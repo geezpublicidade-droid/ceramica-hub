@@ -3,22 +3,49 @@
 import { useEffect, useRef } from "react";
 import { useScrollProgress } from "@/components/motion/ScrollStage";
 
-const FLOOR_COUNT = 9;
-const NODES_PER_FLOOR = 6;
-
-type TowerNode = { floor: number; index: number; threshold: number };
-
-const NODES: TowerNode[] = Array.from({ length: FLOOR_COUNT }, (_, floor) =>
-  Array.from({ length: NODES_PER_FLOOR }, (_, index) => ({ floor, index }))
-)
-  .flat()
-  .map((node, position, all) => ({ ...node, threshold: (position / (all.length - 1)) * 0.55 }));
+type Point = { x: number; y: number; threshold: number };
 
 /**
- * Versão CSS/SVG do "prédio que acende" — usada quando não há WebGL, o
- * dispositivo é considerado fraco, ou o usuário pediu prefers-reduced-motion.
- * Sincronizada ao mesmo progresso de scroll da cena 3D via uma única custom
- * property CSS (`--p`), atualizada por frame — sem recalcular nada em React.
+ * Posições em % sobre a foto do Espaço Cerâmica — concentradas na metade
+ * direita do quadro (torre secundária + céu), longe da área onde o texto
+ * do hero fica (metade esquerda). Cada ponto representa uma empresa que
+ * "acende" progressivamente com o scroll.
+ */
+const RAW_POINTS: [number, number][] = [
+  [54, 10], [62, 7], [70, 12], [78, 8], [86, 14], [94, 10],
+  [58, 20], [66, 24], [74, 18], [82, 22], [90, 26],
+  [54, 32], [62, 36], [70, 30], [78, 34], [86, 30],
+  [58, 42], [74, 42],
+];
+
+const POINTS: Point[] = RAW_POINTS.map(([x, y], index) => ({
+  x,
+  y,
+  threshold: (index / (RAW_POINTS.length - 1)) * 0.55,
+}));
+
+/** conexões curadas entre pontos próximos — não é malha completa */
+const CONNECTIONS: [number, number][] = [
+  [0, 1], [1, 2], [2, 3], [3, 4], [4, 5],
+  [0, 6], [2, 8], [4, 10],
+  [6, 7], [7, 8], [8, 9], [9, 10],
+  [6, 11], [7, 13], [9, 15],
+  [11, 12], [13, 14], [14, 15],
+  [11, 16], [13, 17], [14, 17],
+];
+
+function curvePath(a: Point, b: Point) {
+  const mx = (a.x + b.x) / 2;
+  const my = (a.y + b.y) / 2 - 3;
+  return `M ${a.x} ${a.y} Q ${mx} ${my} ${b.x} ${b.y}`;
+}
+
+/**
+ * Camada abstrata (sem WebGL) que acende pontos sobre a foto real do
+ * Espaço Cerâmica e desenha conexões orgânicas entre eles — usada quando
+ * não há WebGL, o dispositivo é considerado fraco, ou prefers-reduced-motion.
+ * Sincronizada ao progresso de scroll via uma única custom property CSS
+ * (`--p`), atualizada por frame, sem recalcular nada em React.
  */
 export function CSSFallbackScene() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -44,65 +71,51 @@ export function CSSFallbackScene() {
       ref={containerRef}
       aria-hidden="true"
       role="presentation"
-      className="absolute inset-0 overflow-hidden bg-surface-dark"
+      className="absolute inset-0 overflow-hidden"
       style={{ ["--p" as string]: 0 }}
     >
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background: "radial-gradient(60% 50% at 50% 45%, var(--glow), transparent 70%)",
-          opacity: "calc(0.25 + var(--p) * 0.45)",
+          background: "radial-gradient(55% 45% at 50% 30%, var(--glow), transparent 70%)",
+          opacity: "calc(0.15 + var(--p) * 0.3)",
         }}
       />
 
-      <div
-        className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col-reverse gap-[10px]"
-        style={{ transform: "translate(-50%, -50%) perspective(1200px) rotateX(4deg)" }}
-      >
-        {Array.from({ length: FLOOR_COUNT }).map((_, floor) => {
-          const offset = Math.sin(floor * 1.3) * 10;
-          return (
-            <div
-              key={floor}
-              className="flex items-center justify-center gap-[8px]"
-              style={{ transform: `translateX(${offset}px)` }}
-            >
-              {NODES.filter((node) => node.floor === floor).map((node) => {
-                const activation = `clamp(0, calc((var(--p) - ${node.threshold} + 0.08) / 0.16), 1)`;
-                return (
-                  <div
-                    key={node.index}
-                    className="h-[10px] w-[16px] rounded-[2px] bg-[#1c2430]"
-                    style={{
-                      position: "relative",
-                    }}
-                  >
-                    <div
-                      className="absolute inset-0 rounded-[2px] bg-connection"
-                      style={{
-                        opacity: activation,
-                        boxShadow: `0 0 8px var(--glow)`,
-                      }}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
-      </div>
-
       <svg
-        className="absolute left-1/2 top-1/2 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2"
-        style={{ opacity: "clamp(0, (var(--p) - 0.58) / 0.4, 1)" }}
+        className="absolute inset-0 h-full w-full"
         viewBox="0 0 100 100"
+        preserveAspectRatio="none"
         fill="none"
       >
-        <line x1="20" y1="80" x2="80" y2="20" stroke="var(--connection)" strokeWidth="0.4" />
-        <line x1="20" y1="20" x2="80" y2="80" stroke="var(--connection)" strokeWidth="0.4" />
-        <line x1="10" y1="50" x2="90" y2="50" stroke="var(--connection)" strokeWidth="0.4" />
-        <line x1="50" y1="10" x2="50" y2="90" stroke="var(--connection)" strokeWidth="0.4" />
+        <g style={{ opacity: "clamp(0, calc((var(--p) - 0.58) / 0.4 * 0.6), 0.6)" }}>
+          {CONNECTIONS.map(([a, b], index) => (
+            <path
+              key={index}
+              d={curvePath(POINTS[a], POINTS[b])}
+              stroke="var(--connection)"
+              strokeWidth="0.12"
+              strokeLinecap="round"
+            />
+          ))}
+        </g>
       </svg>
+
+      {POINTS.map((point, index) => {
+        const activation = `clamp(0, calc((var(--p) - ${point.threshold} + 0.08) / 0.16), 1)`;
+        return (
+          <div
+            key={index}
+            className="absolute h-[5px] w-[5px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-connection"
+            style={{
+              left: `${point.x}%`,
+              top: `${point.y}%`,
+              opacity: activation,
+              boxShadow: "0 0 8px var(--glow)",
+            }}
+          />
+        );
+      })}
     </div>
   );
 }

@@ -21,12 +21,11 @@ export default function SceneCanvas() {
     <div className="absolute inset-0" aria-hidden="true" role="presentation">
       <Canvas
         dpr={[1, 1.75]}
-        gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
+        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
         camera={{ fov: 45, near: 0.1, far: 100, position: [0, 1.2, 11] }}
         frameloop={tabVisible ? "always" : "never"}
       >
-        <color attach="background" args={["#050505"]} />
-        <fog attach="fog" args={["#050505", 9, 22]} />
+        <fog attach="fog" args={["#050505", 10, 20]} />
         <SceneLighting />
         <CameraRig />
         <ConnectionTower />

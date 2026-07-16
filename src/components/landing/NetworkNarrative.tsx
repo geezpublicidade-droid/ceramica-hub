@@ -82,15 +82,39 @@ export function NetworkNarrative({ stats }: NetworkNarrativeProps) {
         onProgress={handleProgress}
         className="relative bg-surface-dark text-foreground-dark"
       >
-        {capability.ready && capability.shouldRender3D ? (
-          <Suspense fallback={null}>
-            <SceneCanvas />
-          </Suspense>
-        ) : (
-          <CSSFallbackScene />
-        )}
+        {/* altura própria (100svh), independente do fluxo empilhado do modo
+            reduced-motion — sem isso, essas camadas absolutas esticam pela
+            altura inteira do bloco (todas as cenas somadas) em vez de uma
+            única tela. */}
+        <div
+          className={`relative ${
+            capability.reducedMotion ? "min-h-[100svh]" : "h-[100svh] overflow-hidden"
+          }`}
+        >
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: "url(/images/espaco-ceramica.jpg)" }}
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(5,5,5,0.75) 0%, rgba(5,5,5,0.55) 40%, rgba(5,5,5,0.8) 80%, rgba(5,5,5,0.95) 100%)",
+            }}
+          />
 
-        <div className="relative z-10 h-full">
+          {capability.ready && capability.shouldRender3D ? (
+            <Suspense fallback={null}>
+              <SceneCanvas />
+            </Suspense>
+          ) : (
+            <CSSFallbackScene />
+          )}
+
+          {/* fica dentro do mesmo wrapper de 100svh que a foto/cena, pra
+              sempre aparecer sobreposta a ela — inclusive sem animação */}
           <StageBlock active={stage === "hero"}>
             <RevealText active={stage === "hero"} stagger={0.12}>
               <p className="text-[13px] font-medium uppercase tracking-[0.2em] text-white/50">
@@ -129,6 +153,9 @@ export function NetworkNarrative({ stats }: NetworkNarrativeProps) {
               <span className="block h-9 w-[1px] bg-white/30" />
             </div>
           </StageBlock>
+        </div>
+
+        <div className="relative z-10 h-full">
 
           <StageBlock active={stage === "scale-businesses"}>
             <RevealText active={stage === "scale-businesses"}>
