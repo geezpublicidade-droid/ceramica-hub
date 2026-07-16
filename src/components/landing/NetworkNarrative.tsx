@@ -78,7 +78,7 @@ export function NetworkNarrative({ stats }: NetworkNarrativeProps) {
   return (
     <section id="top" aria-label="A rede de negócios do Cerâmica Hub">
       <ScrollStage
-        heightVh={500}
+        heightVh={300}
         onProgress={handleProgress}
         className="relative bg-surface-dark text-foreground-dark"
       >
@@ -99,7 +99,7 @@ export function NetworkNarrative({ stats }: NetworkNarrativeProps) {
               <p className="mt-3 text-[13px] font-medium uppercase tracking-[0.2em] text-connection">
                 A rede de negócios do Cerâmica
               </p>
-              <h1 className="mt-6 max-w-3xl text-[clamp(2.6rem,7vw,6.5rem)] font-semibold leading-[1.02] tracking-tight">
+              <h1 className="mt-6 max-w-2xl text-[clamp(2.1rem,5vw,4rem)] font-semibold leading-[1.08] tracking-tight">
                 Tudo o que você precisa pode estar a poucos andares de distância.
               </h1>
               <p className="mt-8 max-w-xl text-lg leading-relaxed text-white/70">
@@ -132,7 +132,7 @@ export function NetworkNarrative({ stats }: NetworkNarrativeProps) {
 
           <StageBlock active={stage === "scale-businesses"}>
             <RevealText active={stage === "scale-businesses"}>
-              <h2 className="text-[clamp(2.5rem,6vw,5rem)] font-semibold tracking-tight">
+              <h2 className="text-[clamp(2rem,4.5vw,3.5rem)] font-semibold tracking-tight">
                 {stats.businesses}+ empresas no mesmo endereço.
               </h2>
             </RevealText>
@@ -140,7 +140,7 @@ export function NetworkNarrative({ stats }: NetworkNarrativeProps) {
 
           <StageBlock active={stage === "scale-sectors"}>
             <RevealText active={stage === "scale-sectors"}>
-              <h2 className="text-[clamp(2.5rem,6vw,5rem)] font-semibold tracking-tight">
+              <h2 className="text-[clamp(2rem,4.5vw,3.5rem)] font-semibold tracking-tight">
                 {stats.categories} setores diferentes, sob o mesmo teto.
               </h2>
             </RevealText>
@@ -148,7 +148,7 @@ export function NetworkNarrative({ stats }: NetworkNarrativeProps) {
 
           <StageBlock active={stage === "scale-connection"}>
             <RevealText active={stage === "scale-connection"}>
-              <h2 className="text-[clamp(2.5rem,6vw,5rem)] font-semibold tracking-tight">
+              <h2 className="text-[clamp(2rem,4.5vw,3.5rem)] font-semibold tracking-tight">
                 Um único ponto de conexão.
               </h2>
             </RevealText>
@@ -168,7 +168,7 @@ export function NetworkNarrative({ stats }: NetworkNarrativeProps) {
 
           <StageBlock active={stage === "connect-discover"}>
             <RevealText active={stage === "connect-discover"}>
-              <h2 className="text-[clamp(3rem,8vw,7rem)] font-semibold tracking-tight">
+              <h2 className="text-[clamp(2.5rem,6vw,5rem)] font-semibold tracking-tight">
                 Descubra.
               </h2>
             </RevealText>
@@ -176,7 +176,7 @@ export function NetworkNarrative({ stats }: NetworkNarrativeProps) {
 
           <StageBlock active={stage === "connect-connect"}>
             <RevealText active={stage === "connect-connect"}>
-              <h2 className="text-[clamp(3rem,8vw,7rem)] font-semibold tracking-tight">
+              <h2 className="text-[clamp(2.5rem,6vw,5rem)] font-semibold tracking-tight">
                 Conecte.
               </h2>
             </RevealText>
@@ -184,7 +184,7 @@ export function NetworkNarrative({ stats }: NetworkNarrativeProps) {
 
           <StageBlock active={stage === "connect-collaborate"}>
             <RevealText active={stage === "connect-collaborate"}>
-              <h2 className="text-[clamp(3rem,8vw,7rem)] font-semibold tracking-tight">
+              <h2 className="text-[clamp(2.5rem,6vw,5rem)] font-semibold tracking-tight">
                 Colabore.
               </h2>
             </RevealText>
@@ -192,7 +192,7 @@ export function NetworkNarrative({ stats }: NetworkNarrativeProps) {
 
           <StageBlock active={stage === "connect-grow"}>
             <RevealText active={stage === "connect-grow"}>
-              <h2 className="text-[clamp(3rem,8vw,7rem)] font-semibold tracking-tight">
+              <h2 className="text-[clamp(2.5rem,6vw,5rem)] font-semibold tracking-tight">
                 Cresça.
               </h2>
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/70">
