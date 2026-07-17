@@ -1,5 +1,6 @@
 import { Header } from "@/components/Header";
 import { NetworkNarrative } from "@/components/landing/NetworkNarrative";
+import { ScaleSequence } from "@/components/landing/ScaleSequence";
 import { PlatformReveal } from "@/components/landing/PlatformReveal";
 import { SmartSearch } from "@/components/landing/SmartSearch";
 import { FeaturedBusinesses } from "@/components/landing/FeaturedBusinesses";
@@ -36,7 +37,8 @@ export default async function Home() {
       <Header />
       <main className="flex-1">
         <SearchProvider>
-          <NetworkNarrative stats={stats} />
+          <NetworkNarrative />
+          <ScaleSequence stats={stats} />
           <PlatformReveal
             businesses={featuredBusinesses}
             categories={categoryBreakdown.map((c) => c.category)}
