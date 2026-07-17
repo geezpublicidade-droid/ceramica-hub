@@ -82,7 +82,7 @@ export function SmartSearch({ businesses }: SmartSearchProps) {
             />
             <button
               type="submit"
-              className="shrink-0 rounded-full bg-primary px-5 py-3 text-[14px] font-medium text-white transition-opacity hover:opacity-85"
+              className="neu-primary shrink-0 rounded-full px-5 py-3 text-[14px] font-medium text-white"
             >
               Buscar
             </button>
@@ -95,7 +95,7 @@ export function SmartSearch({ businesses }: SmartSearchProps) {
               key={suggestion.label}
               type="button"
               onClick={() => applySuggestion(suggestion)}
-              className="glass-card-light rounded-full px-4 py-2 text-[13px] text-muted transition-colors hover:text-foreground"
+              className="neu rounded-full px-4 py-2 text-[13px] text-muted transition-colors hover:text-foreground"
             >
               {suggestion.label}
             </button>

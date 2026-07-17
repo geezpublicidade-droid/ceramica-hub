@@ -104,7 +104,7 @@ export default async function BusinessProfilePage({ params }: PageProps) {
                   href={buildWhatsAppLink(business.phone, business.name)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-full bg-primary px-6 py-3 text-[14px] font-medium text-white transition-opacity hover:opacity-85"
+                  className="neu-primary rounded-full px-6 py-3 text-[14px] font-medium text-white"
                 >
                   Falar no WhatsApp
                 </a>
@@ -112,7 +112,7 @@ export default async function BusinessProfilePage({ params }: PageProps) {
                   href={instagramUrl(business.instagram)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="glass-card-light rounded-full px-6 py-3 text-[14px] font-medium text-foreground transition-colors hover:bg-white"
+                  className="neu rounded-full px-6 py-3 text-[14px] font-medium text-foreground"
                 >
                   Ver Instagram
                 </a>

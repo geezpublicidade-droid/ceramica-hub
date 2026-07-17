@@ -70,14 +70,11 @@ export function NetworkNarrative() {
                   <div className="mt-10 flex flex-wrap gap-4">
                     <a
                       href="#empresas"
-                      className="rounded-full bg-primary px-7 py-3.5 text-[15px] font-medium text-white transition-transform hover:scale-[1.03]"
+                      className="neu-primary rounded-full px-7 py-3.5 text-[15px] font-medium text-white"
                     >
                       Explorar empresas
                     </a>
-                    <a
-                      href="#cadastro"
-                      className="glass-card-light rounded-full px-7 py-3.5 text-[15px] font-medium text-foreground transition-colors hover:bg-white"
-                    >
+                    <a href="#cadastro" className="neu rounded-full px-7 py-3.5 text-[15px] font-medium text-foreground">
                       Cadastrar minha empresa
                     </a>
                   </div>

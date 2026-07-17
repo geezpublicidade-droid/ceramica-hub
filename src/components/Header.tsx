@@ -38,7 +38,7 @@ export function Header() {
         </nav>
         <a
           href="#cadastro"
-          className="rounded-full bg-primary px-4 py-2 text-[13px] font-medium text-white transition-opacity hover:opacity-85"
+          className="neu-primary rounded-full px-4 py-2 text-[13px] font-medium text-white"
         >
           Cadastrar empresa
         </a>

@@ -61,8 +61,8 @@ export function Directory({ businesses }: DirectoryProps) {
               onClick={() => setActive(category)}
               className={`rounded-full px-4 py-2 text-[13px] font-medium transition-colors ${
                 active === category
-                  ? "bg-foreground text-white"
-                  : "glass-card-light text-muted hover:text-foreground"
+                  ? "neu-pressed bg-surface text-primary"
+                  : "neu text-muted hover:text-foreground"
               }`}
             >
               {category}

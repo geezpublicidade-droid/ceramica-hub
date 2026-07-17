@@ -49,14 +49,11 @@ export function FounderCTA() {
             href={`https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(ADMIN_MESSAGE)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full bg-primary px-8 py-4 text-[15px] font-medium text-white transition-transform hover:scale-[1.03]"
+            className="neu-primary rounded-full px-8 py-4 text-[15px] font-medium text-white"
           >
             Cadastrar minha empresa gratuitamente
           </a>
-          <a
-            href="#empresas-destaque"
-            className="glass-card-light rounded-full px-8 py-4 text-[15px] font-medium text-foreground transition-colors hover:bg-white"
-          >
+          <a href="#empresas-destaque" className="neu rounded-full px-8 py-4 text-[15px] font-medium text-foreground">
             Conhecer a plataforma
           </a>
         </FadeUp>
