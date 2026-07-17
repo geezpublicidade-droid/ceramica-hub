@@ -26,36 +26,19 @@ export function Header() {
       }`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6">
-        <a
-          href="#top"
-          className={`text-[15px] font-semibold tracking-tight transition-colors ${
-            scrolled ? "text-foreground" : "text-white"
-          }`}
-        >
-          Cerâmica <span className="text-connection">Hub</span>
+        <a href="#top" className="text-[15px] font-semibold tracking-tight text-foreground">
+          Cerâmica <span className="text-primary">Hub</span>
         </a>
-        <nav
-          className={`hidden gap-8 text-[13px] transition-colors md:flex ${
-            scrolled ? "text-muted" : "text-white/60"
-          }`}
-        >
+        <nav className="hidden gap-8 text-[13px] text-muted md:flex">
           {links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className={`transition-colors ${scrolled ? "hover:text-foreground" : "hover:text-white"}`}
-            >
+            <a key={link.href} href={link.href} className="transition-colors hover:text-foreground">
               {link.label}
             </a>
           ))}
         </nav>
         <a
           href="#cadastro"
-          className={`rounded-full px-4 py-2 text-[13px] font-medium transition-colors ${
-            scrolled
-              ? "bg-foreground text-white hover:opacity-80"
-              : "bg-white text-black hover:bg-white/85"
-          }`}
+          className="rounded-full bg-primary px-4 py-2 text-[13px] font-medium text-white transition-opacity hover:opacity-85"
         >
           Cadastrar empresa
         </a>

@@ -14,9 +14,9 @@ const benefits = [
 
 export function FounderCTA() {
   return (
-    <section id="cadastro" className="bg-surface-dark px-6 py-32 text-foreground-dark">
+    <section id="cadastro" className="bg-surface px-6 py-32 text-foreground">
       <div className="mx-auto max-w-4xl text-center">
-        <FadeUp className="text-[13px] font-medium uppercase tracking-[0.2em] text-connection">
+        <FadeUp className="text-[13px] font-medium uppercase tracking-[0.2em] text-primary">
           Fase de lançamento
         </FadeUp>
         <FadeUp
@@ -25,18 +25,18 @@ export function FounderCTA() {
         >
           Faça parte da primeira geração de empresas da Cerâmica Hub.
         </FadeUp>
-        <FadeUp delay={0.1} className="mx-auto mt-6 max-w-md text-[15px] leading-relaxed text-white/60">
+        <FadeUp delay={0.1} className="mx-auto mt-6 max-w-md text-[15px] leading-relaxed text-muted">
           Cadastre seu negócio gratuitamente e receba o selo de Empresa Fundadora da
           plataforma.
         </FadeUp>
 
         <FadeUp
           delay={0.15}
-          className="glass-dark mx-auto mt-12 grid max-w-2xl grid-cols-1 gap-3 rounded-2xl p-6 text-left sm:grid-cols-2"
+          className="glass-light mx-auto mt-12 grid max-w-2xl grid-cols-1 gap-3 rounded-2xl p-6 text-left sm:grid-cols-2"
         >
           {benefits.map((benefit) => (
-            <div key={benefit} className="flex items-start gap-2.5 text-[14px] text-white/75">
-              <span aria-hidden="true" className="mt-0.5 text-connection">
+            <div key={benefit} className="flex items-start gap-2.5 text-[14px] text-foreground/80">
+              <span aria-hidden="true" className="mt-0.5 text-primary">
                 ✓
               </span>
               {benefit}
@@ -49,13 +49,13 @@ export function FounderCTA() {
             href={`https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(ADMIN_MESSAGE)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full bg-white px-8 py-4 text-[15px] font-medium text-black transition-transform hover:scale-[1.03]"
+            className="rounded-full bg-primary px-8 py-4 text-[15px] font-medium text-white transition-transform hover:scale-[1.03]"
           >
             Cadastrar minha empresa gratuitamente
           </a>
           <a
             href="#empresas-destaque"
-            className="rounded-full border border-white/25 px-8 py-4 text-[15px] font-medium text-white transition-colors hover:bg-white/10"
+            className="glass-card-light rounded-full px-8 py-4 text-[15px] font-medium text-foreground transition-colors hover:bg-white"
           >
             Conhecer a plataforma
           </a>

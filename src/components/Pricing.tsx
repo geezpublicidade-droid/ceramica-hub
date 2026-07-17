@@ -44,30 +44,31 @@ export function Pricing() {
               key={plan.name}
               className={`rounded-3xl p-8 ${
                 plan.highlight
-                  ? "border border-white/10 bg-surface-dark text-white"
+                  ? "text-white shadow-[0_30px_60px_-20px_rgba(0,113,227,0.45)]"
                   : "glass-light text-foreground"
               }`}
+              style={plan.highlight ? { background: "linear-gradient(135deg, #2997ff, #0071e3)" } : undefined}
             >
               <h3 className="text-lg font-semibold">{plan.name}</h3>
-              <p className={`mt-2 text-[14px] ${plan.highlight ? "text-white/60" : "text-muted"}`}>
+              <p className={`mt-2 text-[14px] ${plan.highlight ? "text-white/70" : "text-muted"}`}>
                 {plan.description}
               </p>
               <p className="mt-6 flex items-baseline gap-1">
                 <span className="text-4xl font-semibold tracking-tight">{plan.price}</span>
-                <span className={plan.highlight ? "text-white/50" : "text-muted"}>{plan.period}</span>
+                <span className={plan.highlight ? "text-white/60" : "text-muted"}>{plan.period}</span>
               </p>
               <ul className="mt-8 space-y-3 text-[14px]">
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-2">
-                    <span className={plan.highlight ? "text-white/50" : "text-accent"}>—</span>
-                    <span className={plan.highlight ? "text-white/80" : "text-muted"}>{feature}</span>
+                    <span className={plan.highlight ? "text-white/60" : "text-accent"}>—</span>
+                    <span className={plan.highlight ? "text-white/90" : "text-muted"}>{feature}</span>
                   </li>
                 ))}
               </ul>
               <a
                 href="#cadastro"
                 className={`mt-8 block rounded-full px-6 py-3 text-center text-[14px] font-medium transition-opacity hover:opacity-80 ${
-                  plan.highlight ? "bg-white text-foreground" : "bg-foreground text-white"
+                  plan.highlight ? "bg-white text-primary" : "bg-foreground text-white"
                 }`}
               >
                 Quero esse plano

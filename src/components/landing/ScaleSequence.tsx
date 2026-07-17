@@ -72,23 +72,23 @@ export function ScaleSequence() {
 
   return (
     <section aria-label="A escala do Cerâmica Hub">
-      <ScrollStage heightVh={300} onProgress={handleProgress} className="relative bg-surface-dark">
+      <ScrollStage heightVh={300} onProgress={handleProgress} className="relative bg-surface">
         <PhraseBlock active={stage === "connection"}>
-          <h2 className="text-[clamp(1.9rem,5.2vw,3.75rem)] font-semibold leading-[1.15] tracking-tight text-white">
-            Um único ponto de <span className="text-connection">conexão</span>.
+          <h2 className="text-[clamp(1.9rem,5.2vw,3.75rem)] font-semibold leading-[1.15] tracking-tight text-foreground">
+            Um único ponto de <span className="text-primary">conexão</span>.
           </h2>
         </PhraseBlock>
 
         <PhraseBlock active={stage === "disconnected"}>
-          <h2 className="text-[clamp(1.9rem,5.2vw,3.75rem)] font-semibold leading-[1.15] tracking-tight text-white">
-            Trabalhar perto não significa estar <span className="text-connection">conectado</span>.
+          <h2 className="text-[clamp(1.9rem,5.2vw,3.75rem)] font-semibold leading-[1.15] tracking-tight text-foreground">
+            Trabalhar perto não significa estar <span className="text-primary">conectado</span>.
           </h2>
         </PhraseBlock>
 
         <PhraseBlock active={stage === "grow"} large>
-          <p className="text-[clamp(2.1rem,6vw,4.5rem)] font-semibold leading-[1.15] tracking-tight text-white">
+          <p className="text-[clamp(2.1rem,6vw,4.5rem)] font-semibold leading-[1.15] tracking-tight text-foreground">
             Quando os negócios se conectam, todo o ecossistema{" "}
-            <span className="text-connection">cresce</span>.
+            <span className="text-primary">cresce</span>.
           </p>
         </PhraseBlock>
       </ScrollStage>

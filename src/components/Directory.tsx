@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { categories, type Business } from "@/data/businesses";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { matchBusinesses } from "@/lib/search";
@@ -76,22 +77,25 @@ export function Directory({ businesses }: DirectoryProps) {
         ) : (
           <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((business) => (
-              <a
+              <div
                 key={business.id}
-                href={buildWhatsAppLink(business.phone, business.name)}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="glass-card-light group flex gap-4 rounded-2xl p-6 transition-all hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15)]"
               >
-                <BusinessAvatar
-                  business={business}
-                  className="h-16 w-16 rounded-xl bg-white"
-                  textClassName="text-[15px] font-semibold text-foreground"
-                />
+                <Link href={`/empresa/${business.id}`} className="shrink-0">
+                  <BusinessAvatar
+                    business={business}
+                    className="h-16 w-16 rounded-xl bg-white"
+                    textClassName="text-[15px] font-semibold text-foreground"
+                  />
+                </Link>
 
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-2">
-                    <h3 className="text-[16px] font-semibold tracking-tight">{business.name}</h3>
+                    <Link href={`/empresa/${business.id}`} className="min-w-0">
+                      <h3 className="text-[16px] font-semibold leading-snug tracking-tight hover:text-primary">
+                        {business.name}
+                      </h3>
+                    </Link>
                     {business.featured && (
                       <span className="shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary">
                         Verificado
@@ -102,11 +106,16 @@ export function Directory({ businesses }: DirectoryProps) {
                     {business.category} · {business.floor}
                   </p>
                   <p className="mt-3 text-[14px] leading-relaxed text-muted">{business.description}</p>
-                  <p className="mt-4 text-[13px] font-medium text-primary transition-transform group-hover:translate-x-1">
+                  <a
+                    href={buildWhatsAppLink(business.phone, business.name)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-4 inline-block text-[13px] font-medium text-primary transition-transform hover:translate-x-1"
+                  >
                     Falar no WhatsApp →
-                  </p>
+                  </a>
                 </div>
-              </a>
+              </div>
             ))}
           </div>
         )}

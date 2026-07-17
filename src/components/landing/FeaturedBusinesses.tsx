@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { motion } from "motion/react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
@@ -12,16 +13,12 @@ type FeaturedBusinessesProps = {
 };
 
 const gradients = [
-  "linear-gradient(135deg, #0071e3, #0a0a0a)",
-  "linear-gradient(135deg, #5ac8fa, #09090b)",
-  "linear-gradient(135deg, #2997ff, #050505)",
-  "linear-gradient(135deg, #86868b, #09090b)",
-  "linear-gradient(135deg, #0071e3, #2997ff)",
+  "linear-gradient(135deg, #2997ff, #0071e3)",
+  "linear-gradient(135deg, #5ac8fa, #0071e3)",
+  "linear-gradient(135deg, #64d2ff, #2997ff)",
+  "linear-gradient(135deg, #0071e3, #5ac8fa)",
+  "linear-gradient(135deg, #2997ff, #64d2ff)",
 ];
-
-function instagramUrl(handle: string) {
-  return `https://instagram.com/${handle.replace(/^@/, "")}`;
-}
 
 function SpotlightContent({ active }: { active: Business }) {
   return (
@@ -51,14 +48,12 @@ function SpotlightContent({ active }: { active: Business }) {
           >
             Falar no WhatsApp
           </a>
-          <a
-            href={instagramUrl(active.instagram)}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href={`/empresa/${active.id}`}
             className="rounded-full border border-white/30 px-5 py-2.5 text-[13px] font-medium text-white transition-colors hover:bg-white/10"
           >
             Ver perfil
-          </a>
+          </Link>
         </div>
       </div>
     </>

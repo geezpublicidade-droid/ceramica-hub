@@ -23,7 +23,7 @@ export function NetworkNarrative() {
       <ScrollStage
         heightVh={150}
         onProgress={handleProgress}
-        className="relative bg-surface-dark text-foreground-dark"
+        className="relative bg-surface text-foreground"
       >
         <div
           className={`relative ${
@@ -40,7 +40,7 @@ export function NetworkNarrative() {
             className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(180deg, rgba(5,5,5,0.75) 0%, rgba(5,5,5,0.55) 40%, rgba(5,5,5,0.8) 80%, rgba(5,5,5,0.95) 100%)",
+                "linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.3) 45%, rgba(245,245,247,0.65) 80%, rgba(245,245,247,0.9) 100%)",
             }}
           />
 
@@ -53,41 +53,43 @@ export function NetworkNarrative() {
           >
             <div className="mx-auto w-full max-w-6xl">
               <RevealText active={heroActive} stagger={0.12}>
-                <p className="text-[13px] font-medium uppercase tracking-[0.2em] text-white/50">
-                  Cerâmica Hub
-                </p>
-                <p className="mt-3 text-[13px] font-medium uppercase tracking-[0.2em] text-connection">
-                  A rede de negócios do Cerâmica
-                </p>
-                <h1 className="mt-6 max-w-2xl text-[clamp(2.1rem,5vw,4rem)] font-semibold leading-[1.08] tracking-tight">
-                  Tudo o que você precisa pode estar a poucos andares de distância.
-                </h1>
-                <p className="mt-8 max-w-xl text-lg leading-relaxed text-white/70">
-                  Descubra empresas, profissionais, serviços e oportunidades que já estão
-                  trabalhando perto de você.
-                </p>
-                <div className="mt-10 flex flex-wrap gap-4">
-                  <a
-                    href="#empresas"
-                    className="rounded-full bg-white px-7 py-3.5 text-[15px] font-medium text-black transition-transform hover:scale-[1.03]"
-                  >
-                    Explorar empresas
-                  </a>
-                  <a
-                    href="#cadastro"
-                    className="rounded-full border border-white/25 px-7 py-3.5 text-[15px] font-medium text-white transition-colors hover:bg-white/10"
-                  >
-                    Cadastrar minha empresa
-                  </a>
+                <div className="glass-light max-w-2xl rounded-3xl p-8 sm:p-10">
+                  <p className="text-[13px] font-medium uppercase tracking-[0.2em] text-muted">
+                    Cerâmica Hub
+                  </p>
+                  <p className="mt-3 text-[13px] font-medium uppercase tracking-[0.2em] text-primary">
+                    A rede de negócios do Cerâmica
+                  </p>
+                  <h1 className="mt-6 text-[clamp(2.1rem,5vw,4rem)] font-semibold leading-[1.08] tracking-tight text-foreground">
+                    Tudo o que você precisa pode estar a poucos andares de distância.
+                  </h1>
+                  <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted">
+                    Descubra empresas, profissionais, serviços e oportunidades que já estão
+                    trabalhando perto de você.
+                  </p>
+                  <div className="mt-10 flex flex-wrap gap-4">
+                    <a
+                      href="#empresas"
+                      className="rounded-full bg-primary px-7 py-3.5 text-[15px] font-medium text-white transition-transform hover:scale-[1.03]"
+                    >
+                      Explorar empresas
+                    </a>
+                    <a
+                      href="#cadastro"
+                      className="glass-card-light rounded-full px-7 py-3.5 text-[15px] font-medium text-foreground transition-colors hover:bg-white"
+                    >
+                      Cadastrar minha empresa
+                    </a>
+                  </div>
                 </div>
               </RevealText>
             </div>
 
             <div
-              className="pointer-events-none absolute bottom-10 left-1/2 -translate-x-1/2 text-white/40 transition-opacity duration-500"
+              className="pointer-events-none absolute bottom-10 left-1/2 -translate-x-1/2 text-muted transition-opacity duration-500"
               style={{ opacity: heroActive ? 1 : 0 }}
             >
-              <span className="block h-9 w-[1px] bg-white/30" />
+              <span className="block h-9 w-[1px] bg-foreground/20" />
             </div>
           </div>
         </div>

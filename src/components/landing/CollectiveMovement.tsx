@@ -14,7 +14,7 @@ const connections: [number, number][] = [
 
 export function CollectiveMovement() {
   return (
-    <section className="relative overflow-hidden bg-surface-dark px-6 py-36 text-foreground-dark">
+    <section className="relative overflow-hidden bg-surface px-6 py-36 text-foreground">
       <svg
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 h-full w-full opacity-30"
@@ -50,7 +50,7 @@ export function CollectiveMovement() {
         <FadeUp className="max-w-2xl mx-auto text-[clamp(1.75rem,4vw,3rem)] font-semibold leading-tight tracking-tight">
           Um prédio deixa de ser apenas um endereço quando seus negócios começam a se conectar.
         </FadeUp>
-        <FadeUp delay={0.15} className="mt-8 text-[16px] leading-relaxed text-white/55">
+        <FadeUp delay={0.15} className="mt-8 text-[16px] leading-relaxed text-muted">
           A Cerâmica Hub nasce para transformar proximidade em visibilidade, colaboração e novas
           oportunidades.
         </FadeUp>
