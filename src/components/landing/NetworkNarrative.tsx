@@ -1,27 +1,60 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import { motion, type Variants } from "motion/react";
 import { ScrollStage } from "@/components/motion/ScrollStage";
 import { RevealText } from "@/components/motion/RevealText";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+
+const heroImages = [
+  "/images/ceramica-hero-1.jpg",
+  "/images/ceramica-hero-2.jpg",
+  "/images/ceramica-hero-3.jpg",
+  "/images/ceramica-hero-4.jpg",
+];
+
+function resolveImageIndex(progress: number) {
+  if (progress < 0.25) return 0;
+  if (progress < 0.5) return 1;
+  if (progress < 0.75) return 2;
+  return 3;
+}
+
+const image: Variants = {
+  hidden: { opacity: 0, filter: "blur(28px)", scale: 1.06 },
+  visible: {
+    opacity: 1,
+    filter: "blur(0px)",
+    scale: 1,
+    transition: { duration: 1.1, ease: [0.16, 1, 0.3, 1] },
+  },
+};
 
 export function NetworkNarrative() {
   const reducedMotion = useReducedMotion();
   const [heroActive, setHeroActive] = useState(true);
   const heroActiveRef = useRef(true);
+  const [imageIndex, setImageIndex] = useState(0);
+  const imageIndexRef = useRef(0);
 
   const handleProgress = useCallback((progress: number) => {
-    const next = progress < 0.6;
-    if (next !== heroActiveRef.current) {
-      heroActiveRef.current = next;
-      setHeroActive(next);
+    const active = progress < 0.85;
+    if (active !== heroActiveRef.current) {
+      heroActiveRef.current = active;
+      setHeroActive(active);
+    }
+
+    const nextImage = resolveImageIndex(progress);
+    if (nextImage !== imageIndexRef.current) {
+      imageIndexRef.current = nextImage;
+      setImageIndex(nextImage);
     }
   }, []);
 
   return (
     <section id="top" aria-label="A rede de negócios do Cerâmica Hub">
       <ScrollStage
-        heightVh={150}
+        heightVh={220}
         onProgress={handleProgress}
         className="relative bg-surface text-foreground"
       >
@@ -30,11 +63,25 @@ export function NetworkNarrative() {
             reducedMotion ? "min-h-[100svh]" : "h-[100svh] overflow-hidden"
           }`}
         >
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: "url(/images/espaco-ceramica.jpg)" }}
-          />
+          {reducedMotion ? (
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: `url(${heroImages[0]})` }}
+            />
+          ) : (
+            heroImages.map((src, index) => (
+              <motion.div
+                key={src}
+                aria-hidden="true"
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: `url(${src})` }}
+                initial="hidden"
+                animate={imageIndex === index ? "visible" : "hidden"}
+                variants={image}
+              />
+            ))
+          )}
           <div
             aria-hidden="true"
             className="absolute inset-0"
