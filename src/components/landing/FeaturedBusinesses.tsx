@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
+import { BusinessAvatar } from "@/components/BusinessAvatar";
 import type { Business } from "@/data/businesses";
 
 type FeaturedBusinessesProps = {
@@ -115,9 +116,11 @@ export function FeaturedBusinesses({ businesses }: FeaturedBusinessesProps) {
                     : "border-border bg-white hover:border-primary/20"
                 }`}
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface text-[12px] font-semibold">
-                  {business.initials}
-                </div>
+                <BusinessAvatar
+                  business={business}
+                  className="h-10 w-10 rounded-full bg-surface"
+                  textClassName="text-[12px] font-semibold"
+                />
                 <div className="min-w-0">
                   <p className="truncate text-[14px] font-semibold tracking-tight">{business.name}</p>
                   <p className="truncate text-[12px] text-muted">{business.category}</p>

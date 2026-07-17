@@ -1,5 +1,6 @@
 import { FadeUp } from "@/components/motion/FadeUp";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
+import { BusinessAvatar } from "@/components/BusinessAvatar";
 import type { Business } from "@/data/businesses";
 
 type PlatformRevealProps = {
@@ -64,9 +65,11 @@ export function PlatformReveal({ businesses, categories }: PlatformRevealProps) 
                   className="glass-card-dark rounded-xl p-4 transition-transform hover:-translate-y-0.5"
                 >
                   <div className="flex items-center justify-between">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-[12px] font-semibold">
-                      {business.initials}
-                    </div>
+                    <BusinessAvatar
+                      business={business}
+                      className="h-9 w-9 rounded-full bg-white/10"
+                      textClassName="text-[12px] font-semibold"
+                    />
                     {business.featured && (
                       <span className="rounded-full bg-connection/15 px-2 py-0.5 text-[10px] font-medium text-connection">
                         Verificado

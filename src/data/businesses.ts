@@ -8,6 +8,8 @@ export type Business = {
   phone: string;
   featured: boolean;
   initials: string;
+  /** logo quadrado (1:1) da empresa — opcional; sem isso, o card mostra as iniciais */
+  logo?: string;
 };
 
 export const categories = [

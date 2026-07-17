@@ -5,6 +5,7 @@ import { categories, type Business } from "@/data/businesses";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { matchBusinesses } from "@/lib/search";
 import { useSearch } from "@/components/landing/SearchContext";
+import { BusinessAvatar } from "@/components/BusinessAvatar";
 
 type DirectoryProps = {
   businesses: Business[];
@@ -80,26 +81,31 @@ export function Directory({ businesses }: DirectoryProps) {
                 href={buildWhatsAppLink(business.phone, business.name)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="glass-card-light group rounded-2xl p-6 transition-all hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15)]"
+                className="glass-card-light group flex gap-4 rounded-2xl p-6 transition-all hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15)]"
               >
-                <div className="flex items-start justify-between">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[13px] font-semibold text-foreground">
-                    {business.initials}
+                <BusinessAvatar
+                  business={business}
+                  className="h-16 w-16 rounded-xl bg-white"
+                  textClassName="text-[15px] font-semibold text-foreground"
+                />
+
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="text-[16px] font-semibold tracking-tight">{business.name}</h3>
+                    {business.featured && (
+                      <span className="shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary">
+                        Verificado
+                      </span>
+                    )}
                   </div>
-                  {business.featured && (
-                    <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary">
-                      Verificado
-                    </span>
-                  )}
+                  <p className="mt-1 text-[13px] text-muted">
+                    {business.category} · {business.floor}
+                  </p>
+                  <p className="mt-3 text-[14px] leading-relaxed text-muted">{business.description}</p>
+                  <p className="mt-4 text-[13px] font-medium text-primary transition-transform group-hover:translate-x-1">
+                    Falar no WhatsApp →
+                  </p>
                 </div>
-                <h3 className="mt-4 text-[16px] font-semibold tracking-tight">{business.name}</h3>
-                <p className="mt-1 text-[13px] text-muted">
-                  {business.category} · {business.floor}
-                </p>
-                <p className="mt-3 text-[14px] leading-relaxed text-muted">{business.description}</p>
-                <p className="mt-4 text-[13px] font-medium text-primary transition-transform group-hover:translate-x-1">
-                  Falar no WhatsApp →
-                </p>
               </a>
             ))}
           </div>
