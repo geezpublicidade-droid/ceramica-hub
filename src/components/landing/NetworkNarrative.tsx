@@ -1,15 +1,10 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { Suspense, useCallback, useRef, useState, type ReactNode } from "react";
+import { useCallback, useRef, useState, type ReactNode } from "react";
 import { ScrollStage } from "@/components/motion/ScrollStage";
 import { RevealText } from "@/components/motion/RevealText";
-import { CSSFallbackScene } from "./CSSFallbackScene";
-import { useDeviceCapability } from "@/hooks/useDeviceCapability";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import type { PlatformStats } from "@/lib/services/platform";
-
-const SceneCanvas = dynamic(() => import("@/components/three/SceneCanvas"), { ssr: false });
 
 type Stage =
   | "hero"
@@ -63,7 +58,7 @@ type NetworkNarrativeProps = {
 };
 
 export function NetworkNarrative({ stats }: NetworkNarrativeProps) {
-  const capability = useDeviceCapability();
+  const reducedMotion = useReducedMotion();
   const [stage, setStage] = useState<Stage>("hero");
   const stageRef = useRef<Stage>("hero");
 
@@ -88,7 +83,7 @@ export function NetworkNarrative({ stats }: NetworkNarrativeProps) {
             única tela. */}
         <div
           className={`relative ${
-            capability.reducedMotion ? "min-h-[100svh]" : "h-[100svh] overflow-hidden"
+            reducedMotion ? "min-h-[100svh]" : "h-[100svh] overflow-hidden"
           }`}
         >
           <div
@@ -105,15 +100,7 @@ export function NetworkNarrative({ stats }: NetworkNarrativeProps) {
             }}
           />
 
-          {capability.ready && capability.shouldRender3D ? (
-            <Suspense fallback={null}>
-              <SceneCanvas />
-            </Suspense>
-          ) : (
-            <CSSFallbackScene />
-          )}
-
-          {/* fica dentro do mesmo wrapper de 100svh que a foto/cena, pra
+          {/* fica dentro do mesmo wrapper de 100svh que a foto, pra
               sempre aparecer sobreposta a ela — inclusive sem animação */}
           <StageBlock active={stage === "hero"}>
             <RevealText active={stage === "hero"} stagger={0.12}>
