@@ -4,16 +4,13 @@ import { useCallback, useRef, useState, type ReactNode } from "react";
 import { motion, type Variants } from "motion/react";
 import { ScrollStage } from "@/components/motion/ScrollStage";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import type { PlatformStats } from "@/lib/services/platform";
 
-type Stage = "businesses" | "sectors" | "connection" | "disconnected" | "grow";
+type Stage = "connection" | "disconnected" | "grow";
 
 /** a mensagem final ganha a maior janela de progresso — fica visível por mais tempo */
 function resolveStage(progress: number): Stage {
-  if (progress < 0.2) return "businesses";
-  if (progress < 0.4) return "sectors";
-  if (progress < 0.58) return "connection";
-  if (progress < 0.76) return "disconnected";
+  if (progress < 0.36) return "connection";
+  if (progress < 0.64) return "disconnected";
   return "grow";
 }
 
@@ -61,13 +58,9 @@ function PhraseBlock({ active, large, children }: { active: boolean; large?: boo
   );
 }
 
-type ScaleSequenceProps = {
-  stats: PlatformStats;
-};
-
-export function ScaleSequence({ stats }: ScaleSequenceProps) {
-  const [stage, setStage] = useState<Stage>("businesses");
-  const stageRef = useRef<Stage>("businesses");
+export function ScaleSequence() {
+  const [stage, setStage] = useState<Stage>("connection");
+  const stageRef = useRef<Stage>("connection");
 
   const handleProgress = useCallback((progress: number) => {
     const next = resolveStage(progress);
@@ -79,21 +72,7 @@ export function ScaleSequence({ stats }: ScaleSequenceProps) {
 
   return (
     <section aria-label="A escala do Cerâmica Hub">
-      <ScrollStage heightVh={400} onProgress={handleProgress} className="relative bg-surface-dark">
-        <PhraseBlock active={stage === "businesses"}>
-          <h2 className="text-[clamp(1.9rem,5.2vw,3.75rem)] font-semibold leading-[1.15] tracking-tight text-white">
-            <span className="text-connection">{stats.businesses}+</span> empresas no mesmo
-            endereço.
-          </h2>
-        </PhraseBlock>
-
-        <PhraseBlock active={stage === "sectors"}>
-          <h2 className="text-[clamp(1.9rem,5.2vw,3.75rem)] font-semibold leading-[1.15] tracking-tight text-white">
-            <span className="text-connection">{stats.categories}</span> setores diferentes, sob o
-            mesmo teto.
-          </h2>
-        </PhraseBlock>
-
+      <ScrollStage heightVh={300} onProgress={handleProgress} className="relative bg-surface-dark">
         <PhraseBlock active={stage === "connection"}>
           <h2 className="text-[clamp(1.9rem,5.2vw,3.75rem)] font-semibold leading-[1.15] tracking-tight text-white">
             Um único ponto de <span className="text-connection">conexão</span>.

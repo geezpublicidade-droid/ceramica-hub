@@ -13,7 +13,6 @@ import { FounderCTA } from "@/components/landing/FounderCTA";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { SearchProvider } from "@/components/landing/SearchContext";
 import {
-  getPlatformStats,
   getCategoryBreakdown,
   getAllBusinesses,
   getFeaturedBusinesses,
@@ -22,9 +21,8 @@ import {
 } from "@/lib/services/platform";
 
 export default async function Home() {
-  const [stats, categoryBreakdown, allBusinesses, featuredBusinesses, opportunities, benefits] =
+  const [categoryBreakdown, allBusinesses, featuredBusinesses, opportunities, benefits] =
     await Promise.all([
-      getPlatformStats(),
       getCategoryBreakdown(),
       getAllBusinesses(),
       getFeaturedBusinesses(),
@@ -38,7 +36,7 @@ export default async function Home() {
       <main className="flex-1">
         <SearchProvider>
           <NetworkNarrative />
-          <ScaleSequence stats={stats} />
+          <ScaleSequence />
           <PlatformReveal
             businesses={featuredBusinesses}
             categories={categoryBreakdown.map((c) => c.category)}
