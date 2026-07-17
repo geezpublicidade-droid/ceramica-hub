@@ -19,7 +19,7 @@ export const benefitKindLabels: Record<BenefitKind, string> = {
 export const benefits: Benefit[] = [
   {
     id: "conta-certa-indicacao",
-    businessId: "conta-cerâmica",
+    businessId: "conta-certa",
     kind: "desconto",
     title: "20% na abertura de empresa",
     description: "Pra quem indicar outra empresa do prédio na Conta Certa Contabilidade.",

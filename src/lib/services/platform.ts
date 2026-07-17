@@ -47,6 +47,16 @@ export async function getAllBusinesses(): Promise<Business[]> {
   return businesses;
 }
 
+export async function getBusinessById(id: string): Promise<Business | undefined> {
+  return businesses.find((business) => business.id === id);
+}
+
+export async function getRelatedBusinesses(business: Business, limit = 3): Promise<Business[]> {
+  return businesses
+    .filter((candidate) => candidate.id !== business.id && candidate.category === business.category)
+    .slice(0, limit);
+}
+
 export type OpportunityWithBusiness = Opportunity & { business: Business };
 
 export async function getOpportunities(): Promise<OpportunityWithBusiness[]> {

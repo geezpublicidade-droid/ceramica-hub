@@ -25,7 +25,7 @@ export const categories = [
 
 export const businesses: Business[] = [
   {
-    id: "conta-cerâmica",
+    id: "conta-certa",
     name: "Conta Certa Contabilidade",
     category: "Contabilidade & Jurídico",
     floor: "3º andar",
@@ -135,7 +135,7 @@ export const businesses: Business[] = [
     initials: "NT",
   },
   {
-    id: "idiomas-cerâmica",
+    id: "ceramica-idiomas",
     name: "Cerâmica Idiomas",
     category: "Educação",
     floor: "8º andar",
