@@ -19,6 +19,12 @@ type PageProps = {
   params: Promise<{ id: string }>;
 };
 
+// dynamicParams + revalidate (ISR) em vez de SSG puro: o deploy é manual
+// (`vercel --prod`), então uma empresa aprovada no /admin precisa aparecer
+// na hora, sem esperar o próximo deploy.
+export const dynamicParams = true;
+export const revalidate = 60;
+
 export async function generateStaticParams() {
   const businesses = await getAllBusinesses();
   return businesses.map((business) => ({ id: business.id }));
@@ -47,7 +53,7 @@ function instagramUrl(handle: string) {
 export default async function BusinessProfilePage({ params }: PageProps) {
   const { id } = await params;
   const business = await getBusinessById(id);
-  if (!business) notFound();
+  if (!business || business.status !== "approved") notFound();
 
   const [related, allOpportunities, allBenefits] = await Promise.all([
     getRelatedBusinesses(business),
@@ -83,7 +89,7 @@ export default async function BusinessProfilePage({ params }: PageProps) {
                     <h1 className="text-[clamp(1.75rem,4vw,2.75rem)] font-semibold tracking-tight">
                       {business.name}
                     </h1>
-                    {business.featured && (
+                    {business.verified && (
                       <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary">
                         Verificado
                       </span>

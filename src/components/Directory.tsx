@@ -96,7 +96,7 @@ export function Directory({ businesses }: DirectoryProps) {
                         {business.name}
                       </h3>
                     </Link>
-                    {business.featured && (
+                    {business.verified && (
                       <span className="shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary">
                         Verificado
                       </span>

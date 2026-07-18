@@ -1,8 +1,45 @@
 import { createClient } from "@supabase/supabase-js";
 import bcrypt from "bcryptjs";
-import { businesses as demoBusinesses } from "../src/data/businesses";
-import { benefits as demoBenefits } from "../src/data/benefits";
-import { opportunities as demoOpportunities } from "../src/data/opportunities";
+
+/**
+ * Script de migração única: roda contra um Supabase novo/vazio pra recriar
+ * os dados de demonstração que existiam em src/data/*.ts antes da troca pro
+ * banco (ver platform.ts). Por isso os dados ficam embutidos aqui em vez de
+ * importados — o shape de src/data já mudou pra refletir o schema do banco,
+ * então importar de lá quebraria o propósito histórico deste script.
+ */
+const demoBusinesses = [
+  { id: "conta-certa", name: "Conta Certa Contabilidade", category: "Contabilidade & Jurídico", floor: "3º andar", description: "Abertura de empresa, folha de pagamento e consultoria fiscal para quem empreende no prédio.", instagram: "@contacerta.contabil", phone: "5511999999999" },
+  { id: "advocacia-reis", name: "Reis & Andrade Advocacia", category: "Contabilidade & Jurídico", floor: "5º andar", description: "Direito empresarial e trabalhista com atendimento rápido para quem está aqui do lado.", instagram: "@reisandrade.adv", phone: "5511999999999" },
+  { id: "espaco-derme", name: "Espaço Derme Estética", category: "Saúde & Estética", floor: "2º andar", description: "Skincare, harmonização facial e procedimentos estéticos com equipe especializada.", instagram: "@espacoderme", phone: "5511999999999" },
+  { id: "clinica-viva", name: "Clínica Viva Odontologia", category: "Saúde & Estética", floor: "4º andar", description: "Odontologia geral e estética. Convênio com empresas do prédio.", instagram: "@clinicaviva.odonto", phone: "5511999999999" },
+  { id: "cantina-nonna", name: "Cantina da Nonna", category: "Alimentação", floor: "Térreo", description: "Marmitas e almoço executivo. Entrega para todos os andares em 10 minutos.", instagram: "@cantinadanonna", phone: "5511999999999" },
+  { id: "cafe-do-predio", name: "Café do Prédio", category: "Alimentação", floor: "Térreo", description: "Cafeteria de especialidade, ponto de encontro informal entre empresas do Cerâmica.", instagram: "@cafedopredio", phone: "5511999999999" },
+  { id: "atelie-lima", name: "Ateliê Lima Moda", category: "Moda & Beleza", floor: "6º andar", description: "Alfaiataria e consultoria de imagem para quem trabalha no corredor comercial.", instagram: "@ateliedolima", phone: "5511999999999" },
+  { id: "barbearia-bloco", name: "Barbearia do Bloco", category: "Moda & Beleza", floor: "1º andar", description: "Corte, barba e alinhamento. Agenda expressa para intervalo de almoço.", instagram: "@barbeariadobloco", phone: "5511999999999" },
+  { id: "geez-publicidade", name: "Geez Publicidade", category: "Tecnologia & Marketing", floor: "7º andar", description: "Sites, identidade visual e tráfego pago. A agência por trás do Cerâmica Hub.", instagram: "@geez.publicidade", phone: "5511999999999" },
+  { id: "nuvem-tech", name: "Nuvem Tech Suporte", category: "Tecnologia & Marketing", floor: "5º andar", description: "Suporte de TI e infraestrutura para pequenas empresas do prédio.", instagram: "@nuvemtech", phone: "5511999999999" },
+  { id: "ceramica-idiomas", name: "Cerâmica Idiomas", category: "Educação", floor: "8º andar", description: "Inglês e espanhol para profissionais, turmas fechadas por empresa.", instagram: "@ceramicaidiomas", phone: "5511999999999" },
+  { id: "estudio-arq", name: "Estúdio Arquitetos Associados", category: "Design & Arquitetura", floor: "6º andar", description: "Projetos comerciais e residenciais, do conceito à obra.", instagram: "@estudioarquitetos", phone: "5511999999999" },
+];
+
+const demoBenefits = [
+  { id: "conta-certa-indicacao", businessId: "conta-certa", kind: "desconto", title: "20% na abertura de empresa", description: "Pra quem indicar outra empresa do prédio na Conta Certa Contabilidade." },
+  { id: "derme-avaliacao", businessId: "espaco-derme", kind: "avaliacao-gratis", title: "Avaliação facial gratuita", description: "O Espaço Derme oferece uma avaliação facial sem custo pra empresas do Cerâmica." },
+  { id: "nonna-combo", businessId: "cantina-nonna", kind: "combo", title: "Combo executivo em grupo", description: "Desconto progressivo na Cantina da Nonna pra pedidos de 3 ou mais pessoas do mesmo andar." },
+  { id: "barbearia-aniversario", businessId: "barbearia-bloco", kind: "cortesia", title: "Alinhamento de cortesia", description: "Barbearia do Bloco oferece um alinhamento de barba de cortesia no mês de aniversário da sua empresa." },
+  { id: "nuvem-visita", businessId: "nuvem-tech", kind: "cortesia", title: "Primeira visita técnica grátis", description: "Nuvem Tech Suporte não cobra a primeira visita de diagnóstico pra empresas novas no prédio." },
+  { id: "cafe-fidelidade", businessId: "cafe-do-predio", kind: "beneficio-funcionario", title: "Fidelidade entre empresas", description: "Café do Prédio aceita um cartão fidelidade único, compartilhado entre os funcionários de qualquer empresa do Cerâmica." },
+];
+
+const demoOpportunities = [
+  { id: "viva-fotografo", businessId: "clinica-viva", type: "procura", title: "Procura um fotógrafo para o Instagram", description: "A Clínica Viva quer renovar o conteúdo das redes sociais e procura alguém do prédio pra fotografar o consultório e a equipe." },
+  { id: "nonna-beneficio", businessId: "cantina-nonna", type: "oferece", title: "Desconto pra empresas do prédio", description: "A Cantina da Nonna oferece 15% de desconto no almoço executivo pra quem fecha pedido em grupo com outra empresa do Cerâmica." },
+  { id: "reis-tech", businessId: "advocacia-reis", type: "parceria", title: "Busca parceiro de tecnologia", description: "A Reis & Andrade quer digitalizar a gestão de contratos e procura uma empresa de tecnologia do prédio pra tocar o projeto junto." },
+  { id: "geez-estagio", businessId: "geez-publicidade", type: "contratando", title: "Contratando estágio em design", description: "A Geez Publicidade está com vaga aberta de estágio em design pra quem já circula pelo Cerâmica." },
+  { id: "derme-fornecedor", businessId: "espaco-derme", type: "procura", title: "Procura fornecedor de skincare", description: "O Espaço Derme está buscando um novo fornecedor de produtos de skincare profissional — de preferência alguém que já atenda o prédio." },
+  { id: "barbearia-acao", businessId: "barbearia-bloco", type: "parceria", title: "Busca empresas para ação conjunta", description: "A Barbearia do Bloco quer organizar uma ação de Dia dos Pais com outras empresas do prédio — procura quem topa entrar." },
+];
 
 const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 
@@ -66,10 +103,6 @@ const towers = [
   },
 ];
 
-function floorNumber(floor: string): string {
-  const match = floor.match(/\d+/);
-  return match ? match[0] : "0";
-}
 
 async function main() {
   console.log("Seedando towers...");
@@ -93,7 +126,7 @@ async function main() {
       instagram: business.instagram,
       phone: business.phone,
       tower_id: tower.id,
-      floor: floorNumber(business.floor),
+      floor: business.floor,
       room_number: String(101 + index),
       plan: business.id === "geez-publicidade" ? "destaque" : "free",
       status: "approved",

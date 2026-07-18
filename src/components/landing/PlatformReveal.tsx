@@ -70,7 +70,7 @@ export function PlatformReveal({ businesses, categories }: PlatformRevealProps) 
                       className="h-9 w-9 rounded-full bg-surface"
                       textClassName="text-[12px] font-semibold"
                     />
-                    {business.featured && (
+                    {business.verified && (
                       <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
                         Verificado
                       </span>
