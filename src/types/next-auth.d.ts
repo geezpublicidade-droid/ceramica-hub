@@ -1,19 +1,27 @@
 import type { DefaultSession } from "next-auth";
 
+type Role = "business" | "member" | "admin";
+
 declare module "next-auth" {
   interface Session {
     user: {
-      businessId: string;
+      role: Role;
+      businessId?: string;
+      memberId?: string;
     } & DefaultSession["user"];
   }
 
   interface User {
-    businessId: string;
+    role: Role;
+    businessId?: string;
+    memberId?: string;
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
-    businessId: string;
+    role: Role;
+    businessId?: string;
+    memberId?: string;
   }
 }
