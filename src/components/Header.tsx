@@ -36,12 +36,20 @@ export function Header() {
             </a>
           ))}
         </nav>
-        <a
-          href="#cadastro"
-          className="neu-primary rounded-full px-4 py-2 text-[13px] font-medium text-white"
-        >
-          Cadastrar empresa
-        </a>
+        <div className="flex items-center gap-4">
+          <a
+            href="/login"
+            className="hidden text-[13px] text-muted transition-colors hover:text-foreground md:block"
+          >
+            Entrar
+          </a>
+          <a
+            href="#cadastro"
+            className="neu-primary rounded-full px-4 py-2 text-[13px] font-medium text-white"
+          >
+            Cadastrar empresa
+          </a>
+        </div>
       </div>
     </header>
   );
