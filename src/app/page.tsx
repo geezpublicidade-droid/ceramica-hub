@@ -3,7 +3,6 @@ import { NetworkNarrative } from "@/components/landing/NetworkNarrative";
 import { ScaleSequence } from "@/components/landing/ScaleSequence";
 import { PlatformReveal } from "@/components/landing/PlatformReveal";
 import { SmartSearch } from "@/components/landing/SmartSearch";
-import { FeaturedBusinesses } from "@/components/landing/FeaturedBusinesses";
 import { Directory } from "@/components/Directory";
 import { OpportunityNetwork } from "@/components/landing/OpportunityNetwork";
 import { LocalBenefits } from "@/components/landing/LocalBenefits";
@@ -42,7 +41,6 @@ export default async function Home() {
             categories={categoryBreakdown.map((c) => c.category)}
           />
           <SmartSearch businesses={allBusinesses} />
-          <FeaturedBusinesses businesses={featuredBusinesses} />
           <Directory businesses={allBusinesses} />
           <OpportunityNetwork opportunities={opportunities} />
           <LocalBenefits benefits={benefits} />
