@@ -1,28 +1,60 @@
 const plans = [
   {
-    name: "Grátis",
-    price: "R$ 0",
-    period: "pra sempre",
-    description: "Pra empresa que quer entrar na rede e já aparecer no diretório.",
+    name: "Presença",
+    price: "R$ 47",
+    period: "/mês",
+    description: "Sua página comercial no ar, com o essencial pra ser encontrado.",
     features: [
-      "Perfil no diretório do prédio",
-      "Link direto de WhatsApp",
-      "Participação na rede de apoio no Instagram",
+      "Página comercial com URL exclusiva",
+      "Logo e foto de capa",
+      "Descrição profissional",
+      "Até 5 serviços",
+      "Torre, andar e sala",
+      "WhatsApp e Instagram",
+      "SEO básico",
     ],
     highlight: false,
+    badge: null as string | null,
   },
   {
     name: "Destaque",
-    price: "R$ 67",
+    price: "R$ 97",
     period: "/mês",
     description: "Pra quem quer aparecer primeiro e ser visto por mais gente.",
     features: [
-      "Tudo do plano Grátis",
-      "Selo de verificado e prioridade na busca",
-      "Post dedicado no Instagram do prédio",
-      "Relatório mensal de contatos recebidos",
+      "Tudo do plano Presença",
+      "Galeria de fotos",
+      "Serviços ilimitados",
+      "Promoções e cupons",
+      "Selo de verificado",
+      "Prioridade nas buscas",
+      "Métricas de acesso",
+      "Divulgação nos Stories",
+      "Oportunidades e parcerias",
     ],
     highlight: true,
+    badge: "Mais escolhido",
+  },
+  {
+    name: "Experiência",
+    price: "R$ 197",
+    period: "/mês",
+    description: "Página comercial no nível de uma landing page profissional.",
+    features: [
+      "Tudo do plano Destaque",
+      "Landing page mais personalizada",
+      "Cores e apresentação da empresa",
+      "Vídeo em destaque",
+      "Preparação para visita virtual",
+      "Formulário de contato",
+      "Botão de agendamento",
+      "Destaque na página inicial",
+      "Uma alteração mensal",
+      "Relatório completo",
+      "Condições especiais na Geez",
+    ],
+    highlight: false,
+    badge: null as string | null,
   },
 ];
 
@@ -36,19 +68,28 @@ export function Pricing() {
       />
       <div className="relative mx-auto max-w-6xl px-6 py-28">
         <h2 className="text-[clamp(1.75rem,3.5vw,2.75rem)] font-semibold leading-tight tracking-tight">
-          Comece de graça. Cresça quando fizer sentido.
+          Comece com sua página comercial. Cresça quando fizer sentido.
         </h2>
-        <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2">
+        <p className="mt-3 max-w-xl text-[15px] text-muted">
+          A fotografia e a produção de vídeo não estão incluídas automaticamente na mensalidade — são
+          serviços adicionais da Geez Marketing, salvo promoções específicas.
+        </p>
+        <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-3">
           {plans.map((plan) => (
             <div
               key={plan.name}
-              className={`rounded-3xl p-8 ${
+              className={`relative rounded-3xl p-8 ${
                 plan.highlight
                   ? "text-white shadow-[0_30px_60px_-20px_rgba(0,113,227,0.45)]"
                   : "glass-light text-foreground"
               }`}
               style={plan.highlight ? { background: "linear-gradient(135deg, #2997ff, #0071e3)" } : undefined}
             >
+              {plan.badge && (
+                <span className="absolute -top-3 left-8 rounded-full bg-white px-3 py-1 text-[11px] font-medium text-primary shadow-[0_4px_12px_rgba(0,0,0,0.15)]">
+                  {plan.badge}
+                </span>
+              )}
               <h3 className="text-lg font-semibold">{plan.name}</h3>
               <p className={`mt-2 text-[14px] ${plan.highlight ? "text-white/70" : "text-muted"}`}>
                 {plan.description}

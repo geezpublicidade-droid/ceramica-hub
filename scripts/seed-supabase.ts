@@ -128,7 +128,7 @@ async function main() {
       tower_id: tower.id,
       floor: business.floor,
       room_number: String(101 + index),
-      plan: business.id === "geez-publicidade" ? "destaque" : "free",
+      plan: business.id === "geez-publicidade" ? "destaque" : "presenca",
       status: "approved",
       _legacyId: business.id,
     };

@@ -38,9 +38,16 @@ export function CinematicFooter() {
           </nav>
         </div>
 
-        <div className="mt-12 flex flex-col gap-2 border-t border-border pt-6 text-[12px] text-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>Um projeto Geez Publicidade.</p>
-          <p>© {new Date().getFullYear()} Cerâmica Hub.</p>
+        <div className="mt-12 border-t border-border pt-6">
+          <p className="max-w-3xl text-[12px] leading-relaxed text-muted">
+            O Cerâmica Hub é uma iniciativa independente desenvolvida pela Geez Marketing para
+            conectar e divulgar empresas localizadas no Espaço Cerâmica. Não representa
+            oficialmente os condomínios ou suas administradoras.
+          </p>
+          <div className="mt-4 flex flex-col gap-2 text-[12px] text-muted sm:flex-row sm:items-center sm:justify-between">
+            <p>Um projeto Geez Publicidade.</p>
+            <p>© {new Date().getFullYear()} Cerâmica Hub.</p>
+          </div>
         </div>
       </div>
     </footer>

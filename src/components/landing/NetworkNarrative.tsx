@@ -114,6 +114,11 @@ export function NetworkNarrative() {
                     Descubra empresas, profissionais, serviços e oportunidades que já estão
                     trabalhando perto de você.
                   </p>
+                  <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-muted">
+                    O Cerâmica Hub transforma cada sala em uma vitrine e cada vizinho em uma
+                    oportunidade. Não é apenas um diretório — é um canal local de visibilidade,
+                    relacionamento e geração de negócios.
+                  </p>
                   <div className="mt-10 flex flex-wrap gap-4">
                     <a
                       href="#empresas"
@@ -122,7 +127,7 @@ export function NetworkNarrative() {
                       Explorar empresas
                     </a>
                     <a href="#cadastro" className="neu rounded-full px-7 py-3.5 text-[15px] font-medium text-foreground">
-                      Cadastrar minha empresa
+                      Criar a página da minha empresa
                     </a>
                   </div>
                 </div>

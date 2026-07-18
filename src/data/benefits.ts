@@ -6,6 +6,8 @@ export type Benefit = {
   kind: BenefitKind;
   title: string;
   description: string;
+  validUntil?: string;
+  couponCode?: string;
 };
 
 export const benefitKindLabels: Record<BenefitKind, string> = {

@@ -1,5 +1,5 @@
 import { createServiceClient } from "@/lib/supabase/server";
-import { categories, type Business } from "@/data/businesses";
+import { categories, type Business, type BusinessService, type VirtualVisitType } from "@/data/businesses";
 import { type Opportunity } from "@/data/opportunities";
 import { type Benefit } from "@/data/benefits";
 
@@ -26,7 +26,23 @@ type BusinessRow = {
   floor: string;
   room_number: string;
   logo_url: string | null;
-  plan: "free" | "destaque";
+  cover_photo_url: string | null;
+  website_url: string | null;
+  booking_url: string | null;
+  opening_hours: string | null;
+  video_url: string | null;
+  image_usage_authorized: boolean;
+  has_virtual_visit: boolean;
+  virtual_visit_type: VirtualVisitType | null;
+  virtual_visit_url: string | null;
+  virtual_visit_provider: string | null;
+  virtual_visit_thumbnail: string | null;
+  virtual_visit_description: string | null;
+  virtual_visit_active: boolean;
+  address_verified: boolean;
+  photographed: boolean;
+  founder: boolean;
+  plan: "presenca" | "destaque" | "experiencia";
   status: "pending" | "approved" | "rejected";
   towers: TowerJoin;
 };
@@ -47,6 +63,7 @@ function initialsFrom(name: string): string {
 }
 
 function mapBusiness(row: BusinessRow): Business {
+  const verified = row.status === "approved";
   return {
     id: row.id,
     name: row.name,
@@ -55,11 +72,32 @@ function mapBusiness(row: BusinessRow): Business {
     instagram: row.instagram ?? "",
     phone: row.phone,
     floor: `${row.towers?.name ?? "Torre não informada"} · ${row.floor} · sala ${row.room_number}`,
-    verified: row.status === "approved",
+    verified,
     initials: initialsFrom(row.name),
     plan: row.plan,
     status: row.status,
     logo: row.logo_url ?? undefined,
+    coverPhoto: row.cover_photo_url ?? undefined,
+    websiteUrl: row.website_url ?? undefined,
+    bookingUrl: row.booking_url ?? undefined,
+    openingHours: row.opening_hours ?? undefined,
+    videoUrl: row.video_url ?? undefined,
+    imageUsageAuthorized: row.image_usage_authorized,
+    virtualVisit: {
+      active: row.virtual_visit_active,
+      type: row.virtual_visit_type,
+      url: row.virtual_visit_url,
+      provider: row.virtual_visit_provider,
+      thumbnail: row.virtual_visit_thumbnail,
+      description: row.virtual_visit_description,
+    },
+    seals: {
+      verified,
+      addressVerified: row.address_verified,
+      photographed: row.photographed,
+      virtualVisitAvailable: row.virtual_visit_active,
+      founder: row.founder,
+    },
   };
 }
 
@@ -178,7 +216,7 @@ export async function getBenefits(): Promise<BenefitWithBusiness[]> {
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("benefits")
-    .select(`id, kind, title, description, business_id, businesses!inner(${BUSINESS_SELECT})`)
+    .select(`id, kind, title, description, valid_until, coupon_code, business_id, businesses!inner(${BUSINESS_SELECT})`)
     .eq("active", true)
     .eq("businesses.status", "approved");
   if (error) throw error;
@@ -191,7 +229,102 @@ export async function getBenefits(): Promise<BenefitWithBusiness[]> {
       kind: row.kind,
       title: row.title,
       description: row.description ?? "",
+      validUntil: row.valid_until ?? undefined,
+      couponCode: row.coupon_code ?? undefined,
       business,
     };
   });
+}
+
+export async function getBusinessServices(businessId: string): Promise<BusinessService[]> {
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from("business_services")
+    .select("*")
+    .eq("business_id", businessId)
+    .order("sort_order", { ascending: true });
+  if (error) throw error;
+
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    businessId: row.business_id,
+    name: row.name,
+    description: row.description,
+    photo: row.photo_url,
+    startingPrice: row.starting_price,
+    sortOrder: row.sort_order,
+  }));
+}
+
+export type PlatformSettings = {
+  geezDiscountEnabled: boolean;
+  geezDiscountMaxPercentage: number;
+  geezDiscountTerms: string | null;
+  geezMonthlySlotsLimit: number | null;
+  siteCreditEnabled: boolean;
+  siteCreditPercentage: number;
+  siteCreditMonthLimit: number | null;
+  siteCreditMaximum: number | null;
+  siteCreditTerms: string | null;
+};
+
+/** Config global, uma linha só. Tudo desativado até o admin ligar — nunca aplicar automaticamente. */
+export async function getPlatformSettings(): Promise<PlatformSettings> {
+  const supabase = createServiceClient();
+  const { data, error } = await supabase.from("platform_settings").select("*").single();
+  if (error) throw error;
+
+  return {
+    geezDiscountEnabled: data.geez_discount_enabled,
+    geezDiscountMaxPercentage: data.geez_discount_max_percentage,
+    geezDiscountTerms: data.geez_discount_terms,
+    geezMonthlySlotsLimit: data.geez_monthly_slots_limit,
+    siteCreditEnabled: data.site_credit_enabled,
+    siteCreditPercentage: data.site_credit_percentage,
+    siteCreditMonthLimit: data.site_credit_month_limit,
+    siteCreditMaximum: data.site_credit_maximum,
+    siteCreditTerms: data.site_credit_terms,
+  };
+}
+
+export type MetricEventType =
+  | "commercial_page_viewed"
+  | "virtual_visit_opened"
+  | "virtual_visit_completed"
+  | "gallery_viewed"
+  | "video_played"
+  | "directions_clicked"
+  | "appointment_clicked"
+  | "whatsapp_clicked"
+  | "coupon_redeemed"
+  | "geez_service_clicked"
+  | "geez_quote_requested"
+  | "website_upgrade_clicked";
+
+/** Log de evento append-only. Nunca inventar número no painel: sem linha aqui, mostra 0/vazio. */
+export async function logMetricEvent(
+  eventType: MetricEventType,
+  businessId?: string,
+  metadata?: Record<string, unknown>
+): Promise<void> {
+  const supabase = createServiceClient();
+  const { error } = await supabase
+    .from("metrics_events")
+    .insert({ event_type: eventType, business_id: businessId ?? null, metadata: metadata ?? null });
+  if (error) throw error;
+}
+
+export type MetricsSummary = Record<MetricEventType, number>;
+
+export async function getMetricsSummary(businessId: string): Promise<MetricsSummary> {
+  const supabase = createServiceClient();
+  const { data, error } = await supabase.from("metrics_events").select("event_type").eq("business_id", businessId);
+  if (error) throw error;
+
+  const summary = {} as MetricsSummary;
+  for (const row of data ?? []) {
+    const type = row.event_type as MetricEventType;
+    summary[type] = (summary[type] ?? 0) + 1;
+  }
+  return summary;
 }
