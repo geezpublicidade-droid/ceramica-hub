@@ -121,7 +121,7 @@ export function NetworkNarrative() {
                   <h1 className="mt-3 text-[1.65rem] font-semibold leading-[1.15] tracking-tight text-foreground sm:mt-6 sm:text-[clamp(2.1rem,5vw,4rem)] sm:leading-[1.08]">
                     Encontre empresas, serviços e oportunidades a poucos andares de distância.
                   </h1>
-                  <p className="mt-3 max-w-xl text-[14px] leading-relaxed text-muted sm:mt-6 sm:text-lg">
+                  <p className="mt-3 max-w-xl text-[14px] leading-relaxed text-foreground/75 sm:mt-6 sm:text-lg">
                     O Cerâmica Hub conecta visitantes e empresas das torres Park, Union, Way e
                     Gate em uma única plataforma.
                   </p>
