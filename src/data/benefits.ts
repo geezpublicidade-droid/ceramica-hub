@@ -1,4 +1,4 @@
-export type BenefitKind = "desconto" | "cortesia" | "combo" | "avaliacao-gratis" | "beneficio-funcionario";
+export type BenefitKind = "desconto" | "cortesia" | "combo" | "avaliacao-gratis" | "beneficio-funcionario" | "promocao";
 
 export type Benefit = {
   id: string;
@@ -16,4 +16,5 @@ export const benefitKindLabels: Record<BenefitKind, string> = {
   combo: "Combo",
   "avaliacao-gratis": "Avaliação grátis",
   "beneficio-funcionario": "Para funcionários",
+  promocao: "Promoção",
 };

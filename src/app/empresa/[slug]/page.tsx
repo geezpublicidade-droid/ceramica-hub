@@ -14,6 +14,8 @@ import {
   getRelatedBusinesses,
   getOpportunities,
   getBenefits,
+  getBusinessServices,
+  getBusinessPhotos,
   logMetricEvent,
   UUID_RE,
 } from "@/lib/services/platform";
@@ -70,10 +72,12 @@ export default async function BusinessProfilePage({ params }: PageProps) {
     redirect(`/empresa/${business.slug}`);
   }
 
-  const [related, allOpportunities, allBenefits] = await Promise.all([
+  const [related, allOpportunities, allBenefits, services, photos] = await Promise.all([
     getRelatedBusinesses(business),
     getOpportunities(),
     getBenefits(),
+    getBusinessServices(business.id),
+    getBusinessPhotos(business.id),
   ]);
 
   const opportunities = allOpportunities.filter((o) => o.businessId === business.id);
@@ -142,6 +146,51 @@ export default async function BusinessProfilePage({ params }: PageProps) {
             </div>
           </div>
         </section>
+
+        {business.videoUrl && (
+          <section className="bg-surface px-6 py-10">
+            <div className="mx-auto max-w-4xl overflow-hidden rounded-3xl">
+              <video src={business.videoUrl} controls className="w-full" />
+            </div>
+          </section>
+        )}
+
+        {photos.length > 0 && (
+          <section className="bg-surface px-6 py-10">
+            <div className="mx-auto max-w-4xl">
+              <h2 className="text-[13px] font-medium uppercase tracking-[0.2em] text-muted">Galeria</h2>
+              <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {photos.map((photo) => (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    key={photo.id}
+                    src={photo.url}
+                    alt={`Foto de ${business.name}`}
+                    className="h-32 w-full rounded-xl object-cover"
+                  />
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {services.length > 0 && (
+          <section className="bg-background px-6 py-10">
+            <div className="mx-auto max-w-4xl">
+              <h2 className="text-[13px] font-medium uppercase tracking-[0.2em] text-muted">Serviços</h2>
+              <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {services.map((service) => (
+                  <div key={service.id} className="glass-card-light rounded-2xl p-5">
+                    <p className="text-[15px] font-semibold tracking-tight">{service.name}</p>
+                    {service.description && (
+                      <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{service.description}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         {(opportunities.length > 0 || benefits.length > 0) && (
           <section className="bg-surface px-6 py-16">

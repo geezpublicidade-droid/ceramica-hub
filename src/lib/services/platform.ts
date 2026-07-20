@@ -286,6 +286,47 @@ export async function getBusinessServices(businessId: string): Promise<BusinessS
   }));
 }
 
+export type OwnedPhoto = { id: string; url: string; sortOrder: number };
+
+export async function getBusinessPhotos(businessId: string): Promise<OwnedPhoto[]> {
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from("business_photos")
+    .select("id, url, sort_order")
+    .eq("business_id", businessId)
+    .order("sort_order", { ascending: true });
+  if (error) throw error;
+  return (data ?? []).map((row) => ({ id: row.id, url: row.url, sortOrder: row.sort_order }));
+}
+
+export type OwnedPromotion = {
+  id: string;
+  title: string;
+  description: string;
+  couponCode: string | null;
+  validUntil: string | null;
+  active: boolean;
+};
+
+/** Inclui promoções inativas — usado só no painel da própria empresa, nunca na home pública. */
+export async function getOwnedPromotions(businessId: string): Promise<OwnedPromotion[]> {
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from("benefits")
+    .select("id, title, description, coupon_code, valid_until, active")
+    .eq("business_id", businessId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    title: row.title,
+    description: row.description ?? "",
+    couponCode: row.coupon_code,
+    validUntil: row.valid_until,
+    active: row.active,
+  }));
+}
+
 export type PlatformSettings = {
   geezDiscountEnabled: boolean;
   geezDiscountMaxPercentage: number;

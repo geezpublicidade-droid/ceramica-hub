@@ -33,14 +33,22 @@ export default async function DashboardPage() {
               {business?.name ?? "Empresa não encontrada"}
             </h1>
           </div>
-          <form action={logout}>
-            <button
-              type="submit"
-              className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground"
+          <div className="flex items-center gap-3">
+            <a
+              href="/dashboard/editar"
+              className="neu-primary rounded-full px-4 py-2 text-[13px] font-medium text-white"
             >
-              Sair
-            </button>
-          </form>
+              Editar página
+            </a>
+            <form action={logout}>
+              <button
+                type="submit"
+                className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground"
+              >
+                Sair
+              </button>
+            </form>
+          </div>
         </div>
 
         {business?.trial.status === "active" && business.trial.endsAt && (
