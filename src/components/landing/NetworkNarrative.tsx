@@ -65,7 +65,7 @@ export function NetworkNarrative() {
   return (
     <section id="top" aria-label="A rede de negócios do Cerâmica Hub">
       <ScrollStage
-        heightVh={130}
+        heightVh={175}
         onProgress={handleProgress}
         className="relative bg-surface text-foreground"
       >
