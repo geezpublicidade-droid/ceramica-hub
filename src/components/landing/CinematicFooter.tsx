@@ -45,7 +45,14 @@ export function CinematicFooter() {
             oficialmente os condomínios ou suas administradoras.
           </p>
           <div className="mt-4 flex flex-col gap-2 text-[12px] text-muted sm:flex-row sm:items-center sm:justify-between">
-            <p>Um projeto Geez Publicidade.</p>
+            <a
+              href="https://www.geezmarketing.com.br"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors hover:text-foreground"
+            >
+              Um projeto Geez Marketing.
+            </a>
             <p>© {new Date().getFullYear()} Cerâmica Hub.</p>
           </div>
         </div>
