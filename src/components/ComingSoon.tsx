@@ -43,10 +43,10 @@ export function ComingSoon() {
           Cerâmica <span className="text-primary">Hub</span>
         </span>
         <a
-          href="/cadastro"
+          href="/login"
           className="glass-light rounded-full px-4 py-2 text-[13px] font-medium text-foreground transition-colors hover:bg-white/80"
         >
-          Cadastre sua empresa
+          Acessar
         </a>
       </header>
 
