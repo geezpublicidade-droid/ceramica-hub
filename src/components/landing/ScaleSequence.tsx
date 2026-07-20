@@ -72,7 +72,7 @@ export function ScaleSequence() {
 
   return (
     <section aria-label="A escala do Cerâmica Hub">
-      <ScrollStage heightVh={300} onProgress={handleProgress} className="relative bg-surface">
+      <ScrollStage heightVh={150} onProgress={handleProgress} className="relative bg-surface">
         <PhraseBlock active={stage === "connection"}>
           <h2 className="text-[clamp(1.9rem,5.2vw,3.75rem)] font-semibold leading-[1.15] tracking-tight text-foreground">
             Um único ponto de <span className="text-primary">conexão</span>.

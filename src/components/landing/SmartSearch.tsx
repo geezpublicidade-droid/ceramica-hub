@@ -58,7 +58,7 @@ export function SmartSearch({ businesses }: SmartSearchProps) {
   }
 
   return (
-    <section className="bg-surface px-6 py-28 text-foreground">
+    <section className="bg-surface px-6 py-20 text-foreground">
       <div className="mx-auto max-w-3xl text-center">
         <FadeUp className="text-[clamp(2rem,5vw,3.5rem)] font-semibold leading-tight tracking-tight">
           <h2>O que você precisa encontrar hoje?</h2>

@@ -44,3 +44,6 @@ next-env.d.ts
 /assets
 
 .env*.local
+
+# backups locais (podem conter dados sensiveis)
+backup-*.json

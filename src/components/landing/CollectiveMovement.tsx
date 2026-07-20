@@ -14,7 +14,7 @@ const connections: [number, number][] = [
 
 export function CollectiveMovement() {
   return (
-    <section className="relative overflow-hidden bg-surface px-6 py-36 text-foreground">
+    <section className="relative overflow-hidden bg-surface px-6 py-20 text-foreground">
       <svg
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 h-full w-full opacity-30"

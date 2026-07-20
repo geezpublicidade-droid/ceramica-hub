@@ -16,7 +16,7 @@ const typeStyles: Record<string, string> = {
 
 export function OpportunityNetwork({ opportunities }: OpportunityNetworkProps) {
   return (
-    <section id="oportunidades" className="bg-surface px-6 py-28 text-foreground">
+    <section id="oportunidades" className="bg-surface px-6 py-20 text-foreground">
       <div className="mx-auto max-w-6xl">
         <FadeUp className="max-w-2xl">
           <p className="text-[13px] font-medium uppercase tracking-[0.2em] text-primary">

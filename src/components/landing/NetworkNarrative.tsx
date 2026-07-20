@@ -54,7 +54,7 @@ export function NetworkNarrative() {
   return (
     <section id="top" aria-label="A rede de negócios do Cerâmica Hub">
       <ScrollStage
-        heightVh={220}
+        heightVh={130}
         onProgress={handleProgress}
         className="relative bg-surface text-foreground"
       >
@@ -105,19 +105,18 @@ export function NetworkNarrative() {
                     Cerâmica Hub
                   </p>
                   <p className="mt-3 text-[13px] font-medium uppercase tracking-[0.2em] text-primary">
-                    A rede de negócios do Cerâmica
+                    A rede de negócios do Espaço Cerâmica
                   </p>
                   <h1 className="mt-6 text-[clamp(2.1rem,5vw,4rem)] font-semibold leading-[1.08] tracking-tight text-foreground">
-                    Tudo o que você precisa pode estar a poucos andares de distância.
+                    Encontre empresas, serviços e oportunidades a poucos andares de distância.
                   </h1>
                   <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted">
-                    Descubra empresas, profissionais, serviços e oportunidades que já estão
-                    trabalhando perto de você.
+                    O Cerâmica Hub conecta visitantes e empresas das torres Park, Union, Way e
+                    Gate em uma única plataforma.
                   </p>
                   <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-muted">
-                    O Cerâmica Hub transforma cada sala em uma vitrine e cada vizinho em uma
-                    oportunidade. Não é apenas um diretório — é um canal local de visibilidade,
-                    relacionamento e geração de negócios.
+                    Cada empresa recebe uma Página Comercial Inteligente para apresentar seus
+                    serviços, publicar ofertas e receber contatos diretamente pelo WhatsApp.
                   </p>
                   <div className="mt-10 flex flex-wrap gap-4">
                     <a
@@ -127,9 +126,12 @@ export function NetworkNarrative() {
                       Explorar empresas
                     </a>
                     <a href="#cadastro" className="neu rounded-full px-7 py-3.5 text-[15px] font-medium text-foreground">
-                      Criar a página da minha empresa
+                      Cadastrar empresa gratuitamente
                     </a>
                   </div>
+                  <p className="mt-5 text-[13px] text-muted">
+                    Cadastro gratuito para empresas verificadas do Espaço Cerâmica.
+                  </p>
                 </div>
               </RevealText>
             </div>

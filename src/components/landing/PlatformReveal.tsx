@@ -12,7 +12,7 @@ export function PlatformReveal({ businesses, categories }: PlatformRevealProps) 
   const preview = businesses.slice(0, 3);
 
   return (
-    <section className="bg-surface px-6 py-28 text-foreground">
+    <section className="bg-surface px-6 py-20 text-foreground">
       <div className="mx-auto max-w-6xl">
         <FadeUp className="max-w-2xl">
           <p className="text-[13px] font-medium uppercase tracking-[0.2em] text-primary">

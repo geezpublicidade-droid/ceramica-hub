@@ -22,7 +22,7 @@ export function Directory({ businesses }: DirectoryProps) {
   }, [active, businesses, query]);
 
   return (
-    <section id="empresas" className="relative overflow-hidden bg-surface px-6 py-28">
+    <section id="empresas" className="relative overflow-hidden bg-surface px-6 py-20">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-40 top-0 h-[420px] w-[420px] rounded-full opacity-30 blur-[120px]"
@@ -70,10 +70,50 @@ export function Directory({ businesses }: DirectoryProps) {
           ))}
         </div>
 
-        {filtered.length === 0 ? (
-          <p className="mt-14 text-[15px] text-muted">
-            Nenhuma empresa encontrada. Tente outro termo ou categoria.
-          </p>
+        {businesses.length === 0 ? (
+          <div className="relative mt-14 overflow-hidden rounded-3xl border border-border bg-white/60 px-6 py-16 text-center">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute left-1/2 top-0 h-[280px] w-[280px] -translate-x-1/2 rounded-full opacity-40 blur-[110px]"
+              style={{ background: "radial-gradient(circle, var(--primary-light), transparent 70%)" }}
+            />
+            <div className="relative mx-auto max-w-xl">
+              <h3 className="text-[clamp(1.4rem,3vw,1.9rem)] font-semibold tracking-tight text-foreground">
+                As primeiras empresas do Cerâmica estão chegando.
+              </h3>
+              <p className="mt-4 text-[15px] leading-relaxed text-muted">
+                Estamos formando a primeira rede digital de negócios do Espaço Cerâmica.
+                Cadastre sua empresa gratuitamente e faça parte da geração fundadora.
+              </p>
+              <div className="mt-8 flex flex-wrap justify-center gap-4">
+                <a
+                  href="#cadastro"
+                  className="neu-primary rounded-full px-7 py-3.5 text-[15px] font-medium text-white"
+                >
+                  Cadastrar minha empresa gratuitamente
+                </a>
+                <a href="#planos" className="neu rounded-full px-7 py-3.5 text-[15px] font-medium text-foreground">
+                  Conhecer como funciona
+                </a>
+              </div>
+            </div>
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="mt-14 rounded-3xl border border-border bg-white/60 px-6 py-14 text-center">
+            <p className="text-[15px] text-foreground">
+              Ainda não encontramos uma empresa para essa busca.
+            </p>
+            <p className="mt-2 text-[14px] text-muted">
+              Você conhece uma empresa do Cerâmica que oferece esse serviço? Convide-a para
+              participar.
+            </p>
+            <a
+              href="#cadastro"
+              className="mt-6 inline-block rounded-full neu px-6 py-3 text-[14px] font-medium text-foreground"
+            >
+              Indicar uma empresa
+            </a>
+          </div>
         ) : (
           <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((business) => (

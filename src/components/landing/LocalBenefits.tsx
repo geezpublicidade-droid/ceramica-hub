@@ -8,7 +8,7 @@ type LocalBenefitsProps = {
 
 export function LocalBenefits({ benefits }: LocalBenefitsProps) {
   return (
-    <section id="beneficios" className="relative overflow-hidden bg-background px-6 py-28">
+    <section id="beneficios" className="relative overflow-hidden bg-background px-6 py-20">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -left-40 bottom-0 h-[420px] w-[420px] rounded-full opacity-25 blur-[120px]"

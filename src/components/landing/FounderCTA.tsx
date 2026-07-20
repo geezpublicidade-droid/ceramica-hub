@@ -14,7 +14,7 @@ const benefits = [
 
 export function FounderCTA() {
   return (
-    <section id="cadastro" className="bg-surface px-6 py-32 text-foreground">
+    <section id="cadastro" className="bg-surface px-6 py-20 text-foreground">
       <div className="mx-auto max-w-4xl text-center">
         <FadeUp className="text-[13px] font-medium uppercase tracking-[0.2em] text-primary">
           Fase de lançamento

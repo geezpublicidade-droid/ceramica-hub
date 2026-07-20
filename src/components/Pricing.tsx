@@ -66,7 +66,7 @@ export function Pricing() {
         className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[420px] -translate-x-1/2 rounded-full opacity-25 blur-[120px]"
         style={{ background: "radial-gradient(circle, var(--primary-light), transparent 70%)" }}
       />
-      <div className="relative mx-auto max-w-6xl px-6 py-28">
+      <div className="relative mx-auto max-w-6xl px-6 py-20">
         <h2 className="text-[clamp(1.75rem,3.5vw,2.75rem)] font-semibold leading-tight tracking-tight">
           Comece com sua página comercial. Cresça quando fizer sentido.
         </h2>
