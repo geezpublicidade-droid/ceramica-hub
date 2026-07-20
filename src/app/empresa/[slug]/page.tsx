@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
@@ -10,13 +10,15 @@ import { benefitKindLabels } from "@/data/benefits";
 import {
   getAllBusinesses,
   getBusinessById,
+  getBusinessBySlug,
   getRelatedBusinesses,
   getOpportunities,
   getBenefits,
+  UUID_RE,
 } from "@/lib/services/platform";
 
 type PageProps = {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 };
 
 // dynamicParams + revalidate (ISR) em vez de SSG puro: o deploy é manual
@@ -27,12 +29,18 @@ export const revalidate = 60;
 
 export async function generateStaticParams() {
   const businesses = await getAllBusinesses();
-  return businesses.map((business) => ({ id: business.id }));
+  return businesses.map((business) => ({ slug: business.slug }));
+}
+
+/** URLs antigas usavam o UUID como slug — resolve o negócio por qualquer um dos dois. */
+async function resolveBusiness(param: string) {
+  if (UUID_RE.test(param)) return getBusinessById(param);
+  return getBusinessBySlug(param);
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { id } = await params;
-  const business = await getBusinessById(id);
+  const { slug } = await params;
+  const business = await resolveBusiness(slug);
   if (!business) return {};
 
   const title = `${business.name} — Cerâmica Hub`;
@@ -41,7 +49,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title,
     description,
-    alternates: { canonical: `/empresa/${business.id}` },
+    alternates: { canonical: `/empresa/${business.slug}` },
     openGraph: { title, description, type: "profile" },
   };
 }
@@ -51,9 +59,14 @@ function instagramUrl(handle: string) {
 }
 
 export default async function BusinessProfilePage({ params }: PageProps) {
-  const { id } = await params;
-  const business = await getBusinessById(id);
+  const { slug } = await params;
+  const business = await resolveBusiness(slug);
   if (!business || business.status !== "approved") notFound();
+
+  // link antigo com UUID: redireciona pra URL canônica com slug
+  if (UUID_RE.test(slug) && business.slug !== slug) {
+    redirect(`/empresa/${business.slug}`);
+  }
 
   const [related, allOpportunities, allBenefits] = await Promise.all([
     getRelatedBusinesses(business),
@@ -187,7 +200,7 @@ export default async function BusinessProfilePage({ params }: PageProps) {
                 {related.map((candidate) => (
                   <Link
                     key={candidate.id}
-                    href={`/empresa/${candidate.id}`}
+                    href={`/empresa/${candidate.slug}`}
                     className="glass-card-light group flex items-center gap-3 rounded-2xl p-4 transition-colors hover:border-primary/20"
                   >
                     <BusinessAvatar

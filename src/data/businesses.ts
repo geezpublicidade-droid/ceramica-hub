@@ -21,6 +21,7 @@ export type BusinessSeals = {
 
 export type Business = {
   id: string;
+  slug: string;
   name: string;
   category: string;
   /** string pronta pra exibir, ex: "Torre Park · 5º andar · sala 102" */

@@ -5,6 +5,19 @@ import { motion, type Variants } from "motion/react";
 import { ScrollStage } from "@/components/motion/ScrollStage";
 import { RevealText } from "@/components/motion/RevealText";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useSearch } from "@/components/landing/SearchContext";
+import { logSearchPerformed } from "@/lib/actions/log-search";
+
+const heroSearchExamples = [
+  "Clínica",
+  "Advogado",
+  "Contabilidade",
+  "Arquitetura",
+  "Marketing",
+  "Restaurante",
+  "Beleza",
+  "Tecnologia",
+];
 
 const heroImages = [
   "/images/ceramica-hero-1.jpg",
@@ -36,6 +49,15 @@ export function NetworkNarrative() {
   const heroActiveRef = useRef(true);
   const [imageIndex, setImageIndex] = useState(0);
   const imageIndexRef = useRef(0);
+  const { setQuery } = useSearch();
+  const [heroSearchValue, setHeroSearchValue] = useState("");
+
+  function submitHeroSearch(term: string) {
+    const value = term.trim();
+    setQuery(value);
+    void logSearchPerformed(value, "hero");
+    document.getElementById("empresas")?.scrollIntoView({ block: "start" });
+  }
 
   const handleProgress = useCallback((progress: number) => {
     const active = progress < 0.85;
@@ -118,7 +140,43 @@ export function NetworkNarrative() {
                     Cada empresa recebe uma Página Comercial Inteligente para apresentar seus
                     serviços, publicar ofertas e receber contatos diretamente pelo WhatsApp.
                   </p>
-                  <div className="mt-10 flex flex-wrap gap-4">
+                  <form
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      submitHeroSearch(heroSearchValue);
+                    }}
+                    className="mt-8 flex items-center gap-2 rounded-full border border-border bg-white/80 p-1.5 pl-5"
+                  >
+                    <input
+                      type="text"
+                      value={heroSearchValue}
+                      onChange={(event) => setHeroSearchValue(event.target.value)}
+                      placeholder="O que você está procurando?"
+                      className="min-w-0 flex-1 bg-transparent py-2.5 text-[14px] text-foreground placeholder:text-muted focus:outline-none"
+                    />
+                    <button
+                      type="submit"
+                      className="neu-primary shrink-0 rounded-full px-5 py-2.5 text-[13px] font-medium text-white"
+                    >
+                      Buscar
+                    </button>
+                  </form>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {heroSearchExamples.map((example) => (
+                      <button
+                        key={example}
+                        type="button"
+                        onClick={() => {
+                          setHeroSearchValue(example);
+                          submitHeroSearch(example);
+                        }}
+                        className="rounded-full border border-border px-3 py-1 text-[12px] text-muted transition-colors hover:text-foreground"
+                      >
+                        {example}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="mt-8 flex flex-wrap gap-4">
                     <a
                       href="#empresas"
                       className="neu-primary rounded-full px-7 py-3.5 text-[15px] font-medium text-white"

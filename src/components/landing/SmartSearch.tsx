@@ -8,6 +8,7 @@ import { FadeUp } from "@/components/motion/FadeUp";
 import { useSearch } from "./SearchContext";
 import { matchBusinesses } from "@/lib/search";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
+import { logSearchPerformed } from "@/lib/actions/log-search";
 import type { Business } from "@/data/businesses";
 
 type Suggestion = {
@@ -54,6 +55,7 @@ export function SmartSearch({ businesses }: SmartSearchProps) {
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setQuery(inputValue);
+    void logSearchPerformed(inputValue, "smart_search");
     document.getElementById("empresas")?.scrollIntoView({ block: "start" });
   }
 
@@ -110,7 +112,7 @@ export function SmartSearch({ businesses }: SmartSearchProps) {
           >
             {results.map((business) => (
               <div key={business.id} className="glass-card-light rounded-xl p-4">
-                <Link href={`/empresa/${business.id}`}>
+                <Link href={`/empresa/${business.slug}`}>
                   <p className="text-[14px] font-semibold tracking-tight hover:text-primary">
                     {business.name}
                   </p>

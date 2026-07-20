@@ -1,12 +1,12 @@
-const ADMIN_WHATSAPP = "5511999999999";
-
 const linkGroups: { label: string; href: string }[] = [
-  { label: "Empresas", href: "#empresas" },
-  { label: "Categorias", href: "#empresas" },
-  { label: "Oportunidades", href: "#oportunidades" },
-  { label: "Ofertas", href: "#beneficios" },
-  { label: "Cadastrar empresa", href: "#cadastro" },
-  { label: "WhatsApp", href: `https://wa.me/${ADMIN_WHATSAPP}` },
+  { label: "Empresas", href: "/#empresas" },
+  { label: "Categorias", href: "/#empresas" },
+  { label: "Oportunidades", href: "/#oportunidades" },
+  { label: "Ofertas", href: "/#beneficios" },
+  { label: "Cadastrar empresa", href: "/cadastro" },
+  { label: "Contato", href: "/contato" },
+  { label: "Termos de Uso", href: "/termos" },
+  { label: "Privacidade", href: "/privacidade" },
 ];
 
 export function CinematicFooter() {

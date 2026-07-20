@@ -2,6 +2,7 @@
 
 import bcrypt from "bcryptjs";
 import { createServiceClient } from "@/lib/supabase/server";
+import { slugify } from "@/lib/slug";
 
 export type RegisterBusinessInput = {
   name: string;
@@ -29,6 +30,21 @@ export type RegisterBusinessInput = {
 
 export type RegisterBusinessResult = { success: true; businessId: string } | { success: false; error: string };
 
+async function generateUniqueSlug(
+  supabase: ReturnType<typeof createServiceClient>,
+  name: string
+): Promise<string> {
+  const base = slugify(name) || "empresa";
+  let candidate = base;
+  let suffix = 2;
+  while (true) {
+    const { data } = await supabase.from("businesses").select("id").eq("slug", candidate).maybeSingle();
+    if (!data) return candidate;
+    candidate = `${base}-${suffix}`;
+    suffix += 1;
+  }
+}
+
 export async function registerBusiness(input: RegisterBusinessInput): Promise<RegisterBusinessResult> {
   if (
     !input.name.trim() ||
@@ -54,10 +70,12 @@ export async function registerBusiness(input: RegisterBusinessInput): Promise<Re
 
   const supabase = createServiceClient();
   const passwordHash = await bcrypt.hash(input.password, 10);
+  const slug = await generateUniqueSlug(supabase, input.name);
 
   const { data: business, error } = await supabase
     .from("businesses")
     .insert({
+      slug,
       email: input.email.trim().toLowerCase(),
       password_hash: passwordHash,
       name: input.name.trim(),

@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 
 const links = [
-  { href: "#empresas", label: "Empresas" },
-  { href: "#oportunidades", label: "Oportunidades" },
-  { href: "#beneficios", label: "Benefícios" },
-  { href: "#planos", label: "Planos" },
+  { href: "/#empresas", label: "Empresas" },
+  { href: "/#oportunidades", label: "Oportunidades" },
+  { href: "/#beneficios", label: "Benefícios" },
+  { href: "/#planos", label: "Planos" },
 ];
 
 export function Header() {
@@ -26,7 +26,7 @@ export function Header() {
       }`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6">
-        <a href="#top" className="text-[15px] font-semibold tracking-tight text-foreground">
+        <a href="/#top" className="text-[15px] font-semibold tracking-tight text-foreground">
           Cerâmica <span className="text-primary">Hub</span>
         </a>
         <nav className="hidden gap-8 text-[13px] text-muted md:flex">

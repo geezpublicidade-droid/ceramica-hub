@@ -121,7 +121,7 @@ export function Directory({ businesses }: DirectoryProps) {
                 key={business.id}
                 className="glass-card-light group flex gap-4 rounded-2xl p-6 transition-all hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15)]"
               >
-                <Link href={`/empresa/${business.id}`} className="shrink-0">
+                <Link href={`/empresa/${business.slug}`} className="shrink-0">
                   <BusinessAvatar
                     business={business}
                     className="h-16 w-16 rounded-xl bg-white"
@@ -131,7 +131,7 @@ export function Directory({ businesses }: DirectoryProps) {
 
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-2">
-                    <Link href={`/empresa/${business.id}`} className="min-w-0">
+                    <Link href={`/empresa/${business.slug}`} className="min-w-0">
                       <h3 className="text-[16px] font-semibold leading-snug tracking-tight hover:text-primary">
                         {business.name}
                       </h3>

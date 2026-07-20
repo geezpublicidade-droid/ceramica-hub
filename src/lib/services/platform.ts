@@ -18,6 +18,7 @@ type TowerJoin = { name: string } | null;
 
 type BusinessRow = {
   id: string;
+  slug: string | null;
   name: string;
   category: string;
   description: string | null;
@@ -66,6 +67,7 @@ function mapBusiness(row: BusinessRow): Business {
   const verified = row.status === "approved";
   return {
     id: row.id,
+    slug: row.slug ?? row.id,
     name: row.name,
     category: row.category,
     description: row.description ?? "",
@@ -105,7 +107,7 @@ function mapBusiness(row: BusinessRow): Business {
  * Camada de serviço da plataforma. Consulta o Supabase com a service role
  * key (server-only) — nunca importar este arquivo de um componente
  * "use client". `getBusinessById` não filtra por status de propósito: é
- * usado tanto pela página pública (`empresa/[id]`, que checa o status ela
+ * usado tanto pela página pública (`empresa/[slug]`, que checa o status ela
  * mesma) quanto pelo dashboard da própria empresa (que precisa ver o
  * próprio perfil mesmo enquanto `pending`).
  */
@@ -159,13 +161,22 @@ export async function getAllBusinesses(): Promise<Business[]> {
   return ((data ?? []) as BusinessRow[]).map(mapBusiness);
 }
 
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+export const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export async function getBusinessById(id: string): Promise<Business | undefined> {
   if (!UUID_RE.test(id)) return undefined;
 
   const supabase = createServiceClient();
   const { data, error } = await supabase.from("businesses").select(BUSINESS_SELECT).eq("id", id).maybeSingle();
+  if (error) throw error;
+  if (!data) return undefined;
+
+  return mapBusiness(data as BusinessRow);
+}
+
+export async function getBusinessBySlug(slug: string): Promise<Business | undefined> {
+  const supabase = createServiceClient();
+  const { data, error } = await supabase.from("businesses").select(BUSINESS_SELECT).eq("slug", slug).maybeSingle();
   if (error) throw error;
   if (!data) return undefined;
 
@@ -299,7 +310,8 @@ export type MetricEventType =
   | "coupon_redeemed"
   | "geez_service_clicked"
   | "geez_quote_requested"
-  | "website_upgrade_clicked";
+  | "website_upgrade_clicked"
+  | "search_performed";
 
 /** Log de evento append-only. Nunca inventar número no painel: sem linha aqui, mostra 0/vazio. */
 export async function logMetricEvent(

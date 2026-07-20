@@ -12,10 +12,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const title = "Cerâmica Hub — a rede de negócios do Cerâmica";
+const title = "Cerâmica Hub — Empresas e serviços no Espaço Cerâmica";
 const description =
-  "Tudo o que você precisa pode estar a poucos andares de distância. Descubra empresas, profissionais, serviços e oportunidades que já estão trabalhando perto de você.";
-// TODO: trocar pelo domínio real assim que o deploy estiver definido (ou configurar NEXT_PUBLIC_SITE_URL).
+  "Encontre empresas, profissionais, serviços, promoções e oportunidades nas torres Park, Union, Way e Gate, no Espaço Cerâmica em São Caetano do Sul.";
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 export const metadata: Metadata = {
