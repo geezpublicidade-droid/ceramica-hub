@@ -171,3 +171,46 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* Crossfade cinematográfico da tela "em breve" — 4 imagens em loop com
+   Ken Burns sutil. Delay negativo em cada slide adianta a fase do loop,
+   então todas já entram na posição certa sem esperar a primeira volta. */
+@keyframes hero-cycle {
+  0% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  4% {
+    opacity: 1;
+  }
+  21% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  25% {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.hero-slide {
+  opacity: 0;
+  animation: hero-cycle 24s ease-in-out infinite;
+}
+
+/* Com reduced-motion, a regra global acima deixaria o loop rodar em
+   0.01ms e piscar sem parar — pior que não animar. Aqui a gente
+   desliga a animação de fato e fixa só a primeira imagem visível. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide {
+    animation: none !important;
+    opacity: 0;
+  }
+
+  .hero-slide:first-child {
+    opacity: 1;
+  }
+}
