@@ -16,6 +16,7 @@ import {
   deactivatePromotion,
   addVirtualTourScene,
   deleteVirtualTourScene,
+  uploadVirtualTourImage,
 } from "@/lib/actions/business-profile";
 
 const inputClass =
@@ -73,8 +74,9 @@ export function EditPageManager({
   const [newPromotion, setNewPromotion] = useState({ title: "", description: "", couponCode: "", validUntil: "" });
   const [promotionError, setPromotionError] = useState<string | null>(null);
 
-  const [newScene, setNewScene] = useState({ label: "", imageUrl: "" });
+  const [newSceneLabel, setNewSceneLabel] = useState("");
   const [sceneError, setSceneError] = useState<string | null>(null);
+  const [sceneUploading, setSceneUploading] = useState(false);
 
   const activePromotions = promotions.filter((p) => p.active);
 
@@ -118,15 +120,29 @@ export function EditPageManager({
     });
   }
 
-  function submitScene() {
+  function submitScene(file: File) {
     setSceneError(null);
+    if (!newSceneLabel.trim()) {
+      setSceneError("Informe um nome pra essa cena antes de enviar a foto.");
+      return;
+    }
+    setSceneUploading(true);
     startTransition(async () => {
-      const result = await addVirtualTourScene(newScene.label, newScene.imageUrl);
+      const formData = new FormData();
+      formData.append("file", file);
+      const upload = await uploadVirtualTourImage(formData);
+      if (!upload.success) {
+        setSceneError(upload.error);
+        setSceneUploading(false);
+        return;
+      }
+      const result = await addVirtualTourScene(newSceneLabel, upload.url);
+      setSceneUploading(false);
       if (!result.success) {
         setSceneError(result.error);
         return;
       }
-      setNewScene({ label: "", imageUrl: "" });
+      setNewSceneLabel("");
       router.refresh();
     });
   }
@@ -331,7 +347,7 @@ export function EditPageManager({
         </h2>
         <p className="mt-1 text-[13px] text-muted">
           Tire fotos panorâmicas 360° com o celular (modo &quot;Photo Sphere&quot; ou &quot;Panorama&quot;) de cada
-          ambiente e cole a URL de cada uma abaixo. Visitantes vão poder olhar ao redor e trocar de cômodo.
+          ambiente e envie abaixo. Visitantes vão poder olhar ao redor e trocar de cômodo.
         </p>
 
         {virtualTourScenes.length > 0 && (
@@ -359,24 +375,24 @@ export function EditPageManager({
             <input
               className={inputClass}
               placeholder="Nome da cena (ex: Recepção, Sala 215)"
-              value={newScene.label}
-              onChange={(e) => setNewScene((s) => ({ ...s, label: e.target.value }))}
-            />
-            <input
-              className={inputClass}
-              placeholder="URL da foto panorâmica 360°"
-              value={newScene.imageUrl}
-              onChange={(e) => setNewScene((s) => ({ ...s, imageUrl: e.target.value }))}
+              value={newSceneLabel}
+              onChange={(e) => setNewSceneLabel(e.target.value)}
             />
             {sceneError && <p className="text-[13px] text-red-600">{sceneError}</p>}
-            <button
-              type="button"
-              disabled={isPending}
-              onClick={submitScene}
-              className="neu self-start rounded-full px-5 py-2 text-[13px] font-medium text-foreground disabled:opacity-60"
-            >
-              + Adicionar cena
-            </button>
+            <label className="neu inline-flex w-fit cursor-pointer items-center gap-2 rounded-full px-5 py-2 text-[13px] font-medium text-foreground disabled:opacity-60">
+              {sceneUploading ? "Enviando..." : "+ Enviar foto 360°"}
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                disabled={isPending || sceneUploading}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  e.target.value = "";
+                  if (file) submitScene(file);
+                }}
+              />
+            </label>
           </div>
         )}
       </section>

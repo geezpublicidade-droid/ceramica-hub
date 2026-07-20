@@ -2,8 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Viewer } from "@photo-sphere-viewer/core";
+import { CubemapAdapter } from "@photo-sphere-viewer/cubemap-adapter";
 import "@photo-sphere-viewer/core/index.css";
 import type { VirtualTourScene } from "@/lib/services/platform";
+
+function panoramaFor(scene: VirtualTourScene) {
+  return scene.kind === "cubemap" ? scene.cubemapUrls : scene.imageUrl;
+}
 
 export function VirtualTourViewer({ scenes }: { scenes: VirtualTourScene[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -12,9 +17,11 @@ export function VirtualTourViewer({ scenes }: { scenes: VirtualTourScene[] }) {
 
   useEffect(() => {
     if (!containerRef.current || scenes.length === 0) return;
+    const hasCubemap = scenes.some((s) => s.kind === "cubemap");
     const viewer = new Viewer({
       container: containerRef.current,
-      panorama: scenes[0].imageUrl,
+      panorama: panoramaFor(scenes[0]),
+      adapter: hasCubemap ? CubemapAdapter : undefined,
       navbar: ["zoom", "fullscreen"],
       loadingTxt: "Carregando...",
     });
@@ -28,7 +35,7 @@ export function VirtualTourViewer({ scenes }: { scenes: VirtualTourScene[] }) {
 
   function goToScene(scene: VirtualTourScene) {
     setActiveId(scene.id);
-    viewerRef.current?.setPanorama(scene.imageUrl);
+    viewerRef.current?.setPanorama(panoramaFor(scene));
   }
 
   if (scenes.length === 0) return null;

@@ -157,6 +157,44 @@ export async function deletePhoto(photoId: string): Promise<ActionResult> {
 
 // ---- visita virtual 360 ----
 
+type UploadResult = { success: true; url: string } | { success: false; error: string };
+
+const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
+
+export async function uploadVirtualTourImage(formData: FormData): Promise<UploadResult> {
+  const businessId = await requireOwnBusiness();
+  const business = await getBusinessById(businessId);
+  if (!business) return { success: false, error: "Empresa não encontrada." };
+
+  const limits = limitsFor(business.effectivePlan);
+  if (!limits.virtualTourAllowed) {
+    return { success: false, error: "Visita virtual 360° é um recurso do plano Experiência." };
+  }
+
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return { success: false, error: "Selecione uma foto." };
+  }
+  if (!file.type.startsWith("image/")) {
+    return { success: false, error: "O arquivo precisa ser uma imagem." };
+  }
+  if (file.size > MAX_UPLOAD_BYTES) {
+    return { success: false, error: "Imagem muito grande (máximo 20MB)." };
+  }
+
+  const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
+  const path = `${businessId}/${crypto.randomUUID()}.${extension}`;
+
+  const supabase = createServiceClient();
+  const { error: uploadError } = await supabase.storage
+    .from("virtual-tour")
+    .upload(path, file, { contentType: file.type, upsert: false });
+  if (uploadError) return { success: false, error: "Não foi possível enviar a imagem." };
+
+  const { data } = supabase.storage.from("virtual-tour").getPublicUrl(path);
+  return { success: true, url: data.publicUrl };
+}
+
 export async function addVirtualTourScene(label: string, imageUrl: string): Promise<ActionResult> {
   const businessId = await requireOwnBusiness();
   const business = await getBusinessById(businessId);

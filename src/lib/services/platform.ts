@@ -299,22 +299,23 @@ export async function getBusinessPhotos(businessId: string): Promise<OwnedPhoto[
   return (data ?? []).map((row) => ({ id: row.id, url: row.url, sortOrder: row.sort_order }));
 }
 
-export type VirtualTourScene = { id: string; label: string; imageUrl: string; sortOrder: number };
+export type VirtualTourScene =
+  | { id: string; label: string; sortOrder: number; kind: "equirectangular"; imageUrl: string }
+  | { id: string; label: string; sortOrder: number; kind: "cubemap"; cubemapUrls: string[] };
 
 export async function getVirtualTourScenes(businessId: string): Promise<VirtualTourScene[]> {
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("virtual_tour_scenes")
-    .select("id, label, image_url, sort_order")
+    .select("id, label, image_url, cubemap_urls, kind, sort_order")
     .eq("business_id", businessId)
     .order("sort_order", { ascending: true });
   if (error) throw error;
-  return (data ?? []).map((row) => ({
-    id: row.id,
-    label: row.label,
-    imageUrl: row.image_url,
-    sortOrder: row.sort_order,
-  }));
+  return (data ?? []).map((row) =>
+    row.kind === "cubemap"
+      ? { id: row.id, label: row.label, sortOrder: row.sort_order, kind: "cubemap" as const, cubemapUrls: row.cubemap_urls }
+      : { id: row.id, label: row.label, sortOrder: row.sort_order, kind: "equirectangular" as const, imageUrl: row.image_url }
+  );
 }
 
 export type OwnedPromotion = {
