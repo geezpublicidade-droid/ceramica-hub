@@ -7,7 +7,29 @@ const ROLE_BY_PREFIX: { prefix: string; role: "business" | "member" | "admin"; l
   { prefix: "/admin", role: "admin", loginPath: "/admin/login" },
 ];
 
+// gate temporário de pré-lançamento — pede só a senha (usuário pode ser
+// qualquer coisa), pra dar acesso ao sócio antes do site ficar público
+function hasValidSitePassword(req: Request) {
+  const sitePassword = process.env.SITE_PASSWORD;
+  if (!sitePassword) return true;
+
+  const authHeader = req.headers.get("authorization");
+  if (!authHeader?.startsWith("Basic ")) return false;
+
+  const decoded = Buffer.from(authHeader.slice(6), "base64").toString();
+  const separatorIndex = decoded.indexOf(":");
+  const password = separatorIndex === -1 ? "" : decoded.slice(separatorIndex + 1);
+  return password === sitePassword;
+}
+
 export default auth((req) => {
+  if (!hasValidSitePassword(req)) {
+    return new NextResponse("Acesso restrito", {
+      status: 401,
+      headers: { "WWW-Authenticate": 'Basic realm="Cerâmica Hub"' },
+    });
+  }
+
   const { pathname } = req.nextUrl;
   const match = ROLE_BY_PREFIX.find(({ prefix }) => pathname.startsWith(prefix));
   if (!match) return;
@@ -24,5 +46,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/membro/:path*", "/admin/:path*"],
+  matcher: ["/((?!_next/|api/|favicon.ico|robots.txt|sitemap.xml).*)"],
 };
