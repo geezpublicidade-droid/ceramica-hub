@@ -28,6 +28,10 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# scan 3d bruto (dados de captura, nao processados/nao usados no build)
+/sala3d/
+/metafile.json
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)

@@ -299,6 +299,24 @@ export async function getBusinessPhotos(businessId: string): Promise<OwnedPhoto[
   return (data ?? []).map((row) => ({ id: row.id, url: row.url, sortOrder: row.sort_order }));
 }
 
+export type VirtualTourScene = { id: string; label: string; imageUrl: string; sortOrder: number };
+
+export async function getVirtualTourScenes(businessId: string): Promise<VirtualTourScene[]> {
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from("virtual_tour_scenes")
+    .select("id, label, image_url, sort_order")
+    .eq("business_id", businessId)
+    .order("sort_order", { ascending: true });
+  if (error) throw error;
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    label: row.label,
+    imageUrl: row.image_url,
+    sortOrder: row.sort_order,
+  }));
+}
+
 export type OwnedPromotion = {
   id: string;
   title: string;

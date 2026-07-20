@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { BusinessAvatar } from "@/components/BusinessAvatar";
+import { VirtualTourViewer } from "@/components/VirtualTourViewer";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { opportunityTypeLabels } from "@/data/opportunities";
 import { benefitKindLabels } from "@/data/benefits";
@@ -16,6 +17,7 @@ import {
   getBenefits,
   getBusinessServices,
   getBusinessPhotos,
+  getVirtualTourScenes,
   logMetricEvent,
   UUID_RE,
 } from "@/lib/services/platform";
@@ -72,12 +74,13 @@ export default async function BusinessProfilePage({ params }: PageProps) {
     redirect(`/empresa/${business.slug}`);
   }
 
-  const [related, allOpportunities, allBenefits, services, photos] = await Promise.all([
+  const [related, allOpportunities, allBenefits, services, photos, virtualTourScenes] = await Promise.all([
     getRelatedBusinesses(business),
     getOpportunities(),
     getBenefits(),
     getBusinessServices(business.id),
     getBusinessPhotos(business.id),
+    getVirtualTourScenes(business.id),
   ]);
 
   const opportunities = allOpportunities.filter((o) => o.businessId === business.id);
@@ -151,6 +154,19 @@ export default async function BusinessProfilePage({ params }: PageProps) {
           <section className="bg-surface px-6 py-10">
             <div className="mx-auto max-w-4xl overflow-hidden rounded-3xl">
               <video src={business.videoUrl} controls className="w-full" />
+            </div>
+          </section>
+        )}
+
+        {virtualTourScenes.length > 0 && (
+          <section className="bg-surface px-6 py-10">
+            <div className="mx-auto max-w-4xl">
+              <h2 className="text-[13px] font-medium uppercase tracking-[0.2em] text-muted">
+                Visite nossa sala
+              </h2>
+              <div className="mt-4">
+                <VirtualTourViewer scenes={virtualTourScenes} />
+              </div>
             </div>
           </section>
         )}

@@ -5,6 +5,7 @@ import {
   getBusinessServices,
   getBusinessPhotos,
   getOwnedPromotions,
+  getVirtualTourScenes,
 } from "@/lib/services/platform";
 import { limitsFor } from "@/lib/plan-limits";
 import { EditPageManager } from "@/components/dashboard/EditPageManager";
@@ -19,10 +20,11 @@ export default async function EditarPaginaPage() {
   const business = await getBusinessById(businessId);
   if (!business) redirect("/login");
 
-  const [services, photos, promotions] = await Promise.all([
+  const [services, photos, promotions, virtualTourScenes] = await Promise.all([
     getBusinessServices(businessId),
     getBusinessPhotos(businessId),
     getOwnedPromotions(businessId),
+    getVirtualTourScenes(businessId),
   ]);
 
   return (
@@ -39,6 +41,7 @@ export default async function EditarPaginaPage() {
           services={services}
           photos={photos}
           promotions={promotions}
+          virtualTourScenes={virtualTourScenes}
           limits={limitsFor(business.effectivePlan)}
         />
       </div>

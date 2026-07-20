@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@photo-sphere-viewer/core": "^5.14.3",
     "@supabase/supabase-js": "^2.110.7",
     "bcryptjs": "^3.0.3",
     "gsap": "^3.15.0",

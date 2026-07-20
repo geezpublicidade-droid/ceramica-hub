@@ -155,6 +155,52 @@ export async function deletePhoto(photoId: string): Promise<ActionResult> {
   return { success: true };
 }
 
+// ---- visita virtual 360 ----
+
+export async function addVirtualTourScene(label: string, imageUrl: string): Promise<ActionResult> {
+  const businessId = await requireOwnBusiness();
+  const business = await getBusinessById(businessId);
+  if (!business) return { success: false, error: "Empresa não encontrada." };
+  if (!label.trim()) return { success: false, error: "Informe um nome pra essa cena (ex: Recepção)." };
+  if (!imageUrl.trim()) return { success: false, error: "Informe a URL da foto panorâmica." };
+
+  const limits = limitsFor(business.effectivePlan);
+  if (!limits.virtualTourAllowed) {
+    return { success: false, error: "Visita virtual 360° é um recurso do plano Experiência." };
+  }
+
+  const supabase = createServiceClient();
+  const { count } = await supabase
+    .from("virtual_tour_scenes")
+    .select("id", { count: "exact", head: true })
+    .eq("business_id", businessId);
+
+  const { error } = await supabase
+    .from("virtual_tour_scenes")
+    .insert({ business_id: businessId, label: label.trim(), image_url: imageUrl.trim(), sort_order: count ?? 0 });
+  if (error) return { success: false, error: "Não foi possível adicionar a cena." };
+
+  revalidateBusiness(businessId, business.slug);
+  return { success: true };
+}
+
+export async function deleteVirtualTourScene(sceneId: string): Promise<ActionResult> {
+  const businessId = await requireOwnBusiness();
+  const business = await getBusinessById(businessId);
+  if (!business) return { success: false, error: "Empresa não encontrada." };
+
+  const supabase = createServiceClient();
+  const { error } = await supabase
+    .from("virtual_tour_scenes")
+    .delete()
+    .eq("id", sceneId)
+    .eq("business_id", businessId);
+  if (error) return { success: false, error: "Não foi possível remover a cena." };
+
+  revalidateBusiness(businessId, business.slug);
+  return { success: true };
+}
+
 // ---- promoções ----
 
 export async function addPromotion(input: {
