@@ -87,7 +87,7 @@ export function Directory({ businesses }: DirectoryProps) {
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-4">
                 <a
-                  href="#cadastro"
+                  href="/cadastro"
                   className="neu-primary rounded-full px-7 py-3.5 text-[15px] font-medium text-white"
                 >
                   Cadastrar minha empresa gratuitamente
@@ -108,7 +108,7 @@ export function Directory({ businesses }: DirectoryProps) {
               participar.
             </p>
             <a
-              href="#cadastro"
+              href="/cadastro"
               className="mt-6 inline-block rounded-full neu px-6 py-3 text-[14px] font-medium text-foreground"
             >
               Indicar uma empresa

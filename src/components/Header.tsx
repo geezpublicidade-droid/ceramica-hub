@@ -44,7 +44,7 @@ export function Header() {
             Entrar
           </a>
           <a
-            href="#cadastro"
+            href="/cadastro"
             className="neu-primary rounded-full px-4 py-2 text-[13px] font-medium text-white"
           >
             Cadastrar empresa

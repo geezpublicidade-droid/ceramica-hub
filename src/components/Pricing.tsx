@@ -107,7 +107,7 @@ export function Pricing() {
                 ))}
               </ul>
               <a
-                href="#cadastro"
+                href="/cadastro"
                 className={`mt-8 block rounded-full px-6 py-3 text-center text-[14px] font-medium transition-transform active:scale-[0.98] ${
                   plan.highlight
                     ? "bg-white text-primary shadow-[6px_6px_14px_rgba(0,40,100,0.25),-6px_-6px_14px_rgba(255,255,255,0.5)]"

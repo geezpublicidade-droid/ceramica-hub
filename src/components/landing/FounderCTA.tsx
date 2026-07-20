@@ -1,8 +1,5 @@
 import { FadeUp } from "@/components/motion/FadeUp";
 
-const ADMIN_WHATSAPP = "5511999999999";
-const ADMIN_MESSAGE = "Olá! Quero cadastrar minha empresa no Cerâmica Hub.";
-
 const benefits = [
   "Perfil público no diretório",
   "Divulgação na fase inicial da plataforma",
@@ -46,14 +43,12 @@ export function FounderCTA() {
 
         <FadeUp delay={0.2} className="mt-10 flex flex-wrap justify-center gap-4">
           <a
-            href={`https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(ADMIN_MESSAGE)}`}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/cadastro"
             className="neu-primary rounded-full px-8 py-4 text-[15px] font-medium text-white"
           >
             Cadastrar minha empresa gratuitamente
           </a>
-          <a href="#empresas-destaque" className="neu rounded-full px-8 py-4 text-[15px] font-medium text-foreground">
+          <a href="#planos" className="neu rounded-full px-8 py-4 text-[15px] font-medium text-foreground">
             Conhecer a plataforma
           </a>
         </FadeUp>

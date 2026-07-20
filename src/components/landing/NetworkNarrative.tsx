@@ -125,7 +125,7 @@ export function NetworkNarrative() {
                     >
                       Explorar empresas
                     </a>
-                    <a href="#cadastro" className="neu rounded-full px-7 py-3.5 text-[15px] font-medium text-foreground">
+                    <a href="/cadastro" className="neu rounded-full px-7 py-3.5 text-[15px] font-medium text-foreground">
                       Cadastrar empresa gratuitamente
                     </a>
                   </div>
