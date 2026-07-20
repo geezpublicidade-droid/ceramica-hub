@@ -26,8 +26,10 @@ export function Header() {
 
   return (
     <header
-      className={`fixed top-0 z-50 w-full border-b transition-all duration-300 ${
-        scrolled || menuOpen ? "glass-light border-border py-3" : "border-transparent bg-transparent py-5"
+      className={`fixed top-0 z-50 w-full border-b py-3 transition-all duration-300 sm:py-4 ${
+        scrolled || menuOpen
+          ? "glass-light border-border"
+          : "border-transparent bg-white/70 backdrop-blur-md md:bg-transparent md:py-5 md:backdrop-blur-none"
       }`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6">
@@ -50,7 +52,7 @@ export function Header() {
           </a>
           <a
             href="/cadastro"
-            className="neu-primary rounded-full px-4 py-2 text-[13px] font-medium text-white"
+            className="neu-primary whitespace-nowrap rounded-full px-3 py-2 text-[12px] font-medium text-white sm:px-4 sm:text-[13px]"
           >
             Cadastrar empresa
           </a>
@@ -58,7 +60,7 @@ export function Header() {
             type="button"
             aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
             onClick={() => setMenuOpen((v) => !v)}
-            className="neu flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-foreground md:hidden"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-white text-foreground shadow-[0_2px_10px_rgba(0,0,0,0.12)] md:hidden"
           >
             {menuOpen ? (
               <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4">
