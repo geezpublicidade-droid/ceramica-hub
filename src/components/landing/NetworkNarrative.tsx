@@ -8,17 +8,6 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useSearch } from "@/components/landing/SearchContext";
 import { logSearchPerformed } from "@/lib/actions/log-search";
 
-const heroSearchExamples = [
-  "Clínica",
-  "Advogado",
-  "Contabilidade",
-  "Arquitetura",
-  "Marketing",
-  "Restaurante",
-  "Beleza",
-  "Tecnologia",
-];
-
 const heroImages = [
   "/images/ceramica-hero-1.jpg",
   "/images/ceramica-hero-2.jpg",
@@ -132,20 +121,16 @@ export function NetworkNarrative() {
                   <h1 className="mt-6 text-[clamp(2.1rem,5vw,4rem)] font-semibold leading-[1.08] tracking-tight text-foreground">
                     Encontre empresas, serviços e oportunidades a poucos andares de distância.
                   </h1>
-                  <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted">
+                  <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
                     O Cerâmica Hub conecta visitantes e empresas das torres Park, Union, Way e
                     Gate em uma única plataforma.
-                  </p>
-                  <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-muted">
-                    Cada empresa recebe uma Página Comercial Inteligente para apresentar seus
-                    serviços, publicar ofertas e receber contatos diretamente pelo WhatsApp.
                   </p>
                   <form
                     onSubmit={(event) => {
                       event.preventDefault();
                       submitHeroSearch(heroSearchValue);
                     }}
-                    className="mt-8 flex items-center gap-2 rounded-full border border-border bg-white/80 p-1.5 pl-5"
+                    className="mt-7 flex items-center gap-2 rounded-full border border-border bg-white/80 p-1.5 pl-5"
                   >
                     <input
                       type="text"
@@ -161,35 +146,17 @@ export function NetworkNarrative() {
                       Buscar
                     </button>
                   </form>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {heroSearchExamples.map((example) => (
-                      <button
-                        key={example}
-                        type="button"
-                        onClick={() => {
-                          setHeroSearchValue(example);
-                          submitHeroSearch(example);
-                        }}
-                        className="rounded-full border border-border px-3 py-1 text-[12px] text-muted transition-colors hover:text-foreground"
-                      >
-                        {example}
-                      </button>
-                    ))}
-                  </div>
-                  <div className="mt-8 flex flex-wrap gap-4">
-                    <a
-                      href="#empresas"
-                      className="neu-primary rounded-full px-7 py-3.5 text-[15px] font-medium text-white"
-                    >
-                      Explorar empresas
-                    </a>
-                    <a href="/cadastro" className="neu rounded-full px-7 py-3.5 text-[15px] font-medium text-foreground">
+                  <div className="mt-6 flex flex-wrap items-center gap-4">
+                    <a href="/cadastro" className="neu-primary rounded-full px-7 py-3.5 text-[15px] font-medium text-white">
                       Cadastrar empresa gratuitamente
                     </a>
+                    <a
+                      href="#empresas"
+                      className="text-[14px] font-medium text-foreground transition-colors hover:text-primary"
+                    >
+                      Explorar empresas →
+                    </a>
                   </div>
-                  <p className="mt-5 text-[13px] text-muted">
-                    Cadastro gratuito para empresas verificadas do Espaço Cerâmica.
-                  </p>
                 </div>
               </RevealText>
             </div>
