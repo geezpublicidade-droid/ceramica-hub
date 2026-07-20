@@ -14,8 +14,10 @@ import {
   getRelatedBusinesses,
   getOpportunities,
   getBenefits,
+  logMetricEvent,
   UUID_RE,
 } from "@/lib/services/platform";
+import { WhatsAppLink } from "@/components/WhatsAppLink";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -77,6 +79,8 @@ export default async function BusinessProfilePage({ params }: PageProps) {
   const opportunities = allOpportunities.filter((o) => o.businessId === business.id);
   const benefits = allBenefits.filter((b) => b.businessId === business.id);
 
+  await logMetricEvent("commercial_page_viewed", business.id);
+
   return (
     <>
       <Header />
@@ -119,14 +123,13 @@ export default async function BusinessProfilePage({ params }: PageProps) {
               </p>
 
               <div className="mt-8 flex flex-wrap gap-4">
-                <a
+                <WhatsAppLink
                   href={buildWhatsAppLink(business.phone, business.name)}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  businessId={business.id}
                   className="neu-primary rounded-full px-6 py-3 text-[14px] font-medium text-white"
                 >
                   Falar no WhatsApp
-                </a>
+                </WhatsAppLink>
                 <a
                   href={instagramUrl(business.instagram)}
                   target="_blank"

@@ -14,10 +14,34 @@ async function requireAdmin() {
 export async function approveBusiness(businessId: string) {
   await requireAdmin();
   const supabase = createServiceClient();
-  const { error } = await supabase
+
+  const { data: business, error: fetchError } = await supabase
     .from("businesses")
-    .update({ status: "approved", rejection_reason: null })
-    .eq("id", businessId);
+    .select("plan")
+    .eq("id", businessId)
+    .single();
+  if (fetchError) throw fetchError;
+
+  const update: Record<string, unknown> = { status: "approved", rejection_reason: null };
+
+  // trial de 14 dias do plano Destaque, só pra quem entra pelo gratuito
+  if (business.plan === "presenca") {
+    const { data: settings } = await supabase
+      .from("platform_settings")
+      .select("trial_enabled, trial_plan, trial_duration_days")
+      .single();
+
+    if (settings?.trial_enabled) {
+      const startedAt = new Date();
+      const endsAt = new Date(startedAt.getTime() + settings.trial_duration_days * 24 * 60 * 60 * 1000);
+      update.trial_status = "active";
+      update.trial_plan = settings.trial_plan;
+      update.trial_started_at = startedAt.toISOString();
+      update.trial_ends_at = endsAt.toISOString();
+    }
+  }
+
+  const { error } = await supabase.from("businesses").update(update).eq("id", businessId);
   if (error) throw error;
   revalidatePath("/admin");
   revalidatePath("/");

@@ -8,3 +8,7 @@ export async function logSearchPerformed(term: string, source: "hero" | "smart_s
   if (!trimmed) return;
   await logMetricEvent("search_performed", undefined, { term: trimmed, source });
 }
+
+export async function logWhatsAppClick(businessId: string) {
+  await logMetricEvent("whatsapp_clicked", businessId);
+}

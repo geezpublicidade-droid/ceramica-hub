@@ -43,8 +43,11 @@ type BusinessRow = {
   address_verified: boolean;
   photographed: boolean;
   founder: boolean;
-  plan: "presenca" | "destaque" | "experiencia";
+  plan: "presenca" | "profissional" | "destaque" | "experiencia";
   status: "pending" | "approved" | "rejected";
+  trial_status: "none" | "active" | "expired";
+  trial_plan: "presenca" | "profissional" | "destaque" | "experiencia" | null;
+  trial_ends_at: string | null;
   towers: TowerJoin;
 };
 
@@ -63,8 +66,22 @@ function initialsFrom(name: string): string {
   return initials || name.slice(0, 2).toUpperCase();
 }
 
+function resolveEffectivePlan(row: BusinessRow): {
+  effectivePlan: BusinessRow["plan"];
+  trialStatus: "none" | "active" | "expired";
+} {
+  if (row.trial_status !== "active" || !row.trial_ends_at || !row.trial_plan) {
+    return { effectivePlan: row.plan, trialStatus: row.trial_status };
+  }
+  const stillActive = new Date(row.trial_ends_at).getTime() > Date.now();
+  return stillActive
+    ? { effectivePlan: row.trial_plan, trialStatus: "active" }
+    : { effectivePlan: row.plan, trialStatus: "expired" };
+}
+
 function mapBusiness(row: BusinessRow): Business {
   const verified = row.status === "approved";
+  const { effectivePlan, trialStatus } = resolveEffectivePlan(row);
   return {
     id: row.id,
     slug: row.slug ?? row.id,
@@ -77,6 +94,8 @@ function mapBusiness(row: BusinessRow): Business {
     verified,
     initials: initialsFrom(row.name),
     plan: row.plan,
+    effectivePlan,
+    trial: { status: trialStatus, plan: row.trial_plan, endsAt: row.trial_ends_at },
     status: row.status,
     logo: row.logo_url ?? undefined,
     coverPhoto: row.cover_photo_url ?? undefined,

@@ -32,7 +32,14 @@ export type Business = {
   /** = status === 'approved' no banco — selo de verificação real, não um flag arbitrário */
   verified: boolean;
   initials: string;
-  plan: "presenca" | "destaque" | "experiencia";
+  plan: "presenca" | "profissional" | "destaque" | "experiencia";
+  /** plano "de verdade" pra fins de exibição/gating: plan, ou trial.plan enquanto o trial estiver ativo e dentro do prazo */
+  effectivePlan: "presenca" | "profissional" | "destaque" | "experiencia";
+  trial: {
+    status: "none" | "active" | "expired";
+    plan: "presenca" | "profissional" | "destaque" | "experiencia" | null;
+    endsAt: string | null;
+  };
   status: "pending" | "approved" | "rejected";
   /** logo quadrado (1:1) da empresa — opcional; sem isso, o card mostra as iniciais */
   logo?: string;
@@ -47,7 +54,8 @@ export type Business = {
 };
 
 export const planLabels: Record<Business["plan"], string> = {
-  presenca: "Presença",
+  presenca: "Presença Gratuita",
+  profissional: "Profissional",
   destaque: "Destaque",
   experiencia: "Experiência",
 };
