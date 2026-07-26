@@ -12,6 +12,8 @@ export function Header() {
     { href: "/#oportunidades", label: t("navOportunidades") },
     { href: "/#beneficios", label: t("navBeneficios") },
     { href: "/#planos", label: t("navPlanos") },
+    { href: "/blog", label: t("navBlog") },
+    { href: "/noticias", label: t("navNoticias") },
   ];
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);

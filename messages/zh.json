@@ -13,6 +13,8 @@
     "navOportunidades": "商机",
     "navBeneficios": "优惠",
     "navPlanos": "套餐",
+    "navBlog": "博客",
+    "navNoticias": "新闻",
     "entrar": "登录",
     "cadastrarEmpresa": "登记企业",
     "abrirMenu": "打开菜单",
@@ -257,6 +259,8 @@
       "categorias": "行业分类",
       "oportunidades": "商机",
       "ofertas": "优惠",
+      "blog": "博客",
+      "noticias": "新闻",
       "cadastrarEmpresa": "登记企业",
       "contato": "联系我们",
       "termos": "使用条款",
@@ -282,6 +286,22 @@
     "intro": "Cerâmica Hub 由 Geez Marketing 开发与维护。如对登记信息、数据更正、删除请求或平台其他事宜有任何疑问,请通过以下方式联系我们:",
     "emailLabel": "电子邮箱:",
     "instagramLabel": "Instagram:"
+  },
+  "Blog": {
+    "metaTitle": "博客 — Cerâmica Hub",
+    "title": "博客",
+    "subtitle": "关于 Espaço Cerâmica 的新闻、幕后故事和内容。",
+    "empty": "暂无已发布的文章。",
+    "readMore": "阅读更多",
+    "backToBlog": "返回博客"
+  },
+  "Noticias": {
+    "metaTitle": "新闻 — Cerâmica Hub",
+    "title": "圣卡埃塔诺-杜苏尔新闻",
+    "subtitle": "自动从本地媒体精选 — 始终链接到原文。",
+    "empty": "暂无新闻。",
+    "readFull": "阅读全文",
+    "sourceLabel": "来源"
   },
   "Termos": {
     "metaTitle": "使用条款 — Cerâmica Hub",

@@ -13,6 +13,8 @@
     "navOportunidades": "Opportunities",
     "navBeneficios": "Benefits",
     "navPlanos": "Plans",
+    "navBlog": "Blog",
+    "navNoticias": "News",
     "entrar": "Log in",
     "cadastrarEmpresa": "List your business",
     "abrirMenu": "Open menu",
@@ -257,6 +259,8 @@
       "categorias": "Categories",
       "oportunidades": "Opportunities",
       "ofertas": "Deals",
+      "blog": "Blog",
+      "noticias": "News",
       "cadastrarEmpresa": "List your business",
       "contato": "Contact",
       "termos": "Terms of Use",
@@ -282,6 +286,22 @@
     "intro": "Cerâmica Hub is developed and maintained by Geez Marketing. For questions about registration, data corrections, removal requests or anything else about the platform, get in touch:",
     "emailLabel": "Email:",
     "instagramLabel": "Instagram:"
+  },
+  "Blog": {
+    "metaTitle": "Blog — Cerâmica Hub",
+    "title": "Blog",
+    "subtitle": "News, behind the scenes, and content about Espaço Cerâmica.",
+    "empty": "No posts published yet.",
+    "readMore": "Read more",
+    "backToBlog": "Back to blog"
+  },
+  "Noticias": {
+    "metaTitle": "News — Cerâmica Hub",
+    "title": "São Caetano do Sul News",
+    "subtitle": "Automatically curated from local outlets — always links to the original article.",
+    "empty": "No news found yet.",
+    "readFull": "Read full article",
+    "sourceLabel": "Source"
   },
   "Termos": {
     "metaTitle": "Terms of Use — Cerâmica Hub",

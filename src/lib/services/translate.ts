@@ -9,7 +9,7 @@ const DEEPL_TARGET_LANG: Record<TargetLocale, string> = {
   zh: "ZH",
 };
 
-export type TranslatableEntityType = "business" | "benefit" | "opportunity" | "business_service" | "virtual_tour_scene";
+export type TranslatableEntityType = "business" | "benefit" | "opportunity" | "business_service" | "virtual_tour_scene" | "blog_post";
 
 async function translateBatch(texts: string[], targetLocale: TargetLocale): Promise<string[]> {
   const apiKey = process.env.DEEPL_API_KEY;

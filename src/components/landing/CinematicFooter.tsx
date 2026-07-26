@@ -9,6 +9,8 @@ export async function CinematicFooter() {
     { label: t("links.categorias"), href: "/#empresas" },
     { label: t("links.oportunidades"), href: "/#oportunidades" },
     { label: t("links.ofertas"), href: "/#beneficios" },
+    { label: t("links.blog"), href: "/blog" },
+    { label: t("links.noticias"), href: "/noticias" },
     { label: t("links.cadastrarEmpresa"), href: "/cadastro" },
     { label: t("links.contato"), href: "/contato" },
     { label: t("links.termos"), href: "/termos" },

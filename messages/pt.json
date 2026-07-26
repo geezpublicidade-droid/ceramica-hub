@@ -13,6 +13,8 @@
     "navOportunidades": "Oportunidades",
     "navBeneficios": "Benefícios",
     "navPlanos": "Planos",
+    "navBlog": "Blog",
+    "navNoticias": "Notícias",
     "entrar": "Entrar",
     "cadastrarEmpresa": "Cadastrar empresa",
     "abrirMenu": "Abrir menu",
@@ -257,6 +259,8 @@
       "categorias": "Categorias",
       "oportunidades": "Oportunidades",
       "ofertas": "Ofertas",
+      "blog": "Blog",
+      "noticias": "Notícias",
       "cadastrarEmpresa": "Cadastrar empresa",
       "contato": "Contato",
       "termos": "Termos de Uso",
@@ -282,6 +286,22 @@
     "intro": "O Cerâmica Hub é desenvolvido e mantido pela Geez Marketing. Para dúvidas sobre cadastro, correção de dados, solicitação de remoção ou qualquer outro assunto sobre a plataforma, entre em contato:",
     "emailLabel": "E-mail:",
     "instagramLabel": "Instagram:"
+  },
+  "Blog": {
+    "metaTitle": "Blog — Cerâmica Hub",
+    "title": "Blog",
+    "subtitle": "Novidades, bastidores e conteúdo sobre o Espaço Cerâmica.",
+    "empty": "Nenhum post publicado ainda.",
+    "readMore": "Ler mais",
+    "backToBlog": "Voltar ao blog"
+  },
+  "Noticias": {
+    "metaTitle": "Notícias — Cerâmica Hub",
+    "title": "Notícias de São Caetano do Sul",
+    "subtitle": "Selecionado automaticamente de veículos locais — sempre com link pra matéria original.",
+    "empty": "Nenhuma notícia encontrada ainda.",
+    "readFull": "Ler matéria completa",
+    "sourceLabel": "Fonte"
   },
   "Termos": {
     "metaTitle": "Termos de Uso — Cerâmica Hub",
