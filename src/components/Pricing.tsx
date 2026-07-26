@@ -1,91 +1,34 @@
-const plans = [
-  {
-    name: "Presença Gratuita",
-    price: "R$ 0",
-    period: "",
-    description: "Comece sua presença no Cerâmica sem custo.",
-    features: [
-      "Página básica no Cerâmica Hub",
-      "Nome e logo",
-      "Categoria",
-      "Torre, andar e sala",
-      "Descrição curta",
-      "Até três serviços",
-      "Uma imagem",
-      "WhatsApp",
-      "Instagram",
-      "Participação nas buscas",
-      "URL exclusiva",
-    ],
-    highlight: false,
-    badge: null as string | null,
-  },
-  {
-    name: "Profissional",
-    price: "R$ 47",
-    period: "/mês",
-    description: "Página comercial completa, pra empresas que já querem crescer.",
-    features: [
-      "Tudo do plano gratuito",
-      "Até 10 serviços",
-      "Galeria com até 10 imagens",
-      "Descrição completa",
-      "Site e redes sociais",
-      "Horários",
-      "Uma promoção ativa",
-      "Métricas básicas",
-      "Suporte",
-      "Selo de empresa aprovada",
-    ],
-    highlight: false,
-    badge: null as string | null,
-  },
-  {
-    name: "Destaque",
-    price: "R$ 97",
-    period: "/mês",
-    description: "Pra quem quer aparecer primeiro e ser visto por mais gente.",
-    features: [
-      "Tudo do plano Profissional",
-      "Serviços ilimitados",
-      "Galeria ampliada",
-      "Até quatro promoções",
-      "Cupons rastreáveis",
-      "Prioridade nos resultados",
-      "Destaque visual nos cards",
-      "Relatório mensal",
-      "Divulgação nos Stories",
-      "Publicação de oportunidades",
-      "Condições especiais na Geez Marketing",
-    ],
-    highlight: true,
-    badge: "Mais escolhido",
-  },
-  {
-    name: "Experiência",
-    price: "R$ 197",
-    period: "/mês",
-    description: "Página comercial no nível de uma landing page profissional.",
-    features: [
-      "Tudo do plano Destaque",
-      "Landing page personalizada",
-      "Cores e apresentação da empresa",
-      "Vídeo em destaque",
-      "Formulário próprio",
-      "Botão de agendamento",
-      "Destaque na página inicial",
-      "Uma alteração mensal",
-      "Métricas completas",
-      "Divulgação especial",
-      "Preparação para visita virtual",
-      "Condições premium na Geez Marketing",
-    ],
-    highlight: false,
-    badge: null as string | null,
-  },
-];
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 
-export function Pricing() {
+type PlanKey = "presenca" | "profissional" | "destaque" | "experiencia";
+
+const PLAN_PRICE: Record<PlanKey, { price: string; hasPeriod: boolean }> = {
+  presenca: { price: "R$ 0", hasPeriod: false },
+  profissional: { price: "R$ 47", hasPeriod: true },
+  destaque: { price: "R$ 97", hasPeriod: true },
+  experiencia: { price: "R$ 197", hasPeriod: true },
+};
+
+const PLAN_ORDER: PlanKey[] = ["presenca", "profissional", "destaque", "experiencia"];
+
+export async function Pricing() {
+  const t = await getTranslations("Pricing");
+
+  const plans = PLAN_ORDER.map((key) => {
+    const { hasPeriod, ...rest } = PLAN_PRICE[key];
+    return {
+      key,
+      name: t(`plans.${key}.name`),
+      description: t(`plans.${key}.description`),
+      features: t.raw(`plans.${key}.features`) as string[],
+      ...rest,
+      period: hasPeriod ? t("perMonth") : "",
+      highlight: key === "destaque",
+      badge: key === "destaque" ? t("mostChosen") : null,
+    };
+  });
+
   return (
     <section id="planos" className="relative overflow-hidden bg-surface">
       <div
@@ -95,16 +38,13 @@ export function Pricing() {
       />
       <div className="relative mx-auto max-w-6xl px-6 py-20">
         <h2 className="text-[clamp(1.75rem,3.5vw,2.75rem)] font-semibold leading-tight tracking-tight">
-          Comece com sua página comercial. Cresça quando fizer sentido.
+          {t("heading")}
         </h2>
-        <p className="mt-3 max-w-xl text-[15px] text-muted">
-          A fotografia e a produção de vídeo não estão incluídas automaticamente na mensalidade — são
-          serviços adicionais da Geez Marketing, salvo promoções específicas.
-        </p>
+        <p className="mt-3 max-w-xl text-[15px] text-muted">{t("subheading")}</p>
         <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           {plans.map((plan) => (
             <div
-              key={plan.name}
+              key={plan.key}
               className={`relative rounded-3xl p-8 ${
                 plan.highlight
                   ? "text-white shadow-[0_30px_60px_-20px_rgba(0,113,227,0.45)]"
@@ -133,7 +73,7 @@ export function Pricing() {
                   </li>
                 ))}
               </ul>
-              <a
+              <Link
                 href="/cadastro"
                 className={`mt-8 block rounded-full px-6 py-3 text-center text-[14px] font-medium transition-transform active:scale-[0.98] ${
                   plan.highlight
@@ -141,8 +81,8 @@ export function Pricing() {
                     : "neu-primary text-white"
                 }`}
               >
-                Quero esse plano
-              </a>
+                {t("ctaChoosePlan")}
+              </Link>
             </div>
           ))}
         </div>

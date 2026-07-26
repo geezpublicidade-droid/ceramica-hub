@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
 
 const heroImages = [
   "/images/ceramica-hero-1.jpg",
@@ -9,7 +10,8 @@ const heroImages = [
 
 const CYCLE_SECONDS = 24;
 
-export function ComingSoon() {
+export async function ComingSoon() {
+  const t = await getTranslations("ComingSoon");
   const year = new Date().getFullYear();
 
   return (
@@ -46,25 +48,24 @@ export function ComingSoon() {
           href="/login"
           className="glass-light rounded-full px-4 py-2 text-[13px] font-medium text-foreground transition-colors hover:bg-white/80"
         >
-          Acessar
+          {t("acessar")}
         </a>
       </header>
 
       <main className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 text-center">
         <span className="glass-light mb-6 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.18em] text-muted sm:text-[12px]">
-          Espaço Cerâmica · São Caetano do Sul
+          {t("badge")}
         </span>
         <h1 className="max-w-3xl text-[16vw] font-semibold leading-[0.95] tracking-tight text-foreground sm:text-7xl md:text-8xl">
-          Em breve.
+          {t("title")}
         </h1>
         <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-muted sm:text-[17px]">
-          Estamos preparando o ponto de encontro das empresas, profissionais e oportunidades das
-          torres Park, Union, Way e Gate. Tudo em um só lugar.
+          {t("description")}
         </p>
       </main>
 
       <footer className="relative z-10 flex items-center justify-center px-6 py-8 text-[12px] text-muted">
-        © {year} Cerâmica Hub — todos os direitos reservados
+        {t("footer", { year })}
       </footer>
     </div>
   );

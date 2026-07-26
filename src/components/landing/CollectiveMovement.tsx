@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { FadeUp } from "@/components/motion/FadeUp";
 
 const nodes = [
@@ -12,7 +13,8 @@ const connections: [number, number][] = [
   [12, 7], [12, 13], [13, 8], [13, 14], [14, 9],
 ];
 
-export function CollectiveMovement() {
+export async function CollectiveMovement() {
+  const t = await getTranslations("CollectiveMovement");
   return (
     <section className="relative overflow-hidden bg-surface px-6 py-20 text-foreground">
       <svg
@@ -48,11 +50,10 @@ export function CollectiveMovement() {
 
       <div className="relative mx-auto max-w-3xl text-center">
         <FadeUp className="max-w-2xl mx-auto text-[clamp(1.75rem,4vw,3rem)] font-semibold leading-tight tracking-tight">
-          Um prédio deixa de ser apenas um endereço quando seus negócios começam a se conectar.
+          {t("headline")}
         </FadeUp>
         <FadeUp delay={0.15} className="mt-8 text-[16px] leading-relaxed text-muted">
-          A Cerâmica Hub nasce para transformar proximidade em visibilidade, colaboração e novas
-          oportunidades.
+          {t("subhead")}
         </FadeUp>
       </div>
     </section>

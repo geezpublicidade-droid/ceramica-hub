@@ -1,15 +1,20 @@
-const linkGroups: { label: string; href: string }[] = [
-  { label: "Empresas", href: "/#empresas" },
-  { label: "Categorias", href: "/#empresas" },
-  { label: "Oportunidades", href: "/#oportunidades" },
-  { label: "Ofertas", href: "/#beneficios" },
-  { label: "Cadastrar empresa", href: "/cadastro" },
-  { label: "Contato", href: "/contato" },
-  { label: "Termos de Uso", href: "/termos" },
-  { label: "Privacidade", href: "/privacidade" },
-];
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
-export function CinematicFooter() {
+export async function CinematicFooter() {
+  const t = await getTranslations("CinematicFooter");
+  const linkGroups: { label: string; href: string }[] = [
+    { label: t("links.empresas"), href: "/#empresas" },
+    { label: t("links.categorias"), href: "/#empresas" },
+    { label: t("links.oportunidades"), href: "/#oportunidades" },
+    { label: t("links.ofertas"), href: "/#beneficios" },
+    { label: t("links.cadastrarEmpresa"), href: "/cadastro" },
+    { label: t("links.contato"), href: "/contato" },
+    { label: t("links.termos"), href: "/termos" },
+    { label: t("links.privacidade"), href: "/privacidade" },
+  ];
+
   return (
     <footer className="border-t border-border bg-surface px-6 py-16 text-foreground">
       <div className="mx-auto max-w-6xl">
@@ -18,32 +23,21 @@ export function CinematicFooter() {
             <p className="text-[17px] font-semibold tracking-tight">
               Cerâmica <span className="text-primary">Hub</span>
             </p>
-            <p className="mt-3 max-w-sm text-[14px] leading-relaxed text-muted">
-              Empresas próximas. Conexões reais. Novas oportunidades.
-            </p>
+            <p className="mt-3 max-w-sm text-[14px] leading-relaxed text-muted">{t("tagline")}</p>
           </div>
 
-          <nav className="flex flex-wrap gap-x-6 gap-y-3 text-[13px] text-muted">
+          <nav className="flex flex-wrap items-center gap-x-6 gap-y-3 text-[13px] text-muted">
             {linkGroups.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                target={link.href.startsWith("http") ? "_blank" : undefined}
-                rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="transition-colors hover:text-foreground"
-              >
+              <Link key={link.label} href={link.href} className="transition-colors hover:text-foreground">
                 {link.label}
-              </a>
+              </Link>
             ))}
+            <LanguageSwitcher />
           </nav>
         </div>
 
         <div className="mt-12 border-t border-border pt-6">
-          <p className="max-w-3xl text-[12px] leading-relaxed text-muted">
-            O Cerâmica Hub é uma iniciativa independente desenvolvida pela Geez Marketing para
-            conectar e divulgar empresas localizadas no Espaço Cerâmica. Não representa
-            oficialmente os condomínios ou suas administradoras.
-          </p>
+          <p className="max-w-3xl text-[12px] leading-relaxed text-muted">{t("disclaimer")}</p>
           <div className="mt-4 flex flex-col gap-2 text-[12px] text-muted sm:flex-row sm:items-center sm:justify-between">
             <a
               href="https://www.geezmarketing.com.br"
@@ -51,9 +45,9 @@ export function CinematicFooter() {
               rel="noopener noreferrer"
               className="transition-colors hover:text-foreground"
             >
-              Um projeto Geez Marketing.
+              {t("projectBy")}
             </a>
-            <p>© {new Date().getFullYear()} Cerâmica Hub.</p>
+            <p>{t("copyright", { year: new Date().getFullYear() })}</p>
           </div>
         </div>
       </div>

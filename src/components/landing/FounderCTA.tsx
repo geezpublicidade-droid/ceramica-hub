@@ -1,30 +1,25 @@
+import { getTranslations } from "next-intl/server";
 import { FadeUp } from "@/components/motion/FadeUp";
+import { Link } from "@/i18n/navigation";
 
-const benefits = [
-  "Perfil público no diretório",
-  "Divulgação na fase inicial da plataforma",
-  "Presença garantida nas categorias",
-  "Contato direto pelo WhatsApp",
-  "Participação nas primeiras ações",
-  "Possibilidade de novas parcerias",
-];
+export async function FounderCTA() {
+  const t = await getTranslations("FounderCTA");
+  const benefits = t.raw("benefits") as string[];
 
-export function FounderCTA() {
   return (
     <section id="cadastro" className="bg-surface px-6 py-20 text-foreground">
       <div className="mx-auto max-w-4xl text-center">
         <FadeUp className="text-[13px] font-medium uppercase tracking-[0.2em] text-primary">
-          Fase de lançamento
+          {t("eyebrow")}
         </FadeUp>
         <FadeUp
           delay={0.05}
           className="mx-auto mt-5 max-w-2xl text-[clamp(2rem,4.5vw,3.5rem)] font-semibold leading-tight tracking-tight"
         >
-          Faça parte da primeira geração de empresas da Cerâmica Hub.
+          {t("headline")}
         </FadeUp>
         <FadeUp delay={0.1} className="mx-auto mt-6 max-w-md text-[15px] leading-relaxed text-muted">
-          Cadastre seu negócio gratuitamente e receba o selo de Empresa Fundadora da
-          plataforma.
+          {t("subhead")}
         </FadeUp>
 
         <FadeUp
@@ -42,14 +37,14 @@ export function FounderCTA() {
         </FadeUp>
 
         <FadeUp delay={0.2} className="mt-10 flex flex-wrap justify-center gap-4">
-          <a
+          <Link
             href="/cadastro"
             className="neu-primary rounded-full px-8 py-4 text-[15px] font-medium text-white"
           >
-            Cadastrar minha empresa gratuitamente
-          </a>
+            {t("ctaRegister")}
+          </Link>
           <a href="#planos" className="neu rounded-full px-8 py-4 text-[15px] font-medium text-foreground">
-            Conhecer a plataforma
+            {t("ctaKnowPlatform")}
           </a>
         </FadeUp>
       </div>

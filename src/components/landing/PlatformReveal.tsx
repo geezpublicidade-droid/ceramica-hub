@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { FadeUp } from "@/components/motion/FadeUp";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { BusinessAvatar } from "@/components/BusinessAvatar";
@@ -8,7 +9,10 @@ type PlatformRevealProps = {
   categories: string[];
 };
 
-export function PlatformReveal({ businesses, categories }: PlatformRevealProps) {
+export async function PlatformReveal({ businesses, categories }: PlatformRevealProps) {
+  const t = await getTranslations("PlatformReveal");
+  const tCategories = await getTranslations("categories");
+  const tCommon = await getTranslations("Common");
   const preview = businesses.slice(0, 3);
 
   return (
@@ -16,15 +20,12 @@ export function PlatformReveal({ businesses, categories }: PlatformRevealProps) 
       <div className="mx-auto max-w-6xl">
         <FadeUp className="max-w-2xl">
           <p className="text-[13px] font-medium uppercase tracking-[0.2em] text-primary">
-            A plataforma
+            {t("eyebrow")}
           </p>
           <h2 className="mt-4 text-[clamp(2rem,4.5vw,3.5rem)] font-semibold leading-tight tracking-tight">
-            Toda a rede em um só lugar.
+            {t("headline")}
           </h2>
-          <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted">
-            Pesquise empresas, conheça serviços, descubra benefícios e inicie novas
-            conexões sem sair do Cerâmica.
-          </p>
+          <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted">{t("subhead")}</p>
         </FadeUp>
 
         <FadeUp
@@ -44,7 +45,7 @@ export function PlatformReveal({ businesses, categories }: PlatformRevealProps) 
                 <circle cx="9" cy="9" r="6" stroke="currentColor" strokeWidth="1.5" />
                 <path d="M14 14L18 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
-              Busque por empresa, serviço, categoria ou especialidade
+              {t("searchPlaceholder")}
             </div>
 
             <div className="mt-5 flex flex-wrap gap-2">
@@ -53,7 +54,7 @@ export function PlatformReveal({ businesses, categories }: PlatformRevealProps) 
                   key={category}
                   className="rounded-full border border-border bg-white px-3.5 py-1.5 text-[12px] text-muted"
                 >
-                  {category}
+                  {tCategories(category)}
                 </span>
               ))}
             </div>
@@ -72,19 +73,19 @@ export function PlatformReveal({ businesses, categories }: PlatformRevealProps) 
                     />
                     {business.verified && (
                       <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
-                        Verificado
+                        {tCommon("verified")}
                       </span>
                     )}
                   </div>
                   <p className="mt-3 text-[14px] font-semibold tracking-tight">{business.name}</p>
-                  <p className="mt-0.5 text-[12px] text-muted">{business.category}</p>
+                  <p className="mt-0.5 text-[12px] text-muted">{tCategories(business.category)}</p>
                   <a
                     href={buildWhatsAppLink(business.phone, business.name)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-3 inline-flex items-center gap-1.5 text-[12px] font-medium text-primary"
                   >
-                    Falar no WhatsApp
+                    {tCommon("whatsapp")}
                     <span aria-hidden="true">→</span>
                   </a>
                 </div>

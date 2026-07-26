@@ -1,0 +1,339 @@
+{
+  "Metadata": {
+    "title": "Cerâmica Hub — Businesses and services at Espaço Cerâmica",
+    "description": "Find businesses, professionals, services, promotions and opportunities in the Park, Union, Way and Gate towers, at Espaço Cerâmica in São Caetano do Sul."
+  },
+  "Common": {
+    "verified": "Verified",
+    "whatsapp": "Chat on WhatsApp"
+  },
+  "Header": {
+    "navEmpresas": "Businesses",
+    "navOportunidades": "Opportunities",
+    "navBeneficios": "Benefits",
+    "navPlanos": "Plans",
+    "entrar": "Log in",
+    "cadastrarEmpresa": "List your business",
+    "abrirMenu": "Open menu",
+    "fecharMenu": "Close menu"
+  },
+  "LanguageSwitcher": {
+    "label": "Language"
+  },
+  "ComingSoon": {
+    "badge": "Espaço Cerâmica · São Caetano do Sul",
+    "title": "Coming soon.",
+    "description": "We're building the meeting point for businesses, professionals and opportunities across the Park, Union, Way and Gate towers. All in one place.",
+    "acessar": "Log in",
+    "footer": "© {year} Cerâmica Hub — all rights reserved"
+  },
+  "Directory": {
+    "title": "Who's already on board",
+    "subtitle": "Search by category and chat directly on WhatsApp with businesses in your building.",
+    "filteringBy": "Filtering by",
+    "clear": "clear",
+    "emptyTitle": "The first Cerâmica businesses are on their way.",
+    "emptyDescription": "We're building the first digital business network at Espaço Cerâmica. List your business for free and join the founding generation.",
+    "ctaRegisterFree": "List my business for free",
+    "ctaHowItWorks": "See how it works",
+    "noResultsTitle": "We haven't found a business for that search yet.",
+    "noResultsDescription": "Do you know a business at Cerâmica that offers this service? Invite them to join.",
+    "ctaIndicate": "Suggest a business"
+  },
+  "Pricing": {
+    "heading": "Start with your business page. Grow when it makes sense.",
+    "subheading": "Photography and video production aren't automatically included in the monthly plan — they're additional Geez Marketing services, except during specific promotions.",
+    "ctaChoosePlan": "I want this plan",
+    "mostChosen": "Most popular",
+    "perMonth": "/mo",
+    "plans": {
+      "presenca": {
+        "name": "Free Presence",
+        "description": "Start your presence at Cerâmica at no cost.",
+        "features": [
+          "Basic page on Cerâmica Hub",
+          "Name and logo",
+          "Category",
+          "Tower, floor and room",
+          "Short description",
+          "Up to three services",
+          "One photo",
+          "WhatsApp",
+          "Instagram",
+          "Included in search",
+          "Exclusive URL"
+        ]
+      },
+      "profissional": {
+        "name": "Professional",
+        "description": "A complete business page, for businesses ready to grow.",
+        "features": [
+          "Everything in the free plan",
+          "Up to 10 services",
+          "Gallery with up to 10 photos",
+          "Full description",
+          "Website and social media",
+          "Business hours",
+          "One active promotion",
+          "Basic metrics",
+          "Support",
+          "Approved-business seal"
+        ]
+      },
+      "destaque": {
+        "name": "Featured",
+        "description": "For businesses that want to appear first and be seen by more people.",
+        "features": [
+          "Everything in the Professional plan",
+          "Unlimited services",
+          "Expanded gallery",
+          "Up to four promotions",
+          "Trackable coupons",
+          "Priority in search results",
+          "Visual highlight on cards",
+          "Monthly report",
+          "Promotion on Stories",
+          "Publish opportunities",
+          "Special rates at Geez Marketing"
+        ]
+      },
+      "experiencia": {
+        "name": "Experience",
+        "description": "A business page on par with a professional landing page.",
+        "features": [
+          "Everything in the Featured plan",
+          "Custom landing page",
+          "Your brand's colors and presentation",
+          "Featured video",
+          "Your own contact form",
+          "Booking button",
+          "Featured on the homepage",
+          "One monthly update",
+          "Full metrics",
+          "Special promotion",
+          "Virtual tour setup",
+          "Premium rates at Geez Marketing"
+        ]
+      }
+    }
+  },
+  "RegisterWizard": {
+    "step1Eyebrow": "Step 1 · Business details",
+    "step2Eyebrow": "Step 2 · Location",
+    "step3Eyebrow": "Step 3 · Free page",
+    "step4Eyebrow": "Step 4 · Verification",
+    "labels": {
+      "name": "Business name",
+      "responsibleName": "Responsible person's name",
+      "email": "Email",
+      "password": "Create an access password",
+      "phone": "WhatsApp",
+      "document": "Business tax ID (CNPJ or CPF)",
+      "category": "Category",
+      "shortDescription": "Short description",
+      "tower": "Tower",
+      "floor": "Floor",
+      "roomNumber": "Room",
+      "logoUrl": "Logo URL (optional for now)",
+      "coverPhotoUrl": "Cover photo URL (optional for now)",
+      "instagram": "Instagram",
+      "websiteUrl": "Website (if you have one)",
+      "openingHours": "Business hours",
+      "services": "Services (up to 3)",
+      "serviceName": "Service name",
+      "serviceDescription": "Short description (optional)"
+    },
+    "placeholders": {
+      "categorySelect": "Select",
+      "towerSelect": "Select the tower",
+      "password": "At least 8 characters",
+      "phone": "11912345678",
+      "instagram": "@yourbusiness",
+      "openingHours": "Mon–Fri, 9am–6pm"
+    },
+    "towerAddress": "Address: {address}",
+    "addService": "+ Add service",
+    "consent": {
+      "address": "I confirm my business operates at the address provided.",
+      "terms": "I have read and accept the <termsLink>Terms of Use</termsLink>.",
+      "privacy": "I have read and accept the <privacyLink>Privacy Policy</privacyLink>.",
+      "imageUsage": "I authorize the public display of the information and images submitted."
+    },
+    "errors": {
+      "name": "Enter the business name.",
+      "responsibleName": "Enter the responsible person's name.",
+      "email": "Enter your email.",
+      "password": "The password must be at least 8 characters.",
+      "phone": "Enter your WhatsApp number.",
+      "category": "Select a category.",
+      "tower": "Select the tower.",
+      "floor": "Enter the floor.",
+      "roomNumber": "Enter the room number.",
+      "consent": "You must accept the terms, the privacy policy, and confirm the business address."
+    },
+    "buttons": {
+      "back": "Back",
+      "continue": "Continue",
+      "submitting": "Submitting...",
+      "submit": "Submit registration"
+    },
+    "doneTitle": "Registration received successfully.",
+    "doneDescription": "Our team will verify your details before publishing your page."
+  },
+  "NetworkNarrative": {
+    "eyebrow": "The Espaço Cerâmica business network",
+    "headline": "Find businesses, services and opportunities just a few floors away.",
+    "subhead": "Cerâmica Hub connects visitors and businesses across the Park, Union, Way and Gate towers in a single platform.",
+    "searchPlaceholder": "What are you looking for?",
+    "searchButton": "Search",
+    "ctaRegister": "List your business for free",
+    "ctaExplore": "Explore businesses →",
+    "sectionLabel": "The Cerâmica Hub business network"
+  },
+  "ScaleSequence": {
+    "sectionLabel": "The scale of Cerâmica Hub",
+    "phrase1": "A single point of <primary>connection</primary>.",
+    "phrase2": "Working nearby doesn't mean being <primary>connected</primary>.",
+    "phrase3": "When businesses connect, the whole ecosystem <primary>grows</primary>."
+  },
+  "PlatformReveal": {
+    "eyebrow": "The platform",
+    "headline": "The whole network in one place.",
+    "subhead": "Search businesses, discover services, find benefits and start new connections without leaving Cerâmica.",
+    "searchPlaceholder": "Search by business, service, category or specialty"
+  },
+  "SmartSearch": {
+    "heading": "What do you need to find today?",
+    "searchPlaceholder": "Search by business, service, category or specialty",
+    "searchButton": "Search",
+    "viewAllInDirectory": "View all in the directory →",
+    "suggestions": [
+      { "label": "I need a marketing agency.", "term": "marketing" },
+      { "label": "I'm looking for an accountant.", "term": "contabilidade" },
+      { "label": "I want to find a clinic.", "term": "estética" },
+      { "label": "I need a lawyer.", "term": "advocacia" },
+      { "label": "I'm looking for a restaurant.", "term": "alimentação" },
+      { "label": "I want to form a partnership.", "term": "__oportunidades__" }
+    ]
+  },
+  "OpportunityNetwork": {
+    "eyebrow": "Network in motion",
+    "headline": "More than finding businesses. Find opportunities.",
+    "ctaTalk": "Talk about this"
+  },
+  "LocalBenefits": {
+    "eyebrow": "Local benefits",
+    "headline": "Advantages only a local network can create."
+  },
+  "CollectiveMovement": {
+    "headline": "A building stops being just an address once its businesses start connecting.",
+    "subhead": "Cerâmica Hub exists to turn proximity into visibility, collaboration and new opportunities."
+  },
+  "FounderCTA": {
+    "eyebrow": "Launch phase",
+    "headline": "Join the first generation of Cerâmica Hub businesses.",
+    "subhead": "List your business for free and receive the platform's Founding Business seal.",
+    "ctaRegister": "List my business for free",
+    "ctaKnowPlatform": "Learn about the platform",
+    "benefits": [
+      "Public profile in the directory",
+      "Promotion during the platform's early phase",
+      "Guaranteed presence in categories",
+      "Direct contact via WhatsApp",
+      "Participation in the first initiatives",
+      "Potential for new partnerships"
+    ]
+  },
+  "CinematicFooter": {
+    "tagline": "Nearby businesses. Real connections. New opportunities.",
+    "disclaimer": "Cerâmica Hub is an independent initiative developed by Geez Marketing to connect and promote businesses located at Espaço Cerâmica. It does not officially represent the condominiums or their management companies.",
+    "projectBy": "A Geez Marketing project.",
+    "copyright": "© {year} Cerâmica Hub.",
+    "links": {
+      "empresas": "Businesses",
+      "categorias": "Categories",
+      "oportunidades": "Opportunities",
+      "ofertas": "Deals",
+      "cadastrarEmpresa": "List your business",
+      "contato": "Contact",
+      "termos": "Terms of Use",
+      "privacidade": "Privacy"
+    }
+  },
+  "EmpresaPage": {
+    "backToDirectory": "← Back to directory",
+    "instagram": "View Instagram",
+    "sectionVisitRoom": "Visit our room",
+    "sectionGallery": "Gallery",
+    "sectionServices": "Services",
+    "sectionOpportunities": "Opportunities",
+    "sectionBenefits": "Benefits",
+    "alsoIn": "Also in {category}",
+    "photoAlt": "Photo of {name}",
+    "metaTitle": "{name} — Cerâmica Hub"
+  },
+  "Contato": {
+    "metaTitle": "Contact — Cerâmica Hub",
+    "title": "Talk to the platform",
+    "intro": "Cerâmica Hub is developed and maintained by Geez Marketing. For questions about registration, data corrections, removal requests or anything else about the platform, get in touch:",
+    "emailLabel": "Email:",
+    "instagramLabel": "Instagram:"
+  },
+  "Termos": {
+    "metaTitle": "Terms of Use — Cerâmica Hub",
+    "title": "Terms of Use",
+    "paragraph1": "Cerâmica Hub is an independent platform, developed by Geez Marketing, that connects and promotes businesses located at Espaço Cerâmica. By registering or browsing the platform, you agree to these terms.",
+    "paragraph2": "Business registrations go through verification before publication. The platform may refuse, suspend or remove registrations that contain incorrect or incomplete information, or that violate these terms.",
+    "paragraph3": "The information published on business pages is the responsibility of the registered business. Cerâmica Hub is not responsible for negotiations, products or services contracted between visitors and businesses.",
+    "paragraph4": "These terms may be updated at any time. Relevant changes will be communicated to registered businesses.",
+    "paragraph5": "Questions about these terms can be sent through the <contactLink>contact</contactLink> page."
+  },
+  "Privacidade": {
+    "metaTitle": "Privacy Policy — Cerâmica Hub",
+    "title": "Privacy Policy",
+    "paragraph1": "We only collect the data needed to operate the directory: business registration information (name, contact, location, category) and basic platform usage data (such as views and contact clicks), used for the reports shown to the business itself.",
+    "paragraph2": "A business's contact details (WhatsApp, Instagram, website) are displayed publicly on its business page, since that's the purpose of registering. Internal data such as passwords and verification documents are never displayed publicly.",
+    "paragraph3": "We do not sell or share data with third parties for advertising purposes. Access to administrative data is restricted to the team responsible for the platform.",
+    "paragraph4": "A business may request the correction or removal of its data at any time through the <contactLink>contact</contactLink> page."
+  },
+  "Cadastro": {
+    "metaTitle": "List your business for free — Cerâmica Hub",
+    "metaDescription": "Create your free business page and start getting found at Espaço Cerâmica.",
+    "eyebrow": "Free registration",
+    "headline": "Create your business page and start getting found at Cerâmica.",
+    "subhead": "Takes less than 5 minutes. Our team will verify your details before publishing your page."
+  },
+  "VirtualTourViewer": {
+    "loading": "Loading..."
+  },
+  "categories": {
+    "Todas": "All",
+    "Contabilidade & Jurídico": "Accounting & Legal",
+    "Saúde & Estética": "Health & Aesthetics",
+    "Alimentação": "Food & Dining",
+    "Moda & Beleza": "Fashion & Beauty",
+    "Tecnologia & Marketing": "Technology & Marketing",
+    "Educação": "Education",
+    "Design & Arquitetura": "Design & Architecture"
+  },
+  "planLabels": {
+    "presenca": "Free Presence",
+    "profissional": "Professional",
+    "destaque": "Featured",
+    "experiencia": "Experience"
+  },
+  "opportunityTypeLabels": {
+    "procura": "Looking for",
+    "oferece": "Offering",
+    "contratando": "Hiring",
+    "parceria": "Partnership"
+  },
+  "benefitKindLabels": {
+    "desconto": "Discount",
+    "cortesia": "Complimentary",
+    "combo": "Bundle",
+    "avaliacao-gratis": "Free trial",
+    "beneficio-funcionario": "Employee perk",
+    "promocao": "Promotion"
+  }
+}

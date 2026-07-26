@@ -2,6 +2,7 @@
 
 import { useCallback, useRef, useState, type ReactNode } from "react";
 import { motion, type Variants } from "motion/react";
+import { useTranslations } from "next-intl";
 import { ScrollStage } from "@/components/motion/ScrollStage";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
@@ -58,7 +59,10 @@ function PhraseBlock({ active, large, children }: { active: boolean; large?: boo
   );
 }
 
+const highlight = (chunks: ReactNode) => <span className="text-primary">{chunks}</span>;
+
 export function ScaleSequence() {
+  const t = useTranslations("ScaleSequence");
   const [stage, setStage] = useState<Stage>("connection");
   const stageRef = useRef<Stage>("connection");
 
@@ -71,24 +75,23 @@ export function ScaleSequence() {
   }, []);
 
   return (
-    <section aria-label="A escala do Cerâmica Hub">
+    <section aria-label={t("sectionLabel")}>
       <ScrollStage heightVh={150} onProgress={handleProgress} className="relative bg-surface">
         <PhraseBlock active={stage === "connection"}>
           <h2 className="text-[clamp(1.9rem,5.2vw,3.75rem)] font-semibold leading-[1.15] tracking-tight text-foreground">
-            Um único ponto de <span className="text-primary">conexão</span>.
+            {t.rich("phrase1", { primary: highlight })}
           </h2>
         </PhraseBlock>
 
         <PhraseBlock active={stage === "disconnected"}>
           <h2 className="text-[clamp(1.9rem,5.2vw,3.75rem)] font-semibold leading-[1.15] tracking-tight text-foreground">
-            Trabalhar perto não significa estar <span className="text-primary">conectado</span>.
+            {t.rich("phrase2", { primary: highlight })}
           </h2>
         </PhraseBlock>
 
         <PhraseBlock active={stage === "grow"} large>
           <p className="text-[clamp(2.1rem,6vw,4.5rem)] font-semibold leading-[1.15] tracking-tight text-foreground">
-            Quando os negócios se conectam, todo o ecossistema{" "}
-            <span className="text-primary">cresce</span>.
+            {t.rich("phrase3", { primary: highlight })}
           </p>
         </PhraseBlock>
       </ScrollStage>

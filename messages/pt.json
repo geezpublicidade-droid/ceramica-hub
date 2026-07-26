@@ -1,0 +1,339 @@
+{
+  "Metadata": {
+    "title": "Cerâmica Hub — Empresas e serviços no Espaço Cerâmica",
+    "description": "Encontre empresas, profissionais, serviços, promoções e oportunidades nas torres Park, Union, Way e Gate, no Espaço Cerâmica em São Caetano do Sul."
+  },
+  "Common": {
+    "verified": "Verificado",
+    "whatsapp": "Falar no WhatsApp"
+  },
+  "Header": {
+    "navEmpresas": "Empresas",
+    "navOportunidades": "Oportunidades",
+    "navBeneficios": "Benefícios",
+    "navPlanos": "Planos",
+    "entrar": "Entrar",
+    "cadastrarEmpresa": "Cadastrar empresa",
+    "abrirMenu": "Abrir menu",
+    "fecharMenu": "Fechar menu"
+  },
+  "LanguageSwitcher": {
+    "label": "Idioma"
+  },
+  "ComingSoon": {
+    "badge": "Espaço Cerâmica · São Caetano do Sul",
+    "title": "Em breve.",
+    "description": "Estamos preparando o ponto de encontro das empresas, profissionais e oportunidades das torres Park, Union, Way e Gate. Tudo em um só lugar.",
+    "acessar": "Acessar",
+    "footer": "© {year} Cerâmica Hub — todos os direitos reservados"
+  },
+  "Directory": {
+    "title": "Quem já faz parte",
+    "subtitle": "Busque por setor e fale direto no WhatsApp com quem trabalha no seu prédio.",
+    "filteringBy": "Filtrando por",
+    "clear": "limpar",
+    "emptyTitle": "As primeiras empresas do Cerâmica estão chegando.",
+    "emptyDescription": "Estamos formando a primeira rede digital de negócios do Espaço Cerâmica. Cadastre sua empresa gratuitamente e faça parte da geração fundadora.",
+    "ctaRegisterFree": "Cadastrar minha empresa gratuitamente",
+    "ctaHowItWorks": "Conhecer como funciona",
+    "noResultsTitle": "Ainda não encontramos uma empresa para essa busca.",
+    "noResultsDescription": "Você conhece uma empresa do Cerâmica que oferece esse serviço? Convide-a para participar.",
+    "ctaIndicate": "Indicar uma empresa"
+  },
+  "Pricing": {
+    "heading": "Comece com sua página comercial. Cresça quando fizer sentido.",
+    "subheading": "A fotografia e a produção de vídeo não estão incluídas automaticamente na mensalidade — são serviços adicionais da Geez Marketing, salvo promoções específicas.",
+    "ctaChoosePlan": "Quero esse plano",
+    "mostChosen": "Mais escolhido",
+    "perMonth": "/mês",
+    "plans": {
+      "presenca": {
+        "name": "Presença Gratuita",
+        "description": "Comece sua presença no Cerâmica sem custo.",
+        "features": [
+          "Página básica no Cerâmica Hub",
+          "Nome e logo",
+          "Categoria",
+          "Torre, andar e sala",
+          "Descrição curta",
+          "Até três serviços",
+          "Uma imagem",
+          "WhatsApp",
+          "Instagram",
+          "Participação nas buscas",
+          "URL exclusiva"
+        ]
+      },
+      "profissional": {
+        "name": "Profissional",
+        "description": "Página comercial completa, pra empresas que já querem crescer.",
+        "features": [
+          "Tudo do plano gratuito",
+          "Até 10 serviços",
+          "Galeria com até 10 imagens",
+          "Descrição completa",
+          "Site e redes sociais",
+          "Horários",
+          "Uma promoção ativa",
+          "Métricas básicas",
+          "Suporte",
+          "Selo de empresa aprovada"
+        ]
+      },
+      "destaque": {
+        "name": "Destaque",
+        "description": "Pra quem quer aparecer primeiro e ser visto por mais gente.",
+        "features": [
+          "Tudo do plano Profissional",
+          "Serviços ilimitados",
+          "Galeria ampliada",
+          "Até quatro promoções",
+          "Cupons rastreáveis",
+          "Prioridade nos resultados",
+          "Destaque visual nos cards",
+          "Relatório mensal",
+          "Divulgação nos Stories",
+          "Publicação de oportunidades",
+          "Condições especiais na Geez Marketing"
+        ]
+      },
+      "experiencia": {
+        "name": "Experiência",
+        "description": "Página comercial no nível de uma landing page profissional.",
+        "features": [
+          "Tudo do plano Destaque",
+          "Landing page personalizada",
+          "Cores e apresentação da empresa",
+          "Vídeo em destaque",
+          "Formulário próprio",
+          "Botão de agendamento",
+          "Destaque na página inicial",
+          "Uma alteração mensal",
+          "Métricas completas",
+          "Divulgação especial",
+          "Preparação para visita virtual",
+          "Condições premium na Geez Marketing"
+        ]
+      }
+    }
+  },
+  "RegisterWizard": {
+    "step1Eyebrow": "Etapa 1 · Dados da empresa",
+    "step2Eyebrow": "Etapa 2 · Localização",
+    "step3Eyebrow": "Etapa 3 · Página gratuita",
+    "step4Eyebrow": "Etapa 4 · Verificação",
+    "labels": {
+      "name": "Nome da empresa",
+      "responsibleName": "Nome do responsável",
+      "email": "E-mail",
+      "password": "Crie uma senha de acesso",
+      "phone": "WhatsApp",
+      "document": "CNPJ ou CPF profissional",
+      "category": "Categoria",
+      "shortDescription": "Breve descrição",
+      "tower": "Torre",
+      "floor": "Andar",
+      "roomNumber": "Sala",
+      "logoUrl": "URL da logo (opcional por enquanto)",
+      "coverPhotoUrl": "URL da foto de capa (opcional por enquanto)",
+      "instagram": "Instagram",
+      "websiteUrl": "Site (se possuir)",
+      "openingHours": "Horário de atendimento",
+      "services": "Serviços (até 3)",
+      "serviceName": "Nome do serviço",
+      "serviceDescription": "Descrição curta (opcional)"
+    },
+    "placeholders": {
+      "categorySelect": "Selecione",
+      "towerSelect": "Selecione a torre",
+      "password": "Mínimo 8 caracteres",
+      "phone": "11912345678",
+      "instagram": "@suaempresa",
+      "openingHours": "Seg a sex, 9h às 18h"
+    },
+    "towerAddress": "Endereço: {address}",
+    "addService": "+ Adicionar serviço",
+    "consent": {
+      "address": "Confirmo que minha empresa funciona no endereço informado.",
+      "terms": "Li e aceito os <termsLink>Termos de Uso</termsLink>.",
+      "privacy": "Li e aceito a <privacyLink>Política de Privacidade</privacyLink>.",
+      "imageUsage": "Autorizo a exibição pública das informações e imagens enviadas."
+    },
+    "errors": {
+      "name": "Informe o nome da empresa.",
+      "responsibleName": "Informe o nome do responsável.",
+      "email": "Informe o e-mail.",
+      "password": "A senha precisa ter pelo menos 8 caracteres.",
+      "phone": "Informe o WhatsApp.",
+      "category": "Selecione uma categoria.",
+      "tower": "Selecione a torre.",
+      "floor": "Informe o andar.",
+      "roomNumber": "Informe a sala.",
+      "consent": "É necessário aceitar os termos, a política de privacidade e confirmar o funcionamento no endereço."
+    },
+    "buttons": {
+      "back": "Voltar",
+      "continue": "Continuar",
+      "submitting": "Enviando...",
+      "submit": "Enviar cadastro"
+    },
+    "doneTitle": "Cadastro recebido com sucesso.",
+    "doneDescription": "Nossa equipe verificará os dados antes de publicar sua página."
+  },
+  "NetworkNarrative": {
+    "eyebrow": "A rede de negócios do Espaço Cerâmica",
+    "headline": "Encontre empresas, serviços e oportunidades a poucos andares de distância.",
+    "subhead": "O Cerâmica Hub conecta visitantes e empresas das torres Park, Union, Way e Gate em uma única plataforma.",
+    "searchPlaceholder": "O que você procura?",
+    "searchButton": "Buscar",
+    "ctaRegister": "Cadastrar empresa gratuitamente",
+    "ctaExplore": "Explorar empresas →",
+    "sectionLabel": "A rede de negócios do Cerâmica Hub"
+  },
+  "ScaleSequence": {
+    "sectionLabel": "A escala do Cerâmica Hub",
+    "phrase1": "Um único ponto de <primary>conexão</primary>.",
+    "phrase2": "Trabalhar perto não significa estar <primary>conectado</primary>.",
+    "phrase3": "Quando os negócios se conectam, todo o ecossistema <primary>cresce</primary>."
+  },
+  "PlatformReveal": {
+    "eyebrow": "A plataforma",
+    "headline": "Toda a rede em um só lugar.",
+    "subhead": "Pesquise empresas, conheça serviços, descubra benefícios e inicie novas conexões sem sair do Cerâmica.",
+    "searchPlaceholder": "Busque por empresa, serviço, categoria ou especialidade"
+  },
+  "SmartSearch": {
+    "heading": "O que você precisa encontrar hoje?",
+    "searchPlaceholder": "Busque por empresa, serviço, categoria ou especialidade",
+    "searchButton": "Buscar",
+    "viewAllInDirectory": "Ver todos no diretório →",
+    "suggestions": [
+      { "label": "Preciso de uma agência de marketing.", "term": "marketing" },
+      { "label": "Estou procurando um contador.", "term": "contabilidade" },
+      { "label": "Quero encontrar uma clínica.", "term": "estética" },
+      { "label": "Preciso de um advogado.", "term": "advocacia" },
+      { "label": "Procuro um restaurante.", "term": "alimentação" },
+      { "label": "Quero fazer uma parceria.", "term": "__oportunidades__" }
+    ]
+  },
+  "OpportunityNetwork": {
+    "eyebrow": "Rede em movimento",
+    "headline": "Mais do que encontrar empresas. Encontre oportunidades.",
+    "ctaTalk": "Conversar sobre isso"
+  },
+  "LocalBenefits": {
+    "eyebrow": "Benefícios locais",
+    "headline": "Vantagens que só uma rede local pode criar."
+  },
+  "CollectiveMovement": {
+    "headline": "Um prédio deixa de ser apenas um endereço quando seus negócios começam a se conectar.",
+    "subhead": "A Cerâmica Hub nasce para transformar proximidade em visibilidade, colaboração e novas oportunidades."
+  },
+  "FounderCTA": {
+    "eyebrow": "Fase de lançamento",
+    "headline": "Faça parte da primeira geração de empresas da Cerâmica Hub.",
+    "subhead": "Cadastre seu negócio gratuitamente e receba o selo de Empresa Fundadora da plataforma.",
+    "ctaRegister": "Cadastrar minha empresa gratuitamente",
+    "ctaKnowPlatform": "Conhecer a plataforma",
+    "benefits": [
+      "Perfil público no diretório",
+      "Divulgação na fase inicial da plataforma",
+      "Presença garantida nas categorias",
+      "Contato direto pelo WhatsApp",
+      "Participação nas primeiras ações",
+      "Possibilidade de novas parcerias"
+    ]
+  },
+  "CinematicFooter": {
+    "tagline": "Empresas próximas. Conexões reais. Novas oportunidades.",
+    "disclaimer": "O Cerâmica Hub é uma iniciativa independente desenvolvida pela Geez Marketing para conectar e divulgar empresas localizadas no Espaço Cerâmica. Não representa oficialmente os condomínios ou suas administradoras.",
+    "projectBy": "Um projeto Geez Marketing.",
+    "copyright": "© {year} Cerâmica Hub.",
+    "links": {
+      "empresas": "Empresas",
+      "categorias": "Categorias",
+      "oportunidades": "Oportunidades",
+      "ofertas": "Ofertas",
+      "cadastrarEmpresa": "Cadastrar empresa",
+      "contato": "Contato",
+      "termos": "Termos de Uso",
+      "privacidade": "Privacidade"
+    }
+  },
+  "EmpresaPage": {
+    "backToDirectory": "← Voltar ao diretório",
+    "instagram": "Ver Instagram",
+    "sectionVisitRoom": "Visite nossa sala",
+    "sectionGallery": "Galeria",
+    "sectionServices": "Serviços",
+    "sectionOpportunities": "Oportunidades",
+    "sectionBenefits": "Benefícios",
+    "alsoIn": "Também em {category}",
+    "photoAlt": "Foto de {name}",
+    "metaTitle": "{name} — Cerâmica Hub"
+  },
+  "Contato": {
+    "metaTitle": "Contato — Cerâmica Hub",
+    "title": "Fale com a plataforma",
+    "intro": "O Cerâmica Hub é desenvolvido e mantido pela Geez Marketing. Para dúvidas sobre cadastro, correção de dados, solicitação de remoção ou qualquer outro assunto sobre a plataforma, entre em contato:",
+    "emailLabel": "E-mail:",
+    "instagramLabel": "Instagram:"
+  },
+  "Termos": {
+    "metaTitle": "Termos de Uso — Cerâmica Hub",
+    "title": "Termos de Uso",
+    "paragraph1": "O Cerâmica Hub é uma plataforma independente, desenvolvida pela Geez Marketing, que conecta e divulga empresas localizadas no Espaço Cerâmica. Ao se cadastrar ou navegar pela plataforma, você concorda com estes termos.",
+    "paragraph2": "O cadastro de empresas passa por verificação antes da publicação. A plataforma pode recusar, suspender ou remover cadastros que contenham informações incorretas, incompletas ou que violem estes termos.",
+    "paragraph3": "As informações publicadas nas páginas comerciais são de responsabilidade da empresa cadastrada. O Cerâmica Hub não se responsabiliza por negociações, produtos ou serviços contratados entre visitantes e empresas.",
+    "paragraph4": "Estes termos podem ser atualizados a qualquer momento. Alterações relevantes serão comunicadas às empresas cadastradas.",
+    "paragraph5": "Dúvidas sobre estes termos podem ser enviadas pela página de <contactLink>contato</contactLink>."
+  },
+  "Privacidade": {
+    "metaTitle": "Política de Privacidade — Cerâmica Hub",
+    "title": "Política de Privacidade",
+    "paragraph1": "Coletamos apenas os dados necessários para operar o diretório: informações de cadastro da empresa (nome, contato, localização, categoria) e dados básicos de uso da plataforma (como visualizações e cliques em contato), usados para os relatórios mostrados à própria empresa.",
+    "paragraph2": "Os dados de contato de uma empresa (WhatsApp, Instagram, site) são exibidos publicamente na página comercial, pois esse é o propósito do cadastro. Dados internos como senha e comprovantes de verificação nunca são exibidos publicamente.",
+    "paragraph3": "Não vendemos nem compartilhamos dados com terceiros para fins de publicidade. O acesso aos dados administrativos é restrito à equipe responsável pela plataforma.",
+    "paragraph4": "Uma empresa pode solicitar a correção ou remoção dos seus dados a qualquer momento pela página de <contactLink>contato</contactLink>."
+  },
+  "Cadastro": {
+    "metaTitle": "Cadastrar empresa gratuitamente — Cerâmica Hub",
+    "metaDescription": "Crie sua página comercial gratuita e comece a ser encontrado no Espaço Cerâmica.",
+    "eyebrow": "Cadastro gratuito",
+    "headline": "Crie sua página comercial e comece a ser encontrado no Cerâmica.",
+    "subhead": "Leva menos de 5 minutos. Nossa equipe verificará os dados antes de publicar sua página."
+  },
+  "VirtualTourViewer": {
+    "loading": "Carregando..."
+  },
+  "categories": {
+    "Todas": "Todas",
+    "Contabilidade & Jurídico": "Contabilidade & Jurídico",
+    "Saúde & Estética": "Saúde & Estética",
+    "Alimentação": "Alimentação",
+    "Moda & Beleza": "Moda & Beleza",
+    "Tecnologia & Marketing": "Tecnologia & Marketing",
+    "Educação": "Educação",
+    "Design & Arquitetura": "Design & Arquitetura"
+  },
+  "planLabels": {
+    "presenca": "Presença Gratuita",
+    "profissional": "Profissional",
+    "destaque": "Destaque",
+    "experiencia": "Experiência"
+  },
+  "opportunityTypeLabels": {
+    "procura": "Procura",
+    "oferece": "Oferece",
+    "contratando": "Contratando",
+    "parceria": "Parceria"
+  },
+  "benefitKindLabels": {
+    "desconto": "Desconto",
+    "cortesia": "Cortesia",
+    "combo": "Combo",
+    "avaliacao-gratis": "Avaliação grátis",
+    "beneficio-funcionario": "Para funcionários",
+    "promocao": "Promoção"
+  }
+}

@@ -2,11 +2,13 @@
 
 import { useCallback, useRef, useState } from "react";
 import { motion, type Variants } from "motion/react";
+import { useTranslations } from "next-intl";
 import { ScrollStage } from "@/components/motion/ScrollStage";
 import { RevealText } from "@/components/motion/RevealText";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useSearch } from "@/components/landing/SearchContext";
 import { logSearchPerformed } from "@/lib/actions/log-search";
+import { Link } from "@/i18n/navigation";
 
 const heroImages = [
   "/images/ceramica-hero-1.jpg",
@@ -33,6 +35,7 @@ const image: Variants = {
 };
 
 export function NetworkNarrative() {
+  const t = useTranslations("NetworkNarrative");
   const reducedMotion = useReducedMotion();
   const [heroActive, setHeroActive] = useState(true);
   const heroActiveRef = useRef(true);
@@ -63,7 +66,7 @@ export function NetworkNarrative() {
   }, []);
 
   return (
-    <section id="top" aria-label="A rede de negócios do Cerâmica Hub">
+    <section id="top" aria-label={t("sectionLabel")}>
       <ScrollStage
         heightVh={175}
         onProgress={handleProgress}
@@ -116,14 +119,13 @@ export function NetworkNarrative() {
                     Cerâmica Hub
                   </p>
                   <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.15em] text-primary sm:mt-3 sm:text-[13px] sm:tracking-[0.2em]">
-                    A rede de negócios do Espaço Cerâmica
+                    {t("eyebrow")}
                   </p>
                   <h1 className="mt-3 text-[1.65rem] font-semibold leading-[1.15] tracking-tight text-foreground sm:mt-6 sm:text-[clamp(2.1rem,5vw,4rem)] sm:leading-[1.08]">
-                    Encontre empresas, serviços e oportunidades a poucos andares de distância.
+                    {t("headline")}
                   </h1>
                   <p className="mt-3 max-w-xl text-[14px] leading-relaxed text-foreground/75 sm:mt-6 sm:text-lg">
-                    O Cerâmica Hub conecta visitantes e empresas das torres Park, Union, Way e
-                    Gate em uma única plataforma.
+                    {t("subhead")}
                   </p>
                   <form
                     onSubmit={(event) => {
@@ -136,28 +138,28 @@ export function NetworkNarrative() {
                       type="text"
                       value={heroSearchValue}
                       onChange={(event) => setHeroSearchValue(event.target.value)}
-                      placeholder="O que você procura?"
+                      placeholder={t("searchPlaceholder")}
                       className="min-w-0 flex-1 bg-transparent py-2 text-[13px] text-foreground placeholder:text-muted focus:outline-none sm:py-2.5 sm:text-[14px]"
                     />
                     <button
                       type="submit"
                       className="neu-primary shrink-0 rounded-full px-4 py-2 text-[12px] font-medium text-white sm:px-5 sm:py-2.5 sm:text-[13px]"
                     >
-                      Buscar
+                      {t("searchButton")}
                     </button>
                   </form>
                   <div className="mt-4 flex flex-wrap items-center gap-3 sm:mt-6 sm:gap-4">
-                    <a
+                    <Link
                       href="/cadastro"
                       className="neu-primary rounded-full px-5 py-2.5 text-[13px] font-medium text-white sm:px-7 sm:py-3.5 sm:text-[15px]"
                     >
-                      Cadastrar empresa gratuitamente
-                    </a>
+                      {t("ctaRegister")}
+                    </Link>
                     <a
                       href="#empresas"
                       className="text-[13px] font-medium text-foreground transition-colors hover:text-primary sm:text-[14px]"
                     >
-                      Explorar empresas →
+                      {t("ctaExplore")}
                     </a>
                   </div>
                 </div>

@@ -1,8 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import { motion } from "motion/react";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { FadeUp } from "@/components/motion/FadeUp";
 import { useSearch } from "./SearchContext";
@@ -17,20 +18,15 @@ type Suggestion = {
   term: string;
 };
 
-const suggestions: Suggestion[] = [
-  { label: "Preciso de uma agência de marketing.", term: "marketing" },
-  { label: "Estou procurando um contador.", term: "contabilidade" },
-  { label: "Quero encontrar uma clínica.", term: "estética" },
-  { label: "Preciso de um advogado.", term: "advocacia" },
-  { label: "Procuro um restaurante.", term: "alimentação" },
-  { label: "Quero fazer uma parceria.", term: "__oportunidades__" },
-];
-
 type SmartSearchProps = {
   businesses: Business[];
 };
 
 export function SmartSearch({ businesses }: SmartSearchProps) {
+  const t = useTranslations("SmartSearch");
+  const tCategories = useTranslations("categories");
+  const tCommon = useTranslations("Common");
+  const suggestions = t.raw("suggestions") as Suggestion[];
   const reducedMotion = useReducedMotion();
   const { query, setQuery } = useSearch();
   const [inputValue, setInputValue] = useState("");
@@ -63,7 +59,7 @@ export function SmartSearch({ businesses }: SmartSearchProps) {
     <section className="bg-surface px-6 py-20 text-foreground">
       <div className="mx-auto max-w-3xl text-center">
         <FadeUp className="text-[clamp(2rem,5vw,3.5rem)] font-semibold leading-tight tracking-tight">
-          <h2>O que você precisa encontrar hoje?</h2>
+          <h2>{t("heading")}</h2>
         </FadeUp>
 
         <FadeUp delay={0.1} className="mx-auto mt-10">
@@ -79,14 +75,14 @@ export function SmartSearch({ businesses }: SmartSearchProps) {
               type="text"
               value={inputValue}
               onChange={(event) => setInputValue(event.target.value)}
-              placeholder="Busque por empresa, serviço, categoria ou especialidade"
+              placeholder={t("searchPlaceholder")}
               className="min-w-0 flex-1 bg-transparent py-3 text-[15px] text-foreground placeholder:text-muted focus:outline-none"
             />
             <button
               type="submit"
               className="neu-primary shrink-0 rounded-full px-5 py-3 text-[14px] font-medium text-white"
             >
-              Buscar
+              {t("searchButton")}
             </button>
           </form>
         </FadeUp>
@@ -118,7 +114,7 @@ export function SmartSearch({ businesses }: SmartSearchProps) {
                   </p>
                 </Link>
                 <p className="mt-0.5 text-[12px] text-muted">
-                  {business.category} · {business.floor}
+                  {tCategories(business.category)} · {business.floor}
                 </p>
                 <a
                   href={buildWhatsAppLink(business.phone, business.name)}
@@ -126,7 +122,7 @@ export function SmartSearch({ businesses }: SmartSearchProps) {
                   rel="noopener noreferrer"
                   className="mt-2 inline-flex items-center gap-1.5 text-[12px] font-medium text-primary"
                 >
-                  Falar no WhatsApp
+                  {tCommon("whatsapp")}
                   <span aria-hidden="true">→</span>
                 </a>
               </div>
@@ -140,7 +136,7 @@ export function SmartSearch({ businesses }: SmartSearchProps) {
             onClick={() => setQuery(query || inputValue)}
             className="mt-8 inline-block text-[13px] font-medium text-primary hover:underline"
           >
-            Ver todos no diretório →
+            {t("viewAllInDirectory")}
           </a>
         )}
       </div>

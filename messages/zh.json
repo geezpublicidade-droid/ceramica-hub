@@ -1,0 +1,339 @@
+{
+  "Metadata": {
+    "title": "Cerâmica Hub — Espaço Cerâmica 商业与服务平台",
+    "description": "在圣卡耶塔诺-杜苏尔的 Espaço Cerâmica 园区,于 Park、Union、Way 和 Gate 四座大厦中,发现企业、专业人士、服务、优惠与商机。"
+  },
+  "Common": {
+    "verified": "已认证",
+    "whatsapp": "WhatsApp 联系"
+  },
+  "Header": {
+    "navEmpresas": "企业",
+    "navOportunidades": "商机",
+    "navBeneficios": "优惠",
+    "navPlanos": "套餐",
+    "entrar": "登录",
+    "cadastrarEmpresa": "登记企业",
+    "abrirMenu": "打开菜单",
+    "fecharMenu": "关闭菜单"
+  },
+  "LanguageSwitcher": {
+    "label": "语言"
+  },
+  "ComingSoon": {
+    "badge": "Espaço Cerâmica · 圣卡耶塔诺-杜苏尔",
+    "title": "敬请期待。",
+    "description": "我们正在打造 Park、Union、Way 和 Gate 四座大厦企业、专业人士与商机的聚集地。一切尽在此处。",
+    "acessar": "登录",
+    "footer": "© {year} Cerâmica Hub — 保留所有权利"
+  },
+  "Directory": {
+    "title": "已入驻企业",
+    "subtitle": "按行业搜索,直接通过 WhatsApp 联系同栋大厦的企业。",
+    "filteringBy": "筛选条件",
+    "clear": "清除",
+    "emptyTitle": "Cerâmica 首批企业即将入驻。",
+    "emptyDescription": "我们正在打造 Espaço Cerâmica 首个数字商业网络。免费登记您的企业,成为创始一代的一员。",
+    "ctaRegisterFree": "免费登记我的企业",
+    "ctaHowItWorks": "了解运作方式",
+    "noResultsTitle": "暂未找到符合该搜索条件的企业。",
+    "noResultsDescription": "您认识 Cerâmica 提供此类服务的企业吗?欢迎邀请他们加入。",
+    "ctaIndicate": "推荐一家企业"
+  },
+  "Pricing": {
+    "heading": "从您的商业主页开始。按需求逐步升级。",
+    "subheading": "摄影与视频制作不包含在月费套餐内 — 属于 Geez Marketing 的附加服务,特定优惠活动除外。",
+    "ctaChoosePlan": "选择此套餐",
+    "mostChosen": "最受欢迎",
+    "perMonth": "/月",
+    "plans": {
+      "presenca": {
+        "name": "免费展示",
+        "description": "免费开启您在 Cerâmica 的展示。",
+        "features": [
+          "Cerâmica Hub 基础主页",
+          "名称与标志",
+          "行业分类",
+          "所在大厦、楼层与房间号",
+          "简短描述",
+          "最多三项服务",
+          "一张图片",
+          "WhatsApp",
+          "Instagram",
+          "纳入搜索结果",
+          "专属网址"
+        ]
+      },
+      "profissional": {
+        "name": "专业版",
+        "description": "完整商业主页,适合已准备好成长的企业。",
+        "features": [
+          "包含免费套餐所有内容",
+          "最多 10 项服务",
+          "最多 10 张图片相册",
+          "完整描述",
+          "网站与社交媒体链接",
+          "营业时间",
+          "一项进行中的优惠活动",
+          "基础数据统计",
+          "客户支持",
+          "认证企业标识"
+        ]
+      },
+      "destaque": {
+        "name": "精选版",
+        "description": "适合希望优先展示、被更多人看到的企业。",
+        "features": [
+          "包含专业版所有内容",
+          "服务数量不限",
+          "扩展相册",
+          "最多四项优惠活动",
+          "可追踪优惠券",
+          "搜索结果优先展示",
+          "卡片视觉突出显示",
+          "月度报告",
+          "Stories 推广",
+          "发布商机信息",
+          "Geez Marketing 特别优惠条件"
+        ]
+      },
+      "experiencia": {
+        "name": "尊享版",
+        "description": "媲美专业落地页水准的商业主页。",
+        "features": [
+          "包含精选版所有内容",
+          "定制落地页",
+          "品牌专属配色与呈现方式",
+          "精选视频展示",
+          "专属联系表单",
+          "预约按钮",
+          "首页重点展示",
+          "每月一次修改",
+          "完整数据统计",
+          "特别推广",
+          "虚拟参观筹备",
+          "Geez Marketing 尊享优惠条件"
+        ]
+      }
+    }
+  },
+  "RegisterWizard": {
+    "step1Eyebrow": "第 1 步 · 企业信息",
+    "step2Eyebrow": "第 2 步 · 位置信息",
+    "step3Eyebrow": "第 3 步 · 免费主页",
+    "step4Eyebrow": "第 4 步 · 验证",
+    "labels": {
+      "name": "企业名称",
+      "responsibleName": "负责人姓名",
+      "email": "电子邮箱",
+      "password": "设置登录密码",
+      "phone": "WhatsApp",
+      "document": "企业税号(CNPJ 或 CPF)",
+      "category": "行业分类",
+      "shortDescription": "简短描述",
+      "tower": "所在大厦",
+      "floor": "楼层",
+      "roomNumber": "房间号",
+      "logoUrl": "标志图片链接(暂时可选)",
+      "coverPhotoUrl": "封面图片链接(暂时可选)",
+      "instagram": "Instagram",
+      "websiteUrl": "网站(如有)",
+      "openingHours": "营业时间",
+      "services": "服务项目(最多 3 项)",
+      "serviceName": "服务名称",
+      "serviceDescription": "简短描述(可选)"
+    },
+    "placeholders": {
+      "categorySelect": "请选择",
+      "towerSelect": "请选择大厦",
+      "password": "至少 8 个字符",
+      "phone": "11912345678",
+      "instagram": "@您的企业",
+      "openingHours": "周一至周五,9:00–18:00"
+    },
+    "towerAddress": "地址:{address}",
+    "addService": "+ 添加服务",
+    "consent": {
+      "address": "我确认本企业在所填地址正常营业。",
+      "terms": "我已阅读并接受<termsLink>使用条款</termsLink>。",
+      "privacy": "我已阅读并接受<privacyLink>隐私政策</privacyLink>。",
+      "imageUsage": "我授权公开展示所提交的信息与图片。"
+    },
+    "errors": {
+      "name": "请填写企业名称。",
+      "responsibleName": "请填写负责人姓名。",
+      "email": "请填写电子邮箱。",
+      "password": "密码至少需要 8 个字符。",
+      "phone": "请填写 WhatsApp 号码。",
+      "category": "请选择一个行业分类。",
+      "tower": "请选择大厦。",
+      "floor": "请填写楼层。",
+      "roomNumber": "请填写房间号。",
+      "consent": "必须接受条款、隐私政策,并确认营业地址。"
+    },
+    "buttons": {
+      "back": "返回",
+      "continue": "继续",
+      "submitting": "提交中...",
+      "submit": "提交登记"
+    },
+    "doneTitle": "登记已成功提交。",
+    "doneDescription": "我们的团队将在发布您的主页前核实相关信息。"
+  },
+  "NetworkNarrative": {
+    "eyebrow": "Espaço Cerâmica 商业网络",
+    "headline": "近在咫尺,发现企业、服务与商机。",
+    "subhead": "Cerâmica Hub 将 Park、Union、Way 和 Gate 四座大厦的访客与企业连接在同一平台上。",
+    "searchPlaceholder": "您在寻找什么?",
+    "searchButton": "搜索",
+    "ctaRegister": "免费登记企业",
+    "ctaExplore": "探索企业 →",
+    "sectionLabel": "Cerâmica Hub 商业网络"
+  },
+  "ScaleSequence": {
+    "sectionLabel": "Cerâmica Hub 的规模",
+    "phrase1": "一个统一的<primary>连接</primary>点。",
+    "phrase2": "近在咫尺,不代表彼此<primary>相连</primary>。",
+    "phrase3": "当企业彼此连接,整个生态便随之<primary>成长</primary>。"
+  },
+  "PlatformReveal": {
+    "eyebrow": "平台",
+    "headline": "整个网络,尽在一处。",
+    "subhead": "搜索企业、了解服务、发现优惠,足不出 Cerâmica 即可建立新的联系。",
+    "searchPlaceholder": "按企业、服务、行业或专长搜索"
+  },
+  "SmartSearch": {
+    "heading": "今天您想找到什么?",
+    "searchPlaceholder": "按企业、服务、行业或专长搜索",
+    "searchButton": "搜索",
+    "viewAllInDirectory": "查看目录中的全部企业 →",
+    "suggestions": [
+      { "label": "我需要一家营销代理公司。", "term": "marketing" },
+      { "label": "我在寻找会计师。", "term": "contabilidade" },
+      { "label": "我想找一家诊所。", "term": "estética" },
+      { "label": "我需要一位律师。", "term": "advocacia" },
+      { "label": "我在找一家餐厅。", "term": "alimentação" },
+      { "label": "我想寻求合作。", "term": "__oportunidades__" }
+    ]
+  },
+  "OpportunityNetwork": {
+    "eyebrow": "活跃的商机网络",
+    "headline": "不止于寻找企业,更能发现商机。",
+    "ctaTalk": "了解详情"
+  },
+  "LocalBenefits": {
+    "eyebrow": "本地优惠",
+    "headline": "唯有本地网络才能创造的独特优势。"
+  },
+  "CollectiveMovement": {
+    "headline": "当楼内的企业开始互联,一栋大厦便不再只是一个地址。",
+    "subhead": "Cerâmica Hub 致力于将地理上的邻近,转化为可见度、协作与全新商机。"
+  },
+  "FounderCTA": {
+    "eyebrow": "上线阶段",
+    "headline": "加入 Cerâmica Hub 首批入驻企业。",
+    "subhead": "免费登记您的企业,获得平台颁发的创始企业标识。",
+    "ctaRegister": "免费登记我的企业",
+    "ctaKnowPlatform": "了解平台详情",
+    "benefits": [
+      "目录中的公开主页",
+      "平台上线初期的专属推广",
+      "行业分类中的固定展示位",
+      "通过 WhatsApp 直接联系",
+      "参与首批平台活动",
+      "拓展新合作的机会"
+    ]
+  },
+  "CinematicFooter": {
+    "tagline": "近在咫尺的企业。真实的连接。全新的商机。",
+    "disclaimer": "Cerâmica Hub 是由 Geez Marketing 独立开发的项目,旨在连接并推广位于 Espaço Cerâmica 的企业。本平台并不代表相关物业或其管理公司的官方立场。",
+    "projectBy": "Geez Marketing 出品。",
+    "copyright": "© {year} Cerâmica Hub。",
+    "links": {
+      "empresas": "企业",
+      "categorias": "行业分类",
+      "oportunidades": "商机",
+      "ofertas": "优惠",
+      "cadastrarEmpresa": "登记企业",
+      "contato": "联系我们",
+      "termos": "使用条款",
+      "privacidade": "隐私政策"
+    }
+  },
+  "EmpresaPage": {
+    "backToDirectory": "← 返回企业目录",
+    "instagram": "查看 Instagram",
+    "sectionVisitRoom": "参观我们的门店",
+    "sectionGallery": "相册",
+    "sectionServices": "服务项目",
+    "sectionOpportunities": "商机",
+    "sectionBenefits": "优惠",
+    "alsoIn": "{category} 分类下的更多企业",
+    "photoAlt": "{name} 的照片",
+    "metaTitle": "{name} — Cerâmica Hub"
+  },
+  "Contato": {
+    "metaTitle": "联系我们 — Cerâmica Hub",
+    "title": "联系平台",
+    "intro": "Cerâmica Hub 由 Geez Marketing 开发与维护。如对登记信息、数据更正、删除请求或平台其他事宜有任何疑问,请通过以下方式联系我们:",
+    "emailLabel": "电子邮箱:",
+    "instagramLabel": "Instagram:"
+  },
+  "Termos": {
+    "metaTitle": "使用条款 — Cerâmica Hub",
+    "title": "使用条款",
+    "paragraph1": "Cerâmica Hub 是由 Geez Marketing 开发的独立平台,旨在连接并推广位于 Espaço Cerâmica 的企业。注册或浏览本平台即表示您同意本条款。",
+    "paragraph2": "企业登记信息在发布前需经过审核。如登记信息有误、不完整或违反本条款,平台有权拒绝、暂停或删除相关登记。",
+    "paragraph3": "商业主页中发布的信息由登记企业自行负责。Cerâmica Hub 不对访客与企业之间达成的洽谈、产品或服务承担责任。",
+    "paragraph4": "本条款可能随时更新。重大变更将通知已登记的企业。",
+    "paragraph5": "如对本条款有任何疑问,请通过<contactLink>联系我们</contactLink>页面提交。"
+  },
+  "Privacidade": {
+    "metaTitle": "隐私政策 — Cerâmica Hub",
+    "title": "隐私政策",
+    "paragraph1": "我们仅收集运营本目录所需的数据:企业登记信息(名称、联系方式、位置、行业分类)以及基础平台使用数据(如浏览量和联系点击量),用于向企业本身展示相关报告。",
+    "paragraph2": "企业的联系方式(WhatsApp、Instagram、网站)会在其商业主页中公开展示,这正是登记的目的所在。密码及验证凭证等内部数据绝不会公开展示。",
+    "paragraph3": "我们不会出于广告目的向第三方出售或共享数据。管理数据的访问权限仅限于负责平台运营的团队。",
+    "paragraph4": "企业可随时通过<contactLink>联系我们</contactLink>页面申请更正或删除其数据。"
+  },
+  "Cadastro": {
+    "metaTitle": "免费登记企业 — Cerâmica Hub",
+    "metaDescription": "创建您的免费商业主页,开始在 Espaço Cerâmica 被发现。",
+    "eyebrow": "免费登记",
+    "headline": "创建您的商业主页,开始在 Cerâmica 被发现。",
+    "subhead": "仅需不到 5 分钟。我们的团队将在发布您的主页前核实相关信息。"
+  },
+  "VirtualTourViewer": {
+    "loading": "加载中..."
+  },
+  "categories": {
+    "Todas": "全部",
+    "Contabilidade & Jurídico": "会计与法律",
+    "Saúde & Estética": "健康与美容",
+    "Alimentação": "餐饮美食",
+    "Moda & Beleza": "时尚与美妆",
+    "Tecnologia & Marketing": "科技与营销",
+    "Educação": "教育",
+    "Design & Arquitetura": "设计与建筑"
+  },
+  "planLabels": {
+    "presenca": "免费展示",
+    "profissional": "专业版",
+    "destaque": "精选版",
+    "experiencia": "尊享版"
+  },
+  "opportunityTypeLabels": {
+    "procura": "寻求",
+    "oferece": "提供",
+    "contratando": "招聘",
+    "parceria": "合作"
+  },
+  "benefitKindLabels": {
+    "desconto": "折扣",
+    "cortesia": "免费赠送",
+    "combo": "套餐组合",
+    "avaliacao-gratis": "免费试用",
+    "beneficio-funcionario": "员工福利",
+    "promocao": "促销活动"
+  }
+}

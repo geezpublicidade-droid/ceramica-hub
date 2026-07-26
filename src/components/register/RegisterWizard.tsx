@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, type ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import { categories } from "@/data/businesses";
 import { registerBusiness } from "@/lib/actions/register-business";
-import type { TowerOption } from "@/app/cadastro/page";
+import { Link } from "@/i18n/navigation";
+import type { TowerOption } from "@/app/[locale]/cadastro/page";
 
 const realCategories = categories.filter((c) => c !== "Todas");
 
@@ -62,6 +64,8 @@ const inputClass =
 const labelClass = "text-[13px] font-medium text-foreground";
 
 export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
+  const t = useTranslations("RegisterWizard");
+  const tCategories = useTranslations("categories");
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<FormState>(initialState);
   const [error, setError] = useState<string | null>(null);
@@ -83,17 +87,17 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
 
   function validateStep(current: number): string | null {
     if (current === 1) {
-      if (!form.name.trim()) return "Informe o nome da empresa.";
-      if (!form.responsibleName.trim()) return "Informe o nome do responsável.";
-      if (!form.email.trim()) return "Informe o e-mail.";
-      if (form.password.length < 8) return "A senha precisa ter pelo menos 8 caracteres.";
-      if (!form.phone.trim()) return "Informe o WhatsApp.";
-      if (!form.category) return "Selecione uma categoria.";
+      if (!form.name.trim()) return t("errors.name");
+      if (!form.responsibleName.trim()) return t("errors.responsibleName");
+      if (!form.email.trim()) return t("errors.email");
+      if (form.password.length < 8) return t("errors.password");
+      if (!form.phone.trim()) return t("errors.phone");
+      if (!form.category) return t("errors.category");
     }
     if (current === 2) {
-      if (!form.towerId) return "Selecione a torre.";
-      if (!form.floor.trim()) return "Informe o andar.";
-      if (!form.roomNumber.trim()) return "Informe a sala.";
+      if (!form.towerId) return t("errors.tower");
+      if (!form.floor.trim()) return t("errors.floor");
+      if (!form.roomNumber.trim()) return t("errors.roomNumber");
     }
     return null;
   }
@@ -115,7 +119,7 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
 
   function handleSubmit() {
     if (!form.termsAccepted || !form.privacyAccepted || !form.addressConfirmed) {
-      setError("É necessário aceitar os termos, a política de privacidade e confirmar o funcionamento no endereço.");
+      setError(t("errors.consent"));
       return;
     }
     setError(null);
@@ -132,10 +136,8 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
   if (done) {
     return (
       <div className="rounded-3xl border border-border bg-white/70 px-8 py-12 text-center">
-        <h2 className="text-[1.4rem] font-semibold text-foreground">Cadastro recebido com sucesso.</h2>
-        <p className="mt-3 text-[15px] text-muted">
-          Nossa equipe verificará os dados antes de publicar sua página.
-        </p>
+        <h2 className="text-[1.4rem] font-semibold text-foreground">{t("doneTitle")}</h2>
+        <p className="mt-3 text-[15px] text-muted">{t("doneDescription")}</p>
       </div>
     );
   }
@@ -153,13 +155,13 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
 
       {step === 1 && (
         <div className="flex flex-col gap-4">
-          <p className="text-[13px] font-medium uppercase tracking-[0.15em] text-muted">Etapa 1 · Dados da empresa</p>
+          <p className="text-[13px] font-medium uppercase tracking-[0.15em] text-muted">{t("step1Eyebrow")}</p>
           <label>
-            <span className={labelClass}>Nome da empresa</span>
+            <span className={labelClass}>{t("labels.name")}</span>
             <input className={inputClass} value={form.name} onChange={(e) => update("name", e.target.value)} />
           </label>
           <label>
-            <span className={labelClass}>Nome do responsável</span>
+            <span className={labelClass}>{t("labels.responsibleName")}</span>
             <input
               className={inputClass}
               value={form.responsibleName}
@@ -167,7 +169,7 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
             />
           </label>
           <label>
-            <span className={labelClass}>E-mail</span>
+            <span className={labelClass}>{t("labels.email")}</span>
             <input
               type="email"
               className={inputClass}
@@ -176,26 +178,26 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
             />
           </label>
           <label>
-            <span className={labelClass}>Crie uma senha de acesso</span>
+            <span className={labelClass}>{t("labels.password")}</span>
             <input
               type="password"
               className={inputClass}
               value={form.password}
               onChange={(e) => update("password", e.target.value)}
-              placeholder="Mínimo 8 caracteres"
+              placeholder={t("placeholders.password")}
             />
           </label>
           <label>
-            <span className={labelClass}>WhatsApp</span>
+            <span className={labelClass}>{t("labels.phone")}</span>
             <input
               className={inputClass}
               value={form.phone}
               onChange={(e) => update("phone", e.target.value)}
-              placeholder="11912345678"
+              placeholder={t("placeholders.phone")}
             />
           </label>
           <label>
-            <span className={labelClass}>CNPJ ou CPF profissional</span>
+            <span className={labelClass}>{t("labels.document")}</span>
             <input
               className={inputClass}
               value={form.document}
@@ -203,22 +205,22 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
             />
           </label>
           <label>
-            <span className={labelClass}>Categoria</span>
+            <span className={labelClass}>{t("labels.category")}</span>
             <select
               className={inputClass}
               value={form.category}
               onChange={(e) => update("category", e.target.value)}
             >
-              <option value="">Selecione</option>
+              <option value="">{t("placeholders.categorySelect")}</option>
               {realCategories.map((c) => (
                 <option key={c} value={c}>
-                  {c}
+                  {tCategories(c)}
                 </option>
               ))}
             </select>
           </label>
           <label>
-            <span className={labelClass}>Breve descrição</span>
+            <span className={labelClass}>{t("labels.shortDescription")}</span>
             <textarea
               className={inputClass}
               rows={3}
@@ -231,31 +233,31 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
 
       {step === 2 && (
         <div className="flex flex-col gap-4">
-          <p className="text-[13px] font-medium uppercase tracking-[0.15em] text-muted">Etapa 2 · Localização</p>
+          <p className="text-[13px] font-medium uppercase tracking-[0.15em] text-muted">{t("step2Eyebrow")}</p>
           <label>
-            <span className={labelClass}>Torre</span>
+            <span className={labelClass}>{t("labels.tower")}</span>
             <select
               className={inputClass}
               value={form.towerId}
               onChange={(e) => update("towerId", e.target.value)}
             >
-              <option value="">Selecione a torre</option>
-              {towers.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.name}
+              <option value="">{t("placeholders.towerSelect")}</option>
+              {towers.map((tower) => (
+                <option key={tower.id} value={tower.id}>
+                  {tower.name}
                 </option>
               ))}
             </select>
           </label>
           {selectedTower && (
-            <p className="text-[13px] text-muted">Endereço: {selectedTower.address}</p>
+            <p className="text-[13px] text-muted">{t("towerAddress", { address: selectedTower.address })}</p>
           )}
           <label>
-            <span className={labelClass}>Andar</span>
+            <span className={labelClass}>{t("labels.floor")}</span>
             <input className={inputClass} value={form.floor} onChange={(e) => update("floor", e.target.value)} />
           </label>
           <label>
-            <span className={labelClass}>Sala</span>
+            <span className={labelClass}>{t("labels.roomNumber")}</span>
             <input
               className={inputClass}
               value={form.roomNumber}
@@ -267,13 +269,13 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
 
       {step === 3 && (
         <div className="flex flex-col gap-4">
-          <p className="text-[13px] font-medium uppercase tracking-[0.15em] text-muted">Etapa 3 · Página gratuita</p>
+          <p className="text-[13px] font-medium uppercase tracking-[0.15em] text-muted">{t("step3Eyebrow")}</p>
           <label>
-            <span className={labelClass}>URL da logo (opcional por enquanto)</span>
+            <span className={labelClass}>{t("labels.logoUrl")}</span>
             <input className={inputClass} value={form.logoUrl} onChange={(e) => update("logoUrl", e.target.value)} />
           </label>
           <label>
-            <span className={labelClass}>URL da foto de capa (opcional por enquanto)</span>
+            <span className={labelClass}>{t("labels.coverPhotoUrl")}</span>
             <input
               className={inputClass}
               value={form.coverPhotoUrl}
@@ -281,16 +283,16 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
             />
           </label>
           <label>
-            <span className={labelClass}>Instagram</span>
+            <span className={labelClass}>{t("labels.instagram")}</span>
             <input
               className={inputClass}
               value={form.instagram}
               onChange={(e) => update("instagram", e.target.value)}
-              placeholder="@suaempresa"
+              placeholder={t("placeholders.instagram")}
             />
           </label>
           <label>
-            <span className={labelClass}>Site (se possuir)</span>
+            <span className={labelClass}>{t("labels.websiteUrl")}</span>
             <input
               className={inputClass}
               value={form.websiteUrl}
@@ -298,28 +300,28 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
             />
           </label>
           <label>
-            <span className={labelClass}>Horário de atendimento</span>
+            <span className={labelClass}>{t("labels.openingHours")}</span>
             <input
               className={inputClass}
               value={form.openingHours}
               onChange={(e) => update("openingHours", e.target.value)}
-              placeholder="Seg a sex, 9h às 18h"
+              placeholder={t("placeholders.openingHours")}
             />
           </label>
           <div>
-            <span className={labelClass}>Serviços (até 3)</span>
+            <span className={labelClass}>{t("labels.services")}</span>
             <div className="mt-2 flex flex-col gap-3">
               {form.services.map((service, index) => (
                 <div key={index} className="rounded-xl border border-border p-3">
                   <input
                     className={inputClass}
-                    placeholder="Nome do serviço"
+                    placeholder={t("labels.serviceName")}
                     value={service.name}
                     onChange={(e) => updateService(index, { name: e.target.value })}
                   />
                   <input
                     className={inputClass}
-                    placeholder="Descrição curta (opcional)"
+                    placeholder={t("labels.serviceDescription")}
                     value={service.description}
                     onChange={(e) => updateService(index, { description: e.target.value })}
                   />
@@ -331,7 +333,7 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
                   onClick={() => update("services", [...form.services, { name: "", description: "" }])}
                   className="self-start text-[13px] font-medium text-primary"
                 >
-                  + Adicionar serviço
+                  {t("addService")}
                 </button>
               )}
             </div>
@@ -341,7 +343,7 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
 
       {step === 4 && (
         <div className="flex flex-col gap-4">
-          <p className="text-[13px] font-medium uppercase tracking-[0.15em] text-muted">Etapa 4 · Verificação</p>
+          <p className="text-[13px] font-medium uppercase tracking-[0.15em] text-muted">{t("step4Eyebrow")}</p>
           <label className="flex items-start gap-3 text-[14px] text-foreground">
             <input
               type="checkbox"
@@ -349,7 +351,7 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
               checked={form.addressConfirmed}
               onChange={(e) => update("addressConfirmed", e.target.checked)}
             />
-            Confirmo que minha empresa funciona no endereço informado.
+            {t("consent.address")}
           </label>
           <label className="flex items-start gap-3 text-[14px] text-foreground">
             <input
@@ -358,11 +360,13 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
               checked={form.termsAccepted}
               onChange={(e) => update("termsAccepted", e.target.checked)}
             />
-            Li e aceito os{" "}
-            <a href="/termos" target="_blank" className="text-primary underline">
-              Termos de Uso
-            </a>
-            .
+            {t.rich("consent.terms", {
+              termsLink: (chunks: ReactNode) => (
+                <Link href="/termos" target="_blank" className="text-primary underline">
+                  {chunks}
+                </Link>
+              ),
+            })}
           </label>
           <label className="flex items-start gap-3 text-[14px] text-foreground">
             <input
@@ -371,11 +375,13 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
               checked={form.privacyAccepted}
               onChange={(e) => update("privacyAccepted", e.target.checked)}
             />
-            Li e aceito a{" "}
-            <a href="/privacidade" target="_blank" className="text-primary underline">
-              Política de Privacidade
-            </a>
-            .
+            {t.rich("consent.privacy", {
+              privacyLink: (chunks: ReactNode) => (
+                <Link href="/privacidade" target="_blank" className="text-primary underline">
+                  {chunks}
+                </Link>
+              ),
+            })}
           </label>
           <label className="flex items-start gap-3 text-[14px] text-foreground">
             <input
@@ -384,7 +390,7 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
               checked={form.imageUsageAuthorized}
               onChange={(e) => update("imageUsageAuthorized", e.target.checked)}
             />
-            Autorizo a exibição pública das informações e imagens enviadas.
+            {t("consent.imageUsage")}
           </label>
         </div>
       )}
@@ -398,7 +404,7 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
             onClick={goBack}
             className="neu rounded-full px-6 py-3 text-[14px] font-medium text-foreground"
           >
-            Voltar
+            {t("buttons.back")}
           </button>
         ) : (
           <span />
@@ -409,7 +415,7 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
             onClick={goNext}
             className="neu-primary rounded-full px-6 py-3 text-[14px] font-medium text-white"
           >
-            Continuar
+            {t("buttons.continue")}
           </button>
         ) : (
           <button
@@ -418,7 +424,7 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
             onClick={handleSubmit}
             className="neu-primary rounded-full px-6 py-3 text-[14px] font-medium text-white disabled:opacity-60"
           >
-            {isPending ? "Enviando..." : "Enviar cadastro"}
+            {isPending ? t("buttons.submitting") : t("buttons.submit")}
           </button>
         )}
       </div>

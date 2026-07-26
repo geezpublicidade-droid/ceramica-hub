@@ -1,15 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-const links = [
-  { href: "/#empresas", label: "Empresas" },
-  { href: "/#oportunidades", label: "Oportunidades" },
-  { href: "/#beneficios", label: "Benefícios" },
-  { href: "/#planos", label: "Planos" },
-];
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 export function Header() {
+  const t = useTranslations("Header");
+  const links = [
+    { href: "/#empresas", label: t("navEmpresas") },
+    { href: "/#oportunidades", label: t("navOportunidades") },
+    { href: "/#beneficios", label: t("navBeneficios") },
+    { href: "/#planos", label: t("navPlanos") },
+  ];
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -33,32 +36,33 @@ export function Header() {
       }`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6">
-        <a href="/#top" className="text-[15px] font-semibold tracking-tight text-foreground">
+        <Link href="/#top" className="text-[15px] font-semibold tracking-tight text-foreground">
           Cerâmica <span className="text-primary">Hub</span>
-        </a>
+        </Link>
         <nav className="hidden gap-8 text-[13px] text-muted md:flex">
           {links.map((link) => (
-            <a key={link.href} href={link.href} className="transition-colors hover:text-foreground">
+            <Link key={link.href} href={link.href} className="transition-colors hover:text-foreground">
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
         <div className="flex items-center gap-3">
+          <LanguageSwitcher className="hidden md:flex" />
           <a
             href="/login"
             className="hidden text-[13px] text-muted transition-colors hover:text-foreground md:block"
           >
-            Entrar
+            {t("entrar")}
           </a>
-          <a
+          <Link
             href="/cadastro"
             className="neu-primary whitespace-nowrap rounded-full px-3 py-2 text-[12px] font-medium text-white sm:px-4 sm:text-[13px]"
           >
-            Cadastrar empresa
-          </a>
+            {t("cadastrarEmpresa")}
+          </Link>
           <button
             type="button"
-            aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
+            aria-label={menuOpen ? t("fecharMenu") : t("abrirMenu")}
             onClick={() => setMenuOpen((v) => !v)}
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-white text-foreground shadow-[0_2px_10px_rgba(0,0,0,0.12)] md:hidden"
           >
@@ -78,22 +82,25 @@ export function Header() {
       {menuOpen && (
         <nav className="glass-light mx-6 mt-3 flex flex-col gap-1 rounded-2xl border border-border p-3 text-[14px] md:hidden">
           {links.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               onClick={() => setMenuOpen(false)}
               className="rounded-xl px-3 py-2.5 text-foreground transition-colors hover:bg-white/60"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
           <a
             href="/login"
             onClick={() => setMenuOpen(false)}
             className="rounded-xl px-3 py-2.5 text-foreground transition-colors hover:bg-white/60"
           >
-            Entrar
+            {t("entrar")}
           </a>
+          <div className="mt-2 border-t border-border pt-2">
+            <LanguageSwitcher />
+          </div>
         </nav>
       )}
     </header>

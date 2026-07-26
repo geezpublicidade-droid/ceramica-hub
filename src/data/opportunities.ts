@@ -7,10 +7,3 @@ export type Opportunity = {
   title: string;
   description: string;
 };
-
-export const opportunityTypeLabels: Record<OpportunityType, string> = {
-  procura: "Procura",
-  oferece: "Oferece",
-  contratando: "Contratando",
-  parceria: "Parceria",
-};

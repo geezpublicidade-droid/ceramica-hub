@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Viewer } from "@photo-sphere-viewer/core";
 import { CubemapAdapter } from "@photo-sphere-viewer/cubemap-adapter";
 import "@photo-sphere-viewer/core/index.css";
+import { useTranslations } from "next-intl";
 import type { VirtualTourScene } from "@/lib/services/platform";
 
 function panoramaFor(scene: VirtualTourScene) {
@@ -11,6 +12,7 @@ function panoramaFor(scene: VirtualTourScene) {
 }
 
 export function VirtualTourViewer({ scenes }: { scenes: VirtualTourScene[] }) {
+  const t = useTranslations("VirtualTourViewer");
   const containerRef = useRef<HTMLDivElement>(null);
   const viewerRef = useRef<Viewer | null>(null);
   const [activeId, setActiveId] = useState(scenes[0]?.id);
@@ -23,7 +25,7 @@ export function VirtualTourViewer({ scenes }: { scenes: VirtualTourScene[] }) {
       panorama: panoramaFor(scenes[0]),
       adapter: hasCubemap ? CubemapAdapter : undefined,
       navbar: ["zoom", "fullscreen"],
-      loadingTxt: "Carregando...",
+      loadingTxt: t("loading"),
     });
     viewerRef.current = viewer;
     return () => {

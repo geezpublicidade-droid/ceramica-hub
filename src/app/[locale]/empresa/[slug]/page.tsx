@@ -1,13 +1,12 @@
-import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { BusinessAvatar } from "@/components/BusinessAvatar";
 import { VirtualTourViewer } from "@/components/VirtualTourViewer";
+import { Link, redirect } from "@/i18n/navigation";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
-import { opportunityTypeLabels } from "@/data/opportunities";
-import { benefitKindLabels } from "@/data/benefits";
 import {
   getAllBusinesses,
   getBusinessById,
@@ -24,7 +23,7 @@ import {
 import { WhatsAppLink } from "@/components/WhatsAppLink";
 
 type PageProps = {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 };
 
 // dynamicParams + revalidate (ISR) em vez de SSG puro: o deploy é manual
@@ -45,11 +44,12 @@ async function resolveBusiness(param: string) {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   const business = await resolveBusiness(slug);
   if (!business) return {};
 
-  const title = `${business.name} — Cerâmica Hub`;
+  const t = await getTranslations({ locale, namespace: "EmpresaPage" });
+  const title = t("metaTitle", { name: business.name });
   const description = business.description;
 
   return {
@@ -65,14 +65,22 @@ function instagramUrl(handle: string) {
 }
 
 export default async function BusinessProfilePage({ params }: PageProps) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   const business = await resolveBusiness(slug);
   if (!business || business.status !== "approved") notFound();
 
   // link antigo com UUID: redireciona pra URL canônica com slug
   if (UUID_RE.test(slug) && business.slug !== slug) {
-    redirect(`/empresa/${business.slug}`);
+    redirect({ href: `/empresa/${business.slug}`, locale });
   }
+
+  const [t, tCategories, tCommon, tOpportunityTypes, tBenefitKinds] = await Promise.all([
+    getTranslations("EmpresaPage"),
+    getTranslations("categories"),
+    getTranslations("Common"),
+    getTranslations("opportunityTypeLabels"),
+    getTranslations("benefitKindLabels"),
+  ]);
 
   const [related, allOpportunities, allBenefits, services, photos, virtualTourScenes] = await Promise.all([
     getRelatedBusinesses(business),
@@ -98,7 +106,7 @@ export default async function BusinessProfilePage({ params }: PageProps) {
               href="/#empresas"
               className="text-[13px] font-medium text-muted transition-colors hover:text-foreground"
             >
-              ← Voltar ao diretório
+              {t("backToDirectory")}
             </Link>
 
             <div className="glass-light mt-8 rounded-3xl p-8 sm:p-10">
@@ -115,12 +123,12 @@ export default async function BusinessProfilePage({ params }: PageProps) {
                     </h1>
                     {business.verified && (
                       <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary">
-                        Verificado
+                        {tCommon("verified")}
                       </span>
                     )}
                   </div>
                   <p className="mt-2 text-[15px] text-muted">
-                    {business.category} · {business.floor}
+                    {tCategories(business.category)} · {business.floor}
                   </p>
                 </div>
               </div>
@@ -135,7 +143,7 @@ export default async function BusinessProfilePage({ params }: PageProps) {
                   businessId={business.id}
                   className="neu-primary rounded-full px-6 py-3 text-[14px] font-medium text-white"
                 >
-                  Falar no WhatsApp
+                  {tCommon("whatsapp")}
                 </WhatsAppLink>
                 <a
                   href={instagramUrl(business.instagram)}
@@ -143,7 +151,7 @@ export default async function BusinessProfilePage({ params }: PageProps) {
                   rel="noopener noreferrer"
                   className="neu rounded-full px-6 py-3 text-[14px] font-medium text-foreground"
                 >
-                  Ver Instagram
+                  {t("instagram")}
                 </a>
               </div>
             </div>
@@ -162,7 +170,7 @@ export default async function BusinessProfilePage({ params }: PageProps) {
           <section className="bg-surface px-6 py-10">
             <div className="mx-auto max-w-4xl">
               <h2 className="text-[13px] font-medium uppercase tracking-[0.2em] text-muted">
-                Visite nossa sala
+                {t("sectionVisitRoom")}
               </h2>
               <div className="mt-4">
                 <VirtualTourViewer scenes={virtualTourScenes} />
@@ -174,14 +182,14 @@ export default async function BusinessProfilePage({ params }: PageProps) {
         {photos.length > 0 && (
           <section className="bg-surface px-6 py-10">
             <div className="mx-auto max-w-4xl">
-              <h2 className="text-[13px] font-medium uppercase tracking-[0.2em] text-muted">Galeria</h2>
+              <h2 className="text-[13px] font-medium uppercase tracking-[0.2em] text-muted">{t("sectionGallery")}</h2>
               <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {photos.map((photo) => (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     key={photo.id}
                     src={photo.url}
-                    alt={`Foto de ${business.name}`}
+                    alt={t("photoAlt", { name: business.name })}
                     className="h-32 w-full rounded-xl object-cover"
                   />
                 ))}
@@ -193,7 +201,7 @@ export default async function BusinessProfilePage({ params }: PageProps) {
         {services.length > 0 && (
           <section className="bg-background px-6 py-10">
             <div className="mx-auto max-w-4xl">
-              <h2 className="text-[13px] font-medium uppercase tracking-[0.2em] text-muted">Serviços</h2>
+              <h2 className="text-[13px] font-medium uppercase tracking-[0.2em] text-muted">{t("sectionServices")}</h2>
               <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {services.map((service) => (
                   <div key={service.id} className="glass-card-light rounded-2xl p-5">
@@ -214,13 +222,13 @@ export default async function BusinessProfilePage({ params }: PageProps) {
               {opportunities.length > 0 && (
                 <div>
                   <h2 className="text-[13px] font-medium uppercase tracking-[0.2em] text-primary">
-                    Oportunidades
+                    {t("sectionOpportunities")}
                   </h2>
                   <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                     {opportunities.map((opportunity) => (
                       <div key={opportunity.id} className="glass-card-light rounded-2xl p-5">
                         <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary">
-                          {opportunityTypeLabels[opportunity.type]}
+                          {tOpportunityTypes(opportunity.type)}
                         </span>
                         <p className="mt-3 text-[15px] font-semibold tracking-tight">
                           {opportunity.title}
@@ -237,13 +245,13 @@ export default async function BusinessProfilePage({ params }: PageProps) {
               {benefits.length > 0 && (
                 <div>
                   <h2 className="text-[13px] font-medium uppercase tracking-[0.2em] text-primary">
-                    Benefícios
+                    {t("sectionBenefits")}
                   </h2>
                   <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                     {benefits.map((benefit) => (
                       <div key={benefit.id} className="glass-card-light rounded-2xl p-5">
                         <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary">
-                          {benefitKindLabels[benefit.kind]}
+                          {tBenefitKinds(benefit.kind)}
                         </span>
                         <p className="mt-3 text-[15px] font-semibold tracking-tight">{benefit.title}</p>
                         <p className="mt-1.5 text-[13px] leading-relaxed text-muted">
@@ -262,7 +270,7 @@ export default async function BusinessProfilePage({ params }: PageProps) {
           <section className="bg-background px-6 py-16">
             <div className="mx-auto max-w-4xl">
               <h2 className="text-[13px] font-medium uppercase tracking-[0.2em] text-muted">
-                Também em {business.category}
+                {t("alsoIn", { category: tCategories(business.category) })}
               </h2>
               <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
                 {related.map((candidate) => (

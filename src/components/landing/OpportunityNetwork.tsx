@@ -1,5 +1,5 @@
+import { getTranslations } from "next-intl/server";
 import { FadeUp } from "@/components/motion/FadeUp";
-import { opportunityTypeLabels } from "@/data/opportunities";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import type { OpportunityWithBusiness } from "@/lib/services/platform";
 
@@ -14,16 +14,18 @@ const typeStyles: Record<string, string> = {
   parceria: "bg-primary/15 text-primary",
 };
 
-export function OpportunityNetwork({ opportunities }: OpportunityNetworkProps) {
+export async function OpportunityNetwork({ opportunities }: OpportunityNetworkProps) {
+  const t = await getTranslations("OpportunityNetwork");
+  const tTypes = await getTranslations("opportunityTypeLabels");
   return (
     <section id="oportunidades" className="bg-surface px-6 py-20 text-foreground">
       <div className="mx-auto max-w-6xl">
         <FadeUp className="max-w-2xl">
           <p className="text-[13px] font-medium uppercase tracking-[0.2em] text-primary">
-            Rede em movimento
+            {t("eyebrow")}
           </p>
           <h2 className="mt-4 text-[clamp(2rem,4.5vw,3.5rem)] font-semibold leading-tight tracking-tight">
-            Mais do que encontrar empresas. Encontre oportunidades.
+            {t("headline")}
           </h2>
         </FadeUp>
 
@@ -41,7 +43,7 @@ export function OpportunityNetwork({ opportunities }: OpportunityNetworkProps) {
                   typeStyles[opportunity.type] ?? "bg-foreground/10 text-muted"
                 }`}
               >
-                {opportunityTypeLabels[opportunity.type]}
+                {tTypes(opportunity.type)}
               </span>
               <p className="mt-4 text-[15px] font-semibold leading-snug tracking-tight">
                 {opportunity.title}
@@ -64,7 +66,7 @@ export function OpportunityNetwork({ opportunities }: OpportunityNetworkProps) {
                 rel="noopener noreferrer"
                 className="mt-4 inline-flex items-center gap-1.5 text-[12px] font-medium text-primary"
               >
-                Conversar sobre isso
+                {t("ctaTalk")}
                 <span aria-hidden="true">→</span>
               </a>
             </div>

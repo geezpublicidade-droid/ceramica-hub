@@ -9,12 +9,3 @@ export type Benefit = {
   validUntil?: string;
   couponCode?: string;
 };
-
-export const benefitKindLabels: Record<BenefitKind, string> = {
-  desconto: "Desconto",
-  cortesia: "Cortesia",
-  combo: "Combo",
-  "avaliacao-gratis": "Avaliação grátis",
-  "beneficio-funcionario": "Para funcionários",
-  promocao: "Promoção",
-};

@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { categories, type Business } from "@/data/businesses";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { matchBusinesses } from "@/lib/search";
@@ -13,6 +14,9 @@ type DirectoryProps = {
 };
 
 export function Directory({ businesses }: DirectoryProps) {
+  const t = useTranslations("Directory");
+  const tCategories = useTranslations("categories");
+  const tCommon = useTranslations("Common");
   const [active, setActive] = useState<string>("Todas");
   const { query, setQuery } = useSearch();
 
@@ -33,23 +37,21 @@ export function Directory({ businesses }: DirectoryProps) {
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h2 className="text-[clamp(1.75rem,3.5vw,2.75rem)] font-semibold leading-tight tracking-tight">
-              Quem já faz parte
+              {t("title")}
             </h2>
-            <p className="mt-3 max-w-md text-[15px] text-muted">
-              Busque por setor e fale direto no WhatsApp com quem trabalha no seu prédio.
-            </p>
+            <p className="mt-3 max-w-md text-[15px] text-muted">{t("subtitle")}</p>
           </div>
         </div>
 
         {query && query !== "__oportunidades__" && (
           <div className="mt-6 flex items-center gap-2 text-[13px] text-muted">
-            Filtrando por <span className="font-medium text-foreground">“{query}”</span>
+            {t("filteringBy")} <span className="font-medium text-foreground">“{query}”</span>
             <button
               type="button"
               onClick={() => setQuery("")}
               className="rounded-full border border-border px-2.5 py-0.5 text-[12px] hover:bg-white"
             >
-              limpar
+              {t("clear")}
             </button>
           </div>
         )}
@@ -65,7 +67,7 @@ export function Directory({ businesses }: DirectoryProps) {
                   : "neu text-muted hover:text-foreground"
               }`}
             >
-              {category}
+              {tCategories(category)}
             </button>
           ))}
         </div>
@@ -79,40 +81,32 @@ export function Directory({ businesses }: DirectoryProps) {
             />
             <div className="relative mx-auto max-w-xl">
               <h3 className="text-[clamp(1.4rem,3vw,1.9rem)] font-semibold tracking-tight text-foreground">
-                As primeiras empresas do Cerâmica estão chegando.
+                {t("emptyTitle")}
               </h3>
-              <p className="mt-4 text-[15px] leading-relaxed text-muted">
-                Estamos formando a primeira rede digital de negócios do Espaço Cerâmica.
-                Cadastre sua empresa gratuitamente e faça parte da geração fundadora.
-              </p>
+              <p className="mt-4 text-[15px] leading-relaxed text-muted">{t("emptyDescription")}</p>
               <div className="mt-8 flex flex-wrap justify-center gap-4">
-                <a
+                <Link
                   href="/cadastro"
                   className="neu-primary rounded-full px-7 py-3.5 text-[15px] font-medium text-white"
                 >
-                  Cadastrar minha empresa gratuitamente
-                </a>
+                  {t("ctaRegisterFree")}
+                </Link>
                 <a href="#planos" className="neu rounded-full px-7 py-3.5 text-[15px] font-medium text-foreground">
-                  Conhecer como funciona
+                  {t("ctaHowItWorks")}
                 </a>
               </div>
             </div>
           </div>
         ) : filtered.length === 0 ? (
           <div className="mt-14 rounded-3xl border border-border bg-white/60 px-6 py-14 text-center">
-            <p className="text-[15px] text-foreground">
-              Ainda não encontramos uma empresa para essa busca.
-            </p>
-            <p className="mt-2 text-[14px] text-muted">
-              Você conhece uma empresa do Cerâmica que oferece esse serviço? Convide-a para
-              participar.
-            </p>
-            <a
+            <p className="text-[15px] text-foreground">{t("noResultsTitle")}</p>
+            <p className="mt-2 text-[14px] text-muted">{t("noResultsDescription")}</p>
+            <Link
               href="/cadastro"
               className="mt-6 inline-block rounded-full neu px-6 py-3 text-[14px] font-medium text-foreground"
             >
-              Indicar uma empresa
-            </a>
+              {t("ctaIndicate")}
+            </Link>
           </div>
         ) : (
           <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -138,21 +132,22 @@ export function Directory({ businesses }: DirectoryProps) {
                     </Link>
                     {business.verified && (
                       <span className="shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary">
-                        Verificado
+                        {tCommon("verified")}
                       </span>
                     )}
                   </div>
                   <p className="mt-1 text-[13px] text-muted">
-                    {business.category} · {business.floor}
+                    {tCategories(business.category)} · {business.floor}
                   </p>
                   <p className="mt-3 text-[14px] leading-relaxed text-muted">{business.description}</p>
                   <a
                     href={buildWhatsAppLink(business.phone, business.name)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-4 inline-block text-[13px] font-medium text-primary transition-transform hover:translate-x-1"
+                    className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-medium text-primary transition-transform hover:translate-x-1"
                   >
-                    Falar no WhatsApp →
+                    {tCommon("whatsapp")}
+                    <span aria-hidden="true">→</span>
                   </a>
                 </div>
               </div>
