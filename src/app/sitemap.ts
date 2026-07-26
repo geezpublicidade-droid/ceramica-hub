@@ -33,6 +33,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entry("/cadastro", "monthly", 0.8),
     entry("/termos", "yearly", 0.2),
     entry("/privacidade", "yearly", 0.2),
+    entry("/politica-de-cadastro", "yearly", 0.2),
+    entry("/politica-de-publicidade", "yearly", 0.2),
+    entry("/politica-de-cancelamento", "yearly", 0.2),
     entry("/contato", "yearly", 0.3),
     ...businesses.map((business) => entry(`/empresa/${business.slug}`, "weekly", 0.6)),
   ];

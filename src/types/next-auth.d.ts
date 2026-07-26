@@ -5,6 +5,7 @@ type Role = "business" | "member" | "admin";
 declare module "next-auth" {
   interface Session {
     user: {
+      id: string;
       role: Role;
       businessId?: string;
       memberId?: string;

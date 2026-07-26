@@ -31,6 +31,7 @@ type FormState = {
   services: ServiceDraft[];
   termsAccepted: boolean;
   privacyAccepted: boolean;
+  registrationPolicyAccepted: boolean;
   imageUsageAuthorized: boolean;
   addressConfirmed: boolean;
 };
@@ -55,6 +56,7 @@ const initialState: FormState = {
   services: [{ name: "", description: "" }],
   termsAccepted: false,
   privacyAccepted: false,
+  registrationPolicyAccepted: false,
   imageUsageAuthorized: false,
   addressConfirmed: false,
 };
@@ -118,7 +120,7 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
   }
 
   function handleSubmit() {
-    if (!form.termsAccepted || !form.privacyAccepted || !form.addressConfirmed) {
+    if (!form.termsAccepted || !form.privacyAccepted || !form.registrationPolicyAccepted || !form.addressConfirmed) {
       setError(t("errors.consent"));
       return;
     }
@@ -378,6 +380,21 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
             {t.rich("consent.privacy", {
               privacyLink: (chunks: ReactNode) => (
                 <Link href="/privacidade" target="_blank" className="text-primary underline">
+                  {chunks}
+                </Link>
+              ),
+            })}
+          </label>
+          <label className="flex items-start gap-3 text-[14px] text-foreground">
+            <input
+              type="checkbox"
+              className="mt-1"
+              checked={form.registrationPolicyAccepted}
+              onChange={(e) => update("registrationPolicyAccepted", e.target.checked)}
+            />
+            {t.rich("consent.registrationPolicy", {
+              registrationLink: (chunks: ReactNode) => (
+                <Link href="/politica-de-cadastro" target="_blank" className="text-primary underline">
                   {chunks}
                 </Link>
               ),

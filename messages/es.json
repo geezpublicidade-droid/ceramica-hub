@@ -5,7 +5,8 @@
   },
   "Common": {
     "verified": "Verificado",
-    "whatsapp": "Hablar por WhatsApp"
+    "whatsapp": "Hablar por WhatsApp",
+    "legalPlaceholderNotice": "Texto provisional — revisión legal pendiente antes del lanzamiento."
   },
   "Header": {
     "navEmpresas": "Empresas",
@@ -157,6 +158,7 @@
       "address": "Confirmo que mi empresa opera en la dirección indicada.",
       "terms": "He leído y acepto los <termsLink>Términos de Uso</termsLink>.",
       "privacy": "He leído y acepto la <privacyLink>Política de Privacidad</privacyLink>.",
+      "registrationPolicy": "He leído y acepto la <registrationLink>Política de Registro y Verificación</registrationLink>.",
       "imageUsage": "Autorizo la exhibición pública de la información e imágenes enviadas."
     },
     "errors": {
@@ -169,7 +171,7 @@
       "tower": "Selecciona la torre.",
       "floor": "Indica el piso.",
       "roomNumber": "Indica la sala.",
-      "consent": "Debes aceptar los términos, la política de privacidad y confirmar el funcionamiento en la dirección."
+      "consent": "Debes aceptar los términos, la política de privacidad, la política de registro y confirmar el funcionamiento en la dirección."
     },
     "buttons": {
       "back": "Volver",
@@ -257,7 +259,8 @@
       "cadastrarEmpresa": "Registrar empresa",
       "contato": "Contacto",
       "termos": "Términos de Uso",
-      "privacidade": "Privacidad"
+      "privacidade": "Privacidad",
+      "politicaCancelamento": "Cancelación"
     }
   },
   "EmpresaPage": {
@@ -295,6 +298,30 @@
     "paragraph2": "Los datos de contacto de una empresa (WhatsApp, Instagram, sitio web) se muestran públicamente en la página comercial, ya que ese es el propósito del registro. Los datos internos, como contraseñas y comprobantes de verificación, nunca se muestran públicamente.",
     "paragraph3": "No vendemos ni compartimos datos con terceros con fines publicitarios. El acceso a los datos administrativos está restringido al equipo responsable de la plataforma.",
     "paragraph4": "Una empresa puede solicitar la corrección o eliminación de sus datos en cualquier momento a través de la página de <contactLink>contacto</contactLink>."
+  },
+  "PoliticaCadastro": {
+    "metaTitle": "Política de Registro y Verificación — Cerâmica Hub",
+    "title": "Política de Registro y Verificación",
+    "paragraph1": "Solo las empresas y profesionales comprobadamente instalados en Espaço Cerâmica pueden tener un perfil de miembro en Cerâmica Hub. Durante el registro, la empresa indica su torre, piso y sala, y puede solicitársele un comprobante de funcionamiento en esa dirección.",
+    "paragraph2": "Todo registro pasa por una revisión antes de publicarse. La plataforma puede aprobar, solicitar ajustes, rechazar o suspender un registro que contenga información incorrecta, incompleta, o que no compruebe una instalación real en el complejo. No hay un plazo garantizado de revisión.",
+    "paragraph3": "Las empresas externas a Espaço Cerâmica no reciben sello de miembro ni pueden presentarse como parte del complejo, incluso si contratan publicidad en la plataforma (ver Política de Publicidad).",
+    "paragraph4": "Las dudas sobre el proceso de verificación pueden enviarse a través de la página de <contactLink>contacto</contactLink>."
+  },
+  "PoliticaPublicidade": {
+    "metaTitle": "Política de Publicidad — Cerâmica Hub",
+    "title": "Política de Publicidad",
+    "paragraph1": "Cerâmica Hub puede mostrar contenido pago de empresas externas a Espaço Cerâmica, en forma de publicidad, patrocinio o campañas. Todo contenido pago se identifica claramente como \"Patrocinado\".",
+    "paragraph2": "La publicidad paga no otorga estatus de miembro ni ninguna indicación de que el anunciante esté físicamente instalado en el complejo — esta distinción se mantiene siempre, sin importar el monto invertido.",
+    "paragraph3": "La plataforma puede rechazar, pausar o eliminar una campaña en cualquier momento, sin aviso previo, si el contenido infringe estos términos, la legislación aplicable, o los intereses de las empresas miembro del complejo.",
+    "paragraph4": "Los anunciantes interesados pueden ponerse en contacto a través de la página de <contactLink>contacto</contactLink>."
+  },
+  "PoliticaCancelamento": {
+    "metaTitle": "Política de Cancelación — Cerâmica Hub",
+    "title": "Política de Cancelación",
+    "paragraph1": "Una empresa puede cancelar un plan pago en cualquier momento. La cancelación detiene la renovación — los recursos del plan pago siguen disponibles hasta el final del período ya pagado, y después de eso la empresa vuelve automáticamente al plan gratuito.",
+    "paragraph2": "La cancelación no elimina el perfil de la empresa: el registro y el historial siguen existiendo, solo con los recursos del plan gratuito.",
+    "paragraph3": "Los reembolsos, cuando correspondan, siguen la legislación vigente y se evalúan caso por caso — la plataforma no promete reembolsos automáticos fuera de los casos previstos por ley.",
+    "paragraph4": "Las solicitudes de cancelación pueden hacerse desde el propio panel de la empresa o a través de la página de <contactLink>contacto</contactLink>."
   },
   "Cadastro": {
     "metaTitle": "Registra tu empresa gratis — Cerâmica Hub",

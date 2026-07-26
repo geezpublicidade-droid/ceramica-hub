@@ -1,5 +1,6 @@
 "use server";
 
+import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { createServiceClient } from "@/lib/supabase/server";
@@ -8,6 +9,13 @@ import { getBusinessById } from "@/lib/services/platform";
 import { translateAndStore } from "@/lib/services/translate";
 
 type ActionResult = { success: true } | { success: false; error: string };
+
+const addPromotionSchema = z.object({
+  title: z.string().trim().min(1, "Informe o título da promoção.").max(120, "Título muito longo."),
+  description: z.string().max(1000, "Descrição muito longa."),
+  couponCode: z.string().max(40, "Cupom muito longo."),
+  validUntil: z.string(),
+});
 
 async function requireOwnBusiness() {
   const session = await auth();
@@ -258,16 +266,21 @@ export async function deleteVirtualTourScene(sceneId: string): Promise<ActionRes
 
 // ---- promoções ----
 
-export async function addPromotion(input: {
+export async function addPromotion(rawInput: {
   title: string;
   description: string;
   couponCode: string;
   validUntil: string;
 }): Promise<ActionResult> {
+  const parsed = addPromotionSchema.safeParse(rawInput);
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues[0]?.message ?? "Dados inválidos." };
+  }
+  const input = parsed.data;
+
   const businessId = await requireOwnBusiness();
   const business = await getBusinessById(businessId);
   if (!business) return { success: false, error: "Empresa não encontrada." };
-  if (!input.title.trim()) return { success: false, error: "Informe o título da promoção." };
 
   const limits = limitsFor(business.effectivePlan);
   if (limits.maxPromotions === 0) {

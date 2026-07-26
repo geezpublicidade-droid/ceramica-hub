@@ -4,15 +4,34 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { createServiceClient } from "@/lib/supabase/server";
 
-async function requireAdmin() {
+async function requireAdmin(): Promise<string> {
   const session = await auth();
   if (session?.user?.role !== "admin") {
     throw new Error("Acesso restrito a administradores.");
   }
+  return session.user.id;
+}
+
+async function logAdminAction(
+  adminId: string,
+  action: string,
+  entityType: string,
+  entityId: string,
+  metadata?: Record<string, unknown>
+) {
+  const supabase = createServiceClient();
+  await supabase.from("audit_logs").insert({
+    actor_type: "admin",
+    actor_id: adminId,
+    action,
+    entity_type: entityType,
+    entity_id: entityId,
+    metadata: metadata ?? null,
+  });
 }
 
 export async function approveBusiness(businessId: string) {
-  await requireAdmin();
+  const adminId = await requireAdmin();
   const supabase = createServiceClient();
 
   const { data: business, error: fetchError } = await supabase
@@ -43,18 +62,26 @@ export async function approveBusiness(businessId: string) {
 
   const { error } = await supabase.from("businesses").update(update).eq("id", businessId);
   if (error) throw error;
+
+  await logAdminAction(adminId, "approve_business", "business", businessId, {
+    trialGranted: Boolean(update.trial_status),
+  });
+
   revalidatePath("/admin");
   revalidatePath("/");
 }
 
 export async function rejectBusiness(businessId: string, reason: string) {
-  await requireAdmin();
+  const adminId = await requireAdmin();
   const supabase = createServiceClient();
   const { error } = await supabase
     .from("businesses")
     .update({ status: "rejected", rejection_reason: reason || null })
     .eq("id", businessId);
   if (error) throw error;
+
+  await logAdminAction(adminId, "reject_business", "business", businessId, { reason: reason || null });
+
   revalidatePath("/admin");
   revalidatePath("/");
 }

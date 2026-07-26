@@ -1,33 +1,50 @@
 "use server";
 
+import { z } from "zod";
 import bcrypt from "bcryptjs";
+import { headers } from "next/headers";
 import { createServiceClient } from "@/lib/supabase/server";
 import { slugify } from "@/lib/slug";
 import { translateAndStore } from "@/lib/services/translate";
 
-export type RegisterBusinessInput = {
-  name: string;
-  responsibleName: string;
-  email: string;
-  password: string;
-  phone: string;
-  document: string;
-  category: string;
-  shortDescription: string;
-  towerId: string;
-  floor: string;
-  roomNumber: string;
-  logoUrl: string;
-  coverPhotoUrl: string;
-  instagram: string;
-  websiteUrl: string;
-  openingHours: string;
-  services: { name: string; description: string }[];
-  termsAccepted: boolean;
-  privacyAccepted: boolean;
-  imageUsageAuthorized: boolean;
-  addressConfirmed: boolean;
-};
+const CONSENT_VERSION = "1.0";
+
+const registerBusinessSchema = z
+  .object({
+    name: z.string().trim().min(1, "Informe o nome da empresa."),
+    responsibleName: z.string().trim().min(1, "Informe o nome do responsável."),
+    email: z.string().trim().min(1, "Informe o e-mail.").email("Informe um e-mail válido."),
+    password: z.string().min(8, "A senha precisa ter pelo menos 8 caracteres."),
+    phone: z.string().trim().min(1, "Informe o WhatsApp."),
+    document: z.string(),
+    category: z.string().trim().min(1, "Selecione uma categoria."),
+    shortDescription: z.string(),
+    towerId: z.string().min(1, "Selecione a torre."),
+    floor: z.string().trim().min(1, "Informe o andar."),
+    roomNumber: z.string().trim().min(1, "Informe a sala."),
+    logoUrl: z.string(),
+    coverPhotoUrl: z.string(),
+    instagram: z.string(),
+    websiteUrl: z.string(),
+    openingHours: z.string(),
+    services: z.array(z.object({ name: z.string(), description: z.string() })).max(3),
+    termsAccepted: z.boolean(),
+    privacyAccepted: z.boolean(),
+    registrationPolicyAccepted: z.boolean(),
+    imageUsageAuthorized: z.boolean(),
+    addressConfirmed: z.boolean(),
+  })
+  .superRefine((data, ctx) => {
+    if (!data.termsAccepted || !data.privacyAccepted || !data.registrationPolicyAccepted || !data.addressConfirmed) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["addressConfirmed"],
+        message: "É necessário aceitar os termos, a política de privacidade e confirmar o funcionamento no endereço.",
+      });
+    }
+  });
+
+export type RegisterBusinessInput = z.input<typeof registerBusinessSchema>;
 
 export type RegisterBusinessResult = { success: true; businessId: string } | { success: false; error: string };
 
@@ -46,28 +63,12 @@ async function generateUniqueSlug(
   }
 }
 
-export async function registerBusiness(input: RegisterBusinessInput): Promise<RegisterBusinessResult> {
-  if (
-    !input.name.trim() ||
-    !input.responsibleName.trim() ||
-    !input.email.trim() ||
-    !input.password ||
-    !input.phone.trim() ||
-    !input.category.trim() ||
-    !input.towerId ||
-    !input.floor.trim() ||
-    !input.roomNumber.trim()
-  ) {
-    return { success: false, error: "Preencha todos os campos obrigatórios." };
+export async function registerBusiness(rawInput: RegisterBusinessInput): Promise<RegisterBusinessResult> {
+  const parsed = registerBusinessSchema.safeParse(rawInput);
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues[0]?.message ?? "Dados inválidos." };
   }
-
-  if (!input.termsAccepted || !input.privacyAccepted || !input.addressConfirmed) {
-    return { success: false, error: "É necessário aceitar os termos, a política de privacidade e confirmar o funcionamento no endereço." };
-  }
-
-  if (input.password.length < 8) {
-    return { success: false, error: "A senha precisa ter pelo menos 8 caracteres." };
-  }
+  const input = parsed.data;
 
   const supabase = createServiceClient();
   const passwordHash = await bcrypt.hash(input.password, 10);
@@ -77,18 +78,18 @@ export async function registerBusiness(input: RegisterBusinessInput): Promise<Re
     .from("businesses")
     .insert({
       slug,
-      email: input.email.trim().toLowerCase(),
+      email: input.email.toLowerCase(),
       password_hash: passwordHash,
-      name: input.name.trim(),
-      responsible_name: input.responsibleName.trim(),
+      name: input.name,
+      responsible_name: input.responsibleName,
       document: input.document.trim() || null,
       category: input.category,
       description: input.shortDescription.trim() || null,
       instagram: input.instagram.trim() || null,
-      phone: input.phone.trim(),
+      phone: input.phone,
       tower_id: input.towerId,
-      floor: input.floor.trim(),
-      room_number: input.roomNumber.trim(),
+      floor: input.floor,
+      room_number: input.roomNumber,
       logo_url: input.logoUrl.trim() || null,
       cover_photo_url: input.coverPhotoUrl.trim() || null,
       website_url: input.websiteUrl.trim() || null,
@@ -106,6 +107,17 @@ export async function registerBusiness(input: RegisterBusinessInput): Promise<Re
     }
     return { success: false, error: "Não foi possível concluir o cadastro. Tente novamente." };
   }
+
+  const requestHeaders = await headers();
+  const ip = requestHeaders.get("x-forwarded-for")?.split(",")[0]?.trim() || requestHeaders.get("x-real-ip") || null;
+  await supabase.from("consent_acceptances").insert(
+    (["termos_de_uso", "politica_de_privacidade", "politica_de_cadastro"] as const).map((documentType) => ({
+      business_id: business.id,
+      document_type: documentType,
+      version: CONSENT_VERSION,
+      ip,
+    }))
+  );
 
   await translateAndStore("business", business.id, {
     description: input.shortDescription.trim(),

@@ -5,7 +5,8 @@
   },
   "Common": {
     "verified": "已认证",
-    "whatsapp": "WhatsApp 联系"
+    "whatsapp": "WhatsApp 联系",
+    "legalPlaceholderNotice": "占位文本 — 上线前待法律审核。"
   },
   "Header": {
     "navEmpresas": "企业",
@@ -157,6 +158,7 @@
       "address": "我确认本企业在所填地址正常营业。",
       "terms": "我已阅读并接受<termsLink>使用条款</termsLink>。",
       "privacy": "我已阅读并接受<privacyLink>隐私政策</privacyLink>。",
+      "registrationPolicy": "我已阅读并接受<registrationLink>登记与认证政策</registrationLink>。",
       "imageUsage": "我授权公开展示所提交的信息与图片。"
     },
     "errors": {
@@ -169,7 +171,7 @@
       "tower": "请选择大厦。",
       "floor": "请填写楼层。",
       "roomNumber": "请填写房间号。",
-      "consent": "必须接受条款、隐私政策,并确认营业地址。"
+      "consent": "必须接受条款、隐私政策、登记政策,并确认营业地址。"
     },
     "buttons": {
       "back": "返回",
@@ -257,7 +259,8 @@
       "cadastrarEmpresa": "登记企业",
       "contato": "联系我们",
       "termos": "使用条款",
-      "privacidade": "隐私政策"
+      "privacidade": "隐私政策",
+      "politicaCancelamento": "取消政策"
     }
   },
   "EmpresaPage": {
@@ -295,6 +298,30 @@
     "paragraph2": "企业的联系方式(WhatsApp、Instagram、网站)会在其商业主页中公开展示,这正是登记的目的所在。密码及验证凭证等内部数据绝不会公开展示。",
     "paragraph3": "我们不会出于广告目的向第三方出售或共享数据。管理数据的访问权限仅限于负责平台运营的团队。",
     "paragraph4": "企业可随时通过<contactLink>联系我们</contactLink>页面申请更正或删除其数据。"
+  },
+  "PoliticaCadastro": {
+    "metaTitle": "登记与认证政策 — Cerâmica Hub",
+    "title": "登记与认证政策",
+    "paragraph1": "只有确实入驻 Espaço Cerâmica 的企业和专业人士才能在 Cerâmica Hub 拥有会员主页。登记时,企业需提供所在大厦、楼层与房间号,平台可能要求提供该地址的经营证明。",
+    "paragraph2": "所有登记信息在发布前均需经过审核。如登记信息有误、不完整,或未能证明在园区内的实际入驻情况,平台有权批准、要求修改、拒绝或暂停该登记。审核不保证在固定时限内完成。",
+    "paragraph3": "Espaço Cerâmica 之外的企业不会获得会员标识,也不得以园区一部分的身份呈现,即使其在平台上购买了广告(参见广告政策)。",
+    "paragraph4": "有关认证流程的疑问可通过<contactLink>联系我们</contactLink>页面提交。"
+  },
+  "PoliticaPublicidade": {
+    "metaTitle": "广告政策 — Cerâmica Hub",
+    "title": "广告政策",
+    "paragraph1": "Cerâmica Hub 可能展示来自 Espaço Cerâmica 以外企业的付费内容,包括广告、赞助或推广活动。所有付费内容均会明确标注为“赞助内容”。",
+    "paragraph2": "付费广告不授予会员身份,也不表明广告主实际入驻园区 —— 无论投入金额多少,这一区分始终保持不变。",
+    "paragraph3": "如内容违反本条款、适用法律,或损害园区会员企业的利益,平台有权随时拒绝、暂停或删除相关推广活动,恕不另行通知。",
+    "paragraph4": "有意向的广告主可通过<contactLink>联系我们</contactLink>页面取得联系。"
+  },
+  "PoliticaCancelamento": {
+    "metaTitle": "取消政策 — Cerâmica Hub",
+    "title": "取消政策",
+    "paragraph1": "企业可随时取消付费套餐。取消操作将停止续费 —— 已付费周期内套餐功能仍可正常使用,周期结束后企业将自动转为免费套餐。",
+    "paragraph2": "取消套餐不会删除企业主页:登记信息与历史记录将继续保留,仅套餐功能变为免费版。",
+    "paragraph3": "如适用退款,将依据现行法律逐案评估 —— 除法律规定的情形外,平台不承诺自动退款。",
+    "paragraph4": "取消申请可通过企业自己的管理面板提交,或通过<contactLink>联系我们</contactLink>页面提交。"
   },
   "Cadastro": {
     "metaTitle": "免费登记企业 — Cerâmica Hub",
