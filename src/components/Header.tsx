@@ -15,28 +15,16 @@ export function Header() {
     { href: "/blog", label: t("navBlog") },
     { href: "/noticias", label: t("navNoticias") },
   ];
-  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
+    const onScroll = () => setMenuOpen(false);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [scrolled]);
-
   return (
-    <header
-      className={`fixed top-0 z-50 w-full border-b py-3 transition-all duration-300 sm:py-4 ${
-        scrolled || menuOpen
-          ? "glass-light border-border"
-          : "border-transparent bg-white/70 backdrop-blur-md lg:bg-transparent lg:py-5 lg:backdrop-blur-none"
-      }`}
-    >
+    <header className="fixed top-0 z-50 w-full border-b border-border bg-white py-3 sm:py-4">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6">
         <Link href="/#top" className="shrink-0 text-[17px] font-semibold tracking-tight text-foreground sm:text-[20px]">
           Cerâmica <span className="text-primary">Hub</span>
@@ -83,13 +71,13 @@ export function Header() {
       </div>
 
       {menuOpen && (
-        <nav className="glass-light mx-6 mt-3 flex flex-col gap-1 rounded-2xl border border-border p-3 text-[16px] lg:hidden">
+        <nav className="mx-6 mt-3 flex flex-col gap-1 rounded-2xl border border-border bg-white p-3 text-[16px] lg:hidden">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setMenuOpen(false)}
-              className="rounded-xl px-3 py-2.5 text-foreground transition-colors hover:bg-white/60"
+              className="rounded-xl px-3 py-2.5 text-foreground transition-colors hover:bg-black/5"
             >
               {link.label}
             </Link>
@@ -97,7 +85,7 @@ export function Header() {
           <a
             href="/login"
             onClick={() => setMenuOpen(false)}
-            className="rounded-xl px-3 py-2.5 text-foreground transition-colors hover:bg-white/60"
+            className="rounded-xl px-3 py-2.5 text-foreground transition-colors hover:bg-black/5"
           >
             {t("entrar")}
           </a>

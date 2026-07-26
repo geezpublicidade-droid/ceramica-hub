@@ -49,7 +49,7 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
         </svg>
       </button>
       {open && (
-        <div className="glass-light absolute right-0 top-full mt-2 flex flex-col gap-0.5 rounded-2xl border border-border p-1.5">
+        <div className="absolute right-0 top-full mt-2 flex flex-col gap-0.5 rounded-2xl border border-border bg-white p-1.5 shadow-[0_10px_30px_rgba(0,0,0,0.12)]">
           {routing.locales.map((loc) => (
             <button
               key={loc}
@@ -60,7 +60,7 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
               }}
               aria-current={loc === locale}
               className={`whitespace-nowrap rounded-xl px-3 py-2 text-left transition-colors ${
-                loc === locale ? "bg-primary/10 text-primary" : "text-foreground hover:bg-white/60"
+                loc === locale ? "bg-primary/10 text-primary" : "text-foreground hover:bg-black/5"
               }`}
             >
               {FULL_LABEL[loc]}
