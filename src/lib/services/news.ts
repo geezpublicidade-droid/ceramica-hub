@@ -20,17 +20,13 @@ function splitTitleAndSource(rawTitle: string): { title: string; source: string 
   return { title: rawTitle.slice(0, separatorIndex), source: rawTitle.slice(separatorIndex + 3) };
 }
 
-function stripHtml(html: string): string {
-  return html
-    .replace(/<[^>]+>/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
 /**
- * Agregador: nunca copia o texto completo da matéria, só título/resumo
- * (o próprio <description> do RSS, que já vem curto) e sempre linka pro
- * site de origem — decisão explícita pra não ter risco de direito autoral.
+ * Agregador: nunca copia o texto completo da matéria, só título e fonte,
+ * sempre linkando pro site de origem — decisão explícita pra não ter risco
+ * de direito autoral. O <description> do feed do Google News não é um
+ * resumo de verdade, é só o próprio título repetido dentro de um <a> +
+ * "&nbsp;&nbsp;" + nome da fonte — por isso não usamos esse campo (geraria
+ * uma linha redundante e com entidade HTML crua na tela).
  */
 export async function fetchAndStoreNews(): Promise<{ inserted: number; total: number }> {
   const response = await fetch(FEED_URL, { headers: { "User-Agent": "Mozilla/5.0 (compatible; CeramicaHubBot/1.0)" } });
@@ -51,13 +47,12 @@ export async function fetchAndStoreNews(): Promise<{ inserted: number; total: nu
     if (!rawTitle || !link) continue;
 
     const { title, source } = splitTitleAndSource(rawTitle);
-    const excerpt = item.description ? stripHtml(String(item.description)).slice(0, 300) : null;
     const publishedAt = item.pubDate ? new Date(String(item.pubDate)).toISOString() : null;
 
     const { error, count } = await supabase
       .from("news_items")
       .upsert(
-        { title, link, excerpt, source_name: source, published_at: publishedAt },
+        { title, link, excerpt: null, source_name: source, published_at: publishedAt },
         { onConflict: "link", ignoreDuplicates: true, count: "exact" },
       );
     if (error) throw error;
