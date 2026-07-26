@@ -19,3 +19,12 @@ export const PLAN_LIMITS: Record<Business["plan"], PlanLimits> = {
 export function limitsFor(plan: Business["plan"]): PlanLimits {
   return PLAN_LIMITS[plan];
 }
+
+/** Planos pagáveis (presença é gratuito, nunca gera fatura). Preço em centavos — mesmo valor hoje exibido em Pricing.tsx. */
+export type PayablePlan = "profissional" | "destaque" | "experiencia";
+
+export const PLAN_PRICES_CENTS: Record<PayablePlan, number> = {
+  profissional: 4700,
+  destaque: 9700,
+  experiencia: 19700,
+};

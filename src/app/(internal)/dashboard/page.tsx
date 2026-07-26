@@ -1,6 +1,7 @@
 import { auth, signOut } from "@/auth";
-import { getBusinessById, getMetricsSummary } from "@/lib/services/platform";
+import { getBusinessById, getMetricsSummary, getOwnedInvoices } from "@/lib/services/platform";
 import { planLabels } from "@/data/businesses";
+import { PlanBilling } from "@/components/dashboard/PlanBilling";
 
 export const metadata = { title: "Painel — Cerâmica Hub" };
 
@@ -17,6 +18,7 @@ export default async function DashboardPage() {
   const metrics = session?.user?.businessId
     ? await getMetricsSummary(session.user.businessId)
     : undefined;
+  const invoices = session?.user?.businessId ? await getOwnedInvoices(session.user.businessId) : [];
 
   const totalViews = metrics?.commercial_page_viewed ?? 0;
   const totalContacts =
@@ -131,6 +133,8 @@ export default async function DashboardPage() {
                 </p>
               )}
             </div>
+
+            <PlanBilling currentPlan={business.plan} invoices={invoices} />
           </>
         ) : null}
       </div>

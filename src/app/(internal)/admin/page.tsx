@@ -46,10 +46,17 @@ export default async function AdminPage() {
   return (
     <main className="min-h-screen bg-background px-6 py-16">
       <div className="mx-auto max-w-4xl">
-        <h1 className="text-2xl font-semibold text-foreground">Painel administrativo</h1>
-        <p className="mt-2 text-[14px] text-muted">
-          Aprove ou rejeite cadastros de empresas antes que a página fique pública.
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-semibold text-foreground">Painel administrativo</h1>
+            <p className="mt-2 text-[14px] text-muted">
+              Aprove ou rejeite cadastros de empresas antes que a página fique pública.
+            </p>
+          </div>
+          <a href="/admin/financeiro" className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground">
+            Financeiro
+          </a>
+        </div>
 
         <section className="mt-10">
           <h2 className="text-[15px] font-semibold text-foreground">

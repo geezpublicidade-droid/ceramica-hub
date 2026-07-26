@@ -389,6 +389,66 @@ export async function getOwnedPromotions(businessId: string): Promise<OwnedPromo
   }));
 }
 
+export type OwnedInvoice = {
+  id: string;
+  plan: "profissional" | "destaque" | "experiencia";
+  amountCents: number;
+  status: "pending" | "paid" | "canceled";
+  paymentLink: string | null;
+  createdAt: string;
+};
+
+/** Faturas da própria empresa (qualquer status) — usado no painel de cobrança do dashboard. */
+export async function getOwnedInvoices(businessId: string): Promise<OwnedInvoice[]> {
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from("invoices")
+    .select("id, amount_cents, status, mercadopago_link, created_at, subscriptions(plan)")
+    .eq("business_id", businessId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    plan: (row.subscriptions as unknown as { plan: OwnedInvoice["plan"] } | null)?.plan ?? "profissional",
+    amountCents: row.amount_cents,
+    status: row.status,
+    paymentLink: row.mercadopago_link,
+    createdAt: row.created_at,
+  }));
+}
+
+export type PendingInvoice = {
+  id: string;
+  businessId: string;
+  businessName: string;
+  plan: "profissional" | "destaque" | "experiencia";
+  amountCents: number;
+  paymentLink: string | null;
+  createdAt: string;
+};
+
+/** Faturas pendentes de confirmação de todas as empresas — usado só no admin/financeiro. */
+export async function getPendingInvoices(): Promise<PendingInvoice[]> {
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from("invoices")
+    .select("id, business_id, amount_cents, mercadopago_link, created_at, businesses(name), subscriptions(plan)")
+    .eq("status", "pending")
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    businessId: row.business_id,
+    businessName: (row.businesses as unknown as { name: string } | null)?.name ?? "Empresa",
+    plan: (row.subscriptions as unknown as { plan: PendingInvoice["plan"] } | null)?.plan ?? "profissional",
+    amountCents: row.amount_cents,
+    paymentLink: row.mercadopago_link,
+    createdAt: row.created_at,
+  }));
+}
+
 export type PlatformSettings = {
   geezDiscountEnabled: boolean;
   geezDiscountMaxPercentage: number;
