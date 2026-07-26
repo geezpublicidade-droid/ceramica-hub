@@ -1,4 +1,17 @@
+import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import type { AdminRole } from "@/auth";
+
+// Pra onde mandar cada papel quando ele tenta acessar uma área fora do seu
+// escopo — precisa ser sempre um destino que o próprio papel pode acessar,
+// senão vira loop de redirect.
+const DEFAULT_ADMIN_PATH_BY_ROLE: Record<AdminRole, string> = {
+  super_admin: "/admin",
+  admin: "/admin",
+  moderador: "/admin",
+  financeiro: "/admin/financeiro",
+  comercial: "/admin/publicidade",
+};
 
 /**
  * DECISÃO ARQUITETURAL — por que não há RLS "de verdade" no Postgres:
@@ -31,10 +44,32 @@ export async function requireOwnBusiness(): Promise<string> {
   return businessId;
 }
 
-export async function requireAdmin(): Promise<string> {
+/**
+ * Sem `allowedRoles`, qualquer admin passa (comportamento original).
+ * Com `allowedRoles`, exige um desses papéis — `super_admin` sempre passa,
+ * mesmo se não estiver na lista, porque é o papel de acesso total.
+ */
+export async function requireAdmin(allowedRoles?: AdminRole[]): Promise<string> {
   const session = await auth();
   if (session?.user?.role !== "admin") {
     throw new Error("Acesso restrito a administradores.");
   }
+  const adminRole = session.user.adminRole ?? "admin";
+  if (allowedRoles && adminRole !== "super_admin" && !allowedRoles.includes(adminRole)) {
+    throw new Error("Seu papel de administrador não tem acesso a esta área.");
+  }
   return session.user.id;
+}
+
+/** Versão pra Server Component: redireciona em vez de lançar erro. */
+export async function requireAdminPage(allowedRoles?: AdminRole[]): Promise<{ adminId: string; adminRole: AdminRole }> {
+  const session = await auth();
+  if (session?.user?.role !== "admin") {
+    redirect("/login");
+  }
+  const adminRole = session.user.adminRole ?? "admin";
+  if (allowedRoles && adminRole !== "super_admin" && !allowedRoles.includes(adminRole)) {
+    redirect(DEFAULT_ADMIN_PATH_BY_ROLE[adminRole]);
+  }
+  return { adminId: session.user.id, adminRole };
 }

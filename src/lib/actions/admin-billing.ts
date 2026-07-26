@@ -15,7 +15,7 @@ const SUBSCRIPTION_DAYS = 30;
  * paga, ativa a assinatura por 30 dias e atualiza o plano da empresa.
  */
 export async function confirmInvoicePayment(invoiceId: string): Promise<ActionResult> {
-  const adminId = await requireAdmin();
+  const adminId = await requireAdmin(["super_admin", "admin", "financeiro"]);
   const supabase = createServiceClient();
 
   const { data: invoice, error: invoiceError } = await supabase

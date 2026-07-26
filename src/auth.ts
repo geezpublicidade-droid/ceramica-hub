@@ -5,6 +5,7 @@ import { verify as verifyTotp } from "otplib";
 import { createServiceClient } from "@/lib/supabase/server";
 
 type Role = "business" | "member" | "admin";
+export type AdminRole = "super_admin" | "admin" | "financeiro" | "comercial" | "moderador";
 
 const TABLE_BY_ROLE: Record<Role, "businesses" | "members" | "admins"> = {
   business: "businesses",
@@ -23,6 +24,7 @@ type AuthorizedUser = {
   role: Role;
   businessId?: string;
   memberId?: string;
+  adminRole?: AdminRole;
   mfaSetupRequired: boolean;
 };
 
@@ -49,7 +51,7 @@ async function tryAuthenticate(
   // admin até isso acontecer (ver /admin/mfa-setup).
   let mfaSetupRequired = false;
   if (role === "admin") {
-    const admin = account as { mfa_secret: string | null; mfa_enabled: boolean };
+    const admin = account as { mfa_secret: string | null; mfa_enabled: boolean; role: AdminRole };
     if (admin.mfa_enabled) {
       if (typeof totpCode !== "string" || totpCode.trim().length === 0 || !admin.mfa_secret) return null;
       // tolerância de 30s pra cada lado: sem isso, o código expira antes
@@ -68,6 +70,7 @@ async function tryAuthenticate(
     role,
     businessId: role === "business" ? account.id : undefined,
     memberId: role === "member" ? account.id : undefined,
+    adminRole: role === "admin" ? (account as { role: AdminRole }).role : undefined,
     mfaSetupRequired,
   };
 }
@@ -116,10 +119,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        const u = user as { role: Role; businessId?: string; memberId?: string; mfaSetupRequired?: boolean };
+        const u = user as { role: Role; businessId?: string; memberId?: string; adminRole?: AdminRole; mfaSetupRequired?: boolean };
         token.role = u.role;
         token.businessId = u.businessId;
         token.memberId = u.memberId;
+        token.adminRole = u.adminRole;
         token.mfaSetupRequired = u.mfaSetupRequired ?? false;
       }
       return token;
@@ -130,6 +134,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.role = token.role as Role;
         session.user.businessId = token.businessId as string | undefined;
         session.user.memberId = token.memberId as string | undefined;
+        session.user.adminRole = token.adminRole as AdminRole | undefined;
         session.user.mfaSetupRequired = Boolean(token.mfaSetupRequired);
       }
       return session;

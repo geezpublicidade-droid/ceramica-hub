@@ -1,5 +1,4 @@
-import { redirect } from "next/navigation";
-import { auth } from "@/auth";
+import { requireAdminPage } from "@/lib/auth-guards";
 import { getAllCampaigns, getAllPlacements, getCampaignMetrics } from "@/lib/services/ads";
 import { AdCampaignRow } from "@/components/admin/AdCampaignRow";
 import { NewCampaignForm } from "@/components/admin/NewCampaignForm";
@@ -8,10 +7,7 @@ import { ExportCampaignsCsvButton } from "@/components/admin/ExportCampaignsCsvB
 export const metadata = { title: "Publicidade — Cerâmica Hub" };
 
 export default async function AdminPublicidadePage() {
-  const session = await auth();
-  if (session?.user?.role !== "admin") {
-    redirect("/login");
-  }
+  await requireAdminPage(["super_admin", "admin", "comercial"]);
 
   const [campaigns, placements] = await Promise.all([getAllCampaigns(), getAllPlacements()]);
   const rows = await Promise.all(

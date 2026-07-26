@@ -19,7 +19,7 @@ export async function resolveDataDeletionRequest(
   approve: boolean,
   notes: string
 ): Promise<ActionResult> {
-  const adminId = await requireAdmin();
+  const adminId = await requireAdmin(["super_admin", "admin"]);
   const supabase = createServiceClient();
 
   const { data: request, error: fetchError } = await supabase

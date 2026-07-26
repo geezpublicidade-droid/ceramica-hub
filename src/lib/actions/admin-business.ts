@@ -6,7 +6,7 @@ import { requireAdmin } from "@/lib/auth-guards";
 import { logAdminAction } from "@/lib/audit-log";
 
 export async function approveBusiness(businessId: string) {
-  const adminId = await requireAdmin();
+  const adminId = await requireAdmin(["super_admin", "admin", "moderador"]);
   const supabase = createServiceClient();
 
   const { data: business, error: fetchError } = await supabase
@@ -47,7 +47,7 @@ export async function approveBusiness(businessId: string) {
 }
 
 export async function rejectBusiness(businessId: string, reason: string) {
-  const adminId = await requireAdmin();
+  const adminId = await requireAdmin(["super_admin", "admin", "moderador"]);
   const supabase = createServiceClient();
   const { error } = await supabase
     .from("businesses")

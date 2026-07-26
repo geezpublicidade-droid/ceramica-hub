@@ -1,5 +1,4 @@
-import { redirect } from "next/navigation";
-import { auth } from "@/auth";
+import { requireAdminPage } from "@/lib/auth-guards";
 import { createServiceClient } from "@/lib/supabase/server";
 import { AdminBusinessRow } from "@/components/admin/AdminBusinessRow";
 
@@ -32,10 +31,7 @@ async function getBusinessesByStatus(status: "pending" | "approved" | "rejected"
 }
 
 export default async function AdminPage() {
-  const session = await auth();
-  if (session?.user?.role !== "admin") {
-    redirect("/login");
-  }
+  const { adminRole } = await requireAdminPage(["super_admin", "admin", "moderador"]);
 
   const [pending, approved, rejected] = await Promise.all([
     getBusinessesByStatus("pending"),
@@ -54,15 +50,26 @@ export default async function AdminPage() {
             </p>
           </div>
           <div className="flex gap-2">
-            <a href="/admin/financeiro" className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground">
-              Financeiro
-            </a>
-            <a href="/admin/lgpd" className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground">
-              LGPD
-            </a>
-            <a href="/admin/publicidade" className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground">
-              Publicidade
-            </a>
+            {(adminRole === "super_admin" || adminRole === "admin" || adminRole === "financeiro") && (
+              <a href="/admin/financeiro" className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground">
+                Financeiro
+              </a>
+            )}
+            {(adminRole === "super_admin" || adminRole === "admin") && (
+              <a href="/admin/lgpd" className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground">
+                LGPD
+              </a>
+            )}
+            {(adminRole === "super_admin" || adminRole === "admin" || adminRole === "comercial") && (
+              <a href="/admin/publicidade" className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground">
+                Publicidade
+              </a>
+            )}
+            {adminRole === "super_admin" && (
+              <a href="/admin/usuarios" className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground">
+                Usuários
+              </a>
+            )}
           </div>
         </div>
 

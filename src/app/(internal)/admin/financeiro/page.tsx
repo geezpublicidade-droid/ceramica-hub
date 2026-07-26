@@ -1,15 +1,11 @@
-import { redirect } from "next/navigation";
-import { auth } from "@/auth";
+import { requireAdminPage } from "@/lib/auth-guards";
 import { getPendingInvoices } from "@/lib/services/platform";
 import { AdminInvoiceRow } from "@/components/admin/AdminInvoiceRow";
 
 export const metadata = { title: "Financeiro — Cerâmica Hub" };
 
 export default async function AdminFinanceiroPage() {
-  const session = await auth();
-  if (session?.user?.role !== "admin") {
-    redirect("/login");
-  }
+  await requireAdminPage(["super_admin", "admin", "financeiro"]);
 
   const pendingInvoices = await getPendingInvoices();
 

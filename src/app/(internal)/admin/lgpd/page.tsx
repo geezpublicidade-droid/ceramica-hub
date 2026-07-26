@@ -1,15 +1,11 @@
-import { redirect } from "next/navigation";
-import { auth } from "@/auth";
+import { requireAdminPage } from "@/lib/auth-guards";
 import { getPendingDataDeletionRequests } from "@/lib/services/platform";
 import { AdminDeletionRequestRow } from "@/components/admin/AdminDeletionRequestRow";
 
 export const metadata = { title: "LGPD — Cerâmica Hub" };
 
 export default async function AdminLgpdPage() {
-  const session = await auth();
-  if (session?.user?.role !== "admin") {
-    redirect("/login");
-  }
+  await requireAdminPage(["super_admin", "admin"]);
 
   const pendingRequests = await getPendingDataDeletionRequests();
 

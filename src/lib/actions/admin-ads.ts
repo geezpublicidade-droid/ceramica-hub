@@ -28,7 +28,7 @@ export type CreateCampaignInput = z.input<typeof createCampaignSchema>;
 
 /** Cria o anunciante (ou reaproveita um já existente pelo e-mail) + a campanha + os criativos. Sempre entra como pending_review — nunca vai pro ar sem o admin aprovar. */
 export async function createAdCampaign(rawInput: CreateCampaignInput): Promise<ActionResult> {
-  await requireAdmin();
+  await requireAdmin(["super_admin", "admin", "comercial"]);
   const parsed = createCampaignSchema.safeParse(rawInput);
   if (!parsed.success) {
     return { success: false, error: parsed.error.issues[0]?.message ?? "Dados inválidos." };
@@ -87,7 +87,7 @@ export async function createAdCampaign(rawInput: CreateCampaignInput): Promise<A
 }
 
 async function updateCampaignStatus(campaignId: string, status: string, rejectionReason?: string): Promise<ActionResult> {
-  const adminId = await requireAdmin();
+  const adminId = await requireAdmin(["super_admin", "admin", "comercial"]);
   const supabase = createServiceClient();
   const { error } = await supabase
     .from("ad_campaigns")
@@ -118,7 +118,7 @@ export async function resumeCampaign(campaignId: string): Promise<ActionResult> 
 
 /** Bloquear um anunciante tira TODAS as campanhas dele do ar imediatamente (checado em getActiveCampaignForPlacement), mesmo sem mexer no status de cada campanha individualmente. */
 export async function toggleBlockAdvertiser(accountId: string, blocked: boolean): Promise<ActionResult> {
-  const adminId = await requireAdmin();
+  const adminId = await requireAdmin(["super_admin", "admin", "comercial"]);
   const supabase = createServiceClient();
   const { error } = await supabase.from("ad_accounts").update({ blocked }).eq("id", accountId);
   if (error) return { success: false, error: "Não foi possível atualizar o anunciante." };
