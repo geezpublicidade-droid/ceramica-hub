@@ -2,6 +2,7 @@ import { auth, signOut } from "@/auth";
 import { getBusinessById, getMetricsSummary, getOwnedInvoices } from "@/lib/services/platform";
 import { planLabels } from "@/data/businesses";
 import { PlanBilling } from "@/components/dashboard/PlanBilling";
+import { PrivacyControls } from "@/components/dashboard/PrivacyControls";
 
 export const metadata = { title: "Painel — Cerâmica Hub" };
 
@@ -135,6 +136,7 @@ export default async function DashboardPage() {
             </div>
 
             <PlanBilling currentPlan={business.plan} invoices={invoices} />
+            <PrivacyControls />
           </>
         ) : null}
       </div>

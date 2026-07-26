@@ -1,22 +1,15 @@
 "use server";
 
-import { auth } from "@/auth";
 import { createServiceClient } from "@/lib/supabase/server";
 import { getBusinessById } from "@/lib/services/platform";
 import { PLAN_PRICES_CENTS, type PayablePlan } from "@/lib/plan-limits";
 import { createPaymentPreference } from "@/lib/services/mercadopago";
 import { planLabels } from "@/data/businesses";
+import { requireOwnBusiness } from "@/lib/auth-guards";
 
 type CreatePaymentLinkResult =
   | { success: true; paymentLink: string | null }
   | { success: false; error: string };
-
-async function requireOwnBusiness(): Promise<string> {
-  const session = await auth();
-  const businessId = session?.user?.businessId;
-  if (!businessId) throw new Error("Não autenticado.");
-  return businessId;
-}
 
 /**
  * Cria a assinatura (pending) + a fatura pro plano escolhido e tenta gerar

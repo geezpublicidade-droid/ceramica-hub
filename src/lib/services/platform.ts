@@ -449,6 +449,33 @@ export async function getPendingInvoices(): Promise<PendingInvoice[]> {
   }));
 }
 
+export type PendingDeletionRequest = {
+  id: string;
+  businessId: string;
+  businessName: string;
+  reason: string | null;
+  requestedAt: string;
+};
+
+/** Pedidos de exclusão de dados (LGPD) pendentes de revisão — usado só no admin/lgpd. */
+export async function getPendingDataDeletionRequests(): Promise<PendingDeletionRequest[]> {
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from("data_deletion_requests")
+    .select("id, business_id, business_name, reason, requested_at")
+    .eq("status", "pending")
+    .order("requested_at", { ascending: true });
+  if (error) throw error;
+
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    businessId: row.business_id,
+    businessName: row.business_name,
+    reason: row.reason,
+    requestedAt: row.requested_at,
+  }));
+}
+
 export type PlatformSettings = {
   geezDiscountEnabled: boolean;
   geezDiscountMaxPercentage: number;

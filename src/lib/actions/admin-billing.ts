@@ -1,36 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { auth } from "@/auth";
 import { createServiceClient } from "@/lib/supabase/server";
+import { requireAdmin } from "@/lib/auth-guards";
+import { logAdminAction } from "@/lib/audit-log";
 
 type ActionResult = { success: true } | { success: false; error: string };
-
-async function requireAdmin(): Promise<string> {
-  const session = await auth();
-  if (session?.user?.role !== "admin") {
-    throw new Error("Acesso restrito a administradores.");
-  }
-  return session.user.id;
-}
-
-async function logAdminAction(
-  adminId: string,
-  action: string,
-  entityType: string,
-  entityId: string,
-  metadata?: Record<string, unknown>
-) {
-  const supabase = createServiceClient();
-  await supabase.from("audit_logs").insert({
-    actor_type: "admin",
-    actor_id: adminId,
-    action,
-    entity_type: entityType,
-    entity_id: entityId,
-    metadata: metadata ?? null,
-  });
-}
 
 const SUBSCRIPTION_DAYS = 30;
 

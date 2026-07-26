@@ -2,11 +2,11 @@
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { auth } from "@/auth";
 import { createServiceClient } from "@/lib/supabase/server";
 import { limitsFor } from "@/lib/plan-limits";
 import { getBusinessById } from "@/lib/services/platform";
 import { translateAndStore } from "@/lib/services/translate";
+import { requireOwnBusiness } from "@/lib/auth-guards";
 
 type ActionResult = { success: true } | { success: false; error: string };
 
@@ -16,13 +16,6 @@ const addPromotionSchema = z.object({
   couponCode: z.string().max(40, "Cupom muito longo."),
   validUntil: z.string(),
 });
-
-async function requireOwnBusiness() {
-  const session = await auth();
-  const businessId = session?.user?.businessId;
-  if (!businessId) throw new Error("Não autenticado.");
-  return businessId;
-}
 
 function revalidateBusiness(businessId: string, slug: string) {
   revalidatePath("/dashboard");
