@@ -1,18 +1,31 @@
-import { getActiveCampaignsForPlacement } from "@/lib/services/ads";
-import { logMetricEvent } from "@/lib/services/platform";
+"use client";
+
+import { useEffect, useState } from "react";
 import { AdCarouselTrack } from "@/components/ads/AdCarouselTrack";
+import type { ActiveCampaign } from "@/lib/services/ads";
 
 /**
  * Carrossel horizontal com todos os anunciantes ativos pra essa posição ao
- * mesmo tempo (diferente do AdSlot, que sorteia só um) -- pensado pra
- * mostrar vários pagantes numa faixa só, tipo vitrine.
+ * mesmo tempo (diferente do AdSlot, que sorteia só um) -- vitrine de vários
+ * pagantes. Busca via /api/ads/carousel, fora do cache ISR da página, pelo
+ * mesmo motivo do AdSlot (ver comentário lá).
  */
-export async function AdCarousel({ placementKey }: { placementKey: string }) {
-  const campaigns = await getActiveCampaignsForPlacement(placementKey);
-  const withCreative = campaigns.filter((c) => c.creatives.length > 0);
-  if (withCreative.length === 0) return null;
+export function AdCarousel({ placementKey }: { placementKey: string }) {
+  const [campaigns, setCampaigns] = useState<ActiveCampaign[]>([]);
 
-  await Promise.all(withCreative.map((c) => logMetricEvent("ad_impression", undefined, { campaignId: c.id })));
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`/api/ads/carousel?placement=${encodeURIComponent(placementKey)}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (!cancelled) setCampaigns(Array.isArray(data) ? data : []);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [placementKey]);
 
-  return <AdCarouselTrack campaigns={withCreative} />;
+  if (campaigns.length === 0) return null;
+  return <AdCarouselTrack campaigns={campaigns} />;
 }

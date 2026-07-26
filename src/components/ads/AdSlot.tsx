@@ -1,31 +1,36 @@
-import { getActiveCampaignForPlacement } from "@/lib/services/ads";
-import { logMetricEvent } from "@/lib/services/platform";
-import { AdLink } from "@/components/ads/AdLink";
+"use client";
 
-/**
- * Não renderiza nada se não houver campanha aprovada, dentro do período e de
- * anunciante não-bloqueado pra essa posição — sem placeholder vazio ocupando
- * espaço. Rótulo "Patrocinado" é sempre visível, nunca opcional (regra
- * central de exclusividade: anunciante externo nunca aparenta ser membro).
- */
+import { useEffect, useState } from "react";
+import { AdLink } from "@/components/ads/AdLink";
+import type { ActiveCampaign } from "@/lib/services/ads";
+
 /** `fullBleed`: ocupa a largura inteira da viewport, sem cantos arredondados nem
  * container — pensado pra posições de destaque tipo banner logo abaixo do hero.
- * Cada view sorteia entre as campanhas elegíveis (ver getActiveCampaignForPlacement),
- * então com várias campanhas cadastradas pra mesma posição, atualizar a página
- * troca o anunciante mostrado. */
-export async function AdSlot({ placementKey, fullBleed = false }: { placementKey: string; fullBleed?: boolean }) {
-  const campaign = await getActiveCampaignForPlacement(placementKey);
+ * Busca via /api/ads/slot (fora do cache ISR da página) pra sortear de verdade
+ * a cada carregamento, em vez de ficar presa ao HTML cacheado por até 60s. */
+export function AdSlot({ placementKey, fullBleed = false }: { placementKey: string; fullBleed?: boolean }) {
+  const [campaign, setCampaign] = useState<ActiveCampaign | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`/api/ads/slot?placement=${encodeURIComponent(placementKey)}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (!cancelled) setCampaign(data);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [placementKey]);
+
   if (!campaign) return null;
 
   const desktopCreative = campaign.creatives.find((c) => c.device === "desktop");
   const mobileCreative = campaign.creatives.find((c) => c.device === "mobile");
   if (!desktopCreative && !mobileCreative) return null;
 
-  await logMetricEvent("ad_impression", undefined, { campaignId: campaign.id });
-
-  const imageClass = fullBleed
-    ? "h-64 w-full object-cover sm:h-80 md:h-[420px]"
-    : "w-full";
+  const imageClass = fullBleed ? "h-64 w-full object-cover sm:h-80 md:h-[420px]" : "w-full";
 
   return (
     <div className={fullBleed ? "w-full" : "mx-auto max-w-6xl px-6"}>
