@@ -109,22 +109,22 @@ export function NetworkNarrative() {
             className={
               reducedMotion
                 ? "relative w-full px-4 pb-16 pt-28 sm:px-6 sm:pb-24 sm:pt-36"
-                : "absolute inset-0 flex flex-col items-center justify-center px-4 pt-24 sm:items-start sm:px-6 sm:pt-32"
+                : "absolute inset-0 flex flex-col items-center justify-center px-4 pt-14 sm:items-start sm:px-6 sm:pt-20"
             }
           >
             <div className="mx-auto w-full max-w-6xl">
               <RevealText active={heroActive} stagger={0.12}>
-                <div className="max-w-2xl rounded-2xl border border-white/70 bg-white/90 p-5 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.25)] backdrop-blur-md sm:rounded-3xl sm:bg-white/95 sm:p-10">
+                <div className="max-w-2xl rounded-2xl border border-white/70 bg-white/90 p-4 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.25)] backdrop-blur-md sm:rounded-3xl sm:bg-white/95 sm:p-7">
                   <p className="text-[13px] font-medium uppercase tracking-[0.15em] text-muted sm:text-[15px] sm:tracking-[0.2em]">
                     Cerâmica Hub
                   </p>
-                  <p className="mt-2 text-[13px] font-medium uppercase tracking-[0.15em] text-primary sm:mt-3 sm:text-[15px] sm:tracking-[0.2em]">
+                  <p className="mt-2 text-[13px] font-medium uppercase tracking-[0.15em] text-primary sm:mt-2 sm:text-[15px] sm:tracking-[0.2em]">
                     {t("eyebrow")}
                   </p>
-                  <h1 className="mt-3 text-[1.65rem] font-semibold leading-[1.15] tracking-tight text-foreground sm:mt-6 sm:text-[clamp(2.1rem,5vw,4rem)] sm:leading-[1.08]">
+                  <h1 className="mt-3 text-[1.65rem] font-semibold leading-[1.15] tracking-tight text-foreground sm:mt-4 sm:text-[clamp(2.1rem,5vw,4rem)] sm:leading-[1.08]">
                     {t("headline")}
                   </h1>
-                  <p className="mt-3 max-w-xl text-[16px] leading-relaxed text-foreground/75 sm:mt-6 sm:text-lg">
+                  <p className="mt-3 max-w-xl text-[16px] leading-relaxed text-foreground/75 sm:mt-4 sm:text-lg">
                     {t("subhead")}
                   </p>
                   <form
@@ -132,7 +132,7 @@ export function NetworkNarrative() {
                       event.preventDefault();
                       submitHeroSearch(heroSearchValue);
                     }}
-                    className="mt-4 flex items-center gap-2 rounded-full border border-border bg-white/80 p-1 pl-4 sm:mt-7 sm:p-1.5 sm:pl-5"
+                    className="mt-4 flex items-center gap-2 rounded-full border border-border bg-white/80 p-1 pl-4 sm:mt-5 sm:p-1.5 sm:pl-5"
                   >
                     <input
                       type="text"
@@ -148,7 +148,7 @@ export function NetworkNarrative() {
                       {t("searchButton")}
                     </button>
                   </form>
-                  <div className="mt-4 flex flex-wrap items-center gap-3 sm:mt-6 sm:gap-4">
+                  <div className="mt-4 flex flex-wrap items-center gap-3 sm:mt-5 sm:gap-4">
                     <Link
                       href="/cadastro"
                       className="neu-primary rounded-full px-5 py-2.5 text-[15px] font-medium text-white sm:px-7 sm:py-3.5 sm:text-[17px]"
