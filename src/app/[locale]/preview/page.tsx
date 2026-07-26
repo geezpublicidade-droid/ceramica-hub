@@ -44,10 +44,8 @@ export default async function Preview({ params }: { params: Promise<{ locale: st
       <main className="flex-1">
         <SearchProvider>
           <NetworkNarrative />
-          <div className="py-6">
-            <AdSlot placementKey="hero_abaixo" />
-          </div>
-          <div className="pb-10">
+          <AdSlot placementKey="hero_abaixo" fullBleed />
+          <div className="py-10">
             <AdCarousel placementKey="carrossel_home" />
           </div>
           <ScaleSequence />

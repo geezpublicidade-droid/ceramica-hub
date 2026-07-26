@@ -76,7 +76,7 @@ export function ScaleSequence() {
 
   return (
     <section aria-label={t("sectionLabel")}>
-      <ScrollStage heightVh={150} onProgress={handleProgress} className="relative bg-surface">
+      <ScrollStage heightVh={100} onProgress={handleProgress} className="relative bg-surface">
         <PhraseBlock active={stage === "connection"}>
           <h2 className="text-[clamp(1.9rem,5.2vw,3.75rem)] font-semibold leading-[1.15] tracking-tight text-foreground">
             {t.rich("phrase1", { primary: highlight })}

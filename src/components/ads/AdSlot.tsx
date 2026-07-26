@@ -8,7 +8,12 @@ import { AdLink } from "@/components/ads/AdLink";
  * espaço. Rótulo "Patrocinado" é sempre visível, nunca opcional (regra
  * central de exclusividade: anunciante externo nunca aparenta ser membro).
  */
-export async function AdSlot({ placementKey }: { placementKey: string }) {
+/** `fullBleed`: ocupa a largura inteira da viewport, sem cantos arredondados nem
+ * container — pensado pra posições de destaque tipo banner logo abaixo do hero.
+ * Cada view sorteia entre as campanhas elegíveis (ver getActiveCampaignForPlacement),
+ * então com várias campanhas cadastradas pra mesma posição, atualizar a página
+ * troca o anunciante mostrado. */
+export async function AdSlot({ placementKey, fullBleed = false }: { placementKey: string; fullBleed?: boolean }) {
   const campaign = await getActiveCampaignForPlacement(placementKey);
   if (!campaign) return null;
 
@@ -18,20 +23,24 @@ export async function AdSlot({ placementKey }: { placementKey: string }) {
 
   await logMetricEvent("ad_impression", undefined, { campaignId: campaign.id });
 
+  const imageClass = fullBleed
+    ? "h-64 w-full object-cover sm:h-80 md:h-[420px]"
+    : "w-full";
+
   return (
-    <div className="mx-auto max-w-6xl px-6">
-      <div className="relative overflow-hidden rounded-2xl border border-border">
+    <div className={fullBleed ? "w-full" : "mx-auto max-w-6xl px-6"}>
+      <div className={`relative overflow-hidden ${fullBleed ? "" : "rounded-2xl border border-border"}`}>
         <span className="absolute left-3 top-3 z-10 rounded-full bg-black/60 px-2.5 py-1 text-[12px] font-medium uppercase tracking-wide text-white">
           Patrocinado
         </span>
         <AdLink href={campaign.targetUrl} campaignId={campaign.id}>
           {desktopCreative && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={desktopCreative.imageUrl} alt={desktopCreative.altText} className="hidden w-full sm:block" />
+            <img src={desktopCreative.imageUrl} alt={desktopCreative.altText} className={`hidden sm:block ${imageClass}`} />
           )}
           {mobileCreative && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={mobileCreative.imageUrl} alt={mobileCreative.altText} className="block w-full sm:hidden" />
+            <img src={mobileCreative.imageUrl} alt={mobileCreative.altText} className={`block sm:hidden ${imageClass}`} />
           )}
         </AdLink>
       </div>
