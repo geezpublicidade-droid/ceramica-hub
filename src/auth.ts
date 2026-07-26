@@ -51,7 +51,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           const admin = account as { mfa_secret: string | null; mfa_enabled: boolean };
           if (admin.mfa_enabled) {
             if (typeof totpCode !== "string" || totpCode.trim().length === 0 || !admin.mfa_secret) return null;
-            const result = await verifyTotp({ secret: admin.mfa_secret, token: totpCode.trim() });
+            // tolerância de 30s pra cada lado: sem isso, o código expira antes
+            // de chegar no servidor (rede + tempo de digitar), e login legítimo
+            // falharia quase sempre — o default da lib é 0 (janela exata).
+            const result = await verifyTotp({ secret: admin.mfa_secret, token: totpCode.trim(), epochTolerance: 30 });
             if (!result.valid) return null;
           } else {
             mfaSetupRequired = true;

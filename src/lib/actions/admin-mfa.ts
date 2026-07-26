@@ -27,7 +27,9 @@ export async function confirmMfaSetup(code: string): Promise<ConfirmResult> {
   if (!admin?.mfa_secret) return { success: false, error: "Configuração não iniciada. Recarregue a página." };
   if (admin.mfa_enabled) return { success: false, error: "MFA já está ativado." };
 
-  const result = code.trim() ? await verifyTotp({ secret: admin.mfa_secret, token: code.trim() }) : { valid: false };
+  const result = code.trim()
+    ? await verifyTotp({ secret: admin.mfa_secret, token: code.trim(), epochTolerance: 30 })
+    : { valid: false };
   if (!result.valid) {
     return { success: false, error: "Código inválido. Confira o app autenticador e tente de novo." };
   }
