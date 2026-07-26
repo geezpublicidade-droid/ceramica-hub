@@ -41,30 +41,30 @@ export async function ComingSoon() {
       </div>
 
       <header className="relative z-10 flex items-center justify-between px-6 py-6 sm:px-10">
-        <span className="text-[15px] font-semibold tracking-tight text-foreground">
+        <span className="text-[17px] font-semibold tracking-tight text-foreground">
           Cerâmica <span className="text-primary">Hub</span>
         </span>
         <a
           href="/login"
-          className="glass-light rounded-full px-4 py-2 text-[13px] font-medium text-foreground transition-colors hover:bg-white/80"
+          className="glass-light rounded-full px-4 py-2 text-[15px] font-medium text-foreground transition-colors hover:bg-white/80"
         >
           {t("acessar")}
         </a>
       </header>
 
       <main className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 text-center">
-        <span className="glass-light mb-6 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.18em] text-muted sm:text-[12px]">
+        <span className="glass-light mb-6 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[13px] font-medium uppercase tracking-[0.18em] text-muted sm:text-[14px]">
           {t("badge")}
         </span>
         <h1 className="max-w-3xl text-[16vw] font-semibold leading-[0.95] tracking-tight text-foreground sm:text-7xl md:text-8xl">
           {t("title")}
         </h1>
-        <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-muted sm:text-[17px]">
+        <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-muted sm:text-[19px]">
           {t("description")}
         </p>
       </main>
 
-      <footer className="relative z-10 flex items-center justify-center px-6 py-8 text-[12px] text-muted">
+      <footer className="relative z-10 flex items-center justify-center px-6 py-8 text-[14px] text-muted">
         {t("footer", { year })}
       </footer>
     </div>

@@ -17,8 +17,8 @@ export default async function ContatoPage() {
           <h1 className="text-[clamp(1.8rem,4vw,2.5rem)] font-semibold tracking-tight">
             {t("title")}
           </h1>
-          <p className="mt-6 text-[15px] leading-relaxed text-muted">{t("intro")}</p>
-          <div className="mt-8 flex flex-col gap-3 text-[15px]">
+          <p className="mt-6 text-[17px] leading-relaxed text-muted">{t("intro")}</p>
+          <div className="mt-8 flex flex-col gap-3 text-[17px]">
             <p>
               <span className="text-muted">{t("emailLabel")}</span>{" "}
               <a href="mailto:geezpublicidade@gmail.com" className="text-primary underline">

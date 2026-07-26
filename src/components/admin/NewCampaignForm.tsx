@@ -4,8 +4,8 @@ import { useState, useTransition } from "react";
 import { createAdCampaign } from "@/lib/actions/admin-ads";
 import type { AdPlacement } from "@/lib/services/ads";
 
-const inputClass = "mt-1.5 w-full rounded-xl border border-border bg-white px-4 py-2.5 text-[14px] text-foreground outline-none focus:border-primary";
-const labelClass = "text-[13px] font-medium text-foreground";
+const inputClass = "mt-1.5 w-full rounded-xl border border-border bg-white px-4 py-2.5 text-[16px] text-foreground outline-none focus:border-primary";
+const labelClass = "text-[15px] font-medium text-foreground";
 
 type FormState = {
   companyName: string;
@@ -85,8 +85,8 @@ export function NewCampaignForm({ placements }: { placements: AdPlacement[] }) {
   if (done) {
     return (
       <div className="rounded-2xl border border-border bg-white/70 p-6 text-center">
-        <p className="text-[15px] font-semibold text-foreground">Campanha criada como pendente de revisão.</p>
-        <button type="button" onClick={() => setDone(false)} className="mt-4 text-[13px] font-medium text-primary underline">
+        <p className="text-[17px] font-semibold text-foreground">Campanha criada como pendente de revisão.</p>
+        <button type="button" onClick={() => setDone(false)} className="mt-4 text-[15px] font-medium text-primary underline">
           Cadastrar outra campanha
         </button>
       </div>
@@ -95,7 +95,7 @@ export function NewCampaignForm({ placements }: { placements: AdPlacement[] }) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-2xl border border-border bg-white/70 p-6">
-      <p className="text-[13px] font-medium uppercase tracking-[0.15em] text-muted">Anunciante</p>
+      <p className="text-[15px] font-medium uppercase tracking-[0.15em] text-muted">Anunciante</p>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <label>
           <span className={labelClass}>Nome da empresa</span>
@@ -115,7 +115,7 @@ export function NewCampaignForm({ placements }: { placements: AdPlacement[] }) {
         </label>
       </div>
 
-      <p className="mt-2 text-[13px] font-medium uppercase tracking-[0.15em] text-muted">Campanha</p>
+      <p className="mt-2 text-[15px] font-medium uppercase tracking-[0.15em] text-muted">Campanha</p>
       <label>
         <span className={labelClass}>Posição</span>
         <select className={inputClass} value={form.placementId} onChange={(e) => update("placementId", e.target.value)}>
@@ -159,7 +159,7 @@ export function NewCampaignForm({ placements }: { placements: AdPlacement[] }) {
         </label>
       </div>
 
-      <p className="mt-2 text-[13px] font-medium uppercase tracking-[0.15em] text-muted">Criativos</p>
+      <p className="mt-2 text-[15px] font-medium uppercase tracking-[0.15em] text-muted">Criativos</p>
       <label>
         <span className={labelClass}>URL da imagem (desktop)</span>
         <input className={inputClass} value={form.desktopImageUrl} onChange={(e) => update("desktopImageUrl", e.target.value)} />
@@ -169,12 +169,12 @@ export function NewCampaignForm({ placements }: { placements: AdPlacement[] }) {
         <input className={inputClass} value={form.mobileImageUrl} onChange={(e) => update("mobileImageUrl", e.target.value)} />
       </label>
 
-      {error && <p className="text-[13px] text-red-600">{error}</p>}
+      {error && <p className="text-[15px] text-red-600">{error}</p>}
 
       <button
         type="submit"
         disabled={isPending}
-        className="neu-primary mt-2 self-start rounded-full px-6 py-3 text-[14px] font-medium text-white disabled:opacity-60"
+        className="neu-primary mt-2 self-start rounded-full px-6 py-3 text-[16px] font-medium text-white disabled:opacity-60"
       >
         {isPending ? "Salvando..." : "Criar campanha"}
       </button>

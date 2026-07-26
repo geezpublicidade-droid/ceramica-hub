@@ -9,6 +9,7 @@ import {
 } from "@/lib/services/platform";
 import { limitsFor } from "@/lib/plan-limits";
 import { EditPageManager } from "@/components/dashboard/EditPageManager";
+import { BackLink } from "@/components/nav/BackLink";
 
 export const metadata = { title: "Editar página — Cerâmica Hub" };
 
@@ -30,8 +31,11 @@ export default async function EditarPaginaPage() {
   return (
     <main className="min-h-screen bg-background px-6 py-16">
       <div className="mx-auto max-w-3xl">
+        <div className="mb-6">
+          <BackLink href="/dashboard" />
+        </div>
         <h1 className="text-2xl font-semibold text-foreground">Editar página comercial</h1>
-        <p className="mt-2 text-[14px] text-muted">
+        <p className="mt-2 text-[16px] text-muted">
           Plano atual: <strong>{business.effectivePlan}</strong>
           {business.trial.status === "active" && " (em teste)"}
         </p>

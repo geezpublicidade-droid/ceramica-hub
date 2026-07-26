@@ -53,12 +53,12 @@ export function PlanBilling({
 
   return (
     <div className="glass-light rounded-3xl p-6">
-      <p className="text-[13px] font-medium uppercase tracking-[0.15em] text-muted">Plano e cobrança</p>
+      <p className="text-[15px] font-medium uppercase tracking-[0.15em] text-muted">Plano e cobrança</p>
 
       {pendingInvoices.length > 0 && (
         <div className="mt-4 flex flex-col gap-2">
           {pendingInvoices.map((invoice) => (
-            <div key={invoice.id} className="flex items-center justify-between rounded-xl border border-border px-4 py-2.5 text-[13px]">
+            <div key={invoice.id} className="flex items-center justify-between rounded-xl border border-border px-4 py-2.5 text-[15px]">
               <span>
                 Plano {planLabels[invoice.plan]} — {formatCents(invoice.amountCents)} — {INVOICE_STATUS_LABEL[invoice.status]}
               </span>
@@ -79,19 +79,19 @@ export function PlanBilling({
             type="button"
             disabled={isPending || currentPlan === plan}
             onClick={() => handleChoosePlan(plan)}
-            className="neu rounded-xl px-4 py-3 text-left text-[13px] font-medium text-foreground disabled:opacity-50"
+            className="neu rounded-xl px-4 py-3 text-left text-[15px] font-medium text-foreground disabled:opacity-50"
           >
             <span className="block">{planLabels[plan]}</span>
-            <span className="mt-1 block text-[12px] font-normal text-muted">
+            <span className="mt-1 block text-[14px] font-normal text-muted">
               {formatCents(PLAN_PRICES_CENTS[plan])}/mês
               {currentPlan === plan ? " — plano atual" : ""}
             </span>
-            {pendingPlan === plan && isPending && <span className="mt-1 block text-[11px] text-primary">Gerando fatura...</span>}
+            {pendingPlan === plan && isPending && <span className="mt-1 block text-[13px] text-primary">Gerando fatura...</span>}
           </button>
         ))}
       </div>
 
-      {message && <p className="mt-4 rounded-xl bg-primary/5 px-4 py-3 text-[13px] text-foreground">{message}</p>}
+      {message && <p className="mt-4 rounded-xl bg-primary/5 px-4 py-3 text-[15px] text-foreground">{message}</p>}
     </div>
   );
 }

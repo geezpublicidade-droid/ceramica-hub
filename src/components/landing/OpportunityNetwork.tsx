@@ -18,10 +18,10 @@ export async function OpportunityNetwork({ opportunities }: OpportunityNetworkPr
   const t = await getTranslations("OpportunityNetwork");
   const tTypes = await getTranslations("opportunityTypeLabels");
   return (
-    <section id="oportunidades" className="bg-surface px-6 py-20 text-foreground">
+    <section id="oportunidades" className="bg-surface px-6 py-28 text-foreground">
       <div className="mx-auto max-w-6xl">
         <FadeUp className="max-w-2xl">
-          <p className="text-[13px] font-medium uppercase tracking-[0.2em] text-primary">
+          <p className="text-[15px] font-medium uppercase tracking-[0.2em] text-primary">
             {t("eyebrow")}
           </p>
           <h2 className="mt-4 text-[clamp(2rem,4.5vw,3.5rem)] font-semibold leading-tight tracking-tight">
@@ -39,22 +39,22 @@ export async function OpportunityNetwork({ opportunities }: OpportunityNetworkPr
               className="glass-card-light w-[280px] shrink-0 snap-start rounded-2xl p-6"
             >
               <span
-                className={`inline-block rounded-full px-2.5 py-1 text-[11px] font-medium ${
+                className={`inline-block rounded-full px-2.5 py-1 text-[13px] font-medium ${
                   typeStyles[opportunity.type] ?? "bg-foreground/10 text-muted"
                 }`}
               >
                 {tTypes(opportunity.type)}
               </span>
-              <p className="mt-4 text-[15px] font-semibold leading-snug tracking-tight">
+              <p className="mt-4 text-[17px] font-semibold leading-snug tracking-tight">
                 {opportunity.title}
               </p>
-              <p className="mt-2 text-[13px] leading-relaxed text-muted">{opportunity.description}</p>
+              <p className="mt-2 text-[15px] leading-relaxed text-muted">{opportunity.description}</p>
 
               <div className="mt-5 flex items-center gap-2 border-t border-border pt-4">
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-surface text-[10px] font-semibold">
+                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-surface text-[12px] font-semibold">
                   {opportunity.business.initials}
                 </div>
-                <p className="truncate text-[12px] text-muted">{opportunity.business.name}</p>
+                <p className="truncate text-[14px] text-muted">{opportunity.business.name}</p>
               </div>
 
               <a
@@ -64,7 +64,7 @@ export async function OpportunityNetwork({ opportunities }: OpportunityNetworkPr
                 )}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-4 inline-flex items-center gap-1.5 text-[12px] font-medium text-primary"
+                className="mt-4 inline-flex items-center gap-1.5 text-[14px] font-medium text-primary"
               >
                 {t("ctaTalk")}
                 <span aria-hidden="true">→</span>

@@ -20,12 +20,12 @@ import {
 } from "@/lib/actions/business-profile";
 
 const inputClass =
-  "mt-1.5 w-full rounded-xl border border-border bg-white px-4 py-2.5 text-[14px] text-foreground outline-none focus:border-primary";
-const labelClass = "text-[13px] font-medium text-foreground";
+  "mt-1.5 w-full rounded-xl border border-border bg-white px-4 py-2.5 text-[16px] text-foreground outline-none focus:border-primary";
+const labelClass = "text-[15px] font-medium text-foreground";
 
 function UpgradeNotice({ message }: { message: string }) {
   return (
-    <div className="mt-3 rounded-xl bg-primary/5 px-4 py-3 text-[13px] text-foreground">
+    <div className="mt-3 rounded-xl bg-primary/5 px-4 py-3 text-[15px] text-foreground">
       <p className="font-medium">Esse recurso faz parte de um plano superior.</p>
       <p className="mt-1 text-muted">{message}</p>
       <Link href="/#planos" className="mt-2 inline-block font-medium text-primary hover:underline">
@@ -164,7 +164,7 @@ export function EditPageManager({
     <div className="mt-10 flex flex-col gap-10">
       {/* Perfil */}
       <section className="glass-light rounded-3xl p-6">
-        <h2 className="text-[15px] font-semibold text-foreground">Perfil da página</h2>
+        <h2 className="text-[17px] font-semibold text-foreground">Perfil da página</h2>
         <div className="mt-4 flex flex-col gap-4">
           <label>
             <span className={labelClass}>Descrição</span>
@@ -228,13 +228,13 @@ export function EditPageManager({
           {!limits.videoAllowed && (
             <UpgradeNotice message="Vídeo em destaque é um recurso do plano Experiência." />
           )}
-          {profileError && <p className="text-[13px] text-red-600">{profileError}</p>}
-          {profileSaved && <p className="text-[13px] text-primary">Salvo.</p>}
+          {profileError && <p className="text-[15px] text-red-600">{profileError}</p>}
+          {profileSaved && <p className="text-[15px] text-primary">Salvo.</p>}
           <button
             type="button"
             disabled={isPending}
             onClick={saveProfile}
-            className="neu-primary self-start rounded-full px-6 py-2.5 text-[13px] font-medium text-white disabled:opacity-60"
+            className="neu-primary self-start rounded-full px-6 py-2.5 text-[15px] font-medium text-white disabled:opacity-60"
           >
             Salvar perfil
           </button>
@@ -243,7 +243,7 @@ export function EditPageManager({
 
       {/* Serviços */}
       <section className="glass-light rounded-3xl p-6">
-        <h2 className="text-[15px] font-semibold text-foreground">
+        <h2 className="text-[17px] font-semibold text-foreground">
           Serviços ({services.length}
           {Number.isFinite(limits.maxServices) ? `/${limits.maxServices}` : ""})
         </h2>
@@ -251,14 +251,14 @@ export function EditPageManager({
           {services.map((service) => (
             <div key={service.id} className="flex items-center justify-between rounded-xl border border-border p-3">
               <div>
-                <p className="text-[14px] font-medium text-foreground">{service.name}</p>
-                {service.description && <p className="text-[13px] text-muted">{service.description}</p>}
+                <p className="text-[16px] font-medium text-foreground">{service.name}</p>
+                {service.description && <p className="text-[15px] text-muted">{service.description}</p>}
               </div>
               <button
                 type="button"
                 disabled={isPending}
                 onClick={() => startTransition(async () => { await deleteService(service.id); router.refresh(); })}
-                className="text-[12px] text-red-600"
+                className="text-[14px] text-red-600"
               >
                 Remover
               </button>
@@ -282,12 +282,12 @@ export function EditPageManager({
               value={newService.description}
               onChange={(e) => setNewService((s) => ({ ...s, description: e.target.value }))}
             />
-            {serviceError && <p className="text-[13px] text-red-600">{serviceError}</p>}
+            {serviceError && <p className="text-[15px] text-red-600">{serviceError}</p>}
             <button
               type="button"
               disabled={isPending}
               onClick={submitService}
-              className="neu self-start rounded-full px-5 py-2 text-[13px] font-medium text-foreground disabled:opacity-60"
+              className="neu self-start rounded-full px-5 py-2 text-[15px] font-medium text-foreground disabled:opacity-60"
             >
               + Adicionar serviço
             </button>
@@ -297,7 +297,7 @@ export function EditPageManager({
 
       {/* Galeria */}
       <section className="glass-light rounded-3xl p-6">
-        <h2 className="text-[15px] font-semibold text-foreground">
+        <h2 className="text-[17px] font-semibold text-foreground">
           Galeria ({photos.length}/{limits.maxPhotos})
         </h2>
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -309,7 +309,7 @@ export function EditPageManager({
                 type="button"
                 disabled={isPending}
                 onClick={() => startTransition(async () => { await deletePhoto(photo.id); router.refresh(); })}
-                className="absolute right-1 top-1 rounded-full bg-black/60 px-2 py-0.5 text-[11px] text-white"
+                className="absolute right-1 top-1 rounded-full bg-black/60 px-2 py-0.5 text-[13px] text-white"
               >
                 Remover
               </button>
@@ -331,21 +331,21 @@ export function EditPageManager({
               type="button"
               disabled={isPending}
               onClick={submitPhoto}
-              className="neu shrink-0 rounded-full px-5 py-2 text-[13px] font-medium text-foreground disabled:opacity-60"
+              className="neu shrink-0 rounded-full px-5 py-2 text-[15px] font-medium text-foreground disabled:opacity-60"
             >
               Adicionar
             </button>
           </div>
         )}
-        {photoError && <p className="mt-2 text-[13px] text-red-600">{photoError}</p>}
+        {photoError && <p className="mt-2 text-[15px] text-red-600">{photoError}</p>}
       </section>
 
       {/* Visita Virtual 360° */}
       <section className="glass-light rounded-3xl p-6">
-        <h2 className="text-[15px] font-semibold text-foreground">
+        <h2 className="text-[17px] font-semibold text-foreground">
           Visite nossa sala — visita virtual 360° ({virtualTourScenes.length})
         </h2>
-        <p className="mt-1 text-[13px] text-muted">
+        <p className="mt-1 text-[15px] text-muted">
           Tire fotos panorâmicas 360° com o celular (modo &quot;Photo Sphere&quot; ou &quot;Panorama&quot;) de cada
           ambiente e envie abaixo. Visitantes vão poder olhar ao redor e trocar de cômodo.
         </p>
@@ -354,12 +354,12 @@ export function EditPageManager({
           <div className="mt-4 flex flex-col gap-2">
             {virtualTourScenes.map((scene) => (
               <div key={scene.id} className="flex items-center justify-between rounded-xl border border-border p-3">
-                <p className="text-[14px] font-medium text-foreground">{scene.label}</p>
+                <p className="text-[16px] font-medium text-foreground">{scene.label}</p>
                 <button
                   type="button"
                   disabled={isPending}
                   onClick={() => startTransition(async () => { await deleteVirtualTourScene(scene.id); router.refresh(); })}
-                  className="text-[12px] text-red-600"
+                  className="text-[14px] text-red-600"
                 >
                   Remover
                 </button>
@@ -378,8 +378,8 @@ export function EditPageManager({
               value={newSceneLabel}
               onChange={(e) => setNewSceneLabel(e.target.value)}
             />
-            {sceneError && <p className="text-[13px] text-red-600">{sceneError}</p>}
-            <label className="neu inline-flex w-fit cursor-pointer items-center gap-2 rounded-full px-5 py-2 text-[13px] font-medium text-foreground disabled:opacity-60">
+            {sceneError && <p className="text-[15px] text-red-600">{sceneError}</p>}
+            <label className="neu inline-flex w-fit cursor-pointer items-center gap-2 rounded-full px-5 py-2 text-[15px] font-medium text-foreground disabled:opacity-60">
               {sceneUploading ? "Enviando..." : "+ Enviar foto 360°"}
               <input
                 type="file"
@@ -399,7 +399,7 @@ export function EditPageManager({
 
       {/* Promoções */}
       <section className="glass-light rounded-3xl p-6">
-        <h2 className="text-[15px] font-semibold text-foreground">
+        <h2 className="text-[17px] font-semibold text-foreground">
           Promoções ativas ({activePromotions.length}
           {limits.maxPromotions > 0 ? `/${limits.maxPromotions}` : ""})
         </h2>
@@ -407,15 +407,15 @@ export function EditPageManager({
           {activePromotions.map((promo) => (
             <div key={promo.id} className="flex items-center justify-between rounded-xl border border-border p-3">
               <div>
-                <p className="text-[14px] font-medium text-foreground">{promo.title}</p>
-                {promo.description && <p className="text-[13px] text-muted">{promo.description}</p>}
-                {promo.couponCode && <p className="text-[12px] text-primary">Cupom: {promo.couponCode}</p>}
+                <p className="text-[16px] font-medium text-foreground">{promo.title}</p>
+                {promo.description && <p className="text-[15px] text-muted">{promo.description}</p>}
+                {promo.couponCode && <p className="text-[14px] text-primary">Cupom: {promo.couponCode}</p>}
               </div>
               <button
                 type="button"
                 disabled={isPending}
                 onClick={() => startTransition(async () => { await deactivatePromotion(promo.id); router.refresh(); })}
-                className="text-[12px] text-red-600"
+                className="text-[14px] text-red-600"
               >
                 Encerrar
               </button>
@@ -448,12 +448,12 @@ export function EditPageManager({
               value={newPromotion.couponCode}
               onChange={(e) => setNewPromotion((p) => ({ ...p, couponCode: e.target.value }))}
             />
-            {promotionError && <p className="text-[13px] text-red-600">{promotionError}</p>}
+            {promotionError && <p className="text-[15px] text-red-600">{promotionError}</p>}
             <button
               type="button"
               disabled={isPending}
               onClick={submitPromotion}
-              className="neu self-start rounded-full px-5 py-2 text-[13px] font-medium text-foreground disabled:opacity-60"
+              className="neu self-start rounded-full px-5 py-2 text-[15px] font-medium text-foreground disabled:opacity-60"
             >
               + Criar promoção
             </button>

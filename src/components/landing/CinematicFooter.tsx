@@ -21,13 +21,13 @@ export async function CinematicFooter() {
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col gap-10 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-[17px] font-semibold tracking-tight">
+            <p className="text-[19px] font-semibold tracking-tight">
               Cerâmica <span className="text-primary">Hub</span>
             </p>
-            <p className="mt-3 max-w-sm text-[14px] leading-relaxed text-muted">{t("tagline")}</p>
+            <p className="mt-3 max-w-sm text-[16px] leading-relaxed text-muted">{t("tagline")}</p>
           </div>
 
-          <nav className="flex flex-wrap items-center gap-x-6 gap-y-3 text-[13px] text-muted">
+          <nav className="flex flex-wrap items-center gap-x-6 gap-y-3 text-[15px] text-muted">
             {linkGroups.map((link) => (
               <Link key={link.label} href={link.href} className="transition-colors hover:text-foreground">
                 {link.label}
@@ -38,8 +38,8 @@ export async function CinematicFooter() {
         </div>
 
         <div className="mt-12 border-t border-border pt-6">
-          <p className="max-w-3xl text-[12px] leading-relaxed text-muted">{t("disclaimer")}</p>
-          <div className="mt-4 flex flex-col gap-2 text-[12px] text-muted sm:flex-row sm:items-center sm:justify-between">
+          <p className="max-w-3xl text-[14px] leading-relaxed text-muted">{t("disclaimer")}</p>
+          <div className="mt-4 flex flex-col gap-2 text-[14px] text-muted sm:flex-row sm:items-center sm:justify-between">
             <a
               href="https://www.geezmarketing.com.br"
               target="_blank"

@@ -52,7 +52,7 @@ export function VirtualTourViewer({ scenes }: { scenes: VirtualTourScene[] }) {
               key={scene.id}
               type="button"
               onClick={() => goToScene(scene)}
-              className={`rounded-full px-4 py-2 text-[13px] font-medium transition-colors ${
+              className={`rounded-full px-4 py-2 text-[15px] font-medium transition-colors ${
                 activeId === scene.id
                   ? "neu-primary text-white"
                   : "neu text-foreground"

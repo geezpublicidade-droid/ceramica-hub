@@ -7,9 +7,9 @@ export async function FounderCTA() {
   const benefits = t.raw("benefits") as string[];
 
   return (
-    <section id="cadastro" className="bg-surface px-6 py-20 text-foreground">
+    <section id="cadastro" className="bg-surface px-6 py-28 text-foreground">
       <div className="mx-auto max-w-4xl text-center">
-        <FadeUp className="text-[13px] font-medium uppercase tracking-[0.2em] text-primary">
+        <FadeUp className="text-[15px] font-medium uppercase tracking-[0.2em] text-primary">
           {t("eyebrow")}
         </FadeUp>
         <FadeUp
@@ -18,7 +18,7 @@ export async function FounderCTA() {
         >
           {t("headline")}
         </FadeUp>
-        <FadeUp delay={0.1} className="mx-auto mt-6 max-w-md text-[15px] leading-relaxed text-muted">
+        <FadeUp delay={0.1} className="mx-auto mt-6 max-w-md text-[17px] leading-relaxed text-muted">
           {t("subhead")}
         </FadeUp>
 
@@ -27,7 +27,7 @@ export async function FounderCTA() {
           className="glass-light mx-auto mt-12 grid max-w-2xl grid-cols-1 gap-3 rounded-2xl p-6 text-left sm:grid-cols-2"
         >
           {benefits.map((benefit) => (
-            <div key={benefit} className="flex items-start gap-2.5 text-[14px] text-foreground/80">
+            <div key={benefit} className="flex items-start gap-2.5 text-[16px] text-foreground/80">
               <span aria-hidden="true" className="mt-0.5 text-primary">
                 ✓
               </span>
@@ -39,11 +39,11 @@ export async function FounderCTA() {
         <FadeUp delay={0.2} className="mt-10 flex flex-wrap justify-center gap-4">
           <Link
             href="/cadastro"
-            className="neu-primary rounded-full px-8 py-4 text-[15px] font-medium text-white"
+            className="neu-primary rounded-full px-8 py-4 text-[17px] font-medium text-white"
           >
             {t("ctaRegister")}
           </Link>
-          <a href="#planos" className="neu rounded-full px-8 py-4 text-[15px] font-medium text-foreground">
+          <a href="#planos" className="neu rounded-full px-8 py-4 text-[17px] font-medium text-foreground">
             {t("ctaKnowPlatform")}
           </a>
         </FadeUp>

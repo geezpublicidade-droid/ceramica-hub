@@ -26,7 +26,7 @@ export function Directory({ businesses }: DirectoryProps) {
   }, [active, businesses, query]);
 
   return (
-    <section id="empresas" className="relative overflow-hidden bg-surface px-6 py-20">
+    <section id="empresas" className="relative overflow-hidden bg-surface px-6 py-28">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-40 top-0 h-[420px] w-[420px] rounded-full opacity-30 blur-[120px]"
@@ -39,17 +39,17 @@ export function Directory({ businesses }: DirectoryProps) {
             <h2 className="text-[clamp(1.75rem,3.5vw,2.75rem)] font-semibold leading-tight tracking-tight">
               {t("title")}
             </h2>
-            <p className="mt-3 max-w-md text-[15px] text-muted">{t("subtitle")}</p>
+            <p className="mt-3 max-w-md text-[17px] text-muted">{t("subtitle")}</p>
           </div>
         </div>
 
         {query && query !== "__oportunidades__" && (
-          <div className="mt-6 flex items-center gap-2 text-[13px] text-muted">
+          <div className="mt-6 flex items-center gap-2 text-[15px] text-muted">
             {t("filteringBy")} <span className="font-medium text-foreground">“{query}”</span>
             <button
               type="button"
               onClick={() => setQuery("")}
-              className="rounded-full border border-border px-2.5 py-0.5 text-[12px] hover:bg-white"
+              className="rounded-full border border-border px-2.5 py-0.5 text-[14px] hover:bg-white"
             >
               {t("clear")}
             </button>
@@ -61,7 +61,7 @@ export function Directory({ businesses }: DirectoryProps) {
             <button
               key={category}
               onClick={() => setActive(category)}
-              className={`rounded-full px-4 py-2 text-[13px] font-medium transition-colors ${
+              className={`rounded-full px-4 py-2 text-[15px] font-medium transition-colors ${
                 active === category
                   ? "neu-pressed bg-surface text-primary"
                   : "neu text-muted hover:text-foreground"
@@ -83,15 +83,15 @@ export function Directory({ businesses }: DirectoryProps) {
               <h3 className="text-[clamp(1.4rem,3vw,1.9rem)] font-semibold tracking-tight text-foreground">
                 {t("emptyTitle")}
               </h3>
-              <p className="mt-4 text-[15px] leading-relaxed text-muted">{t("emptyDescription")}</p>
+              <p className="mt-4 text-[17px] leading-relaxed text-muted">{t("emptyDescription")}</p>
               <div className="mt-8 flex flex-wrap justify-center gap-4">
                 <Link
                   href="/cadastro"
-                  className="neu-primary rounded-full px-7 py-3.5 text-[15px] font-medium text-white"
+                  className="neu-primary rounded-full px-7 py-3.5 text-[17px] font-medium text-white"
                 >
                   {t("ctaRegisterFree")}
                 </Link>
-                <a href="#planos" className="neu rounded-full px-7 py-3.5 text-[15px] font-medium text-foreground">
+                <a href="#planos" className="neu rounded-full px-7 py-3.5 text-[17px] font-medium text-foreground">
                   {t("ctaHowItWorks")}
                 </a>
               </div>
@@ -99,11 +99,11 @@ export function Directory({ businesses }: DirectoryProps) {
           </div>
         ) : filtered.length === 0 ? (
           <div className="mt-14 rounded-3xl border border-border bg-white/60 px-6 py-14 text-center">
-            <p className="text-[15px] text-foreground">{t("noResultsTitle")}</p>
-            <p className="mt-2 text-[14px] text-muted">{t("noResultsDescription")}</p>
+            <p className="text-[17px] text-foreground">{t("noResultsTitle")}</p>
+            <p className="mt-2 text-[16px] text-muted">{t("noResultsDescription")}</p>
             <Link
               href="/cadastro"
-              className="mt-6 inline-block rounded-full neu px-6 py-3 text-[14px] font-medium text-foreground"
+              className="mt-6 inline-block rounded-full neu px-6 py-3 text-[16px] font-medium text-foreground"
             >
               {t("ctaIndicate")}
             </Link>
@@ -119,32 +119,32 @@ export function Directory({ businesses }: DirectoryProps) {
                   <BusinessAvatar
                     business={business}
                     className="h-16 w-16 rounded-xl bg-white"
-                    textClassName="text-[15px] font-semibold text-foreground"
+                    textClassName="text-[17px] font-semibold text-foreground"
                   />
                 </Link>
 
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-2">
                     <Link href={`/empresa/${business.slug}`} className="min-w-0">
-                      <h3 className="text-[16px] font-semibold leading-snug tracking-tight hover:text-primary">
+                      <h3 className="text-[18px] font-semibold leading-snug tracking-tight hover:text-primary">
                         {business.name}
                       </h3>
                     </Link>
                     {business.verified && (
-                      <span className="shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary">
+                      <span className="shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-[13px] font-medium text-primary">
                         {tCommon("verified")}
                       </span>
                     )}
                   </div>
-                  <p className="mt-1 text-[13px] text-muted">
+                  <p className="mt-1 text-[15px] text-muted">
                     {tCategories(business.category)} · {business.floor}
                   </p>
-                  <p className="mt-3 text-[14px] leading-relaxed text-muted">{business.description}</p>
+                  <p className="mt-3 text-[16px] leading-relaxed text-muted">{business.description}</p>
                   <a
                     href={buildWhatsAppLink(business.phone, business.name)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-medium text-primary transition-transform hover:translate-x-1"
+                    className="mt-4 inline-flex items-center gap-1.5 text-[15px] font-medium text-primary transition-transform hover:translate-x-1"
                   >
                     {tCommon("whatsapp")}
                     <span aria-hidden="true">→</span>

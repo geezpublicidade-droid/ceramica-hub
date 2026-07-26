@@ -36,10 +36,10 @@ export function Header() {
       }`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6">
-        <Link href="/#top" className="text-[15px] font-semibold tracking-tight text-foreground">
+        <Link href="/#top" className="text-[17px] font-semibold tracking-tight text-foreground">
           Cerâmica <span className="text-primary">Hub</span>
         </Link>
-        <nav className="hidden gap-8 text-[13px] text-muted md:flex">
+        <nav className="hidden gap-8 text-[15px] text-muted md:flex">
           {links.map((link) => (
             <Link key={link.href} href={link.href} className="transition-colors hover:text-foreground">
               {link.label}
@@ -50,13 +50,13 @@ export function Header() {
           <LanguageSwitcher className="hidden md:flex" />
           <a
             href="/login"
-            className="hidden text-[13px] text-muted transition-colors hover:text-foreground md:block"
+            className="hidden text-[15px] text-muted transition-colors hover:text-foreground md:block"
           >
             {t("entrar")}
           </a>
           <Link
             href="/cadastro"
-            className="neu-primary whitespace-nowrap rounded-full px-3 py-2 text-[12px] font-medium text-white sm:px-4 sm:text-[13px]"
+            className="neu-primary whitespace-nowrap rounded-full px-3 py-2 text-[14px] font-medium text-white sm:px-4 sm:text-[15px]"
           >
             {t("cadastrarEmpresa")}
           </Link>
@@ -80,7 +80,7 @@ export function Header() {
       </div>
 
       {menuOpen && (
-        <nav className="glass-light mx-6 mt-3 flex flex-col gap-1 rounded-2xl border border-border p-3 text-[14px] md:hidden">
+        <nav className="glass-light mx-6 mt-3 flex flex-col gap-1 rounded-2xl border border-border p-3 text-[16px] md:hidden">
           {links.map((link) => (
             <Link
               key={link.href}

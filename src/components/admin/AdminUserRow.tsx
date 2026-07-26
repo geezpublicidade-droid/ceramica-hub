@@ -49,14 +49,14 @@ export function AdminUserRow({
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-white/70 p-4">
       <div>
-        <p className="text-[14px] font-medium text-foreground">
+        <p className="text-[16px] font-medium text-foreground">
           {admin.email} {isSelf && <span className="text-muted">(você)</span>}
         </p>
-        {error && <p className="text-[12px] text-red-600">{error}</p>}
+        {error && <p className="text-[14px] text-red-600">{error}</p>}
       </div>
       <div className="flex items-center gap-2">
         <select
-          className="rounded-xl border border-border bg-white px-3 py-2 text-[13px] text-foreground disabled:opacity-60"
+          className="rounded-xl border border-border bg-white px-3 py-2 text-[15px] text-foreground disabled:opacity-60"
           value={role}
           disabled={isPending || isSelf}
           onChange={(e) => handleRoleChange(e.target.value as AdminRole)}
@@ -72,7 +72,7 @@ export function AdminUserRow({
             type="button"
             disabled={isPending}
             onClick={() => setConfirmingRemove(true)}
-            className="rounded-full border border-red-200 px-4 py-2 text-[13px] font-medium text-red-600 disabled:opacity-60"
+            className="rounded-full border border-red-200 px-4 py-2 text-[15px] font-medium text-red-600 disabled:opacity-60"
           >
             Remover
           </button>
@@ -83,7 +83,7 @@ export function AdminUserRow({
               type="button"
               disabled={isPending}
               onClick={handleRemove}
-              className="rounded-full bg-red-600 px-4 py-2 text-[13px] font-medium text-white disabled:opacity-60"
+              className="rounded-full bg-red-600 px-4 py-2 text-[15px] font-medium text-white disabled:opacity-60"
             >
               Confirmar
             </button>
@@ -91,7 +91,7 @@ export function AdminUserRow({
               type="button"
               disabled={isPending}
               onClick={() => setConfirmingRemove(false)}
-              className="rounded-full px-3 py-2 text-[13px] text-muted"
+              className="rounded-full px-3 py-2 text-[15px] text-muted"
             >
               Cancelar
             </button>

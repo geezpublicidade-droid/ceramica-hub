@@ -34,7 +34,7 @@ export default async function AdminMfaSetupPage() {
     <main className="flex min-h-screen items-center justify-center px-6 py-24">
       <div className="glass-light w-full max-w-sm rounded-3xl p-8 text-center">
         <h1 className="text-xl font-semibold text-foreground">Configure a verificação em duas etapas</h1>
-        <p className="mt-2 text-[13px] text-muted">
+        <p className="mt-2 text-[15px] text-muted">
           Obrigatório pra contas de administrador. Escaneie o código com o Google Authenticator, Authy
           ou outro app compatível.
         </p>
@@ -42,7 +42,7 @@ export default async function AdminMfaSetupPage() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={qrCodeDataUrl} alt="QR code de configuração do MFA" className="mx-auto mt-6 h-48 w-48 rounded-xl" />
 
-        <p className="mt-4 break-all text-[12px] text-muted">
+        <p className="mt-4 break-all text-[14px] text-muted">
           Não conseguiu escanear? Digite manualmente: <span className="font-mono text-foreground">{secret}</span>
         </p>
 

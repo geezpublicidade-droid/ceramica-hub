@@ -63,8 +63,8 @@ const initialState: FormState = {
 };
 
 const inputClass =
-  "mt-1.5 w-full rounded-xl border border-border bg-white px-4 py-2.5 text-[15px] text-foreground outline-none focus:border-primary";
-const labelClass = "text-[13px] font-medium text-foreground";
+  "mt-1.5 w-full rounded-xl border border-border bg-white px-4 py-2.5 text-[17px] text-foreground outline-none focus:border-primary";
+const labelClass = "text-[15px] font-medium text-foreground";
 
 export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
   const t = useTranslations("RegisterWizard");
@@ -146,7 +146,7 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
     return (
       <div className="rounded-3xl border border-border bg-white/70 px-8 py-12 text-center">
         <h2 className="text-[1.4rem] font-semibold text-foreground">{t("doneTitle")}</h2>
-        <p className="mt-3 text-[15px] text-muted">{t("doneDescription")}</p>
+        <p className="mt-3 text-[17px] text-muted">{t("doneDescription")}</p>
       </div>
     );
   }
@@ -164,7 +164,7 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
 
       {step === 1 && (
         <div className="flex flex-col gap-4">
-          <p className="text-[13px] font-medium uppercase tracking-[0.15em] text-muted">{t("step1Eyebrow")}</p>
+          <p className="text-[15px] font-medium uppercase tracking-[0.15em] text-muted">{t("step1Eyebrow")}</p>
           <label>
             <span className={labelClass}>{t("labels.name")}</span>
             <input className={inputClass} value={form.name} onChange={(e) => update("name", e.target.value)} />
@@ -242,7 +242,7 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
 
       {step === 2 && (
         <div className="flex flex-col gap-4">
-          <p className="text-[13px] font-medium uppercase tracking-[0.15em] text-muted">{t("step2Eyebrow")}</p>
+          <p className="text-[15px] font-medium uppercase tracking-[0.15em] text-muted">{t("step2Eyebrow")}</p>
           <label>
             <span className={labelClass}>{t("labels.tower")}</span>
             <select
@@ -259,7 +259,7 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
             </select>
           </label>
           {selectedTower && (
-            <p className="text-[13px] text-muted">{t("towerAddress", { address: selectedTower.address })}</p>
+            <p className="text-[15px] text-muted">{t("towerAddress", { address: selectedTower.address })}</p>
           )}
           <label>
             <span className={labelClass}>{t("labels.floor")}</span>
@@ -278,7 +278,7 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
 
       {step === 3 && (
         <div className="flex flex-col gap-4">
-          <p className="text-[13px] font-medium uppercase tracking-[0.15em] text-muted">{t("step3Eyebrow")}</p>
+          <p className="text-[15px] font-medium uppercase tracking-[0.15em] text-muted">{t("step3Eyebrow")}</p>
           <label>
             <span className={labelClass}>{t("labels.logoUrl")}</span>
             <input className={inputClass} value={form.logoUrl} onChange={(e) => update("logoUrl", e.target.value)} />
@@ -340,7 +340,7 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
                 <button
                   type="button"
                   onClick={() => update("services", [...form.services, { name: "", description: "" }])}
-                  className="self-start text-[13px] font-medium text-primary"
+                  className="self-start text-[15px] font-medium text-primary"
                 >
                   {t("addService")}
                 </button>
@@ -352,8 +352,8 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
 
       {step === 4 && (
         <div className="flex flex-col gap-4">
-          <p className="text-[13px] font-medium uppercase tracking-[0.15em] text-muted">{t("step4Eyebrow")}</p>
-          <label className="flex items-start gap-3 text-[14px] text-foreground">
+          <p className="text-[15px] font-medium uppercase tracking-[0.15em] text-muted">{t("step4Eyebrow")}</p>
+          <label className="flex items-start gap-3 text-[16px] text-foreground">
             <input
               type="checkbox"
               className="mt-1"
@@ -362,7 +362,7 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
             />
             {t("consent.address")}
           </label>
-          <label className="flex items-start gap-3 text-[14px] text-foreground">
+          <label className="flex items-start gap-3 text-[16px] text-foreground">
             <input
               type="checkbox"
               className="mt-1"
@@ -377,7 +377,7 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
               ),
             })}
           </label>
-          <label className="flex items-start gap-3 text-[14px] text-foreground">
+          <label className="flex items-start gap-3 text-[16px] text-foreground">
             <input
               type="checkbox"
               className="mt-1"
@@ -392,7 +392,7 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
               ),
             })}
           </label>
-          <label className="flex items-start gap-3 text-[14px] text-foreground">
+          <label className="flex items-start gap-3 text-[16px] text-foreground">
             <input
               type="checkbox"
               className="mt-1"
@@ -407,7 +407,7 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
               ),
             })}
           </label>
-          <label className="flex items-start gap-3 text-[14px] text-foreground">
+          <label className="flex items-start gap-3 text-[16px] text-foreground">
             <input
               type="checkbox"
               className="mt-1"
@@ -420,14 +420,14 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
         </div>
       )}
 
-      {error && <p className="mt-6 text-[13px] text-red-600">{error}</p>}
+      {error && <p className="mt-6 text-[15px] text-red-600">{error}</p>}
 
       <div className="mt-8 flex justify-between gap-4">
         {step > 1 ? (
           <button
             type="button"
             onClick={goBack}
-            className="neu rounded-full px-6 py-3 text-[14px] font-medium text-foreground"
+            className="neu rounded-full px-6 py-3 text-[16px] font-medium text-foreground"
           >
             {t("buttons.back")}
           </button>
@@ -438,7 +438,7 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
           <button
             type="button"
             onClick={goNext}
-            className="neu-primary rounded-full px-6 py-3 text-[14px] font-medium text-white"
+            className="neu-primary rounded-full px-6 py-3 text-[16px] font-medium text-white"
           >
             {t("buttons.continue")}
           </button>
@@ -447,7 +447,7 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
             type="button"
             disabled={isPending}
             onClick={handleSubmit}
-            className="neu-primary rounded-full px-6 py-3 text-[14px] font-medium text-white disabled:opacity-60"
+            className="neu-primary rounded-full px-6 py-3 text-[16px] font-medium text-white disabled:opacity-60"
           >
             {isPending ? t("buttons.submitting") : t("buttons.submit")}
           </button>

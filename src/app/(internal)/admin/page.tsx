@@ -1,6 +1,13 @@
 import { requireAdminPage } from "@/lib/auth-guards";
 import { createServiceClient } from "@/lib/supabase/server";
 import { AdminBusinessRow } from "@/components/admin/AdminBusinessRow";
+import { SignOutButton } from "@/components/nav/SignOutButton";
+import { signOut } from "@/auth";
+
+async function logout() {
+  "use server";
+  await signOut({ redirectTo: "/admin/login" });
+}
 
 export const metadata = { title: "Painel administrativo — Cerâmica Hub" };
 
@@ -45,40 +52,41 @@ export default async function AdminPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold text-foreground">Painel administrativo</h1>
-            <p className="mt-2 text-[14px] text-muted">
+            <p className="mt-2 text-[16px] text-muted">
               Aprove ou rejeite cadastros de empresas antes que a página fique pública.
             </p>
           </div>
           <div className="flex gap-2">
             {(adminRole === "super_admin" || adminRole === "admin" || adminRole === "financeiro") && (
-              <a href="/admin/financeiro" className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground">
+              <a href="/admin/financeiro" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
                 Financeiro
               </a>
             )}
             {(adminRole === "super_admin" || adminRole === "admin") && (
-              <a href="/admin/lgpd" className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground">
+              <a href="/admin/lgpd" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
                 LGPD
               </a>
             )}
             {(adminRole === "super_admin" || adminRole === "admin" || adminRole === "comercial") && (
-              <a href="/admin/publicidade" className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground">
+              <a href="/admin/publicidade" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
                 Publicidade
               </a>
             )}
             {adminRole === "super_admin" && (
-              <a href="/admin/usuarios" className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground">
+              <a href="/admin/usuarios" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
                 Usuários
               </a>
             )}
+            <SignOutButton action={logout} />
           </div>
         </div>
 
         <section className="mt-10">
-          <h2 className="text-[15px] font-semibold text-foreground">
+          <h2 className="text-[17px] font-semibold text-foreground">
             Pendentes ({pending.length})
           </h2>
           <div className="mt-4 flex flex-col gap-3">
-            {pending.length === 0 && <p className="text-[14px] text-muted">Nenhum cadastro pendente.</p>}
+            {pending.length === 0 && <p className="text-[16px] text-muted">Nenhum cadastro pendente.</p>}
             {pending.map((b) => (
               <AdminBusinessRow key={b.id} business={b} />
             ))}
@@ -86,12 +94,12 @@ export default async function AdminPage() {
         </section>
 
         <section className="mt-12">
-          <h2 className="text-[15px] font-semibold text-foreground">
+          <h2 className="text-[17px] font-semibold text-foreground">
             Aprovadas ({approved.length})
           </h2>
           <div className="mt-4 flex flex-col gap-2">
             {approved.map((b) => (
-              <p key={b.id} className="text-[13px] text-muted">
+              <p key={b.id} className="text-[15px] text-muted">
                 {b.name} — {b.towers?.name} · {b.floor} · sala {b.room_number}
               </p>
             ))}
@@ -99,12 +107,12 @@ export default async function AdminPage() {
         </section>
 
         <section className="mt-12">
-          <h2 className="text-[15px] font-semibold text-foreground">
+          <h2 className="text-[17px] font-semibold text-foreground">
             Rejeitadas ({rejected.length})
           </h2>
           <div className="mt-4 flex flex-col gap-2">
             {rejected.map((b) => (
-              <p key={b.id} className="text-[13px] text-muted">
+              <p key={b.id} className="text-[15px] text-muted">
                 {b.name} — {b.email}
               </p>
             ))}

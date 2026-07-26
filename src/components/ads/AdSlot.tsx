@@ -21,7 +21,7 @@ export async function AdSlot({ placementKey }: { placementKey: string }) {
   return (
     <div className="mx-auto max-w-6xl px-6">
       <div className="relative overflow-hidden rounded-2xl border border-border">
-        <span className="absolute left-3 top-3 z-10 rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-medium uppercase tracking-wide text-white">
+        <span className="absolute left-3 top-3 z-10 rounded-full bg-black/60 px-2.5 py-1 text-[12px] font-medium uppercase tracking-wide text-white">
           Patrocinado
         </span>
         <AdLink href={campaign.targetUrl} campaignId={campaign.id}>

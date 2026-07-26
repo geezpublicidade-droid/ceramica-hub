@@ -18,7 +18,7 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
   const router = useRouter();
 
   return (
-    <div className={`flex items-center gap-1 text-[12px] font-medium text-muted ${className}`}>
+    <div className={`flex items-center gap-1 text-[14px] font-medium text-muted ${className}`}>
       <span className="sr-only">{t("label")}</span>
       {routing.locales.map((loc) => (
         <button

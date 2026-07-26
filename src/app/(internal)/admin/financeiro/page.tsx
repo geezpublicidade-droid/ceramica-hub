@@ -1,6 +1,7 @@
 import { requireAdminPage } from "@/lib/auth-guards";
 import { getPendingInvoices } from "@/lib/services/platform";
 import { AdminInvoiceRow } from "@/components/admin/AdminInvoiceRow";
+import { BackLink } from "@/components/nav/BackLink";
 
 export const metadata = { title: "Financeiro — Cerâmica Hub" };
 
@@ -15,18 +16,16 @@ export default async function AdminFinanceiroPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold text-foreground">Financeiro</h1>
-            <p className="mt-2 text-[14px] text-muted">
+            <p className="mt-2 text-[16px] text-muted">
               Faturas aguardando confirmação manual de pagamento (Mercado Pago).
             </p>
           </div>
-          <a href="/admin" className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground">
-            ← Voltar
-          </a>
+          <BackLink href="/admin" />
         </div>
 
         <section className="mt-10 flex flex-col gap-3">
           {pendingInvoices.length === 0 && (
-            <p className="text-[14px] text-muted">Nenhuma fatura pendente de confirmação.</p>
+            <p className="text-[16px] text-muted">Nenhuma fatura pendente de confirmação.</p>
           )}
           {pendingInvoices.map((invoice) => (
             <AdminInvoiceRow key={invoice.id} invoice={invoice} />

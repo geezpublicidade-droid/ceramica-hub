@@ -56,7 +56,7 @@ export function SmartSearch({ businesses }: SmartSearchProps) {
   }
 
   return (
-    <section className="bg-surface px-6 py-20 text-foreground">
+    <section className="bg-surface px-6 py-28 text-foreground">
       <div className="mx-auto max-w-3xl text-center">
         <FadeUp className="text-[clamp(2rem,5vw,3.5rem)] font-semibold leading-tight tracking-tight">
           <h2>{t("heading")}</h2>
@@ -76,11 +76,11 @@ export function SmartSearch({ businesses }: SmartSearchProps) {
               value={inputValue}
               onChange={(event) => setInputValue(event.target.value)}
               placeholder={t("searchPlaceholder")}
-              className="min-w-0 flex-1 bg-transparent py-3 text-[15px] text-foreground placeholder:text-muted focus:outline-none"
+              className="min-w-0 flex-1 bg-transparent py-3 text-[17px] text-foreground placeholder:text-muted focus:outline-none"
             />
             <button
               type="submit"
-              className="neu-primary shrink-0 rounded-full px-5 py-3 text-[14px] font-medium text-white"
+              className="neu-primary shrink-0 rounded-full px-5 py-3 text-[16px] font-medium text-white"
             >
               {t("searchButton")}
             </button>
@@ -93,7 +93,7 @@ export function SmartSearch({ businesses }: SmartSearchProps) {
               key={suggestion.label}
               type="button"
               onClick={() => applySuggestion(suggestion)}
-              className="neu rounded-full px-4 py-2 text-[13px] text-muted transition-colors hover:text-foreground"
+              className="neu rounded-full px-4 py-2 text-[15px] text-muted transition-colors hover:text-foreground"
             >
               {suggestion.label}
             </button>
@@ -109,18 +109,18 @@ export function SmartSearch({ businesses }: SmartSearchProps) {
             {results.map((business) => (
               <div key={business.id} className="glass-card-light rounded-xl p-4">
                 <Link href={`/empresa/${business.slug}`}>
-                  <p className="text-[14px] font-semibold tracking-tight hover:text-primary">
+                  <p className="text-[16px] font-semibold tracking-tight hover:text-primary">
                     {business.name}
                   </p>
                 </Link>
-                <p className="mt-0.5 text-[12px] text-muted">
+                <p className="mt-0.5 text-[14px] text-muted">
                   {tCategories(business.category)} · {business.floor}
                 </p>
                 <a
                   href={buildWhatsAppLink(business.phone, business.name)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-2 inline-flex items-center gap-1.5 text-[12px] font-medium text-primary"
+                  className="mt-2 inline-flex items-center gap-1.5 text-[14px] font-medium text-primary"
                 >
                   {tCommon("whatsapp")}
                   <span aria-hidden="true">→</span>
@@ -134,7 +134,7 @@ export function SmartSearch({ businesses }: SmartSearchProps) {
           <a
             href="#empresas"
             onClick={() => setQuery(query || inputValue)}
-            className="mt-8 inline-block text-[13px] font-medium text-primary hover:underline"
+            className="mt-8 inline-block text-[15px] font-medium text-primary hover:underline"
           >
             {t("viewAllInDirectory")}
           </a>

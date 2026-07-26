@@ -30,13 +30,13 @@ export default async function CadastroPage() {
   return (
     <main className="min-h-screen bg-background px-6 py-16">
       <div className="mx-auto max-w-2xl">
-        <p className="text-[13px] font-medium uppercase tracking-[0.2em] text-primary">
+        <p className="text-[15px] font-medium uppercase tracking-[0.2em] text-primary">
           {t("eyebrow")}
         </p>
         <h1 className="mt-3 text-[clamp(1.8rem,4vw,2.5rem)] font-semibold tracking-tight text-foreground">
           {t("headline")}
         </h1>
-        <p className="mt-4 text-[15px] leading-relaxed text-muted">{t("subhead")}</p>
+        <p className="mt-4 text-[17px] leading-relaxed text-muted">{t("subhead")}</p>
 
         <div className="mt-10">
           <RegisterWizard towers={towers} />

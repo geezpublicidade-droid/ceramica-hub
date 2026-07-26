@@ -36,11 +36,11 @@ export async function Pricing() {
         className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[420px] -translate-x-1/2 rounded-full opacity-25 blur-[120px]"
         style={{ background: "radial-gradient(circle, var(--primary-light), transparent 70%)" }}
       />
-      <div className="relative mx-auto max-w-6xl px-6 py-20">
+      <div className="relative mx-auto max-w-6xl px-6 py-28">
         <h2 className="text-[clamp(1.75rem,3.5vw,2.75rem)] font-semibold leading-tight tracking-tight">
           {t("heading")}
         </h2>
-        <p className="mt-3 max-w-xl text-[15px] text-muted">{t("subheading")}</p>
+        <p className="mt-3 max-w-xl text-[17px] text-muted">{t("subheading")}</p>
         <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           {plans.map((plan) => (
             <div
@@ -53,19 +53,19 @@ export async function Pricing() {
               style={plan.highlight ? { background: "linear-gradient(135deg, #2997ff, #0071e3)" } : undefined}
             >
               {plan.badge && (
-                <span className="absolute -top-3 left-8 rounded-full bg-white px-3 py-1 text-[11px] font-medium text-primary shadow-[0_4px_12px_rgba(0,0,0,0.15)]">
+                <span className="absolute -top-3 left-8 rounded-full bg-white px-3 py-1 text-[13px] font-medium text-primary shadow-[0_4px_12px_rgba(0,0,0,0.15)]">
                   {plan.badge}
                 </span>
               )}
               <h3 className="text-lg font-semibold">{plan.name}</h3>
-              <p className={`mt-2 text-[14px] ${plan.highlight ? "text-white/70" : "text-muted"}`}>
+              <p className={`mt-2 text-[16px] ${plan.highlight ? "text-white/70" : "text-muted"}`}>
                 {plan.description}
               </p>
               <p className="mt-6 flex items-baseline gap-1">
                 <span className="text-4xl font-semibold tracking-tight">{plan.price}</span>
                 <span className={plan.highlight ? "text-white/60" : "text-muted"}>{plan.period}</span>
               </p>
-              <ul className="mt-8 space-y-3 text-[14px]">
+              <ul className="mt-8 space-y-3 text-[16px]">
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-2">
                     <span className={plan.highlight ? "text-white/60" : "text-accent"}>—</span>
@@ -75,7 +75,7 @@ export async function Pricing() {
               </ul>
               <Link
                 href="/cadastro"
-                className={`mt-8 block rounded-full px-6 py-3 text-center text-[14px] font-medium transition-transform active:scale-[0.98] ${
+                className={`mt-8 block rounded-full px-6 py-3 text-center text-[16px] font-medium transition-transform active:scale-[0.98] ${
                   plan.highlight
                     ? "bg-white text-primary shadow-[6px_6px_14px_rgba(0,40,100,0.25),-6px_-6px_14px_rgba(255,255,255,0.5)]"
                     : "neu-primary text-white"

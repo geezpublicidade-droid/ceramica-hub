@@ -2,6 +2,7 @@ import { requireAdminPage } from "@/lib/auth-guards";
 import { createServiceClient } from "@/lib/supabase/server";
 import { NewAdminForm } from "@/components/admin/NewAdminForm";
 import { AdminUserRow } from "@/components/admin/AdminUserRow";
+import { BackLink } from "@/components/nav/BackLink";
 import type { AdminRole } from "@/auth";
 
 export const metadata = { title: "Usuários — Cerâmica Hub" };
@@ -23,13 +24,11 @@ export default async function AdminUsuariosPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold text-foreground">Usuários administrativos</h1>
-            <p className="mt-2 text-[14px] text-muted">
+            <p className="mt-2 text-[16px] text-muted">
               Cada papel só acessa a área correspondente. Super admin tem acesso total.
             </p>
           </div>
-          <a href="/admin" className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground">
-            ← Voltar
-          </a>
+          <BackLink href="/admin" />
         </div>
 
         <div className="mt-10">
@@ -37,7 +36,7 @@ export default async function AdminUsuariosPage() {
         </div>
 
         <section className="mt-10 flex flex-col gap-3">
-          <p className="text-[15px] font-semibold text-foreground">Admins ({admins.length})</p>
+          <p className="text-[17px] font-semibold text-foreground">Admins ({admins.length})</p>
           {admins.map((admin) => (
             <AdminUserRow key={admin.id} admin={admin} isSelf={admin.id === adminId} />
           ))}

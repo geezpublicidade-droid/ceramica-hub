@@ -25,23 +25,23 @@ export function AdminBusinessRow({ business }: { business: Business }) {
     <div className="rounded-2xl border border-border bg-white/70 p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-[15px] font-semibold text-foreground">{business.name}</p>
-          <p className="text-[13px] text-muted">
+          <p className="text-[17px] font-semibold text-foreground">{business.name}</p>
+          <p className="text-[15px] text-muted">
             {business.category} · {business.towers?.name ?? "torre não informada"} ·{" "}
             {business.floor} · sala {business.room_number}
           </p>
-          <p className="mt-1 text-[13px] text-muted">
+          <p className="mt-1 text-[15px] text-muted">
             Responsável: {business.responsible_name ?? "não informado"} · {business.email} ·{" "}
             {business.phone}
           </p>
-          {business.document && <p className="text-[13px] text-muted">Documento: {business.document}</p>}
+          {business.document && <p className="text-[15px] text-muted">Documento: {business.document}</p>}
         </div>
         <div className="flex gap-2">
           <button
             type="button"
             disabled={isPending}
             onClick={() => startTransition(() => approveBusiness(business.id))}
-            className="neu-primary rounded-full px-4 py-2 text-[13px] font-medium text-white disabled:opacity-60"
+            className="neu-primary rounded-full px-4 py-2 text-[15px] font-medium text-white disabled:opacity-60"
           >
             Aprovar
           </button>
@@ -49,7 +49,7 @@ export function AdminBusinessRow({ business }: { business: Business }) {
             type="button"
             disabled={isPending}
             onClick={() => setShowRejectReason((v) => !v)}
-            className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground disabled:opacity-60"
+            className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground disabled:opacity-60"
           >
             Rejeitar
           </button>
@@ -59,7 +59,7 @@ export function AdminBusinessRow({ business }: { business: Business }) {
       {showRejectReason && (
         <div className="mt-4 flex gap-2">
           <input
-            className="flex-1 rounded-xl border border-border bg-white px-3 py-2 text-[13px]"
+            className="flex-1 rounded-xl border border-border bg-white px-3 py-2 text-[15px]"
             placeholder="Motivo da rejeição (opcional)"
             value={reason}
             onChange={(e) => setReason(e.target.value)}
@@ -68,7 +68,7 @@ export function AdminBusinessRow({ business }: { business: Business }) {
             type="button"
             disabled={isPending}
             onClick={() => startTransition(() => rejectBusiness(business.id, reason))}
-            className="rounded-xl bg-red-600 px-4 py-2 text-[13px] font-medium text-white disabled:opacity-60"
+            className="rounded-xl bg-red-600 px-4 py-2 text-[15px] font-medium text-white disabled:opacity-60"
           >
             Confirmar rejeição
           </button>

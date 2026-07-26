@@ -16,7 +16,7 @@ const connections: [number, number][] = [
 export async function CollectiveMovement() {
   const t = await getTranslations("CollectiveMovement");
   return (
-    <section className="relative overflow-hidden bg-surface px-6 py-20 text-foreground">
+    <section className="relative overflow-hidden bg-surface px-6 py-28 text-foreground">
       <svg
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 h-full w-full opacity-30"
@@ -52,7 +52,7 @@ export async function CollectiveMovement() {
         <FadeUp className="max-w-2xl mx-auto text-[clamp(1.75rem,4vw,3rem)] font-semibold leading-tight tracking-tight">
           {t("headline")}
         </FadeUp>
-        <FadeUp delay={0.15} className="mt-8 text-[16px] leading-relaxed text-muted">
+        <FadeUp delay={0.15} className="mt-8 text-[18px] leading-relaxed text-muted">
           {t("subhead")}
         </FadeUp>
       </div>

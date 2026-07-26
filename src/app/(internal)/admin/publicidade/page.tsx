@@ -3,6 +3,7 @@ import { getAllCampaigns, getAllPlacements, getCampaignMetrics } from "@/lib/ser
 import { AdCampaignRow } from "@/components/admin/AdCampaignRow";
 import { NewCampaignForm } from "@/components/admin/NewCampaignForm";
 import { ExportCampaignsCsvButton } from "@/components/admin/ExportCampaignsCsvButton";
+import { BackLink } from "@/components/nav/BackLink";
 
 export const metadata = { title: "Publicidade — Cerâmica Hub" };
 
@@ -20,14 +21,12 @@ export default async function AdminPublicidadePage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold text-foreground">Publicidade</h1>
-            <p className="mt-2 text-[14px] text-muted">
+            <p className="mt-2 text-[16px] text-muted">
               Campanhas de anunciantes externos — nunca aparecem como membro do complexo, sempre
               rotuladas "Patrocinado".
             </p>
           </div>
-          <a href="/admin" className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground">
-            ← Voltar
-          </a>
+          <BackLink href="/admin" />
         </div>
 
         <div className="mt-10">
@@ -35,12 +34,12 @@ export default async function AdminPublicidadePage() {
         </div>
 
         <div className="mt-10 flex items-center justify-between">
-          <p className="text-[15px] font-semibold text-foreground">Campanhas ({rows.length})</p>
+          <p className="text-[17px] font-semibold text-foreground">Campanhas ({rows.length})</p>
           {rows.length > 0 && <ExportCampaignsCsvButton rows={rows} />}
         </div>
 
         <section className="mt-4 flex flex-col gap-3">
-          {rows.length === 0 && <p className="text-[14px] text-muted">Nenhuma campanha cadastrada ainda.</p>}
+          {rows.length === 0 && <p className="text-[16px] text-muted">Nenhuma campanha cadastrada ainda.</p>}
           {rows.map(({ campaign, metrics }) => (
             <AdCampaignRow key={campaign.id} campaign={campaign} metrics={metrics} />
           ))}
