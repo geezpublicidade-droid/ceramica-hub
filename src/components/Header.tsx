@@ -36,10 +36,10 @@ export function Header() {
       }`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6">
-        <Link href="/#top" className="text-[17px] font-semibold tracking-tight text-foreground">
+        <Link href="/#top" className="text-[20px] font-semibold tracking-tight text-foreground">
           Cerâmica <span className="text-primary">Hub</span>
         </Link>
-        <nav className="hidden gap-8 text-[15px] text-muted md:flex">
+        <nav className="hidden gap-9 text-[16px] font-medium text-muted md:flex">
           {links.map((link) => (
             <Link key={link.href} href={link.href} className="transition-colors hover:text-foreground">
               {link.label}
@@ -56,7 +56,7 @@ export function Header() {
           </a>
           <Link
             href="/cadastro"
-            className="neu-primary whitespace-nowrap rounded-full px-3 py-2 text-[14px] font-medium text-white sm:px-4 sm:text-[15px]"
+            className="neu-primary whitespace-nowrap rounded-full px-4 py-2.5 text-[15px] font-semibold text-white sm:px-6 sm:py-3 sm:text-[16px]"
           >
             {t("cadastrarEmpresa")}
           </Link>

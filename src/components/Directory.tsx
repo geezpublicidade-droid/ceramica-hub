@@ -61,7 +61,7 @@ export function Directory({ businesses }: DirectoryProps) {
             <button
               key={category}
               onClick={() => setActive(category)}
-              className={`rounded-full px-4 py-2 text-[15px] font-medium transition-colors ${
+              className={`rounded-full px-5 py-2.5 text-[16px] font-medium transition-colors ${
                 active === category
                   ? "neu-pressed bg-surface text-primary"
                   : "neu text-muted hover:text-foreground"
@@ -109,24 +109,24 @@ export function Directory({ businesses }: DirectoryProps) {
             </Link>
           </div>
         ) : (
-          <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((business) => (
               <div
                 key={business.id}
-                className="glass-card-light group flex gap-4 rounded-2xl p-6 transition-all hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15)]"
+                className="glass-card-light group flex gap-5 rounded-3xl p-7 transition-all hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15)]"
               >
                 <Link href={`/empresa/${business.slug}`} className="shrink-0">
                   <BusinessAvatar
                     business={business}
-                    className="h-16 w-16 rounded-xl bg-white"
-                    textClassName="text-[17px] font-semibold text-foreground"
+                    className="h-20 w-20 rounded-2xl bg-white"
+                    textClassName="text-[20px] font-semibold text-foreground"
                   />
                 </Link>
 
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-2">
                     <Link href={`/empresa/${business.slug}`} className="min-w-0">
-                      <h3 className="text-[18px] font-semibold leading-snug tracking-tight hover:text-primary">
+                      <h3 className="text-[20px] font-semibold leading-snug tracking-tight hover:text-primary">
                         {business.name}
                       </h3>
                     </Link>
@@ -136,15 +136,15 @@ export function Directory({ businesses }: DirectoryProps) {
                       </span>
                     )}
                   </div>
-                  <p className="mt-1 text-[15px] text-muted">
+                  <p className="mt-1.5 text-[16px] text-muted">
                     {tCategories(business.category)} · {business.floor}
                   </p>
-                  <p className="mt-3 text-[16px] leading-relaxed text-muted">{business.description}</p>
+                  <p className="mt-3 text-[17px] leading-relaxed text-muted">{business.description}</p>
                   <a
                     href={buildWhatsAppLink(business.phone, business.name)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-4 inline-flex items-center gap-1.5 text-[15px] font-medium text-primary transition-transform hover:translate-x-1"
+                    className="mt-4 inline-flex items-center gap-1.5 text-[16px] font-medium text-primary transition-transform hover:translate-x-1"
                   >
                     {tCommon("whatsapp")}
                     <span aria-hidden="true">→</span>

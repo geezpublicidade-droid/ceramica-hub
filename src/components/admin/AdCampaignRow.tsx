@@ -21,7 +21,7 @@ export function AdCampaignRow({ campaign, metrics }: { campaign: CampaignWithDet
   const [reason, setReason] = useState("");
 
   return (
-    <div className="rounded-2xl border border-border bg-white/70 p-5">
+    <div className="rounded-3xl border border-border bg-white/70 p-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-[17px] font-semibold text-foreground">{campaign.title}</p>

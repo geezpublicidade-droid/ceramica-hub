@@ -13,7 +13,7 @@ export function AdminInvoiceRow({ invoice }: { invoice: PendingInvoice }) {
   const [isPending, startTransition] = useTransition();
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-white/70 p-5">
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-border bg-white/70 p-6">
       <div>
         <p className="text-[17px] font-semibold text-foreground">{invoice.businessName}</p>
         <p className="text-[15px] text-muted">

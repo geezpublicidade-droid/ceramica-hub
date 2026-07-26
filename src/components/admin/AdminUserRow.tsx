@@ -47,7 +47,7 @@ export function AdminUserRow({
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-white/70 p-4">
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-border bg-white/70 p-5">
       <div>
         <p className="text-[16px] font-medium text-foreground">
           {admin.email} {isSelf && <span className="text-muted">(você)</span>}

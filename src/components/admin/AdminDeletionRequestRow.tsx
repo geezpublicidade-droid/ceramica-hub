@@ -9,7 +9,7 @@ export function AdminDeletionRequestRow({ request }: { request: PendingDeletionR
   const [notes, setNotes] = useState("");
 
   return (
-    <div className="rounded-2xl border border-border bg-white/70 p-5">
+    <div className="rounded-3xl border border-border bg-white/70 p-6">
       <p className="text-[17px] font-semibold text-foreground">{request.businessName}</p>
       {request.reason && <p className="mt-1 text-[15px] text-muted">Motivo: {request.reason}</p>}
       <p className="mt-1 text-[14px] text-muted">
