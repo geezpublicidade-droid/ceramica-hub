@@ -1,8 +1,10 @@
 import { auth, signOut } from "@/auth";
 import { getBusinessById, getMetricsSummary, getOwnedInvoices, getDailyPageViews } from "@/lib/services/platform";
+import { listStaff } from "@/lib/actions/business-staff";
 import { planLabels } from "@/data/businesses";
 import { PlanBilling } from "@/components/dashboard/PlanBilling";
 import { PrivacyControls } from "@/components/dashboard/PrivacyControls";
+import { StaffManagement } from "@/components/dashboard/StaffManagement";
 
 export const metadata = { title: "Painel — Cerâmica Hub" };
 
@@ -13,6 +15,7 @@ async function logout() {
 
 export default async function DashboardPage() {
   const session = await auth();
+  const isOwner = session?.user?.role === "business";
   const business = session?.user?.businessId
     ? await getBusinessById(session.user.businessId)
     : undefined;
@@ -20,6 +23,7 @@ export default async function DashboardPage() {
     ? await getMetricsSummary(session.user.businessId)
     : undefined;
   const invoices = session?.user?.businessId ? await getOwnedInvoices(session.user.businessId) : [];
+  const staff = isOwner ? await listStaff() : [];
 
   const totalViews = metrics?.commercial_page_viewed ?? 0;
   const totalContacts =
@@ -152,8 +156,9 @@ export default async function DashboardPage() {
               )}
             </div>
 
-            <PlanBilling currentPlan={business.plan} invoices={invoices} />
-            <PrivacyControls />
+            {isOwner && <PlanBilling currentPlan={business.plan} invoices={invoices} />}
+            {isOwner && <StaffManagement staff={staff} />}
+            <PrivacyControls isOwner={isOwner} />
           </>
         ) : null}
       </div>

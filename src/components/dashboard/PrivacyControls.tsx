@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { requestDataExport, requestDataDeletion } from "@/lib/actions/lgpd";
 
-export function PrivacyControls() {
+export function PrivacyControls({ isOwner }: { isOwner: boolean }) {
   const [isPending, startTransition] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
   const [showDeleteForm, setShowDeleteForm] = useState(false);
@@ -53,14 +53,16 @@ export function PrivacyControls() {
         >
           Exportar meus dados
         </button>
-        <button
-          type="button"
-          disabled={isPending}
-          onClick={() => setShowDeleteForm((v) => !v)}
-          className="rounded-full border border-red-200 px-4 py-2 text-[13px] font-medium text-red-600 disabled:opacity-60"
-        >
-          Solicitar exclusão dos meus dados
-        </button>
+        {isOwner && (
+          <button
+            type="button"
+            disabled={isPending}
+            onClick={() => setShowDeleteForm((v) => !v)}
+            className="rounded-full border border-red-200 px-4 py-2 text-[13px] font-medium text-red-600 disabled:opacity-60"
+          >
+            Solicitar exclusão dos meus dados
+          </button>
+        )}
       </div>
 
       {showDeleteForm && (

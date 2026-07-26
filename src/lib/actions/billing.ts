@@ -5,7 +5,7 @@ import { getBusinessById } from "@/lib/services/platform";
 import { PLAN_PRICES_CENTS, type PayablePlan } from "@/lib/plan-limits";
 import { createPaymentPreference } from "@/lib/services/mercadopago";
 import { planLabels } from "@/data/businesses";
-import { requireOwnBusiness } from "@/lib/auth-guards";
+import { requireBusinessOwner } from "@/lib/auth-guards";
 
 type CreatePaymentLinkResult =
   | { success: true; paymentLink: string | null }
@@ -19,7 +19,7 @@ type CreatePaymentLinkResult =
  * `businesses.plan` ainda.
  */
 export async function createPaymentLink(plan: PayablePlan): Promise<CreatePaymentLinkResult> {
-  const businessId = await requireOwnBusiness();
+  const businessId = await requireBusinessOwner();
   const business = await getBusinessById(businessId);
   if (!business) return { success: false, error: "Empresa não encontrada." };
 

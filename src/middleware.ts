@@ -3,10 +3,10 @@ import { NextResponse } from "next/server";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "@/i18n/routing";
 
-const ROLE_BY_PREFIX: { prefix: string; role: "business" | "member" | "admin"; loginPath: string }[] = [
-  { prefix: "/dashboard", role: "business", loginPath: "/login" },
-  { prefix: "/membro", role: "member", loginPath: "/membro/login" },
-  { prefix: "/admin", role: "admin", loginPath: "/admin/login" },
+const ROLE_BY_PREFIX: { prefix: string; roles: ("business" | "business_staff" | "member" | "admin")[]; loginPath: string }[] = [
+  { prefix: "/dashboard", roles: ["business", "business_staff"], loginPath: "/login" },
+  { prefix: "/membro", roles: ["member"], loginPath: "/membro/login" },
+  { prefix: "/admin", roles: ["admin"], loginPath: "/admin/login" },
 ];
 
 // Rotas fora de src/app/[locale] — nunca passam pelo roteamento de idioma.
@@ -23,7 +23,7 @@ export default auth((req) => {
     // (ex: /membro/login, /admin/login não devem exigir sessão)
     if (pathname === match.loginPath || pathname.endsWith("/cadastro")) return;
 
-    if (!req.auth || req.auth.user.role !== match.role) {
+    if (!req.auth || !match.roles.includes(req.auth.user.role)) {
       const loginUrl = new URL(match.loginPath, req.nextUrl.origin);
       loginUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(loginUrl);
@@ -31,7 +31,7 @@ export default auth((req) => {
 
     // admin sem MFA configurado ainda: só pode acessar a tela de setup,
     // qualquer outra rota do admin redireciona pra lá primeiro.
-    if (match.role === "admin" && req.auth.user.mfaSetupRequired && pathname !== "/admin/mfa-setup") {
+    if (req.auth.user.role === "admin" && req.auth.user.mfaSetupRequired && pathname !== "/admin/mfa-setup") {
       return NextResponse.redirect(new URL("/admin/mfa-setup", req.nextUrl.origin));
     }
 

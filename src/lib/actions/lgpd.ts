@@ -1,7 +1,7 @@
 "use server";
 
 import { createServiceClient } from "@/lib/supabase/server";
-import { requireOwnBusiness } from "@/lib/auth-guards";
+import { requireOwnBusiness, requireBusinessOwner } from "@/lib/auth-guards";
 
 type ActionResult = { success: true } | { success: false; error: string };
 
@@ -62,7 +62,7 @@ export async function requestDataExport(): Promise<{ success: true; data: Record
  * ativa etc.), ver src/lib/actions/admin-lgpd.ts.
  */
 export async function requestDataDeletion(reason: string): Promise<ActionResult> {
-  const businessId = await requireOwnBusiness();
+  const businessId = await requireBusinessOwner();
   const supabase = createServiceClient();
 
   const { data: business } = await supabase.from("businesses").select("name").eq("id", businessId).single();

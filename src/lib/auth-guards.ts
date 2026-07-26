@@ -45,6 +45,21 @@ export async function requireOwnBusiness(): Promise<string> {
 }
 
 /**
+ * Igual requireOwnBusiness(), mas rejeita business_staff — usa em ações que
+ * só o dono pode fazer (cobrança, gerenciar a própria equipe, excluir a
+ * conta). Staff nunca deriva permissão maior que o próprio owner, então
+ * qualquer coisa que precise ser mais restrita que "toda a empresa" passa
+ * por aqui.
+ */
+export async function requireBusinessOwner(): Promise<string> {
+  const session = await auth();
+  if (!session?.user?.businessId || session.user.isStaff) {
+    throw new Error("Ação restrita ao responsável pela empresa.");
+  }
+  return session.user.businessId;
+}
+
+/**
  * Sem `allowedRoles`, qualquer admin passa (comportamento original).
  * Com `allowedRoles`, exige um desses papéis — `super_admin` sempre passa,
  * mesmo se não estiver na lista, porque é o papel de acesso total.

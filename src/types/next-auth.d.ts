@@ -1,6 +1,6 @@
 import type { DefaultSession } from "next-auth";
 
-type Role = "business" | "member" | "admin";
+type Role = "business" | "business_staff" | "member" | "admin";
 type AdminRole = "super_admin" | "admin" | "financeiro" | "comercial" | "moderador";
 
 declare module "next-auth" {
@@ -11,6 +11,7 @@ declare module "next-auth" {
       businessId?: string;
       memberId?: string;
       adminRole?: AdminRole;
+      isStaff?: boolean;
       mfaSetupRequired?: boolean;
     } & DefaultSession["user"];
   }
@@ -20,6 +21,7 @@ declare module "next-auth" {
     businessId?: string;
     memberId?: string;
     adminRole?: AdminRole;
+    isStaff?: boolean;
     mfaSetupRequired?: boolean;
   }
 }
@@ -30,6 +32,7 @@ declare module "next-auth/jwt" {
     businessId?: string;
     memberId?: string;
     adminRole?: AdminRole;
+    isStaff?: boolean;
     mfaSetupRequired?: boolean;
   }
 }

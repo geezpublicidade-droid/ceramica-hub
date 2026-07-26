@@ -4,11 +4,12 @@ import bcrypt from "bcryptjs";
 import { verify as verifyTotp } from "otplib";
 import { createServiceClient } from "@/lib/supabase/server";
 
-type Role = "business" | "member" | "admin";
+type Role = "business" | "business_staff" | "member" | "admin";
 export type AdminRole = "super_admin" | "admin" | "financeiro" | "comercial" | "moderador";
 
-const TABLE_BY_ROLE: Record<Role, "businesses" | "members" | "admins"> = {
+const TABLE_BY_ROLE: Record<Role, "businesses" | "business_staff" | "members" | "admins"> = {
   business: "businesses",
+  business_staff: "business_staff",
   member: "members",
   admin: "admins",
 };
@@ -25,6 +26,7 @@ type AuthorizedUser = {
   businessId?: string;
   memberId?: string;
   adminRole?: AdminRole;
+  isStaff?: boolean;
   mfaSetupRequired: boolean;
 };
 
@@ -64,13 +66,18 @@ async function tryAuthenticate(
     }
   }
 
+  let businessId: string | undefined;
+  if (role === "business") businessId = account.id;
+  if (role === "business_staff") businessId = (account as { business_id: string }).business_id;
+
   return {
     id: account.id,
     email: account.email,
     role,
-    businessId: role === "business" ? account.id : undefined,
+    businessId,
     memberId: role === "member" ? account.id : undefined,
     adminRole: role === "admin" ? (account as { role: AdminRole }).role : undefined,
+    isStaff: role === "business_staff",
     mfaSetupRequired,
   };
 }
@@ -89,13 +96,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       async authorize(credentials, request) {
         const email = credentials?.email;
         const password = credentials?.password;
-        const role = credentials?.role as Role | undefined;
+        // "role" enviado pelo formulário é a área de login (business/member/
+        // admin) — o form não distingue owner de staff, os dois usam a
+        // mesma tela em /login. Ver rolesToTry abaixo.
+        const area = credentials?.role as "business" | "member" | "admin" | undefined;
         const totpCode = credentials?.totpCode;
         if (typeof email !== "string" || typeof password !== "string") return null;
-        if (role !== "business" && role !== "member" && role !== "admin") return null;
+        if (area !== "business" && area !== "member" && area !== "admin") return null;
 
         const supabase = createServiceClient();
-        const identifier = `${role}:${email.toLowerCase()}`;
+        const identifier = `${area}:${email.toLowerCase()}`;
         const ip = request?.headers?.get("x-forwarded-for")?.split(",")[0]?.trim() || null;
 
         const windowStart = new Date(Date.now() - LOGIN_ATTEMPT_WINDOW_MS).toISOString();
@@ -110,7 +120,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         // (evita inflar ainda mais a checagem durante um ataque em curso).
         if ((recentFailures ?? 0) >= MAX_LOGIN_ATTEMPTS) return null;
 
-        const user = await tryAuthenticate(supabase, email, password, role, totpCode);
+        const rolesToTry: Role[] = area === "business" ? ["business", "business_staff"] : [area];
+        let user: AuthorizedUser | null = null;
+        for (const role of rolesToTry) {
+          user = await tryAuthenticate(supabase, email, password, role, totpCode);
+          if (user) break;
+        }
         await supabase.from("login_attempts").insert({ identifier, ip, success: Boolean(user) });
         return user;
       },
@@ -119,11 +134,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        const u = user as { role: Role; businessId?: string; memberId?: string; adminRole?: AdminRole; mfaSetupRequired?: boolean };
+        const u = user as { role: Role; businessId?: string; memberId?: string; adminRole?: AdminRole; isStaff?: boolean; mfaSetupRequired?: boolean };
         token.role = u.role;
         token.businessId = u.businessId;
         token.memberId = u.memberId;
         token.adminRole = u.adminRole;
+        token.isStaff = u.isStaff ?? false;
         token.mfaSetupRequired = u.mfaSetupRequired ?? false;
       }
       return token;
@@ -135,6 +151,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.businessId = token.businessId as string | undefined;
         session.user.memberId = token.memberId as string | undefined;
         session.user.adminRole = token.adminRole as AdminRole | undefined;
+        session.user.isStaff = Boolean(token.isStaff);
         session.user.mfaSetupRequired = Boolean(token.mfaSetupRequired);
       }
       return session;
