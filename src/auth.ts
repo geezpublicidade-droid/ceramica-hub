@@ -12,6 +12,66 @@ const TABLE_BY_ROLE: Record<Role, "businesses" | "members" | "admins"> = {
   admin: "admins",
 };
 
+// Rate limiting sem serviço externo: conta tentativas falhas recentes por
+// identifier (role:email) na tabela login_attempts antes de checar a senha.
+const MAX_LOGIN_ATTEMPTS = 5;
+const LOGIN_ATTEMPT_WINDOW_MS = 15 * 60 * 1000;
+
+type AuthorizedUser = {
+  id: string;
+  email: string;
+  role: Role;
+  businessId?: string;
+  memberId?: string;
+  mfaSetupRequired: boolean;
+};
+
+async function tryAuthenticate(
+  supabase: ReturnType<typeof createServiceClient>,
+  email: string,
+  password: string,
+  role: Role,
+  totpCode: unknown
+): Promise<AuthorizedUser | null> {
+  const { data: account } = await supabase
+    .from(TABLE_BY_ROLE[role])
+    .select("*")
+    .eq("email", email.toLowerCase())
+    .maybeSingle();
+  if (!account) return null;
+
+  const valid = await bcrypt.compare(password, account.password_hash);
+  if (!valid) return null;
+
+  // MFA obrigatório pra admin: se já configurado, exige código válido.
+  // Se ainda não configurado (primeiro acesso), deixa entrar sinalizado
+  // pra fazer o setup — o middleware trava qualquer outra tela do
+  // admin até isso acontecer (ver /admin/mfa-setup).
+  let mfaSetupRequired = false;
+  if (role === "admin") {
+    const admin = account as { mfa_secret: string | null; mfa_enabled: boolean };
+    if (admin.mfa_enabled) {
+      if (typeof totpCode !== "string" || totpCode.trim().length === 0 || !admin.mfa_secret) return null;
+      // tolerância de 30s pra cada lado: sem isso, o código expira antes
+      // de chegar no servidor (rede + tempo de digitar), e login legítimo
+      // falharia quase sempre — o default da lib é 0 (janela exata).
+      const result = await verifyTotp({ secret: admin.mfa_secret, token: totpCode.trim(), epochTolerance: 30 });
+      if (!result.valid) return null;
+    } else {
+      mfaSetupRequired = true;
+    }
+  }
+
+  return {
+    id: account.id,
+    email: account.email,
+    role,
+    businessId: role === "business" ? account.id : undefined,
+    memberId: role === "member" ? account.id : undefined,
+    mfaSetupRequired,
+  };
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: "jwt" },
   pages: { signIn: "/login" },
@@ -23,7 +83,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         role: { label: "Role", type: "text" },
         totpCode: { label: "Código do autenticador", type: "text" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, request) {
         const email = credentials?.email;
         const password = credentials?.password;
         const role = credentials?.role as Role | undefined;
@@ -32,43 +92,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (role !== "business" && role !== "member" && role !== "admin") return null;
 
         const supabase = createServiceClient();
-        const { data: account } = await supabase
-          .from(TABLE_BY_ROLE[role])
-          .select("*")
-          .eq("email", email.toLowerCase())
-          .maybeSingle();
-        if (!account) return null;
+        const identifier = `${role}:${email.toLowerCase()}`;
+        const ip = request?.headers?.get("x-forwarded-for")?.split(",")[0]?.trim() || null;
 
-        const valid = await bcrypt.compare(password, account.password_hash);
-        if (!valid) return null;
+        const windowStart = new Date(Date.now() - LOGIN_ATTEMPT_WINDOW_MS).toISOString();
+        const { count: recentFailures } = await supabase
+          .from("login_attempts")
+          .select("id", { count: "exact", head: true })
+          .eq("identifier", identifier)
+          .eq("success", false)
+          .gte("created_at", windowStart);
 
-        // MFA obrigatório pra admin: se já configurado, exige código válido.
-        // Se ainda não configurado (primeiro acesso), deixa entrar sinalizado
-        // pra fazer o setup — o middleware trava qualquer outra tela do
-        // admin até isso acontecer (ver /admin/mfa-setup).
-        let mfaSetupRequired = false;
-        if (role === "admin") {
-          const admin = account as { mfa_secret: string | null; mfa_enabled: boolean };
-          if (admin.mfa_enabled) {
-            if (typeof totpCode !== "string" || totpCode.trim().length === 0 || !admin.mfa_secret) return null;
-            // tolerância de 30s pra cada lado: sem isso, o código expira antes
-            // de chegar no servidor (rede + tempo de digitar), e login legítimo
-            // falharia quase sempre — o default da lib é 0 (janela exata).
-            const result = await verifyTotp({ secret: admin.mfa_secret, token: totpCode.trim(), epochTolerance: 30 });
-            if (!result.valid) return null;
-          } else {
-            mfaSetupRequired = true;
-          }
-        }
+        // Trancado: nem chega a checar a senha, e não grava mais uma linha
+        // (evita inflar ainda mais a checagem durante um ataque em curso).
+        if ((recentFailures ?? 0) >= MAX_LOGIN_ATTEMPTS) return null;
 
-        return {
-          id: account.id,
-          email: account.email,
-          role,
-          businessId: role === "business" ? account.id : undefined,
-          memberId: role === "member" ? account.id : undefined,
-          mfaSetupRequired,
-        };
+        const user = await tryAuthenticate(supabase, email, password, role, totpCode);
+        await supabase.from("login_attempts").insert({ identifier, ip, success: Boolean(user) });
+        return user;
       },
     }),
   ],
