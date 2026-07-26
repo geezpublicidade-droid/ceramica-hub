@@ -520,7 +520,9 @@ export type MetricEventType =
   | "geez_service_clicked"
   | "geez_quote_requested"
   | "website_upgrade_clicked"
-  | "search_performed";
+  | "search_performed"
+  | "ad_impression"
+  | "ad_click";
 
 /** Log de evento append-only. Nunca inventar número no painel: sem linha aqui, mostra 0/vazio. */
 export async function logMetricEvent(

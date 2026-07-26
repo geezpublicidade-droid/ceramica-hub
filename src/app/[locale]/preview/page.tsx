@@ -11,6 +11,7 @@ import { Pricing } from "@/components/Pricing";
 import { FounderCTA } from "@/components/landing/FounderCTA";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { SearchProvider } from "@/components/landing/SearchContext";
+import { AdSlot } from "@/components/ads/AdSlot";
 import {
   getCategoryBreakdown,
   getAllBusinesses,
@@ -42,6 +43,9 @@ export default async function Preview({ params }: { params: Promise<{ locale: st
             categories={categoryBreakdown.map((c) => c.category)}
           />
           <SmartSearch businesses={allBusinesses} />
+          <div className="py-6">
+            <AdSlot placementKey="diretorio_topo" />
+          </div>
           <Directory businesses={allBusinesses} />
           <OpportunityNetwork opportunities={opportunities} />
           <LocalBenefits benefits={benefits} />

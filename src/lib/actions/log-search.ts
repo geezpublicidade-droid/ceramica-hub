@@ -12,3 +12,7 @@ export async function logSearchPerformed(term: string, source: "hero" | "smart_s
 export async function logWhatsAppClick(businessId: string) {
   await logMetricEvent("whatsapp_clicked", businessId);
 }
+
+export async function logAdClick(campaignId: string) {
+  await logMetricEvent("ad_click", undefined, { campaignId });
+}
