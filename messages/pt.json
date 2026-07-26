@@ -171,7 +171,8 @@
       "tower": "Selecione a torre.",
       "floor": "Informe o andar.",
       "roomNumber": "Informe a sala.",
-      "consent": "É necessário aceitar os termos, a política de privacidade, a política de cadastro e confirmar o funcionamento no endereço."
+      "consent": "É necessário aceitar os termos, a política de privacidade, a política de cadastro e confirmar o funcionamento no endereço.",
+      "turnstile": "Confirme que você não é um robô antes de enviar."
     },
     "buttons": {
       "back": "Voltar",

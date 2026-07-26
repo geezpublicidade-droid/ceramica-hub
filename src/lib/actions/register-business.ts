@@ -6,6 +6,7 @@ import { headers } from "next/headers";
 import { createServiceClient } from "@/lib/supabase/server";
 import { slugify } from "@/lib/slug";
 import { translateAndStore } from "@/lib/services/translate";
+import { verifyTurnstileToken } from "@/lib/services/turnstile";
 
 const CONSENT_VERSION = "1.0";
 
@@ -33,6 +34,7 @@ const registerBusinessSchema = z
     registrationPolicyAccepted: z.boolean(),
     imageUsageAuthorized: z.boolean(),
     addressConfirmed: z.boolean(),
+    turnstileToken: z.string().nullable().optional(),
   })
   .superRefine((data, ctx) => {
     if (!data.termsAccepted || !data.privacyAccepted || !data.registrationPolicyAccepted || !data.addressConfirmed) {
@@ -69,6 +71,11 @@ export async function registerBusiness(rawInput: RegisterBusinessInput): Promise
     return { success: false, error: parsed.error.issues[0]?.message ?? "Dados inválidos." };
   }
   const input = parsed.data;
+
+  const turnstileOk = await verifyTurnstileToken(input.turnstileToken);
+  if (!turnstileOk) {
+    return { success: false, error: "Não foi possível confirmar que você não é um robô. Tente novamente." };
+  }
 
   const supabase = createServiceClient();
   const passwordHash = await bcrypt.hash(input.password, 10);

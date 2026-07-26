@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { categories } from "@/data/businesses";
 import { registerBusiness } from "@/lib/actions/register-business";
 import { Link } from "@/i18n/navigation";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
 import type { TowerOption } from "@/app/[locale]/cadastro/page";
 
 const realCategories = categories.filter((c) => c !== "Todas");
@@ -73,6 +74,8 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRequired = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
 
   const selectedTower = towers.find((t) => t.id === form.towerId);
 
@@ -124,9 +127,13 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
       setError(t("errors.consent"));
       return;
     }
+    if (turnstileRequired && !turnstileToken) {
+      setError(t("errors.turnstile"));
+      return;
+    }
     setError(null);
     startTransition(async () => {
-      const result = await registerBusiness(form);
+      const result = await registerBusiness({ ...form, turnstileToken });
       if (!result.success) {
         setError(result.error);
         return;
@@ -409,6 +416,7 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
             />
             {t("consent.imageUsage")}
           </label>
+          <TurnstileWidget onVerify={setTurnstileToken} />
         </div>
       )}
 

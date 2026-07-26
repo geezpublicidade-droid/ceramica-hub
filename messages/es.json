@@ -171,7 +171,8 @@
       "tower": "Selecciona la torre.",
       "floor": "Indica el piso.",
       "roomNumber": "Indica la sala.",
-      "consent": "Debes aceptar los términos, la política de privacidad, la política de registro y confirmar el funcionamiento en la dirección."
+      "consent": "Debes aceptar los términos, la política de privacidad, la política de registro y confirmar el funcionamiento en la dirección.",
+      "turnstile": "Confirma que no eres un robot antes de enviar."
     },
     "buttons": {
       "back": "Volver",

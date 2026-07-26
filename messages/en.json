@@ -171,7 +171,8 @@
       "tower": "Select the tower.",
       "floor": "Enter the floor.",
       "roomNumber": "Enter the room number.",
-      "consent": "You must accept the terms, the privacy policy, the registration policy, and confirm the business address."
+      "consent": "You must accept the terms, the privacy policy, the registration policy, and confirm the business address.",
+      "turnstile": "Please confirm you're not a robot before submitting."
     },
     "buttons": {
       "back": "Back",
