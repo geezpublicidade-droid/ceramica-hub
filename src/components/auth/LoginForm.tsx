@@ -61,6 +61,20 @@ export function LoginForm({
             />
           </label>
 
+          {role === "admin" && (
+            <label className="flex flex-col gap-1.5 text-[13px] text-muted">
+              Código do autenticador
+              <input
+                type="text"
+                name="totpCode"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                placeholder="Deixe em branco se ainda não configurou"
+                className="neu rounded-xl border-0 bg-transparent px-4 py-2.5 text-[14px] text-foreground outline-none"
+              />
+            </label>
+          )}
+
           <button
             type="submit"
             className="neu-primary mt-2 rounded-full px-4 py-2.5 text-[13px] font-medium text-white"

@@ -9,6 +9,7 @@ declare module "next-auth" {
       role: Role;
       businessId?: string;
       memberId?: string;
+      mfaSetupRequired?: boolean;
     } & DefaultSession["user"];
   }
 
@@ -16,6 +17,7 @@ declare module "next-auth" {
     role: Role;
     businessId?: string;
     memberId?: string;
+    mfaSetupRequired?: boolean;
   }
 }
 
@@ -24,5 +26,6 @@ declare module "next-auth/jwt" {
     role: Role;
     businessId?: string;
     memberId?: string;
+    mfaSetupRequired?: boolean;
   }
 }

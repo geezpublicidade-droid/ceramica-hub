@@ -5,9 +5,9 @@ export const metadata = { title: "Entrar — Painel administrativo" };
 export default async function AdminLoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; callbackUrl?: string }>;
+  searchParams: Promise<{ error?: string; callbackUrl?: string; mfaConfigured?: string }>;
 }) {
-  const { error, callbackUrl } = await searchParams;
+  const { error, callbackUrl, mfaConfigured } = await searchParams;
 
   return (
     <LoginForm
@@ -17,7 +17,11 @@ export default async function AdminLoginPage({
       callbackUrl={callbackUrl}
       error={error}
       title="Painel administrativo"
-      subtitle="Acesso restrito à administração do Cerâmica Hub."
+      subtitle={
+        mfaConfigured
+          ? "Verificação em duas etapas ativada — entre novamente com seu código."
+          : "Acesso restrito à administração do Cerâmica Hub."
+      }
     />
   );
 }

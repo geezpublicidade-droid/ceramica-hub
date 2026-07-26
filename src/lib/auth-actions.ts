@@ -14,6 +14,7 @@ export async function authenticateAction(formData: FormData) {
       email: formData.get("email"),
       password: formData.get("password"),
       role,
+      totpCode: formData.get("totpCode"),
       redirectTo: callbackUrl,
     });
   } catch (error) {
