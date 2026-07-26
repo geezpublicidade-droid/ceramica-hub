@@ -549,3 +549,20 @@ export async function getMetricsSummary(businessId: string): Promise<MetricsSumm
   }
   return summary;
 }
+
+export type DailyViewCount = { day: string; count: number };
+
+/** Views por dia nos últimos N dias, a partir de analytics_daily (populado pelo cron diário). Dias sem evento não aparecem — cabe ao chamador preencher zero se quiser o eixo completo. */
+export async function getDailyPageViews(businessId: string, days = 7): Promise<DailyViewCount[]> {
+  const supabase = createServiceClient();
+  const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const { data, error } = await supabase
+    .from("analytics_daily")
+    .select("day, count")
+    .eq("business_id", businessId)
+    .eq("event_type", "commercial_page_viewed")
+    .gte("day", since)
+    .order("day", { ascending: true });
+  if (error) throw error;
+  return (data ?? []).map((row) => ({ day: row.day, count: row.count }));
+}

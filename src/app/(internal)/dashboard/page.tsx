@@ -1,5 +1,5 @@
 import { auth, signOut } from "@/auth";
-import { getBusinessById, getMetricsSummary, getOwnedInvoices } from "@/lib/services/platform";
+import { getBusinessById, getMetricsSummary, getOwnedInvoices, getDailyPageViews } from "@/lib/services/platform";
 import { planLabels } from "@/data/businesses";
 import { PlanBilling } from "@/components/dashboard/PlanBilling";
 import { PrivacyControls } from "@/components/dashboard/PrivacyControls";
@@ -25,6 +25,8 @@ export default async function DashboardPage() {
   const totalContacts =
     (metrics?.whatsapp_clicked ?? 0) + (metrics?.appointment_clicked ?? 0);
   const hasDetailedMetrics = business?.effectivePlan !== "presenca";
+  const dailyViews =
+    hasDetailedMetrics && session?.user?.businessId ? await getDailyPageViews(session.user.businessId, 7) : [];
 
   return (
     <main className="min-h-screen px-6 py-24">
@@ -132,6 +134,21 @@ export default async function DashboardPage() {
                   Sua página recebeu interesse. Faça upgrade para visualizar a origem das
                   buscas, períodos e serviços mais acessados.
                 </p>
+              )}
+              {hasDetailedMetrics && dailyViews.length > 0 && (
+                <div className="mt-5 border-t border-border pt-4">
+                  <p className="text-[12px] text-muted">Visualizações por dia (últimos 7 dias)</p>
+                  <div className="mt-2 flex flex-col gap-1">
+                    {dailyViews.map((row) => (
+                      <div key={row.day} className="flex items-center justify-between text-[13px]">
+                        <span className="text-muted">
+                          {new Date(row.day).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })}
+                        </span>
+                        <span className="font-medium text-foreground">{row.count}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               )}
             </div>
 
