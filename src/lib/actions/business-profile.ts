@@ -5,6 +5,7 @@ import { auth } from "@/auth";
 import { createServiceClient } from "@/lib/supabase/server";
 import { limitsFor } from "@/lib/plan-limits";
 import { getBusinessById } from "@/lib/services/platform";
+import { translateAndStore } from "@/lib/services/translate";
 
 type ActionResult = { success: true } | { success: false; error: string };
 
@@ -55,6 +56,11 @@ export async function updateBusinessProfile(input: {
     .eq("id", businessId);
   if (error) return { success: false, error: "Não foi possível salvar." };
 
+  await translateAndStore("business", businessId, {
+    description: input.description.trim(),
+    opening_hours: input.openingHours.trim(),
+  });
+
   revalidateBusiness(businessId, business.slug);
   return { success: true };
 }
@@ -81,10 +87,17 @@ export async function addService(name: string, description: string): Promise<Act
     };
   }
 
-  const { error } = await supabase
+  const { data: inserted, error } = await supabase
     .from("business_services")
-    .insert({ business_id: businessId, name: name.trim(), description: description.trim() || null, sort_order: count ?? 0 });
+    .insert({ business_id: businessId, name: name.trim(), description: description.trim() || null, sort_order: count ?? 0 })
+    .select("id")
+    .single();
   if (error) return { success: false, error: "Não foi possível adicionar o serviço." };
+
+  await translateAndStore("business_service", inserted.id, {
+    name: name.trim(),
+    description: description.trim(),
+  });
 
   revalidateBusiness(businessId, business.slug);
   return { success: true };
@@ -213,10 +226,14 @@ export async function addVirtualTourScene(label: string, imageUrl: string): Prom
     .select("id", { count: "exact", head: true })
     .eq("business_id", businessId);
 
-  const { error } = await supabase
+  const { data: inserted, error } = await supabase
     .from("virtual_tour_scenes")
-    .insert({ business_id: businessId, label: label.trim(), image_url: imageUrl.trim(), sort_order: count ?? 0 });
+    .insert({ business_id: businessId, label: label.trim(), image_url: imageUrl.trim(), sort_order: count ?? 0 })
+    .select("id")
+    .single();
   if (error) return { success: false, error: "Não foi possível adicionar a cena." };
+
+  await translateAndStore("virtual_tour_scene", inserted.id, { label: label.trim() });
 
   revalidateBusiness(businessId, business.slug);
   return { success: true };
@@ -274,16 +291,25 @@ export async function addPromotion(input: {
     };
   }
 
-  const { error } = await supabase.from("benefits").insert({
-    business_id: businessId,
-    kind: "promocao",
-    title: input.title.trim(),
-    description: input.description.trim() || null,
-    coupon_code: limits.couponsAllowed ? input.couponCode.trim() || null : null,
-    valid_until: input.validUntil || null,
-    active: true,
-  });
+  const { data: inserted, error } = await supabase
+    .from("benefits")
+    .insert({
+      business_id: businessId,
+      kind: "promocao",
+      title: input.title.trim(),
+      description: input.description.trim() || null,
+      coupon_code: limits.couponsAllowed ? input.couponCode.trim() || null : null,
+      valid_until: input.validUntil || null,
+      active: true,
+    })
+    .select("id")
+    .single();
   if (error) return { success: false, error: "Não foi possível criar a promoção." };
+
+  await translateAndStore("benefit", inserted.id, {
+    title: input.title.trim(),
+    description: input.description.trim(),
+  });
 
   revalidateBusiness(businessId, business.slug);
   return { success: true };

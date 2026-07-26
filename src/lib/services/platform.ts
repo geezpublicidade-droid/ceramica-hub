@@ -2,6 +2,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { categories, type Business, type BusinessService, type VirtualVisitType } from "@/data/businesses";
 import { type Opportunity } from "@/data/opportunities";
 import { type Benefit } from "@/data/benefits";
+import { getTranslationsFor, type EntityTranslations } from "@/lib/services/translate";
 
 export type PlatformStats = {
   businesses: number;
@@ -79,7 +80,8 @@ function resolveEffectivePlan(row: BusinessRow): {
     : { effectivePlan: row.plan, trialStatus: "expired" };
 }
 
-function mapBusiness(row: BusinessRow): Business {
+/** `translation` é o mapa field->value já resolvido pra ESSA empresa num idioma específico (ver `getTranslationsFor`); ausente/sem entrada = mantém o texto em português. */
+function mapBusiness(row: BusinessRow, translation?: Record<string, string>): Business {
   const verified = row.status === "approved";
   const { effectivePlan, trialStatus } = resolveEffectivePlan(row);
   return {
@@ -87,7 +89,7 @@ function mapBusiness(row: BusinessRow): Business {
     slug: row.slug ?? row.id,
     name: row.name,
     category: row.category,
-    description: row.description ?? "",
+    description: translation?.description ?? row.description ?? "",
     instagram: row.instagram ?? "",
     phone: row.phone,
     floor: `${row.towers?.name ?? "Torre não informada"} · ${row.floor} · sala ${row.room_number}`,
@@ -101,7 +103,7 @@ function mapBusiness(row: BusinessRow): Business {
     coverPhoto: row.cover_photo_url ?? undefined,
     websiteUrl: row.website_url ?? undefined,
     bookingUrl: row.booking_url ?? undefined,
-    openingHours: row.opening_hours ?? undefined,
+    openingHours: translation?.opening_hours ?? row.opening_hours ?? undefined,
     videoUrl: row.video_url ?? undefined,
     imageUsageAuthorized: row.image_usage_authorized,
     virtualVisit: {
@@ -110,7 +112,7 @@ function mapBusiness(row: BusinessRow): Business {
       url: row.virtual_visit_url,
       provider: row.virtual_visit_provider,
       thumbnail: row.virtual_visit_thumbnail,
-      description: row.virtual_visit_description,
+      description: translation?.virtual_visit_description ?? row.virtual_visit_description,
     },
     seals: {
       verified,
@@ -120,6 +122,14 @@ function mapBusiness(row: BusinessRow): Business {
       founder: row.founder,
     },
   };
+}
+
+async function translationsByEntityId(
+  entityType: Parameters<typeof getTranslationsFor>[0],
+  ids: string[],
+  locale?: string,
+): Promise<EntityTranslations> {
+  return locale ? getTranslationsFor(entityType, ids, locale) : {};
 }
 
 /**
@@ -162,27 +172,31 @@ export async function getCategoryBreakdown(): Promise<CategoryBreakdown[]> {
   }));
 }
 
-export async function getFeaturedBusinesses(limit?: number): Promise<Business[]> {
+export async function getFeaturedBusinesses(limit?: number, locale?: string): Promise<Business[]> {
   const supabase = createServiceClient();
   let query = supabase.from("businesses").select(BUSINESS_SELECT).eq("status", "approved");
   if (typeof limit === "number") query = query.limit(limit);
   const { data, error } = await query;
   if (error) throw error;
 
-  return ((data ?? []) as BusinessRow[]).map(mapBusiness);
+  const rows = (data ?? []) as BusinessRow[];
+  const translations = await translationsByEntityId("business", rows.map((row) => row.id), locale);
+  return rows.map((row) => mapBusiness(row, translations[row.id]));
 }
 
-export async function getAllBusinesses(): Promise<Business[]> {
+export async function getAllBusinesses(locale?: string): Promise<Business[]> {
   const supabase = createServiceClient();
   const { data, error } = await supabase.from("businesses").select(BUSINESS_SELECT).eq("status", "approved");
   if (error) throw error;
 
-  return ((data ?? []) as BusinessRow[]).map(mapBusiness);
+  const rows = (data ?? []) as BusinessRow[];
+  const translations = await translationsByEntityId("business", rows.map((row) => row.id), locale);
+  return rows.map((row) => mapBusiness(row, translations[row.id]));
 }
 
 export const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-export async function getBusinessById(id: string): Promise<Business | undefined> {
+export async function getBusinessById(id: string, locale?: string): Promise<Business | undefined> {
   if (!UUID_RE.test(id)) return undefined;
 
   const supabase = createServiceClient();
@@ -190,19 +204,21 @@ export async function getBusinessById(id: string): Promise<Business | undefined>
   if (error) throw error;
   if (!data) return undefined;
 
-  return mapBusiness(data as BusinessRow);
+  const translations = await translationsByEntityId("business", [data.id], locale);
+  return mapBusiness(data as BusinessRow, translations[data.id]);
 }
 
-export async function getBusinessBySlug(slug: string): Promise<Business | undefined> {
+export async function getBusinessBySlug(slug: string, locale?: string): Promise<Business | undefined> {
   const supabase = createServiceClient();
   const { data, error } = await supabase.from("businesses").select(BUSINESS_SELECT).eq("slug", slug).maybeSingle();
   if (error) throw error;
   if (!data) return undefined;
 
-  return mapBusiness(data as BusinessRow);
+  const translations = await translationsByEntityId("business", [data.id], locale);
+  return mapBusiness(data as BusinessRow, translations[data.id]);
 }
 
-export async function getRelatedBusinesses(business: Business, limit = 3): Promise<Business[]> {
+export async function getRelatedBusinesses(business: Business, limit = 3, locale?: string): Promise<Business[]> {
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("businesses")
@@ -213,12 +229,14 @@ export async function getRelatedBusinesses(business: Business, limit = 3): Promi
     .limit(limit);
   if (error) throw error;
 
-  return ((data ?? []) as BusinessRow[]).map(mapBusiness);
+  const rows = (data ?? []) as BusinessRow[];
+  const translations = await translationsByEntityId("business", rows.map((row) => row.id), locale);
+  return rows.map((row) => mapBusiness(row, translations[row.id]));
 }
 
 export type OpportunityWithBusiness = Opportunity & { business: Business };
 
-export async function getOpportunities(): Promise<OpportunityWithBusiness[]> {
+export async function getOpportunities(locale?: string): Promise<OpportunityWithBusiness[]> {
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("opportunities")
@@ -227,14 +245,21 @@ export async function getOpportunities(): Promise<OpportunityWithBusiness[]> {
     .eq("businesses.status", "approved");
   if (error) throw error;
 
-  return (data ?? []).map((row) => {
-    const business = mapBusiness(row.businesses as unknown as BusinessRow);
+  const rows = data ?? [];
+  const [ownTranslations, businessTranslations] = await Promise.all([
+    translationsByEntityId("opportunity", rows.map((row) => row.id), locale),
+    translationsByEntityId("business", rows.map((row) => row.business_id), locale),
+  ]);
+
+  return rows.map((row) => {
+    const business = mapBusiness(row.businesses as unknown as BusinessRow, businessTranslations[row.business_id]);
+    const translation = ownTranslations[row.id];
     return {
       id: row.id,
       businessId: row.business_id,
       type: row.type,
-      title: row.title,
-      description: row.description ?? "",
+      title: translation?.title ?? row.title,
+      description: translation?.description ?? row.description ?? "",
       business,
     };
   });
@@ -242,7 +267,7 @@ export async function getOpportunities(): Promise<OpportunityWithBusiness[]> {
 
 export type BenefitWithBusiness = Benefit & { business: Business };
 
-export async function getBenefits(): Promise<BenefitWithBusiness[]> {
+export async function getBenefits(locale?: string): Promise<BenefitWithBusiness[]> {
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("benefits")
@@ -251,14 +276,21 @@ export async function getBenefits(): Promise<BenefitWithBusiness[]> {
     .eq("businesses.status", "approved");
   if (error) throw error;
 
-  return (data ?? []).map((row) => {
-    const business = mapBusiness(row.businesses as unknown as BusinessRow);
+  const rows = data ?? [];
+  const [ownTranslations, businessTranslations] = await Promise.all([
+    translationsByEntityId("benefit", rows.map((row) => row.id), locale),
+    translationsByEntityId("business", rows.map((row) => row.business_id), locale),
+  ]);
+
+  return rows.map((row) => {
+    const business = mapBusiness(row.businesses as unknown as BusinessRow, businessTranslations[row.business_id]);
+    const translation = ownTranslations[row.id];
     return {
       id: row.id,
       businessId: row.business_id,
       kind: row.kind,
-      title: row.title,
-      description: row.description ?? "",
+      title: translation?.title ?? row.title,
+      description: translation?.description ?? row.description ?? "",
       validUntil: row.valid_until ?? undefined,
       couponCode: row.coupon_code ?? undefined,
       business,
@@ -266,7 +298,7 @@ export async function getBenefits(): Promise<BenefitWithBusiness[]> {
   });
 }
 
-export async function getBusinessServices(businessId: string): Promise<BusinessService[]> {
+export async function getBusinessServices(businessId: string, locale?: string): Promise<BusinessService[]> {
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("business_services")
@@ -275,15 +307,21 @@ export async function getBusinessServices(businessId: string): Promise<BusinessS
     .order("sort_order", { ascending: true });
   if (error) throw error;
 
-  return (data ?? []).map((row) => ({
-    id: row.id,
-    businessId: row.business_id,
-    name: row.name,
-    description: row.description,
-    photo: row.photo_url,
-    startingPrice: row.starting_price,
-    sortOrder: row.sort_order,
-  }));
+  const rows = data ?? [];
+  const translations = await translationsByEntityId("business_service", rows.map((row) => row.id), locale);
+
+  return rows.map((row) => {
+    const translation = translations[row.id];
+    return {
+      id: row.id,
+      businessId: row.business_id,
+      name: translation?.name ?? row.name,
+      description: translation?.description ?? row.description,
+      photo: row.photo_url,
+      startingPrice: row.starting_price,
+      sortOrder: row.sort_order,
+    };
+  });
 }
 
 export type OwnedPhoto = { id: string; url: string; sortOrder: number };
@@ -303,7 +341,7 @@ export type VirtualTourScene =
   | { id: string; label: string; sortOrder: number; kind: "equirectangular"; imageUrl: string }
   | { id: string; label: string; sortOrder: number; kind: "cubemap"; cubemapUrls: string[] };
 
-export async function getVirtualTourScenes(businessId: string): Promise<VirtualTourScene[]> {
+export async function getVirtualTourScenes(businessId: string, locale?: string): Promise<VirtualTourScene[]> {
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("virtual_tour_scenes")
@@ -311,11 +349,16 @@ export async function getVirtualTourScenes(businessId: string): Promise<VirtualT
     .eq("business_id", businessId)
     .order("sort_order", { ascending: true });
   if (error) throw error;
-  return (data ?? []).map((row) =>
-    row.kind === "cubemap"
-      ? { id: row.id, label: row.label, sortOrder: row.sort_order, kind: "cubemap" as const, cubemapUrls: row.cubemap_urls }
-      : { id: row.id, label: row.label, sortOrder: row.sort_order, kind: "equirectangular" as const, imageUrl: row.image_url }
-  );
+
+  const rows = data ?? [];
+  const translations = await translationsByEntityId("virtual_tour_scene", rows.map((row) => row.id), locale);
+
+  return rows.map((row) => {
+    const label = translations[row.id]?.label ?? row.label;
+    return row.kind === "cubemap"
+      ? { id: row.id, label, sortOrder: row.sort_order, kind: "cubemap" as const, cubemapUrls: row.cubemap_urls }
+      : { id: row.id, label, sortOrder: row.sort_order, kind: "equirectangular" as const, imageUrl: row.image_url };
+  });
 }
 
 export type OwnedPromotion = {

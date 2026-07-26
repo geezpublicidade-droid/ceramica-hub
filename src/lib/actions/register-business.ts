@@ -3,6 +3,7 @@
 import bcrypt from "bcryptjs";
 import { createServiceClient } from "@/lib/supabase/server";
 import { slugify } from "@/lib/slug";
+import { translateAndStore } from "@/lib/services/translate";
 
 export type RegisterBusinessInput = {
   name: string;
@@ -106,15 +107,32 @@ export async function registerBusiness(input: RegisterBusinessInput): Promise<Re
     return { success: false, error: "Não foi possível concluir o cadastro. Tente novamente." };
   }
 
+  await translateAndStore("business", business.id, {
+    description: input.shortDescription.trim(),
+    opening_hours: input.openingHours.trim(),
+  });
+
   const services = input.services.filter((s) => s.name.trim()).slice(0, 3);
   if (services.length > 0) {
-    await supabase.from("business_services").insert(
-      services.map((s, index) => ({
-        business_id: business.id,
-        name: s.name.trim(),
-        description: s.description.trim() || null,
-        sort_order: index,
-      }))
+    const { data: insertedServices } = await supabase
+      .from("business_services")
+      .insert(
+        services.map((s, index) => ({
+          business_id: business.id,
+          name: s.name.trim(),
+          description: s.description.trim() || null,
+          sort_order: index,
+        }))
+      )
+      .select("id, name, description");
+
+    await Promise.all(
+      (insertedServices ?? []).map((service) =>
+        translateAndStore("business_service", service.id, {
+          name: service.name,
+          description: service.description,
+        })
+      )
     );
   }
 

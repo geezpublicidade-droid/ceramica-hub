@@ -19,14 +19,15 @@ import {
   getBenefits,
 } from "@/lib/services/platform";
 
-export default async function Preview() {
+export default async function Preview({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   const [categoryBreakdown, allBusinesses, featuredBusinesses, opportunities, benefits] =
     await Promise.all([
       getCategoryBreakdown(),
-      getAllBusinesses(),
-      getFeaturedBusinesses(),
-      getOpportunities(),
-      getBenefits(),
+      getAllBusinesses(locale),
+      getFeaturedBusinesses(undefined, locale),
+      getOpportunities(locale),
+      getBenefits(locale),
     ]);
 
   return (

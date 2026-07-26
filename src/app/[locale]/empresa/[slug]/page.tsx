@@ -38,14 +38,14 @@ export async function generateStaticParams() {
 }
 
 /** URLs antigas usavam o UUID como slug — resolve o negócio por qualquer um dos dois. */
-async function resolveBusiness(param: string) {
-  if (UUID_RE.test(param)) return getBusinessById(param);
-  return getBusinessBySlug(param);
+async function resolveBusiness(param: string, locale?: string) {
+  if (UUID_RE.test(param)) return getBusinessById(param, locale);
+  return getBusinessBySlug(param, locale);
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug, locale } = await params;
-  const business = await resolveBusiness(slug);
+  const business = await resolveBusiness(slug, locale);
   if (!business) return {};
 
   const t = await getTranslations({ locale, namespace: "EmpresaPage" });
@@ -66,7 +66,7 @@ function instagramUrl(handle: string) {
 
 export default async function BusinessProfilePage({ params }: PageProps) {
   const { slug, locale } = await params;
-  const business = await resolveBusiness(slug);
+  const business = await resolveBusiness(slug, locale);
   if (!business || business.status !== "approved") notFound();
 
   // link antigo com UUID: redireciona pra URL canônica com slug
@@ -83,12 +83,12 @@ export default async function BusinessProfilePage({ params }: PageProps) {
   ]);
 
   const [related, allOpportunities, allBenefits, services, photos, virtualTourScenes] = await Promise.all([
-    getRelatedBusinesses(business),
-    getOpportunities(),
-    getBenefits(),
-    getBusinessServices(business.id),
+    getRelatedBusinesses(business, 3, locale),
+    getOpportunities(locale),
+    getBenefits(locale),
+    getBusinessServices(business.id, locale),
     getBusinessPhotos(business.id),
-    getVirtualTourScenes(business.id),
+    getVirtualTourScenes(business.id, locale),
   ]);
 
   const opportunities = allOpportunities.filter((o) => o.businessId === business.id);
