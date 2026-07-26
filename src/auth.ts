@@ -50,8 +50,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (role === "admin") {
           const admin = account as { mfa_secret: string | null; mfa_enabled: boolean };
           if (admin.mfa_enabled) {
-            if (typeof totpCode !== "string" || !admin.mfa_secret) return null;
-            const result = await verifyTotp({ secret: admin.mfa_secret, token: totpCode });
+            if (typeof totpCode !== "string" || totpCode.trim().length === 0 || !admin.mfa_secret) return null;
+            const result = await verifyTotp({ secret: admin.mfa_secret, token: totpCode.trim() });
             if (!result.valid) return null;
           } else {
             mfaSetupRequired = true;
