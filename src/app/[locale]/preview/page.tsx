@@ -20,6 +20,12 @@ import {
   getBenefits,
 } from "@/lib/services/platform";
 
+// Sem isso, a página fica congelada no HTML gerado no último deploy manual
+// (empresa aprovada, benefício novo, campanha de anúncio aprovada — nada
+// aparece até o próximo `vercel --prod`). Mesmo raciocínio de
+// empresa/[slug]/page.tsx.
+export const revalidate = 60;
+
 export default async function Preview({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const [categoryBreakdown, allBusinesses, featuredBusinesses, opportunities, benefits] =
