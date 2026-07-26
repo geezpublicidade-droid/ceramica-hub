@@ -38,7 +38,7 @@ export function Header() {
       }`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6">
-        <Link href="/#top" className="shrink-0 text-[20px] font-semibold tracking-tight text-foreground">
+        <Link href="/#top" className="shrink-0 text-[17px] font-semibold tracking-tight text-foreground sm:text-[20px]">
           Cerâmica <span className="text-primary">Hub</span>
         </Link>
         <nav className="hidden gap-7 text-[15px] font-medium text-muted lg:flex xl:gap-9 xl:text-[16px]">
@@ -58,9 +58,10 @@ export function Header() {
           </a>
           <Link
             href="/cadastro"
-            className="neu-primary whitespace-nowrap rounded-full px-4 py-2.5 text-[15px] font-semibold text-white sm:px-6 sm:py-3 sm:text-[16px]"
+            className="neu-primary whitespace-nowrap rounded-full px-3 py-2 text-[14px] font-semibold text-white sm:px-6 sm:py-3 sm:text-[16px]"
           >
-            {t("cadastrarEmpresa")}
+            <span className="sm:hidden">{t("cadastrarEmpresaCurto")}</span>
+            <span className="hidden sm:inline">{t("cadastrarEmpresa")}</span>
           </Link>
           <button
             type="button"
