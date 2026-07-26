@@ -8,6 +8,7 @@ type LoginFormProps = {
   error?: string;
   title: string;
   subtitle: string;
+  totpRequired?: boolean;
 };
 
 export function LoginForm({
@@ -18,6 +19,7 @@ export function LoginForm({
   error,
   title,
   subtitle,
+  totpRequired,
 }: LoginFormProps) {
   return (
     <main className="flex min-h-screen items-center justify-center px-6 py-24">
@@ -35,7 +37,9 @@ export function LoginForm({
 
           {error ? (
             <p className="rounded-xl bg-red-500/10 px-3 py-2 text-[13px] text-red-600">
-              E-mail ou senha incorretos.
+              {totpRequired
+                ? "Código do autenticador ausente ou incorreto (ele expira a cada 30s) — e-mail e senha continuam os mesmos de antes."
+                : "E-mail ou senha incorretos."}
             </p>
           ) : null}
 
@@ -69,7 +73,12 @@ export function LoginForm({
                 name="totpCode"
                 inputMode="numeric"
                 autoComplete="one-time-code"
-                placeholder="Deixe em branco se ainda não configurou"
+                required={totpRequired}
+                placeholder={
+                  totpRequired
+                    ? "Obrigatório — 6 dígitos do seu app autenticador"
+                    : "Informe o código se já configurou o autenticador; senão, deixe em branco"
+                }
                 className="neu rounded-xl border-0 bg-transparent px-4 py-2.5 text-[14px] text-foreground outline-none"
               />
             </label>

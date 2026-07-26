@@ -22,6 +22,7 @@ export default async function AdminLoginPage({
           ? "Verificação em duas etapas ativada — entre novamente com seu código."
           : "Acesso restrito à administração do Cerâmica Hub."
       }
+      totpRequired={Boolean(mfaConfigured)}
     />
   );
 }
