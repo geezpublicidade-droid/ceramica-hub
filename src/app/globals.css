@@ -214,3 +214,15 @@ body {
     opacity: 1;
   }
 }
+
+/* Carrossel de anúncios: a faixa tem a lista de campanhas duplicada (ver
+   AdCarouselTrack), então andar -50% é andar exatamente uma volta completa
+   sem deixar costura visível no loop. */
+@keyframes ad-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}

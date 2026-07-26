@@ -12,6 +12,7 @@ import { FounderCTA } from "@/components/landing/FounderCTA";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { SearchProvider } from "@/components/landing/SearchContext";
 import { AdSlot } from "@/components/ads/AdSlot";
+import { AdCarousel } from "@/components/ads/AdCarousel";
 import {
   getCategoryBreakdown,
   getAllBusinesses,
@@ -45,6 +46,9 @@ export default async function Preview({ params }: { params: Promise<{ locale: st
           <NetworkNarrative />
           <div className="py-6">
             <AdSlot placementKey="hero_abaixo" />
+          </div>
+          <div className="pb-10">
+            <AdCarousel placementKey="carrossel_home" />
           </div>
           <ScaleSequence />
           <PlatformReveal

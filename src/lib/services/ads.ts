@@ -32,19 +32,12 @@ export type ActiveCampaign = {
   creatives: ActiveCampaignCreative[];
 };
 
-/**
- * Campanha aprovada, dentro do período e do anunciante não-bloqueado, pra
- * essa posição — usado pela renderização pública (AdSlot). Sem RLS de
- * verdade (ver decisão em auth-guards.ts), mas essa função não recebe
- * nenhum dado do usuário além do placementKey (constante no código-fonte,
- * não vem de input externo), então não há superfície de IDOR aqui.
- */
-export async function getActiveCampaignForPlacement(placementKey: string): Promise<ActiveCampaign | null> {
+async function fetchEligibleCampaigns(placementKey: string): Promise<ActiveCampaign[]> {
   const supabase = createServiceClient();
   const today = new Date().toISOString().slice(0, 10);
 
   const { data: placement } = await supabase.from("ad_placements").select("id").eq("key", placementKey).maybeSingle();
-  if (!placement) return null;
+  if (!placement) return [];
 
   const { data: campaigns, error } = await supabase
     .from("ad_campaigns")
@@ -55,21 +48,41 @@ export async function getActiveCampaignForPlacement(placementKey: string): Promi
     .lte("starts_at", today)
     .gte("ends_at", today);
   if (error) throw error;
-  if (!campaigns || campaigns.length === 0) return null;
 
-  // Frequência: com mais de uma campanha elegível pra mesma posição no
-  // mesmo período, roda entre elas em vez de sempre mostrar a primeira —
-  // cada view sorteia uma, distribuindo impressão entre anunciantes pagantes.
-  const campaign = campaigns[Math.floor(Math.random() * campaigns.length)];
-
-  return {
+  return (campaigns ?? []).map((campaign) => ({
     id: campaign.id,
     title: campaign.title,
     targetUrl: campaign.target_url,
     creatives: (campaign.ad_creatives as unknown as { device: "desktop" | "mobile"; image_url: string; alt_text: string }[]).map(
       (c) => ({ device: c.device, imageUrl: c.image_url, altText: c.alt_text })
     ),
-  };
+  }));
+}
+
+/**
+ * Campanha aprovada, dentro do período e do anunciante não-bloqueado, pra
+ * essa posição — usado pela renderização pública (AdSlot). Sem RLS de
+ * verdade (ver decisão em auth-guards.ts), mas essa função não recebe
+ * nenhum dado do usuário além do placementKey (constante no código-fonte,
+ * não vem de input externo), então não há superfície de IDOR aqui.
+ */
+export async function getActiveCampaignForPlacement(placementKey: string): Promise<ActiveCampaign | null> {
+  const campaigns = await fetchEligibleCampaigns(placementKey);
+  if (campaigns.length === 0) return null;
+
+  // Frequência: com mais de uma campanha elegível pra mesma posição no
+  // mesmo período, roda entre elas em vez de sempre mostrar a primeira —
+  // cada view sorteia uma, distribuindo impressão entre anunciantes pagantes.
+  return campaigns[Math.floor(Math.random() * campaigns.length)];
+}
+
+/** Igual acima, mas devolve todas as elegíveis (embaralhadas) -- usado pelo carrossel, que mostra vários anunciantes ao mesmo tempo em vez de só um. */
+export async function getActiveCampaignsForPlacement(placementKey: string): Promise<ActiveCampaign[]> {
+  const campaigns = await fetchEligibleCampaigns(placementKey);
+  return campaigns
+    .map((campaign) => ({ campaign, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ campaign }) => campaign);
 }
 
 export type CampaignWithDetails = {
