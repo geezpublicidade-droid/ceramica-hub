@@ -108,13 +108,13 @@ export function NetworkNarrative() {
           <div
             className={
               reducedMotion
-                ? "relative w-full px-4 py-16 sm:px-6 sm:py-24"
-                : "absolute inset-0 flex flex-col items-center justify-center px-4 sm:items-start sm:px-6"
+                ? "relative w-full px-4 pb-16 pt-28 sm:px-6 sm:pb-24 sm:pt-36"
+                : "absolute inset-0 flex flex-col items-center justify-center px-4 pt-24 sm:items-start sm:px-6 sm:pt-32"
             }
           >
             <div className="mx-auto w-full max-w-6xl">
               <RevealText active={heroActive} stagger={0.12}>
-                <div className="glass-light max-w-2xl rounded-2xl p-5 sm:rounded-3xl sm:p-10">
+                <div className="max-w-2xl rounded-2xl border border-white/70 bg-white/90 p-5 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.25)] backdrop-blur-md sm:rounded-3xl sm:bg-white/95 sm:p-10">
                   <p className="text-[13px] font-medium uppercase tracking-[0.15em] text-muted sm:text-[15px] sm:tracking-[0.2em]">
                     Cerâmica Hub
                   </p>
