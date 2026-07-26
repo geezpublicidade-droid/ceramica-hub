@@ -43,6 +43,9 @@ export default async function Preview({ params }: { params: Promise<{ locale: st
       <main className="flex-1">
         <SearchProvider>
           <NetworkNarrative />
+          <div className="py-6">
+            <AdSlot placementKey="hero_abaixo" />
+          </div>
           <ScaleSequence />
           <PlatformReveal
             businesses={featuredBusinesses}

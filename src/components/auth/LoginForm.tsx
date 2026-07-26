@@ -1,4 +1,5 @@
 import { authenticateAction } from "@/lib/auth-actions";
+import { BackLink } from "@/components/nav/BackLink";
 
 type LoginFormProps = {
   role: "business" | "member" | "admin";
@@ -23,7 +24,11 @@ export function LoginForm({
 }: LoginFormProps) {
   return (
     <main className="flex min-h-screen items-center justify-center px-6 py-24">
-      <div className="glass-light w-full max-w-sm rounded-3xl p-8">
+      <div className="w-full max-w-sm">
+        <div className="mb-4">
+          <BackLink href="/preview" label="Voltar ao site" />
+        </div>
+        <div className="glass-light rounded-3xl p-8">
         <a href="/" className="text-[17px] font-semibold tracking-tight text-foreground">
           Cerâmica <span className="text-primary">Hub</span>
         </a>
@@ -91,6 +96,7 @@ export function LoginForm({
             Entrar
           </button>
         </form>
+        </div>
       </div>
     </main>
   );

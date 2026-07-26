@@ -53,12 +53,14 @@ export async function getActiveCampaignForPlacement(placementKey: string): Promi
     .eq("status", "approved")
     .eq("ad_accounts.blocked", false)
     .lte("starts_at", today)
-    .gte("ends_at", today)
-    .limit(1);
+    .gte("ends_at", today);
   if (error) throw error;
+  if (!campaigns || campaigns.length === 0) return null;
 
-  const campaign = campaigns?.[0];
-  if (!campaign) return null;
+  // Frequência: com mais de uma campanha elegível pra mesma posição no
+  // mesmo período, roda entre elas em vez de sempre mostrar a primeira —
+  // cada view sorteia uma, distribuindo impressão entre anunciantes pagantes.
+  const campaign = campaigns[Math.floor(Math.random() * campaigns.length)];
 
   return {
     id: campaign.id,
