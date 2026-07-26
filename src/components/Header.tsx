@@ -34,25 +34,25 @@ export function Header() {
       className={`fixed top-0 z-50 w-full border-b py-3 transition-all duration-300 sm:py-4 ${
         scrolled || menuOpen
           ? "glass-light border-border"
-          : "border-transparent bg-white/70 backdrop-blur-md md:bg-transparent md:py-5 md:backdrop-blur-none"
+          : "border-transparent bg-white/70 backdrop-blur-md lg:bg-transparent lg:py-5 lg:backdrop-blur-none"
       }`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6">
-        <Link href="/#top" className="text-[20px] font-semibold tracking-tight text-foreground">
+        <Link href="/#top" className="shrink-0 text-[20px] font-semibold tracking-tight text-foreground">
           Cerâmica <span className="text-primary">Hub</span>
         </Link>
-        <nav className="hidden gap-9 text-[16px] font-medium text-muted md:flex">
+        <nav className="hidden gap-7 text-[15px] font-medium text-muted lg:flex xl:gap-9 xl:text-[16px]">
           {links.map((link) => (
-            <Link key={link.href} href={link.href} className="transition-colors hover:text-foreground">
+            <Link key={link.href} href={link.href} className="whitespace-nowrap transition-colors hover:text-foreground">
               {link.label}
             </Link>
           ))}
         </nav>
-        <div className="flex items-center gap-3">
-          <LanguageSwitcher className="hidden md:flex" />
+        <div className="flex items-center gap-2 sm:gap-3">
+          <LanguageSwitcher className="hidden lg:block" />
           <a
             href="/login"
-            className="hidden text-[15px] text-muted transition-colors hover:text-foreground md:block"
+            className="hidden text-[15px] text-muted transition-colors hover:text-foreground lg:block"
           >
             {t("entrar")}
           </a>
@@ -66,7 +66,7 @@ export function Header() {
             type="button"
             aria-label={menuOpen ? t("fecharMenu") : t("abrirMenu")}
             onClick={() => setMenuOpen((v) => !v)}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-white text-foreground shadow-[0_2px_10px_rgba(0,0,0,0.12)] md:hidden"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-white text-foreground shadow-[0_2px_10px_rgba(0,0,0,0.12)] lg:hidden"
           >
             {menuOpen ? (
               <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4">
@@ -82,7 +82,7 @@ export function Header() {
       </div>
 
       {menuOpen && (
-        <nav className="glass-light mx-6 mt-3 flex flex-col gap-1 rounded-2xl border border-border p-3 text-[16px] md:hidden">
+        <nav className="glass-light mx-6 mt-3 flex flex-col gap-1 rounded-2xl border border-border p-3 text-[16px] lg:hidden">
           {links.map((link) => (
             <Link
               key={link.href}
