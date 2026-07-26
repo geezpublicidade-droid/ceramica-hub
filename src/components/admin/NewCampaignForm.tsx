@@ -14,6 +14,7 @@ type FormState = {
   phone: string;
   placementId: string;
   title: string;
+  description: string;
   targetUrl: string;
   startsAt: string;
   endsAt: string;
@@ -30,6 +31,7 @@ const initialState: FormState = {
   phone: "",
   placementId: "",
   title: "",
+  description: "",
   targetUrl: "",
   startsAt: "",
   endsAt: "",
@@ -65,6 +67,7 @@ export function NewCampaignForm({ placements }: { placements: AdPlacement[] }) {
         phone: form.phone,
         placementId: form.placementId,
         title: form.title,
+        description: form.description,
         targetUrl: form.targetUrl,
         startsAt: form.startsAt,
         endsAt: form.endsAt,
@@ -130,6 +133,16 @@ export function NewCampaignForm({ placements }: { placements: AdPlacement[] }) {
       <label>
         <span className={labelClass}>Título</span>
         <input className={inputClass} value={form.title} onChange={(e) => update("title", e.target.value)} />
+      </label>
+      <label>
+        <span className={labelClass}>Descrição curta (opcional, aparece ao lado da imagem em banners de destaque)</span>
+        <textarea
+          className={inputClass}
+          rows={2}
+          maxLength={200}
+          value={form.description}
+          onChange={(e) => update("description", e.target.value)}
+        />
       </label>
       <label>
         <span className={labelClass}>URL de destino</span>

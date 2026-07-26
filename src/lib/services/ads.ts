@@ -28,6 +28,7 @@ export type ActiveCampaignCreative = { device: "desktop" | "mobile"; imageUrl: s
 export type ActiveCampaign = {
   id: string;
   title: string;
+  description: string | null;
   targetUrl: string;
   creatives: ActiveCampaignCreative[];
 };
@@ -41,7 +42,7 @@ async function fetchEligibleCampaigns(placementKey: string): Promise<ActiveCampa
 
   const { data: campaigns, error } = await supabase
     .from("ad_campaigns")
-    .select("id, title, target_url, ad_accounts!inner(blocked), ad_creatives(device, image_url, alt_text)")
+    .select("id, title, description, target_url, ad_accounts!inner(blocked), ad_creatives(device, image_url, alt_text)")
     .eq("placement_id", placement.id)
     .eq("status", "approved")
     .eq("ad_accounts.blocked", false)
@@ -52,6 +53,7 @@ async function fetchEligibleCampaigns(placementKey: string): Promise<ActiveCampa
   return (campaigns ?? []).map((campaign) => ({
     id: campaign.id,
     title: campaign.title,
+    description: campaign.description,
     targetUrl: campaign.target_url,
     creatives: (campaign.ad_creatives as unknown as { device: "desktop" | "mobile"; image_url: string; alt_text: string }[]).map(
       (c) => ({ device: c.device, imageUrl: c.image_url, altText: c.alt_text })

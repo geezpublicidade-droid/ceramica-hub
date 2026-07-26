@@ -12,6 +12,7 @@ import { FounderCTA } from "@/components/landing/FounderCTA";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { SearchProvider } from "@/components/landing/SearchContext";
 import { AdSlot } from "@/components/ads/AdSlot";
+import { AdBanner } from "@/components/ads/AdBanner";
 import { AdCarousel } from "@/components/ads/AdCarousel";
 import {
   getCategoryBreakdown,
@@ -44,7 +45,7 @@ export default async function Preview({ params }: { params: Promise<{ locale: st
       <main className="flex-1">
         <SearchProvider>
           <NetworkNarrative />
-          <AdSlot placementKey="hero_abaixo" fullBleed />
+          <AdBanner placementKey="hero_abaixo" />
           <div className="py-10">
             <AdCarousel placementKey="carrossel_home" />
           </div>

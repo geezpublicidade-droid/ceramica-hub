@@ -1,16 +1,18 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AdLink } from "@/components/ads/AdLink";
 import type { ActiveCampaign } from "@/lib/services/ads";
 
 const CARD_GAP_PX = 20;
 const AUTO_ADVANCE_MS = 4000;
 const RESUME_AFTER_MANUAL_MS = 6000;
+const BLUR_TRANSITION_MS = 350;
 
 export function AdCarouselTrack({ campaigns }: { campaigns: ActiveCampaign[] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const pausedUntilRef = useRef(0);
+  const [transitioning, setTransitioning] = useState(false);
 
   function cardWidth(): number {
     const card = scrollRef.current?.querySelector<HTMLElement>("[data-card]");
@@ -20,6 +22,10 @@ export function AdCarouselTrack({ campaigns }: { campaigns: ActiveCampaign[] }) 
   function advance(direction: 1 | -1) {
     const el = scrollRef.current;
     if (!el) return;
+
+    setTransitioning(true);
+    setTimeout(() => setTransitioning(false), BLUR_TRANSITION_MS);
+
     const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 4;
     const atStart = el.scrollLeft <= 4;
     if (direction === 1 && atEnd) {
@@ -48,7 +54,9 @@ export function AdCarouselTrack({ campaigns }: { campaigns: ActiveCampaign[] }) 
     <div className="relative">
       <div
         ref={scrollRef}
-        className="flex gap-5 overflow-x-auto scroll-smooth px-6 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className={`flex gap-5 overflow-x-auto scroll-smooth px-6 pb-2 transition-[filter,opacity] duration-300 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+          transitioning ? "opacity-70 blur-sm" : "opacity-100 blur-0"
+        }`}
         style={{ scrollSnapType: "x mandatory" }}
       >
         {campaigns.map((campaign) => {
