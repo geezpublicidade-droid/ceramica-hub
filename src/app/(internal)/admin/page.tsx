@@ -27,6 +27,8 @@ type PendingBusiness = {
   status: "pending" | "approved" | "rejected";
   created_at: string;
   founder: boolean;
+  plan: "presenca" | "profissional" | "destaque" | "experiencia";
+  trial_status: "none" | "active" | "expired";
   towers: { name: string } | null;
 };
 
@@ -34,7 +36,9 @@ async function getBusinessesByStatus(status: "pending" | "approved" | "rejected"
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("businesses")
-    .select("id, name, responsible_name, email, category, phone, document, floor, room_number, status, created_at, founder, towers(name)")
+    .select(
+      "id, name, responsible_name, email, category, phone, document, floor, room_number, status, created_at, founder, plan, trial_status, towers(name)",
+    )
     .eq("status", status)
     .order("created_at", { ascending: true });
   if (error) throw error;
@@ -158,7 +162,16 @@ export default async function AdminPage() {
             {approved.map((b) => (
               <ApprovedBusinessRow
                 key={b.id}
-                business={{ id: b.id, name: b.name, towerName: b.towers?.name ?? null, floor: b.floor, roomNumber: b.room_number, founder: b.founder }}
+                business={{
+                  id: b.id,
+                  name: b.name,
+                  towerName: b.towers?.name ?? null,
+                  floor: b.floor,
+                  roomNumber: b.room_number,
+                  founder: b.founder,
+                  plan: b.plan,
+                  trialStatus: b.trial_status,
+                }}
               />
             ))}
           </div>
