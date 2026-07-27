@@ -12,6 +12,7 @@ type ApprovedBusiness = {
   founder: boolean;
   plan: "presenca" | "profissional" | "destaque" | "experiencia";
   trialStatus: "none" | "active" | "expired";
+  missingItems: string[];
 };
 
 const ACTION_LABEL: Record<string, string> = {
@@ -43,10 +44,17 @@ export function ApprovedBusinessRow({ business }: { business: ApprovedBusiness }
   return (
     <div className="rounded-2xl border border-border bg-white/60 px-4 py-3">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-[15px] text-muted">
-          {business.name} — {business.towerName ?? "torre não informada"} · {business.floor} · sala{" "}
-          {business.roomNumber}
-        </p>
+        <div>
+          <p className="text-[15px] text-muted">
+            {business.name} — {business.towerName ?? "torre não informada"} · {business.floor} · sala{" "}
+            {business.roomNumber}
+          </p>
+          {business.missingItems.length > 0 && (
+            <p className="mt-1 text-[12px] text-amber-700">
+              Perfil incompleto — falta: {business.missingItems.join(", ")}
+            </p>
+          )}
+        </div>
         <div className="flex items-center gap-3">
           {eligibleForTrial && (
             <button

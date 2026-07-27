@@ -3,7 +3,7 @@ import { requireAdminPage } from "@/lib/auth-guards";
 import { createServiceClient } from "@/lib/supabase/server";
 import { AdminBusinessRow } from "@/components/admin/AdminBusinessRow";
 import { ApprovedBusinessRow } from "@/components/admin/ApprovedBusinessRow";
-import { getAdminDashboardStats } from "@/lib/services/admin-dashboard";
+import { getAdminDashboardStats, getProfileCompletenessMap } from "@/lib/services/admin-dashboard";
 import { SignOutButton } from "@/components/nav/SignOutButton";
 import { signOut } from "@/auth";
 
@@ -48,11 +48,12 @@ async function getBusinessesByStatus(status: "pending" | "approved" | "rejected"
 export default async function AdminPage() {
   const { adminRole } = await requireAdminPage(["super_admin", "admin", "moderador"]);
 
-  const [pending, approved, rejected, stats] = await Promise.all([
+  const [pending, approved, rejected, stats, completeness] = await Promise.all([
     getBusinessesByStatus("pending"),
     getBusinessesByStatus("approved"),
     getBusinessesByStatus("rejected"),
     getAdminDashboardStats(),
+    getProfileCompletenessMap(),
   ]);
 
   const statCards: { label: string; value: number }[] = [
@@ -171,6 +172,7 @@ export default async function AdminPage() {
                   founder: b.founder,
                   plan: b.plan,
                   trialStatus: b.trial_status,
+                  missingItems: completeness.get(b.id) ?? [],
                 }}
               />
             ))}
