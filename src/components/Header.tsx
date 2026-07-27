@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { MegaMenuItem, type MegaMenuGroup } from "@/components/MegaMenu";
 import { AdSlot } from "@/components/ads/AdSlot";
+import { GlobalSearchOverlay } from "@/components/GlobalSearchOverlay";
 
 function cat(name: string) {
   return `/preview?categoria=${encodeURIComponent(name)}#empresas`;
@@ -14,6 +15,7 @@ function cat(name: string) {
 export function Header() {
   const t = useTranslations("Header");
   const tCategories = useTranslations("categories");
+  const tSearch = useTranslations("GlobalSearch");
 
   const megaMenuGroups: MegaMenuGroup[] = [
     {
@@ -62,6 +64,7 @@ export function Header() {
   ];
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setMenuOpen(false);
@@ -86,6 +89,17 @@ export function Header() {
           ))}
         </nav>
         <div className="flex items-center gap-2 sm:gap-3">
+          <button
+            type="button"
+            aria-label={tSearch("openSearch")}
+            onClick={() => setSearchOpen(true)}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-black/5 hover:text-foreground"
+          >
+            <svg width="19" height="19" viewBox="0 0 20 20" fill="none">
+              <circle cx="9" cy="9" r="6" stroke="currentColor" strokeWidth="1.5" />
+              <path d="M14 14L18 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
           <LanguageSwitcher className="hidden lg:block" />
           <a
             href="/login"
@@ -158,6 +172,8 @@ export function Header() {
           </div>
         </nav>
       )}
+
+      <GlobalSearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   );
 }

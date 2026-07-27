@@ -34,6 +34,15 @@
   "LanguageSwitcher": {
     "label": "语言"
   },
+  "GlobalSearch": {
+    "ariaLabel": "全局搜索",
+    "placeholder": "搜索企业、分类、酒店、房产...",
+    "close": "关闭搜索",
+    "loading": "搜索中...",
+    "noResults": "未找到结果。",
+    "sponsored": "赞助",
+    "openSearch": "打开搜索"
+  },
   "ComingSoon": {
     "badge": "Espaço Cerâmica · 圣卡耶塔诺-杜苏尔",
     "title": "敬请期待。",

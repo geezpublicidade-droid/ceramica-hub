@@ -34,6 +34,15 @@
   "LanguageSwitcher": {
     "label": "Language"
   },
+  "GlobalSearch": {
+    "ariaLabel": "Global search",
+    "placeholder": "Search companies, categories, hotels, real estate...",
+    "close": "Close search",
+    "loading": "Searching...",
+    "noResults": "No results found.",
+    "sponsored": "Sponsored",
+    "openSearch": "Open search"
+  },
   "ComingSoon": {
     "badge": "Espaço Cerâmica · São Caetano do Sul",
     "title": "Coming soon.",
