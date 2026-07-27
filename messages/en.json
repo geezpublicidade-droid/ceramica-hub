@@ -295,7 +295,9 @@
       "contato": "Contact",
       "termos": "Terms of Use",
       "privacidade": "Privacy",
-      "politicaCancelamento": "Cancellation"
+      "politicaCadastro": "Registration Policy",
+      "politicaCancelamento": "Cancellation",
+      "solicitarRemocao": "Data Removal Request"
     }
   },
   "EmpresaPage": {

@@ -295,7 +295,9 @@
       "contato": "联系我们",
       "termos": "使用条款",
       "privacidade": "隐私政策",
-      "politicaCancelamento": "取消政策"
+      "politicaCadastro": "登记政策",
+      "politicaCancelamento": "取消政策",
+      "solicitarRemocao": "数据删除申请"
     }
   },
   "EmpresaPage": {

@@ -18,7 +18,9 @@ export async function CinematicFooter() {
     { label: t("links.contato"), href: "/contato" },
     { label: t("links.termos"), href: "/termos" },
     { label: t("links.privacidade"), href: "/privacidade" },
+    { label: t("links.politicaCadastro"), href: "/politica-de-cadastro" },
     { label: t("links.politicaCancelamento"), href: "/politica-de-cancelamento" },
+    { label: t("links.solicitarRemocao"), href: "/contato" },
   ];
 
   return (
