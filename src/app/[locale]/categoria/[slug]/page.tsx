@@ -88,6 +88,7 @@ export default async function CategoryPage({ params }: PageProps) {
               ctaBackLabel={t("backToAll")}
               ctaBackHref="/#empresas"
               verifiedLabel={tCommon("verified")}
+              founderLabel={tCommon("founder")}
               whatsappLabel={tCommon("whatsapp")}
             />
           </div>

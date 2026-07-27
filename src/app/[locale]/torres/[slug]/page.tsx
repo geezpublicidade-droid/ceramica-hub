@@ -83,6 +83,7 @@ export default async function TowerPage({ params }: PageProps) {
               ctaBackLabel={t("backToAll")}
               ctaBackHref="/#empresas"
               verifiedLabel={tCommon("verified")}
+              founderLabel={tCommon("founder")}
               whatsappLabel={tCommon("whatsapp")}
             />
           </div>

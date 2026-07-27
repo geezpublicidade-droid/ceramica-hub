@@ -2,6 +2,7 @@ import Link from "next/link";
 import { requireAdminPage } from "@/lib/auth-guards";
 import { createServiceClient } from "@/lib/supabase/server";
 import { AdminBusinessRow } from "@/components/admin/AdminBusinessRow";
+import { ApprovedBusinessRow } from "@/components/admin/ApprovedBusinessRow";
 import { SignOutButton } from "@/components/nav/SignOutButton";
 import { signOut } from "@/auth";
 
@@ -24,6 +25,7 @@ type PendingBusiness = {
   room_number: string;
   status: "pending" | "approved" | "rejected";
   created_at: string;
+  founder: boolean;
   towers: { name: string } | null;
 };
 
@@ -31,7 +33,7 @@ async function getBusinessesByStatus(status: "pending" | "approved" | "rejected"
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("businesses")
-    .select("id, name, responsible_name, email, category, phone, document, floor, room_number, status, created_at, towers(name)")
+    .select("id, name, responsible_name, email, category, phone, document, floor, room_number, status, created_at, founder, towers(name)")
     .eq("status", status)
     .order("created_at", { ascending: true });
   if (error) throw error;
@@ -130,9 +132,10 @@ export default async function AdminPage() {
           </h2>
           <div className="mt-4 flex flex-col gap-2">
             {approved.map((b) => (
-              <p key={b.id} className="text-[15px] text-muted">
-                {b.name} — {b.towers?.name} · {b.floor} · sala {b.room_number}
-              </p>
+              <ApprovedBusinessRow
+                key={b.id}
+                business={{ id: b.id, name: b.name, towerName: b.towers?.name ?? null, floor: b.floor, roomNumber: b.room_number, founder: b.founder }}
+              />
             ))}
           </div>
         </section>

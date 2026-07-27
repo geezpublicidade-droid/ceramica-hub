@@ -188,6 +188,11 @@ export default async function BusinessProfilePage({ params }: PageProps) {
                       <h1 className="text-[clamp(1.75rem,4vw,2.75rem)] font-semibold tracking-tight">
                         {business.name}
                       </h1>
+                      {business.seals.founder && (
+                        <span className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[13px] font-medium text-amber-800">
+                          {tCommon("founder")}
+                        </span>
+                      )}
                       {business.verified && (
                         <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[13px] font-medium text-primary">
                           {tCommon("verified")}

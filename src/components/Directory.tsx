@@ -134,11 +134,18 @@ export function Directory({ businesses }: DirectoryProps) {
                         {business.name}
                       </h3>
                     </Link>
-                    {business.verified && (
-                      <span className="shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-[13px] font-medium text-primary">
-                        {tCommon("verified")}
-                      </span>
-                    )}
+                    <div className="flex shrink-0 items-center gap-1.5">
+                      {business.seals.founder && (
+                        <span className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[13px] font-medium text-amber-800">
+                          {tCommon("founder")}
+                        </span>
+                      )}
+                      {business.verified && (
+                        <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[13px] font-medium text-primary">
+                          {tCommon("verified")}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <p className="mt-1.5 text-[16px] text-muted">
                     {tCategories(business.category)} · {business.floor}

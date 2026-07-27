@@ -12,6 +12,7 @@ type BusinessCardGridProps = {
   ctaBackLabel: string;
   ctaBackHref: string;
   verifiedLabel: string;
+  founderLabel: string;
   whatsappLabel: string;
 };
 
@@ -26,6 +27,7 @@ export function BusinessCardGrid({
   ctaBackLabel,
   ctaBackHref,
   verifiedLabel,
+  founderLabel,
   whatsappLabel,
 }: BusinessCardGridProps) {
   if (businesses.length === 0) {
@@ -69,11 +71,18 @@ export function BusinessCardGrid({
                   {business.name}
                 </h2>
               </Link>
-              {business.verified && (
-                <span className="shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-[13px] font-medium text-primary">
-                  {verifiedLabel}
-                </span>
-              )}
+              <div className="flex shrink-0 items-center gap-1.5">
+                {business.seals.founder && (
+                  <span className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[13px] font-medium text-amber-800">
+                    {founderLabel}
+                  </span>
+                )}
+                {business.verified && (
+                  <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[13px] font-medium text-primary">
+                    {verifiedLabel}
+                  </span>
+                )}
+              </div>
             </div>
             <p className="mt-1.5 text-[16px] text-muted">{business.floor}</p>
             <p className="mt-3 text-[17px] leading-relaxed text-muted">{business.description}</p>

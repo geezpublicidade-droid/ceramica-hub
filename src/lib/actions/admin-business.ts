@@ -46,6 +46,22 @@ export async function approveBusiness(businessId: string) {
   revalidatePath("/");
 }
 
+/** Selo "Empresa Fundadora" -- controlado manualmente pelo admin (ver
+ * Seção 16 do plano: "sem criar escassez falsa", então não há contador de
+ * vagas automático aqui, só o selo em si). */
+export async function setBusinessFounder(businessId: string, founder: boolean) {
+  const adminId = await requireAdmin(["super_admin", "admin"]);
+  const supabase = createServiceClient();
+  const { error } = await supabase.from("businesses").update({ founder }).eq("id", businessId);
+  if (error) throw error;
+
+  await logAdminAction(adminId, "set_business_founder", "business", businessId, { founder });
+
+  revalidatePath("/admin");
+  revalidatePath("/");
+  revalidatePath("/preview");
+}
+
 export async function rejectBusiness(businessId: string, reason: string) {
   const adminId = await requireAdmin(["super_admin", "admin", "moderador"]);
   const supabase = createServiceClient();
