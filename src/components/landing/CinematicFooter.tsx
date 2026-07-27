@@ -13,6 +13,7 @@ export async function CinematicFooter() {
     { label: t("links.noticias"), href: "/noticias" },
     { label: t("links.businessTravel"), href: "/business-travel" },
     { label: t("links.auditorios"), href: "/auditorios-reunioes" },
+    { label: t("links.imobiliarias"), href: "/imobiliarias" },
     { label: t("links.cadastrarEmpresa"), href: "/cadastro" },
     { label: t("links.contato"), href: "/contato" },
     { label: t("links.termos"), href: "/termos" },

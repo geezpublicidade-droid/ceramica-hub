@@ -264,6 +264,7 @@
       "noticias": "News",
       "businessTravel": "Business Travel",
       "auditorios": "Auditoriums",
+      "imobiliarias": "Real Estate",
       "cadastrarEmpresa": "List your business",
       "contato": "Contact",
       "termos": "Terms of Use",
@@ -321,6 +322,19 @@
     "empty": "No spaces registered yet.",
     "requestInfo": "Request information",
     "capacity": "people"
+  },
+  "Imobiliarias": {
+    "metaTitle": "Real Estate — Cerâmica Hub",
+    "title": "Real Estate",
+    "subtitle": "Sale and lease of commercial units and full floors at Espaço Cerâmica.",
+    "empty": "No listings registered yet.",
+    "filterAll": "All",
+    "filterVenda": "For sale",
+    "filterLocacao": "For lease",
+    "requestInfo": "Request information",
+    "available": "Available",
+    "unavailable": "Unavailable",
+    "onRequest": "On request"
   },
   "Termos": {
     "metaTitle": "Terms of Use — Cerâmica Hub",

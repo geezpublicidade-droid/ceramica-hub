@@ -264,6 +264,7 @@
       "noticias": "Noticias",
       "businessTravel": "Business Travel",
       "auditorios": "Auditorios",
+      "imobiliarias": "Inmobiliarias",
       "cadastrarEmpresa": "Registrar empresa",
       "contato": "Contacto",
       "termos": "Términos de Uso",
@@ -321,6 +322,19 @@
     "empty": "Aún no hay espacios registrados.",
     "requestInfo": "Solicitar información",
     "capacity": "personas"
+  },
+  "Imobiliarias": {
+    "metaTitle": "Inmobiliarias — Cerâmica Hub",
+    "title": "Inmobiliarias",
+    "subtitle": "Venta y alquiler de salas comerciales y plantas completas en Espaço Cerâmica.",
+    "empty": "Aún no hay inmuebles registrados.",
+    "filterAll": "Todos",
+    "filterVenda": "Venta",
+    "filterLocacao": "Alquiler",
+    "requestInfo": "Solicitar información",
+    "available": "Disponible",
+    "unavailable": "No disponible",
+    "onRequest": "Bajo consulta"
   },
   "Termos": {
     "metaTitle": "Términos de Uso — Cerâmica Hub",

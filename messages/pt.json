@@ -264,6 +264,7 @@
       "noticias": "Notícias",
       "businessTravel": "Business Travel",
       "auditorios": "Auditórios",
+      "imobiliarias": "Imobiliárias",
       "cadastrarEmpresa": "Cadastrar empresa",
       "contato": "Contato",
       "termos": "Termos de Uso",
@@ -321,6 +322,19 @@
     "empty": "Nenhum espaço cadastrado ainda.",
     "requestInfo": "Solicitar informações",
     "capacity": "pessoas"
+  },
+  "Imobiliarias": {
+    "metaTitle": "Imobiliárias — Cerâmica Hub",
+    "title": "Imobiliárias",
+    "subtitle": "Venda e locação de salas comerciais e lajes inteiras no Espaço Cerâmica.",
+    "empty": "Nenhum imóvel cadastrado ainda.",
+    "filterAll": "Todos",
+    "filterVenda": "Venda",
+    "filterLocacao": "Locação",
+    "requestInfo": "Solicitar informações",
+    "available": "Disponível",
+    "unavailable": "Indisponível",
+    "onRequest": "Sob consulta"
   },
   "Termos": {
     "metaTitle": "Termos de Uso — Cerâmica Hub",

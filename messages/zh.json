@@ -264,6 +264,7 @@
       "noticias": "新闻",
       "businessTravel": "商务差旅",
       "auditorios": "礼堂",
+      "imobiliarias": "房地产",
       "cadastrarEmpresa": "登记企业",
       "contato": "联系我们",
       "termos": "使用条款",
@@ -321,6 +322,19 @@
     "empty": "暂无已登记的空间。",
     "requestInfo": "咨询信息",
     "capacity": "人"
+  },
+  "Imobiliarias": {
+    "metaTitle": "房地产 — Cerâmica Hub",
+    "title": "房地产",
+    "subtitle": "Espaço Cerâmica 内商业单元及整层楼面的买卖与租赁。",
+    "empty": "暂无已登记的房源。",
+    "filterAll": "全部",
+    "filterVenda": "出售",
+    "filterLocacao": "出租",
+    "requestInfo": "咨询信息",
+    "available": "可用",
+    "unavailable": "不可用",
+    "onRequest": "咨询价格"
   },
   "Termos": {
     "metaTitle": "使用条款 — Cerâmica Hub",
