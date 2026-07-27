@@ -83,6 +83,11 @@ export default async function AdminPage() {
                 Parceiros
               </Link>
             )}
+            {(adminRole === "super_admin" || adminRole === "admin" || adminRole === "comercial") && (
+              <Link href="/admin/leads" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
+                Leads
+              </Link>
+            )}
             {(adminRole === "super_admin" || adminRole === "admin") && (
               <Link href="/admin/hoteis" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
                 Hotéis

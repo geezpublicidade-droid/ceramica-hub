@@ -291,6 +291,7 @@
       "businessTravel": "商务差旅",
       "auditorios": "礼堂",
       "imobiliarias": "房地产",
+      "sejaUmParceiro": "成为合作伙伴",
       "cadastrarEmpresa": "登记企业",
       "contato": "联系我们",
       "termos": "使用条款",
@@ -332,6 +333,19 @@
     "intro": "Cerâmica Hub 由 Geez Marketing 开发与维护。如对登记信息、数据更正、删除请求或平台其他事宜有任何疑问,请通过以下方式联系我们:",
     "emailLabel": "电子邮箱:",
     "instagramLabel": "Instagram:"
+  },
+  "PartnersPage": {
+    "metaTitle": "合作伙伴 — Cerâmica Hub",
+    "metaDescription": "与 Cerâmica Hub 合作、已确认授权的机构与品牌。",
+    "heading": "合作伙伴",
+    "subtitle": "支持 Espaço Cerâmica 的机构与品牌。",
+    "emptyState": "目前没有活跃的机构合作伙伴。"
+  },
+  "PartnerLeadPage": {
+    "metaTitle": "成为合作伙伴 — Cerâmica Hub",
+    "metaDescription": "想在 Cerâmica Hub 获得战略展示位置？告诉我们您的企业信息。",
+    "heading": "成为合作伙伴",
+    "subtitle": "简单介绍一下您的企业——我们的团队将与您联系，介绍战略合作伙伴方案。"
   },
   "Blog": {
     "metaTitle": "博客 — Cerâmica Hub",

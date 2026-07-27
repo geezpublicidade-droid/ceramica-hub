@@ -49,6 +49,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entry("/business-travel", "monthly", 0.5),
     entry("/auditorios-reunioes", "monthly", 0.5),
     entry("/imobiliarias", "weekly", 0.5),
+    entry("/parceiros", "weekly", 0.4),
+    entry("/seja-um-parceiro", "monthly", 0.4),
     ...categorySlugs.map((slug) => entry(`/categoria/${slug}`, "weekly", 0.6)),
     ...towers.map((tower) => entry(`/torres/${tower.slug}`, "weekly", 0.5)),
     ...businesses.map((business) => entry(`/empresa/${business.slug}`, "weekly", 0.6)),

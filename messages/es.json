@@ -291,6 +291,7 @@
       "businessTravel": "Business Travel",
       "auditorios": "Auditorios",
       "imobiliarias": "Inmobiliarias",
+      "sejaUmParceiro": "Sé un Socio",
       "cadastrarEmpresa": "Registrar empresa",
       "contato": "Contacto",
       "termos": "Términos de Uso",
@@ -332,6 +333,19 @@
     "intro": "Cerâmica Hub es desarrollado y mantenido por Geez Marketing. Para dudas sobre el registro, corrección de datos, solicitud de eliminación o cualquier otro asunto sobre la plataforma, ponte en contacto:",
     "emailLabel": "Correo:",
     "instagramLabel": "Instagram:"
+  },
+  "PartnersPage": {
+    "metaTitle": "Socios — Cerâmica Hub",
+    "metaDescription": "Instituciones y marcas socias de Cerâmica Hub, con autorización confirmada.",
+    "heading": "Socios",
+    "subtitle": "Instituciones y marcas que apoyan Espaço Cerâmica.",
+    "emptyState": "Ningún socio institucional activo por el momento."
+  },
+  "PartnerLeadPage": {
+    "metaTitle": "Sé un Socio — Cerâmica Hub",
+    "metaDescription": "¿Quieres destaque estratégico en Cerâmica Hub? Cuéntanos sobre tu empresa.",
+    "heading": "Sé un Socio",
+    "subtitle": "Cuéntanos un poco sobre tu empresa — nuestro equipo se pondrá en contacto sobre el plan Socio Estratégico."
   },
   "Blog": {
     "metaTitle": "Blog — Cerâmica Hub",
