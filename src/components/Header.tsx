@@ -7,9 +7,10 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { MegaMenuItem, type MegaMenuGroup } from "@/components/MegaMenu";
 import { AdSlot } from "@/components/ads/AdSlot";
 import { GlobalSearchOverlay } from "@/components/GlobalSearchOverlay";
+import { slugFromCategory } from "@/lib/category-slug";
 
 function cat(name: string) {
-  return `/preview?categoria=${encodeURIComponent(name)}#empresas`;
+  return `/categoria/${slugFromCategory(name)}`;
 }
 
 export function Header() {

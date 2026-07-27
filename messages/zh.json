@@ -304,6 +304,13 @@
     "photoAlt": "{name} 的照片",
     "metaTitle": "{name} — Cerâmica Hub"
   },
+  "CategoryPage": {
+    "metaTitle": "{category} 相关企业 — Cerâmica Hub",
+    "metaDescription": "在 Espaço Cerâmica 查找 {category} 相关企业：直接联系、WhatsApp 和优惠信息。",
+    "heading": "{category} 相关企业",
+    "subtitle": "了解 Espaço Cerâmica 内该领域的企业。",
+    "backToAll": "查看全部企业"
+  },
   "Contato": {
     "metaTitle": "联系我们 — Cerâmica Hub",
     "title": "联系平台",

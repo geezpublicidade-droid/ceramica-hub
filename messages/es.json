@@ -304,6 +304,13 @@
     "photoAlt": "Foto de {name}",
     "metaTitle": "{name} — Cerâmica Hub"
   },
+  "CategoryPage": {
+    "metaTitle": "Empresas de {category} — Cerâmica Hub",
+    "metaDescription": "Encuentra empresas de {category} en Espaço Cerâmica: contacto directo, WhatsApp y ofertas.",
+    "heading": "Empresas de {category}",
+    "subtitle": "Conoce quién trabaja en este sector dentro de Espaço Cerâmica.",
+    "backToAll": "Ver todas las empresas"
+  },
   "Contato": {
     "metaTitle": "Contacto — Cerâmica Hub",
     "title": "Habla con la plataforma",
