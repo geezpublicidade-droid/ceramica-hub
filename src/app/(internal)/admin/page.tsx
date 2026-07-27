@@ -3,6 +3,7 @@ import { requireAdminPage } from "@/lib/auth-guards";
 import { createServiceClient } from "@/lib/supabase/server";
 import { AdminBusinessRow } from "@/components/admin/AdminBusinessRow";
 import { ApprovedBusinessRow } from "@/components/admin/ApprovedBusinessRow";
+import { getAdminDashboardStats } from "@/lib/services/admin-dashboard";
 import { SignOutButton } from "@/components/nav/SignOutButton";
 import { signOut } from "@/auth";
 
@@ -43,11 +44,25 @@ async function getBusinessesByStatus(status: "pending" | "approved" | "rejected"
 export default async function AdminPage() {
   const { adminRole } = await requireAdminPage(["super_admin", "admin", "moderador"]);
 
-  const [pending, approved, rejected] = await Promise.all([
+  const [pending, approved, rejected, stats] = await Promise.all([
     getBusinessesByStatus("pending"),
     getBusinessesByStatus("approved"),
     getBusinessesByStatus("rejected"),
+    getAdminDashboardStats(),
   ]);
+
+  const statCards: { label: string; value: number }[] = [
+    { label: "Pendentes", value: pending.length },
+    { label: "Aprovadas", value: approved.length },
+    { label: "Cadastros (7 dias)", value: stats.recentSignups7d },
+    { label: "Campanhas ativas", value: stats.activeCampaigns },
+    { label: "Impressões de anúncio (30d)", value: stats.adImpressionsLast30d },
+    { label: "Cliques em anúncio (30d)", value: stats.adClicksLast30d },
+    { label: "Buscas (30d)", value: stats.searchesLast30d },
+    { label: "Oportunidades ativas", value: stats.activeOpportunities },
+    { label: "Promoções ativas", value: stats.activePromotions },
+    { label: "Perfis incompletos", value: stats.incompleteProfiles },
+  ];
 
   return (
     <main className="min-h-screen bg-background px-6 py-16">
@@ -113,6 +128,15 @@ export default async function AdminPage() {
             <SignOutButton action={logout} />
           </div>
         </div>
+
+        <section className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {statCards.map((card) => (
+            <div key={card.label} className="rounded-2xl border border-border bg-white/70 p-4">
+              <p className="text-[22px] font-semibold text-foreground">{card.value}</p>
+              <p className="mt-1 text-[13px] text-muted">{card.label}</p>
+            </div>
+          ))}
+        </section>
 
         <section className="mt-10">
           <h2 className="text-[17px] font-semibold text-foreground">
