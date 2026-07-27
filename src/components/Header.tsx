@@ -76,11 +76,11 @@ export function Header() {
 
   return (
     <header className="fixed top-0 z-50 w-full border-b border-border bg-white py-3 sm:py-4">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6">
         <Link href="/#top" className="shrink-0 text-[17px] font-semibold tracking-tight text-foreground sm:text-[20px]">
           Cerâmica <span className="text-primary">Hub</span>
         </Link>
-        <nav className="hidden items-center gap-6 lg:flex xl:gap-8">
+        <nav className="hidden items-center gap-5 lg:flex">
           {megaMenuGroups.map((group) => (
             <MegaMenuItem key={group.key} group={group} />
           ))}
