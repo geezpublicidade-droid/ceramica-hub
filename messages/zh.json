@@ -311,6 +311,12 @@
     "subtitle": "了解 Espaço Cerâmica 内该领域的企业。",
     "backToAll": "查看全部企业"
   },
+  "TowerPage": {
+    "metaTitle": "{tower} 企业 — Cerâmica Hub",
+    "metaDescription": "Espaço Cerâmica {tower} 内的企业，地址：{address}。",
+    "heading": "{tower} 企业",
+    "backToAll": "查看全部企业"
+  },
   "Contato": {
     "metaTitle": "联系我们 — Cerâmica Hub",
     "metaDescription": "如有疑问、数据更正或平台相关请求，请联系 Cerâmica Hub 团队。",

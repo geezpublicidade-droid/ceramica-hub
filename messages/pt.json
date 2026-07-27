@@ -311,6 +311,12 @@
     "subtitle": "Conheça quem atua nesse setor dentro do Espaço Cerâmica.",
     "backToAll": "Ver todas as empresas"
   },
+  "TowerPage": {
+    "metaTitle": "Empresas da {tower} — Cerâmica Hub",
+    "metaDescription": "Empresas do Espaço Cerâmica na {tower}, {address}.",
+    "heading": "Empresas da {tower}",
+    "backToAll": "Ver todas as empresas"
+  },
   "Contato": {
     "metaTitle": "Contato — Cerâmica Hub",
     "metaDescription": "Fale com a equipe do Cerâmica Hub para dúvidas, correção de dados ou solicitações sobre a plataforma.",

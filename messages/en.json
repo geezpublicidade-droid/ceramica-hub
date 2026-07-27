@@ -311,6 +311,12 @@
     "subtitle": "Meet the businesses in this sector at Espaço Cerâmica.",
     "backToAll": "See all businesses"
   },
+  "TowerPage": {
+    "metaTitle": "{tower} businesses — Cerâmica Hub",
+    "metaDescription": "Businesses at Espaço Cerâmica in {tower}, {address}.",
+    "heading": "{tower} businesses",
+    "backToAll": "See all businesses"
+  },
   "Contato": {
     "metaTitle": "Contact — Cerâmica Hub",
     "metaDescription": "Get in touch with the Cerâmica Hub team for questions, data corrections or platform requests.",
