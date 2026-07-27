@@ -4,6 +4,7 @@ import { getActiveHotels } from "@/lib/services/hotels";
 import { getActiveMeetingSpaces } from "@/lib/services/meeting-spaces";
 import { getActiveListings } from "@/lib/services/real-estate";
 import { categories } from "@/data/businesses";
+import { slugFromCategory } from "@/lib/category-slug";
 
 export type SearchResult = {
   type: "empresa" | "categoria" | "hotel" | "espaco" | "imovel" | "oportunidade" | "promocao";
@@ -11,6 +12,16 @@ export type SearchResult = {
   subtitle: string;
   href: string;
   sponsored: boolean;
+};
+
+export const SEARCH_TYPE_LABEL: Record<SearchResult["type"], string> = {
+  empresa: "Empresa",
+  categoria: "Categoria",
+  hotel: "Hotel",
+  espaco: "Auditório/Sala",
+  imovel: "Imóvel",
+  oportunidade: "Oportunidade",
+  promocao: "Promoção",
 };
 
 const PLAN_RANK: Record<string, number> = { experiencia: 3, destaque: 2, profissional: 1, presenca: 0 };
@@ -71,7 +82,7 @@ export async function searchGlobal(term: string, locale?: string): Promise<Searc
       type: "categoria",
       title: category,
       subtitle: "Categoria",
-      href: `/preview?categoria=${encodeURIComponent(category)}#empresas`,
+      href: `/categoria/${slugFromCategory(category)}`,
       sponsored: false,
       tier,
       planRank: 0,

@@ -44,6 +44,12 @@
     "sponsored": "Patrocinado",
     "openSearch": "Abrir busca"
   },
+  "SearchPage": {
+    "metaTitle": "Busca — Cerâmica Hub",
+    "heading": "Resultados para \"{term}\"",
+    "noQuery": "Digite algo pra buscar.",
+    "noResults": "Nenhum resultado encontrado para \"{term}\"."
+  },
   "ComingSoon": {
     "badge": "Espaço Cerâmica · São Caetano do Sul",
     "title": "Em breve.",

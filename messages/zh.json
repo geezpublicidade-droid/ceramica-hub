@@ -44,6 +44,12 @@
     "sponsored": "赞助",
     "openSearch": "打开搜索"
   },
+  "SearchPage": {
+    "metaTitle": "搜索 — Cerâmica Hub",
+    "heading": "\"{term}\" 的搜索结果",
+    "noQuery": "请输入搜索内容。",
+    "noResults": "未找到与\"{term}\"相关的结果。"
+  },
   "ComingSoon": {
     "badge": "Espaço Cerâmica · 圣卡耶塔诺-杜苏尔",
     "title": "敬请期待。",

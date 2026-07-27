@@ -2,19 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { logSearchPerformed } from "@/lib/actions/log-search";
-import type { SearchResult } from "@/lib/services/global-search";
-
-const TYPE_LABEL: Record<SearchResult["type"], string> = {
-  empresa: "Empresa",
-  categoria: "Categoria",
-  hotel: "Hotel",
-  espaco: "Auditório/Sala",
-  imovel: "Imóvel",
-  oportunidade: "Oportunidade",
-  promocao: "Promoção",
-};
+import { SEARCH_TYPE_LABEL, type SearchResult } from "@/lib/services/global-search";
 
 /**
  * Overlay escuro e translúcido, campo grande centralizado, foco automático,
@@ -26,6 +16,7 @@ const TYPE_LABEL: Record<SearchResult["type"], string> = {
 export function GlobalSearchOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
   const t = useTranslations("GlobalSearch");
   const locale = useLocale();
+  const router = useRouter();
   const [term, setTerm] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
@@ -92,7 +83,15 @@ export function GlobalSearchOverlay({ open, onClose }: { open: boolean; onClose:
       aria-label={t("ariaLabel")}
     >
       <div className="w-full max-w-2xl">
-        <div className="flex items-center gap-3 rounded-full bg-white px-6 py-4 shadow-2xl">
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (!term.trim()) return;
+            onClose();
+            router.push(`/busca?q=${encodeURIComponent(term.trim())}`);
+          }}
+          className="flex items-center gap-3 rounded-full bg-white px-6 py-4 shadow-2xl"
+        >
           <svg width="22" height="22" viewBox="0 0 20 20" fill="none" className="shrink-0 text-muted">
             <circle cx="9" cy="9" r="6" stroke="currentColor" strokeWidth="1.5" />
             <path d="M14 14L18 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -115,7 +114,7 @@ export function GlobalSearchOverlay({ open, onClose }: { open: boolean; onClose:
               <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
             </svg>
           </button>
-        </div>
+        </form>
 
         {term.trim() && (
           <div className="mt-3 max-h-[60vh] overflow-y-auto rounded-3xl bg-white p-2 shadow-2xl">
@@ -139,7 +138,7 @@ export function GlobalSearchOverlay({ open, onClose }: { open: boolean; onClose:
                     {result.sponsored && (
                       <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">{t("sponsored")}</span>
                     )}
-                    <span className="text-[12px] text-muted">{TYPE_LABEL[result.type]}</span>
+                    <span className="text-[12px] text-muted">{SEARCH_TYPE_LABEL[result.type]}</span>
                   </div>
                 </Link>
               ))
