@@ -2,12 +2,21 @@ import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { getActiveMeetingSpaces } from "@/lib/services/meeting-spaces";
+import { buildSocialMetadata } from "@/lib/seo";
 
 export const revalidate = 60;
 
-export async function generateMetadata() {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   const t = await getTranslations("Auditorios");
-  return { title: t("metaTitle") };
+  const title = t("metaTitle");
+  const description = t("metaDescription");
+  return {
+    title,
+    description,
+    alternates: { canonical: "/auditorios-reunioes" },
+    ...buildSocialMetadata({ title, description, locale, path: "/auditorios-reunioes" }),
+  };
 }
 
 export default async function AuditoriosReunioesPage() {

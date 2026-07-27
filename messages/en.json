@@ -313,6 +313,7 @@
   },
   "Contato": {
     "metaTitle": "Contact — Cerâmica Hub",
+    "metaDescription": "Get in touch with the Cerâmica Hub team for questions, data corrections or platform requests.",
     "title": "Talk to the platform",
     "intro": "Cerâmica Hub is developed and maintained by Geez Marketing. For questions about registration, data corrections, removal requests or anything else about the platform, get in touch:",
     "emailLabel": "Email:",
@@ -320,6 +321,7 @@
   },
   "Blog": {
     "metaTitle": "Blog — Cerâmica Hub",
+    "metaDescription": "Content and updates from Cerâmica Hub for businesses and visitors of Espaço Cerâmica.",
     "title": "Blog",
     "subtitle": "News, behind the scenes, and content about Espaço Cerâmica.",
     "empty": "No posts published yet.",
@@ -328,6 +330,7 @@
   },
   "Noticias": {
     "metaTitle": "News — Cerâmica Hub",
+    "metaDescription": "News and updates from Espaço Cerâmica and the businesses in its network.",
     "title": "São Caetano do Sul News",
     "subtitle": "Automatically curated from local outlets — always links to the original article.",
     "empty": "No news found yet.",
@@ -336,6 +339,7 @@
   },
   "BusinessTravel": {
     "metaTitle": "Business Travel — Cerâmica Hub",
+    "metaDescription": "Corporate lodging partnered with Espaço Cerâmica for business travelers.",
     "title": "Business Travel",
     "subtitle": "Corporate lodging and services for visitors passing through Espaço Cerâmica.",
     "empty": "No partner hotels registered yet.",
@@ -344,6 +348,7 @@
   },
   "Auditorios": {
     "metaTitle": "Auditoriums and Meeting Rooms — Cerâmica Hub",
+    "metaDescription": "Auditoriums and meeting rooms available for rent at Espaço Cerâmica, with each space's real capacity and features.",
     "title": "Auditoriums and meeting rooms",
     "subtitle": "Spaces for events and meetings inside Espaço Cerâmica — request information and availability.",
     "empty": "No spaces registered yet.",
@@ -352,6 +357,7 @@
   },
   "Imobiliarias": {
     "metaTitle": "Real Estate — Cerâmica Hub",
+    "metaDescription": "Rooms, corporate floors and properties for sale or rent at Espaço Cerâmica, direct from the owner.",
     "title": "Real Estate",
     "subtitle": "Sale and lease of commercial units and full floors at Espaço Cerâmica.",
     "empty": "No listings registered yet.",
@@ -365,6 +371,7 @@
   },
   "Termos": {
     "metaTitle": "Terms of Use — Cerâmica Hub",
+    "metaDescription": "Terms of use for the Cerâmica Hub platform.",
     "title": "Terms of Use",
     "paragraph1": "Cerâmica Hub is an independent platform, developed by Geez Marketing, that connects and promotes businesses located at Espaço Cerâmica. By registering or browsing the platform, you agree to these terms.",
     "paragraph2": "Business registrations go through verification before publication. The platform may refuse, suspend or remove registrations that contain incorrect or incomplete information, or that violate these terms.",
@@ -374,6 +381,7 @@
   },
   "Privacidade": {
     "metaTitle": "Privacy Policy — Cerâmica Hub",
+    "metaDescription": "Privacy policy and data handling for Cerâmica Hub.",
     "title": "Privacy Policy",
     "paragraph1": "We only collect the data needed to operate the directory: business registration information (name, contact, location, category) and basic platform usage data (such as views and contact clicks), used for the reports shown to the business itself.",
     "paragraph2": "A business's contact details (WhatsApp, Instagram, website) are displayed publicly on its business page, since that's the purpose of registering. Internal data such as passwords and verification documents are never displayed publicly.",
@@ -382,6 +390,7 @@
   },
   "PoliticaCadastro": {
     "metaTitle": "Registration and Verification Policy — Cerâmica Hub",
+    "metaDescription": "How business registration and verification works on Cerâmica Hub.",
     "title": "Registration and Verification Policy",
     "paragraph1": "Only businesses and professionals verifiably established at Espaço Cerâmica can have a member profile on Cerâmica Hub. During registration, the business provides its tower, floor and room, and may be asked for proof of operation at that address.",
     "paragraph2": "Every registration goes through review before publication. The platform may approve, request changes to, refuse, or suspend a registration that contains incorrect or incomplete information, or that fails to prove real installation at the complex. There is no guaranteed review timeframe.",
@@ -390,6 +399,7 @@
   },
   "PoliticaPublicidade": {
     "metaTitle": "Advertising Policy — Cerâmica Hub",
+    "metaDescription": "Advertising and sponsorship rules on Cerâmica Hub.",
     "title": "Advertising Policy",
     "paragraph1": "Cerâmica Hub may display paid content from businesses external to Espaço Cerâmica, in the form of advertising, sponsorship or campaigns. All paid content is clearly labeled as \"Sponsored\".",
     "paragraph2": "Paid advertising does not grant member status or any indication that the advertiser is physically established at the complex — this distinction is always preserved, regardless of the amount invested.",
@@ -398,6 +408,7 @@
   },
   "PoliticaCancelamento": {
     "metaTitle": "Cancellation Policy — Cerâmica Hub",
+    "metaDescription": "Cancellation policy for Cerâmica Hub plans and subscriptions.",
     "title": "Cancellation Policy",
     "paragraph1": "A business may cancel a paid plan at any time. Cancellation stops renewal — paid plan features remain available until the end of the already-paid period, after which the business automatically returns to the free plan.",
     "paragraph2": "Cancellation does not delete the business's profile: the registration and history continue to exist, just with free-plan features.",

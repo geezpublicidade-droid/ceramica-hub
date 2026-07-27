@@ -1,10 +1,19 @@
 import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
+import { buildSocialMetadata } from "@/lib/seo";
 
-export async function generateMetadata() {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   const t = await getTranslations("Contato");
-  return { title: t("metaTitle") };
+  const title = t("metaTitle");
+  const description = t("metaDescription");
+  return {
+    title,
+    description,
+    alternates: { canonical: "/contato" },
+    ...buildSocialMetadata({ title, description, locale, path: "/contato" }),
+  };
 }
 
 export default async function ContatoPage() {

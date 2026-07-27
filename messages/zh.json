@@ -313,6 +313,7 @@
   },
   "Contato": {
     "metaTitle": "联系我们 — Cerâmica Hub",
+    "metaDescription": "如有疑问、数据更正或平台相关请求，请联系 Cerâmica Hub 团队。",
     "title": "联系平台",
     "intro": "Cerâmica Hub 由 Geez Marketing 开发与维护。如对登记信息、数据更正、删除请求或平台其他事宜有任何疑问,请通过以下方式联系我们:",
     "emailLabel": "电子邮箱:",
@@ -320,6 +321,7 @@
   },
   "Blog": {
     "metaTitle": "博客 — Cerâmica Hub",
+    "metaDescription": "面向 Espaço Cerâmica 企业与访客的 Cerâmica Hub 资讯内容。",
     "title": "博客",
     "subtitle": "关于 Espaço Cerâmica 的新闻、幕后故事和内容。",
     "empty": "暂无已发布的文章。",
@@ -328,6 +330,7 @@
   },
   "Noticias": {
     "metaTitle": "新闻 — Cerâmica Hub",
+    "metaDescription": "Espaço Cerâmica 及其网络内企业的最新消息。",
     "title": "圣卡埃塔诺-杜苏尔新闻",
     "subtitle": "自动从本地媒体精选 — 始终链接到原文。",
     "empty": "暂无新闻。",
@@ -336,6 +339,7 @@
   },
   "BusinessTravel": {
     "metaTitle": "商务差旅 — Cerâmica Hub",
+    "metaDescription": "Espaço Cerâmica 合作的商务差旅住宿选择。",
     "title": "商务差旅",
     "subtitle": "为途经 Espaço Cerâmica 的访客提供的商务住宿和服务。",
     "empty": "暂无合作酒店。",
@@ -344,6 +348,7 @@
   },
   "Auditorios": {
     "metaTitle": "礼堂与会议室 — Cerâmica Hub",
+    "metaDescription": "Espaço Cerâmica 内可租用的礼堂与会议室，展示各空间的真实容纳人数与设施。",
     "title": "礼堂与会议室",
     "subtitle": "Espaço Cerâmica 内的活动与会议空间 — 请咨询信息与可用情况。",
     "empty": "暂无已登记的空间。",
@@ -352,6 +357,7 @@
   },
   "Imobiliarias": {
     "metaTitle": "房地产 — Cerâmica Hub",
+    "metaDescription": "Espaço Cerâmica 的商务空间、整层办公室及待售/待租房产，直接联系业主。",
     "title": "房地产",
     "subtitle": "Espaço Cerâmica 内商业单元及整层楼面的买卖与租赁。",
     "empty": "暂无已登记的房源。",
@@ -365,6 +371,7 @@
   },
   "Termos": {
     "metaTitle": "使用条款 — Cerâmica Hub",
+    "metaDescription": "Cerâmica Hub 平台使用条款。",
     "title": "使用条款",
     "paragraph1": "Cerâmica Hub 是由 Geez Marketing 开发的独立平台,旨在连接并推广位于 Espaço Cerâmica 的企业。注册或浏览本平台即表示您同意本条款。",
     "paragraph2": "企业登记信息在发布前需经过审核。如登记信息有误、不完整或违反本条款,平台有权拒绝、暂停或删除相关登记。",
@@ -374,6 +381,7 @@
   },
   "Privacidade": {
     "metaTitle": "隐私政策 — Cerâmica Hub",
+    "metaDescription": "Cerâmica Hub 的隐私政策与数据处理方式。",
     "title": "隐私政策",
     "paragraph1": "我们仅收集运营本目录所需的数据:企业登记信息(名称、联系方式、位置、行业分类)以及基础平台使用数据(如浏览量和联系点击量),用于向企业本身展示相关报告。",
     "paragraph2": "企业的联系方式(WhatsApp、Instagram、网站)会在其商业主页中公开展示,这正是登记的目的所在。密码及验证凭证等内部数据绝不会公开展示。",
@@ -382,6 +390,7 @@
   },
   "PoliticaCadastro": {
     "metaTitle": "登记与认证政策 — Cerâmica Hub",
+    "metaDescription": "Cerâmica Hub 企业登记与认证流程说明。",
     "title": "登记与认证政策",
     "paragraph1": "只有确实入驻 Espaço Cerâmica 的企业和专业人士才能在 Cerâmica Hub 拥有会员主页。登记时,企业需提供所在大厦、楼层与房间号,平台可能要求提供该地址的经营证明。",
     "paragraph2": "所有登记信息在发布前均需经过审核。如登记信息有误、不完整,或未能证明在园区内的实际入驻情况,平台有权批准、要求修改、拒绝或暂停该登记。审核不保证在固定时限内完成。",
@@ -390,6 +399,7 @@
   },
   "PoliticaPublicidade": {
     "metaTitle": "广告政策 — Cerâmica Hub",
+    "metaDescription": "Cerâmica Hub 的广告与赞助规则。",
     "title": "广告政策",
     "paragraph1": "Cerâmica Hub 可能展示来自 Espaço Cerâmica 以外企业的付费内容,包括广告、赞助或推广活动。所有付费内容均会明确标注为“赞助内容”。",
     "paragraph2": "付费广告不授予会员身份,也不表明广告主实际入驻园区 —— 无论投入金额多少,这一区分始终保持不变。",
@@ -398,6 +408,7 @@
   },
   "PoliticaCancelamento": {
     "metaTitle": "取消政策 — Cerâmica Hub",
+    "metaDescription": "Cerâmica Hub 套餐与订阅的取消政策。",
     "title": "取消政策",
     "paragraph1": "企业可随时取消付费套餐。取消操作将停止续费 —— 已付费周期内套餐功能仍可正常使用,周期结束后企业将自动转为免费套餐。",
     "paragraph2": "取消套餐不会删除企业主页:登记信息与历史记录将继续保留,仅套餐功能变为免费版。",

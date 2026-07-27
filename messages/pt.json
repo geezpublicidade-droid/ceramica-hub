@@ -313,6 +313,7 @@
   },
   "Contato": {
     "metaTitle": "Contato — Cerâmica Hub",
+    "metaDescription": "Fale com a equipe do Cerâmica Hub para dúvidas, correção de dados ou solicitações sobre a plataforma.",
     "title": "Fale com a plataforma",
     "intro": "O Cerâmica Hub é desenvolvido e mantido pela Geez Marketing. Para dúvidas sobre cadastro, correção de dados, solicitação de remoção ou qualquer outro assunto sobre a plataforma, entre em contato:",
     "emailLabel": "E-mail:",
@@ -320,6 +321,7 @@
   },
   "Blog": {
     "metaTitle": "Blog — Cerâmica Hub",
+    "metaDescription": "Conteúdo e novidades do Cerâmica Hub para empresas e visitantes do Espaço Cerâmica.",
     "title": "Blog",
     "subtitle": "Novidades, bastidores e conteúdo sobre o Espaço Cerâmica.",
     "empty": "Nenhum post publicado ainda.",
@@ -328,6 +330,7 @@
   },
   "Noticias": {
     "metaTitle": "Notícias — Cerâmica Hub",
+    "metaDescription": "Notícias e novidades do Espaço Cerâmica e das empresas que fazem parte da rede.",
     "title": "Notícias de São Caetano do Sul",
     "subtitle": "Selecionado automaticamente de veículos locais — sempre com link pra matéria original.",
     "empty": "Nenhuma notícia encontrada ainda.",
@@ -336,6 +339,7 @@
   },
   "BusinessTravel": {
     "metaTitle": "Business Travel — Cerâmica Hub",
+    "metaDescription": "Hospedagem corporativa parceira do Espaço Cerâmica para quem viaja a negócios.",
     "title": "Business Travel",
     "subtitle": "Hospedagem corporativa e serviços para quem está de passagem pelo Espaço Cerâmica.",
     "empty": "Nenhum hotel parceiro cadastrado ainda.",
@@ -344,6 +348,7 @@
   },
   "Auditorios": {
     "metaTitle": "Auditórios e Salas de Reunião — Cerâmica Hub",
+    "metaDescription": "Auditórios e salas de reunião disponíveis para locação no Espaço Cerâmica, com capacidade e recursos reais de cada espaço.",
     "title": "Auditórios e salas de reunião",
     "subtitle": "Espaços para eventos e reuniões dentro do Espaço Cerâmica — solicite informações e disponibilidade.",
     "empty": "Nenhum espaço cadastrado ainda.",
@@ -352,6 +357,7 @@
   },
   "Imobiliarias": {
     "metaTitle": "Imobiliárias — Cerâmica Hub",
+    "metaDescription": "Salas, lajes corporativas e imóveis à venda ou locação no Espaço Cerâmica, direto com o proprietário.",
     "title": "Imobiliárias",
     "subtitle": "Venda e locação de salas comerciais e lajes inteiras no Espaço Cerâmica.",
     "empty": "Nenhum imóvel cadastrado ainda.",
@@ -365,6 +371,7 @@
   },
   "Termos": {
     "metaTitle": "Termos de Uso — Cerâmica Hub",
+    "metaDescription": "Termos de uso da plataforma Cerâmica Hub.",
     "title": "Termos de Uso",
     "paragraph1": "O Cerâmica Hub é uma plataforma independente, desenvolvida pela Geez Marketing, que conecta e divulga empresas localizadas no Espaço Cerâmica. Ao se cadastrar ou navegar pela plataforma, você concorda com estes termos.",
     "paragraph2": "O cadastro de empresas passa por verificação antes da publicação. A plataforma pode recusar, suspender ou remover cadastros que contenham informações incorretas, incompletas ou que violem estes termos.",
@@ -374,6 +381,7 @@
   },
   "Privacidade": {
     "metaTitle": "Política de Privacidade — Cerâmica Hub",
+    "metaDescription": "Política de privacidade e tratamento de dados do Cerâmica Hub.",
     "title": "Política de Privacidade",
     "paragraph1": "Coletamos apenas os dados necessários para operar o diretório: informações de cadastro da empresa (nome, contato, localização, categoria) e dados básicos de uso da plataforma (como visualizações e cliques em contato), usados para os relatórios mostrados à própria empresa.",
     "paragraph2": "Os dados de contato de uma empresa (WhatsApp, Instagram, site) são exibidos publicamente na página comercial, pois esse é o propósito do cadastro. Dados internos como senha e comprovantes de verificação nunca são exibidos publicamente.",
@@ -382,6 +390,7 @@
   },
   "PoliticaCadastro": {
     "metaTitle": "Política de Cadastro e Verificação — Cerâmica Hub",
+    "metaDescription": "Como funciona o cadastro e a verificação de empresas no Cerâmica Hub.",
     "title": "Política de Cadastro e Verificação",
     "paragraph1": "Somente empresas e profissionais comprovadamente instalados no Espaço Cerâmica podem ter perfil de membro no Cerâmica Hub. No cadastro, a empresa informa torre, andar e sala, e pode ser solicitado um comprovante de funcionamento no endereço.",
     "paragraph2": "Todo cadastro passa por revisão antes de ser publicado. A plataforma pode aprovar, solicitar ajustes, recusar ou suspender um cadastro que contenha informações incorretas, incompletas, ou que não comprove instalação real no complexo. Não há prazo garantido de análise.",
@@ -390,6 +399,7 @@
   },
   "PoliticaPublicidade": {
     "metaTitle": "Política de Publicidade — Cerâmica Hub",
+    "metaDescription": "Regras de publicidade e patrocínio no Cerâmica Hub.",
     "title": "Política de Publicidade",
     "paragraph1": "O Cerâmica Hub pode veicular conteúdo pago de empresas externas ao Espaço Cerâmica, na forma de publicidade, patrocínio ou campanhas. Todo conteúdo pago é identificado claramente como \"Patrocinado\".",
     "paragraph2": "Publicidade paga não confere selo de membro nem qualquer indicação de que o anunciante está fisicamente instalado no complexo — essa distinção é sempre preservada, independentemente do valor investido.",
@@ -398,6 +408,7 @@
   },
   "PoliticaCancelamento": {
     "metaTitle": "Política de Cancelamento — Cerâmica Hub",
+    "metaDescription": "Política de cancelamento de planos e assinaturas do Cerâmica Hub.",
     "title": "Política de Cancelamento",
     "paragraph1": "Uma empresa pode cancelar um plano pago a qualquer momento. O cancelamento interrompe a renovação — os recursos do plano pago continuam disponíveis até o fim do período já pago, e depois disso a empresa volta automaticamente ao plano gratuito.",
     "paragraph2": "O cancelamento não exclui o perfil da empresa: o cadastro e o histórico continuam existindo, apenas com os recursos do plano gratuito.",

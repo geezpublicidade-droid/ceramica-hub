@@ -4,12 +4,21 @@ import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { RealEstateListingsGrid } from "@/components/RealEstateListingsGrid";
 import { getActiveListings } from "@/lib/services/real-estate";
+import { buildSocialMetadata } from "@/lib/seo";
 
 export const revalidate = 60;
 
-export async function generateMetadata() {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   const t = await getTranslations("Imobiliarias");
-  return { title: t("metaTitle") };
+  const title = t("metaTitle");
+  const description = t("metaDescription");
+  return {
+    title,
+    description,
+    alternates: { canonical: "/imobiliarias" },
+    ...buildSocialMetadata({ title, description, locale, path: "/imobiliarias" }),
+  };
 }
 
 export default async function ImobiliariasPage() {

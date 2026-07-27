@@ -313,6 +313,7 @@
   },
   "Contato": {
     "metaTitle": "Contacto — Cerâmica Hub",
+    "metaDescription": "Contacta al equipo de Cerâmica Hub para dudas, corrección de datos o solicitudes sobre la plataforma.",
     "title": "Habla con la plataforma",
     "intro": "Cerâmica Hub es desarrollado y mantenido por Geez Marketing. Para dudas sobre el registro, corrección de datos, solicitud de eliminación o cualquier otro asunto sobre la plataforma, ponte en contacto:",
     "emailLabel": "Correo:",
@@ -320,6 +321,7 @@
   },
   "Blog": {
     "metaTitle": "Blog — Cerâmica Hub",
+    "metaDescription": "Contenido y novedades de Cerâmica Hub para empresas y visitantes de Espaço Cerâmica.",
     "title": "Blog",
     "subtitle": "Novedades, detrás de escena y contenido sobre Espaço Cerâmica.",
     "empty": "Aún no hay posts publicados.",
@@ -328,6 +330,7 @@
   },
   "Noticias": {
     "metaTitle": "Noticias — Cerâmica Hub",
+    "metaDescription": "Noticias y novedades de Espaço Cerâmica y de las empresas que forman parte de la red.",
     "title": "Noticias de São Caetano do Sul",
     "subtitle": "Seleccionado automáticamente de medios locales — siempre con enlace a la nota original.",
     "empty": "Aún no hay noticias.",
@@ -336,6 +339,7 @@
   },
   "BusinessTravel": {
     "metaTitle": "Business Travel — Cerâmica Hub",
+    "metaDescription": "Hospedaje corporativo asociado a Espaço Cerâmica para quienes viajan por negocios.",
     "title": "Business Travel",
     "subtitle": "Hospedaje corporativo y servicios para quien está de paso por Espaço Cerâmica.",
     "empty": "Aún no hay hoteles asociados registrados.",
@@ -344,6 +348,7 @@
   },
   "Auditorios": {
     "metaTitle": "Auditorios y Salas de Reunión — Cerâmica Hub",
+    "metaDescription": "Auditorios y salas de reunión disponibles para alquiler en Espaço Cerâmica, con capacidad y recursos reales de cada espacio.",
     "title": "Auditorios y salas de reunión",
     "subtitle": "Espacios para eventos y reuniones dentro de Espaço Cerâmica — solicite información y disponibilidad.",
     "empty": "Aún no hay espacios registrados.",
@@ -352,6 +357,7 @@
   },
   "Imobiliarias": {
     "metaTitle": "Inmobiliarias — Cerâmica Hub",
+    "metaDescription": "Salas, plantas corporativas e inmuebles en venta o alquiler en Espaço Cerâmica, directo con el propietario.",
     "title": "Inmobiliarias",
     "subtitle": "Venta y alquiler de salas comerciales y plantas completas en Espaço Cerâmica.",
     "empty": "Aún no hay inmuebles registrados.",
@@ -365,6 +371,7 @@
   },
   "Termos": {
     "metaTitle": "Términos de Uso — Cerâmica Hub",
+    "metaDescription": "Términos de uso de la plataforma Cerâmica Hub.",
     "title": "Términos de Uso",
     "paragraph1": "Cerâmica Hub es una plataforma independiente, desarrollada por Geez Marketing, que conecta y promueve empresas ubicadas en Espaço Cerâmica. Al registrarte o navegar por la plataforma, aceptas estos términos.",
     "paragraph2": "El registro de empresas pasa por una verificación antes de la publicación. La plataforma puede rechazar, suspender o eliminar registros que contengan información incorrecta, incompleta o que infrinjan estos términos.",
@@ -374,6 +381,7 @@
   },
   "Privacidade": {
     "metaTitle": "Política de Privacidad — Cerâmica Hub",
+    "metaDescription": "Política de privacidad y tratamiento de datos de Cerâmica Hub.",
     "title": "Política de Privacidad",
     "paragraph1": "Solo recopilamos los datos necesarios para operar el directorio: información de registro de la empresa (nombre, contacto, ubicación, categoría) y datos básicos de uso de la plataforma (como visualizaciones y clics de contacto), usados para los informes que se muestran a la propia empresa.",
     "paragraph2": "Los datos de contacto de una empresa (WhatsApp, Instagram, sitio web) se muestran públicamente en la página comercial, ya que ese es el propósito del registro. Los datos internos, como contraseñas y comprobantes de verificación, nunca se muestran públicamente.",
@@ -382,6 +390,7 @@
   },
   "PoliticaCadastro": {
     "metaTitle": "Política de Registro y Verificación — Cerâmica Hub",
+    "metaDescription": "Cómo funciona el registro y la verificación de empresas en Cerâmica Hub.",
     "title": "Política de Registro y Verificación",
     "paragraph1": "Solo las empresas y profesionales comprobadamente instalados en Espaço Cerâmica pueden tener un perfil de miembro en Cerâmica Hub. Durante el registro, la empresa indica su torre, piso y sala, y puede solicitársele un comprobante de funcionamiento en esa dirección.",
     "paragraph2": "Todo registro pasa por una revisión antes de publicarse. La plataforma puede aprobar, solicitar ajustes, rechazar o suspender un registro que contenga información incorrecta, incompleta, o que no compruebe una instalación real en el complejo. No hay un plazo garantizado de revisión.",
@@ -390,6 +399,7 @@
   },
   "PoliticaPublicidade": {
     "metaTitle": "Política de Publicidad — Cerâmica Hub",
+    "metaDescription": "Reglas de publicidad y patrocinio en Cerâmica Hub.",
     "title": "Política de Publicidad",
     "paragraph1": "Cerâmica Hub puede mostrar contenido pago de empresas externas a Espaço Cerâmica, en forma de publicidad, patrocinio o campañas. Todo contenido pago se identifica claramente como \"Patrocinado\".",
     "paragraph2": "La publicidad paga no otorga estatus de miembro ni ninguna indicación de que el anunciante esté físicamente instalado en el complejo — esta distinción se mantiene siempre, sin importar el monto invertido.",
@@ -398,6 +408,7 @@
   },
   "PoliticaCancelamento": {
     "metaTitle": "Política de Cancelación — Cerâmica Hub",
+    "metaDescription": "Política de cancelación de planes y suscripciones de Cerâmica Hub.",
     "title": "Política de Cancelación",
     "paragraph1": "Una empresa puede cancelar un plan pago en cualquier momento. La cancelación detiene la renovación — los recursos del plan pago siguen disponibles hasta el final del período ya pagado, y después de eso la empresa vuelve automáticamente al plan gratuito.",
     "paragraph2": "La cancelación no elimina el perfil de la empresa: el registro y el historial siguen existiendo, solo con los recursos del plan gratuito.",

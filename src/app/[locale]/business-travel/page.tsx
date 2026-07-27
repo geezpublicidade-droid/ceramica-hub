@@ -2,12 +2,21 @@ import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { getActiveHotels } from "@/lib/services/hotels";
+import { buildSocialMetadata } from "@/lib/seo";
 
 export const revalidate = 60;
 
-export async function generateMetadata() {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   const t = await getTranslations("BusinessTravel");
-  return { title: t("metaTitle") };
+  const title = t("metaTitle");
+  const description = t("metaDescription");
+  return {
+    title,
+    description,
+    alternates: { canonical: "/business-travel" },
+    ...buildSocialMetadata({ title, description, locale, path: "/business-travel" }),
+  };
 }
 
 export default async function BusinessTravelPage() {

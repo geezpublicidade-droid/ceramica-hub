@@ -2,12 +2,21 @@ import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { getRecentNews } from "@/lib/services/news";
+import { buildSocialMetadata } from "@/lib/seo";
 
 export const revalidate = 1800;
 
-export async function generateMetadata() {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   const t = await getTranslations("Noticias");
-  return { title: t("metaTitle") };
+  const title = t("metaTitle");
+  const description = t("metaDescription");
+  return {
+    title,
+    description,
+    alternates: { canonical: "/noticias" },
+    ...buildSocialMetadata({ title, description, locale, path: "/noticias" }),
+  };
 }
 
 function timeAgo(iso: string | null): string | null {

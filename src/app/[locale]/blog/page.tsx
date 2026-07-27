@@ -3,12 +3,21 @@ import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { getPublishedPosts } from "@/lib/services/blog";
+import { buildSocialMetadata } from "@/lib/seo";
 
 export const revalidate = 60;
 
-export async function generateMetadata() {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   const t = await getTranslations("Blog");
-  return { title: t("metaTitle") };
+  const title = t("metaTitle");
+  const description = t("metaDescription");
+  return {
+    title,
+    description,
+    alternates: { canonical: "/blog" },
+    ...buildSocialMetadata({ title, description, locale, path: "/blog" }),
+  };
 }
 
 export default async function BlogPage({ params }: { params: Promise<{ locale: string }> }) {
