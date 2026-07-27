@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
@@ -36,7 +37,9 @@ export default async function ImobiliariasPage() {
           {listings.length === 0 ? (
             <p className="mt-14 text-[16px] text-muted">{t("empty")}</p>
           ) : (
-            <RealEstateListingsGrid listings={listings} labels={labels} />
+            <Suspense fallback={null}>
+              <RealEstateListingsGrid listings={listings} labels={labels} />
+            </Suspense>
           )}
         </div>
       </main>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { categories, type Business } from "@/data/businesses";
@@ -17,7 +18,10 @@ export function Directory({ businesses }: DirectoryProps) {
   const t = useTranslations("Directory");
   const tCategories = useTranslations("categories");
   const tCommon = useTranslations("Common");
-  const [active, setActive] = useState<string>("Todas");
+  const searchParams = useSearchParams();
+  const categoriaParam = searchParams.get("categoria");
+  const initialCategory = categoriaParam && (categories as readonly string[]).includes(categoriaParam) ? categoriaParam : "Todas";
+  const [active, setActive] = useState<string>(initialCategory);
   const { query, setQuery } = useSearch();
 
   const filtered = useMemo(() => {

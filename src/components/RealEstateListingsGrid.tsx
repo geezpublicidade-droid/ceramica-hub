@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import type { RealEstateListing } from "@/lib/services/real-estate";
 
 type Labels = {
@@ -20,7 +21,10 @@ const AVAILABILITY_LABEL_KEY: Record<RealEstateListing["availabilityStatus"], ke
 };
 
 export function RealEstateListingsGrid({ listings, labels }: { listings: RealEstateListing[]; labels: Labels }) {
-  const [filter, setFilter] = useState<"todos" | "venda" | "locacao">("todos");
+  const searchParams = useSearchParams();
+  const tipoParam = searchParams.get("tipo");
+  const initialFilter = tipoParam === "venda" || tipoParam === "locacao" ? tipoParam : "todos";
+  const [filter, setFilter] = useState<"todos" | "venda" | "locacao">(initialFilter);
 
   const filtered = useMemo(
     () => (filter === "todos" ? listings : listings.filter((l) => l.listingType === filter)),

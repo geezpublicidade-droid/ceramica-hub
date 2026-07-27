@@ -4,17 +4,63 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { MegaMenuItem, type MegaMenuGroup } from "@/components/MegaMenu";
+import { AdSlot } from "@/components/ads/AdSlot";
+
+function cat(name: string) {
+  return `/preview?categoria=${encodeURIComponent(name)}#empresas`;
+}
 
 export function Header() {
   const t = useTranslations("Header");
-  const links = [
-    { href: "/#empresas", label: t("navEmpresas") },
-    { href: "/#oportunidades", label: t("navOportunidades") },
-    { href: "/#beneficios", label: t("navBeneficios") },
-    { href: "/#planos", label: t("navPlanos") },
+  const tCategories = useTranslations("categories");
+
+  const megaMenuGroups: MegaMenuGroup[] = [
+    {
+      key: "corporate",
+      label: t("navCorporate"),
+      columns: [
+        { label: tCategories("Contabilidade & Jurídico"), href: cat("Contabilidade & Jurídico") },
+        { label: tCategories("Tecnologia & Marketing"), href: cat("Tecnologia & Marketing") },
+        { label: tCategories("Design & Arquitetura"), href: cat("Design & Arquitetura") },
+        { label: tCategories("Educação"), href: cat("Educação") },
+      ],
+      editorial: <AdSlot placementKey="mega_menu_corporate" />,
+    },
+    {
+      key: "lifestyle",
+      label: t("navLifestyle"),
+      columns: [
+        { label: tCategories("Alimentação"), href: cat("Alimentação") },
+        { label: tCategories("Saúde & Estética"), href: cat("Saúde & Estética") },
+        { label: tCategories("Moda & Beleza"), href: cat("Moda & Beleza") },
+      ],
+    },
+    {
+      key: "hoteis",
+      label: t("navHoteisEventos"),
+      columns: [
+        { label: t("catHospedagemCorporativa"), href: "/business-travel" },
+        { label: t("catAuditorios"), href: "/auditorios-reunioes" },
+        { label: t("catBusinessTravel"), href: "/business-travel" },
+      ],
+    },
+    {
+      key: "imobiliarias",
+      label: t("navImobiliarias"),
+      columns: [
+        { label: t("catLocacaoComercial"), href: "/imobiliarias?tipo=locacao" },
+        { label: t("catVendaLajes"), href: "/imobiliarias?tipo=venda" },
+        { label: t("catSalasDisponiveis"), href: "/imobiliarias" },
+      ],
+    },
+  ];
+
+  const secondaryLinks = [
     { href: "/blog", label: t("navBlog") },
     { href: "/noticias", label: t("navNoticias") },
   ];
+
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -29,9 +75,12 @@ export function Header() {
         <Link href="/#top" className="shrink-0 text-[17px] font-semibold tracking-tight text-foreground sm:text-[20px]">
           Cerâmica <span className="text-primary">Hub</span>
         </Link>
-        <nav className="hidden gap-7 text-[15px] font-medium text-muted lg:flex xl:gap-9 xl:text-[16px]">
-          {links.map((link) => (
-            <Link key={link.href} href={link.href} className="whitespace-nowrap transition-colors hover:text-foreground">
+        <nav className="hidden items-center gap-6 lg:flex xl:gap-8">
+          {megaMenuGroups.map((group) => (
+            <MegaMenuItem key={group.key} group={group} />
+          ))}
+          {secondaryLinks.map((link) => (
+            <Link key={link.href} href={link.href} className="whitespace-nowrap text-[15px] font-medium text-muted transition-colors hover:text-foreground xl:text-[16px]">
               {link.label}
             </Link>
           ))}
@@ -71,8 +120,23 @@ export function Header() {
       </div>
 
       {menuOpen && (
-        <nav className="mx-6 mt-3 flex flex-col gap-1 rounded-2xl border border-border bg-white p-3 text-[16px] lg:hidden">
-          {links.map((link) => (
+        <nav className="mx-6 mt-3 flex max-h-[70vh] flex-col gap-1 overflow-y-auto rounded-2xl border border-border bg-white p-3 text-[16px] lg:hidden">
+          {megaMenuGroups.map((group) => (
+            <div key={group.key} className="border-b border-border pb-2 last:border-0">
+              <p className="px-3 pt-2 text-[13px] font-semibold uppercase tracking-wide text-muted">{group.label}</p>
+              {group.columns.map((link) => (
+                <Link
+                  key={link.href + link.label}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="block rounded-xl px-3 py-2.5 text-foreground transition-colors hover:bg-black/5"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          ))}
+          {secondaryLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}

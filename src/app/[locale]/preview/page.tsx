@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Header } from "@/components/Header";
 import { NetworkNarrative } from "@/components/landing/NetworkNarrative";
 import { ScaleSequence } from "@/components/landing/ScaleSequence";
@@ -60,7 +61,9 @@ export default async function Preview({ params }: { params: Promise<{ locale: st
           <div className="py-6">
             <AdSlot placementKey="diretorio_topo" />
           </div>
-          <Directory businesses={allBusinesses} />
+          <Suspense fallback={null}>
+            <Directory businesses={allBusinesses} />
+          </Suspense>
           <OpportunityNetwork opportunities={opportunities} />
           <LocalBenefits benefits={benefits} />
           <CollectiveMovement />
