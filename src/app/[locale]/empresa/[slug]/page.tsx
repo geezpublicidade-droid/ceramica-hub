@@ -7,7 +7,7 @@ import { BusinessAvatar } from "@/components/BusinessAvatar";
 import { VirtualTourViewer } from "@/components/VirtualTourViewer";
 import { Link, redirect } from "@/i18n/navigation";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
-import { routing } from "@/i18n/routing";
+import { localizedUrl, buildSocialMetadata } from "@/lib/seo";
 import {
   getAllBusinesses,
   getBusinessById,
@@ -22,13 +22,6 @@ import {
   UUID_RE,
 } from "@/lib/services/platform";
 import { WhatsAppLink } from "@/components/WhatsAppLink";
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-
-function localizedUrl(locale: string, path: string): string {
-  const prefix = locale === routing.defaultLocale ? "" : `/${locale}`;
-  return `${siteUrl}${prefix}${path}`;
-}
 
 type PageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -64,7 +57,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title,
     description,
     alternates: { canonical: `/empresa/${business.slug}` },
-    openGraph: { title, description, type: "profile" },
+    ...buildSocialMetadata({
+      title,
+      description,
+      locale,
+      path: `/empresa/${business.slug}`,
+      type: "profile",
+      image: business.coverPhoto ?? business.logo,
+    }),
   };
 }
 

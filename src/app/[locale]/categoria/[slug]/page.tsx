@@ -9,14 +9,7 @@ import { Link } from "@/i18n/navigation";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { getAllBusinesses } from "@/lib/services/platform";
 import { categorySlugs, categoryFromSlug } from "@/lib/category-slug";
-import { routing } from "@/i18n/routing";
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-
-function localizedUrl(locale: string, path: string): string {
-  const prefix = locale === routing.defaultLocale ? "" : `/${locale}`;
-  return `${siteUrl}${prefix}${path}`;
-}
+import { localizedUrl, buildSocialMetadata } from "@/lib/seo";
 
 type PageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -45,7 +38,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title,
     description,
     alternates: { canonical: `/categoria/${slug}` },
-    openGraph: { title, description, type: "website" },
+    ...buildSocialMetadata({ title, description, locale, path: `/categoria/${slug}`, type: "website" }),
   };
 }
 

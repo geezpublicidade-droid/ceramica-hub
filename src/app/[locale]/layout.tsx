@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Geist, Geist_Mono, Alexandria } from "next/font/google";
 import { routing } from "@/i18n/routing";
+import { siteUrl, buildSocialMetadata } from "@/lib/seo";
 import "../globals.css";
 
 const geistSans = Geist({
@@ -23,15 +24,6 @@ const alexandria = Alexandria({
   variable: "--font-alexandria",
   subsets: ["latin"],
 });
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-
-const OG_LOCALE: Record<string, string> = {
-  pt: "pt_BR",
-  en: "en_US",
-  es: "es_ES",
-  zh: "zh_CN",
-};
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -52,19 +44,7 @@ export async function generateMetadata({
     title,
     description,
     alternates: { canonical: locale === routing.defaultLocale ? "/" : `/${locale}` },
-    openGraph: {
-      title,
-      description,
-      url: siteUrl,
-      siteName: "Cerâmica Hub",
-      locale: OG_LOCALE[locale] ?? "pt_BR",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
+    ...buildSocialMetadata({ title, description, locale, path: "/", type: "website" }),
   };
 }
 

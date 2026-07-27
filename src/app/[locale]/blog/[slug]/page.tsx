@@ -4,13 +4,31 @@ import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { getPublishedPostBySlug } from "@/lib/services/blog";
+import { buildSocialMetadata } from "@/lib/seo";
 
 export const revalidate = 60;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string; locale: string }> }) {
   const { slug, locale } = await params;
   const post = await getPublishedPostBySlug(slug, locale);
-  return { title: post ? `${post.title} — Cerâmica Hub` : "Post não encontrado — Cerâmica Hub" };
+  if (!post) return { title: "Post não encontrado — Cerâmica Hub" };
+
+  const title = `${post.title} — Cerâmica Hub`;
+  const description = post.excerpt;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `/blog/${post.slug}` },
+    ...buildSocialMetadata({
+      title,
+      description,
+      locale,
+      path: `/blog/${post.slug}`,
+      type: "article",
+      image: post.coverImageUrl,
+    }),
+  };
 }
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string; locale: string }> }) {
