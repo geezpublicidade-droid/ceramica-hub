@@ -6,7 +6,8 @@
   "Common": {
     "verified": "Verified",
     "whatsapp": "Chat on WhatsApp",
-    "legalPlaceholderNotice": "Placeholder text — legal review pending before launch."
+    "legalPlaceholderNotice": "Placeholder text — legal review pending before launch.",
+    "home": "Home"
   },
   "Header": {
     "navEmpresas": "Businesses",

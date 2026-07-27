@@ -7,6 +7,7 @@ import { BusinessAvatar } from "@/components/BusinessAvatar";
 import { VirtualTourViewer } from "@/components/VirtualTourViewer";
 import { Link, redirect } from "@/i18n/navigation";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
+import { routing } from "@/i18n/routing";
 import {
   getAllBusinesses,
   getBusinessById,
@@ -21,6 +22,13 @@ import {
   UUID_RE,
 } from "@/lib/services/platform";
 import { WhatsAppLink } from "@/components/WhatsAppLink";
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
+function localizedUrl(locale: string, path: string): string {
+  const prefix = locale === routing.defaultLocale ? "" : `/${locale}`;
+  return `${siteUrl}${prefix}${path}`;
+}
 
 type PageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -96,8 +104,48 @@ export default async function BusinessProfilePage({ params }: PageProps) {
 
   await logMetricEvent("commercial_page_viewed", business.id);
 
+  const canonicalUrl = localizedUrl(locale, `/empresa/${business.slug}`);
+  const categoryLabel = tCategories(business.category);
+
+  const businessJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: business.name,
+    description: business.description,
+    url: canonicalUrl,
+    ...(business.phone ? { telephone: business.phone } : {}),
+    ...(business.coverPhoto || business.logo
+      ? { image: business.coverPhoto ?? business.logo }
+      : {}),
+    ...(business.instagram ? { sameAs: [instagramUrl(business.instagram)] } : {}),
+    ...(business.openingHours ? { openingHours: business.openingHours } : {}),
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: tCommon("home"), item: localizedUrl(locale, "/") },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: categoryLabel,
+        item: localizedUrl(locale, `/preview?categoria=${encodeURIComponent(business.category)}`),
+      },
+      { "@type": "ListItem", position: 3, name: business.name, item: canonicalUrl },
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(businessJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <Header />
       <main className="flex-1">
         {/* Banner de ponta a ponta: sem max-width, a foto de capa (ou o

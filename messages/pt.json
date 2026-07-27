@@ -6,7 +6,8 @@
   "Common": {
     "verified": "Verificado",
     "whatsapp": "Falar no WhatsApp",
-    "legalPlaceholderNotice": "Texto placeholder — revisão jurídica pendente antes do lançamento."
+    "legalPlaceholderNotice": "Texto placeholder — revisão jurídica pendente antes do lançamento.",
+    "home": "Início"
   },
   "Header": {
     "navEmpresas": "Empresas",
