@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
 const heroImages = [
@@ -44,12 +45,12 @@ export async function ComingSoon() {
         <span className="text-[17px] font-semibold tracking-tight text-foreground">
           Cerâmica <span className="text-primary">Hub</span>
         </span>
-        <a
+        <Link
           href="/login"
           className="glass-light rounded-full px-4 py-2 text-[15px] font-medium text-foreground transition-colors hover:bg-white/80"
         >
           {t("acessar")}
-        </a>
+        </Link>
       </header>
 
       <main className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 text-center">

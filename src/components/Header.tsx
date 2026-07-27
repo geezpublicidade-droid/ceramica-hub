@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import NextLink from "next/link";
 import { Link } from "@/i18n/navigation";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { MegaMenuItem, type MegaMenuGroup } from "@/components/MegaMenu";
@@ -102,12 +103,12 @@ export function Header() {
             </svg>
           </button>
           <LanguageSwitcher className="hidden lg:block" />
-          <a
+          <NextLink
             href="/login"
             className="hidden text-[15px] text-muted transition-colors hover:text-foreground lg:block"
           >
             {t("entrar")}
-          </a>
+          </NextLink>
           <Link
             href="/cadastro"
             className="neu-primary whitespace-nowrap rounded-full px-3 py-2 text-[14px] font-semibold text-white sm:px-6 sm:py-3 sm:text-[16px]"
@@ -161,13 +162,13 @@ export function Header() {
               {link.label}
             </Link>
           ))}
-          <a
+          <NextLink
             href="/login"
             onClick={() => setMenuOpen(false)}
             className="rounded-xl px-3 py-2.5 text-foreground transition-colors hover:bg-black/5"
           >
             {t("entrar")}
-          </a>
+          </NextLink>
           <div className="mt-2 border-t border-border pt-2">
             <LanguageSwitcher />
           </div>

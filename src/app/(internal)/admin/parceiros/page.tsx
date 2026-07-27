@@ -17,7 +17,7 @@ export default async function AdminParceirosPage() {
           <div>
             <h1 className="text-2xl font-semibold text-foreground">Parceiros institucionais</h1>
             <p className="mt-2 text-[16px] text-muted">
-              Prefeitura, shopping, hotéis parceiros etc. Só aparecem no site com status "Ativo" — nunca
+              Prefeitura, shopping, hotéis parceiros etc. Só aparecem no site com status &quot;Ativo&quot; — nunca
               publique um vínculo sem autorização confirmada de verdade.
             </p>
           </div>

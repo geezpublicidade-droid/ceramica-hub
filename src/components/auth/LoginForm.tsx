@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { authenticateAction } from "@/lib/auth-actions";
 import { BackLink } from "@/components/nav/BackLink";
 
@@ -29,9 +30,9 @@ export function LoginForm({
           <BackLink href="/preview" label="Voltar ao site" />
         </div>
         <div className="glass-light rounded-3xl p-8">
-        <a href="/" className="text-[17px] font-semibold tracking-tight text-foreground">
+        <Link href="/" className="text-[17px] font-semibold tracking-tight text-foreground">
           Cerâmica <span className="text-primary">Hub</span>
-        </a>
+        </Link>
         <h1 className="mt-6 text-xl font-semibold text-foreground">{title}</h1>
         <p className="mt-1 text-[15px] text-muted">{subtitle}</p>
 

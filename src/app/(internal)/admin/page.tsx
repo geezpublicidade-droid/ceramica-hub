@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireAdminPage } from "@/lib/auth-guards";
 import { createServiceClient } from "@/lib/supabase/server";
 import { AdminBusinessRow } from "@/components/admin/AdminBusinessRow";
@@ -58,49 +59,49 @@ export default async function AdminPage() {
           </div>
           <div className="flex gap-2">
             {(adminRole === "super_admin" || adminRole === "admin" || adminRole === "financeiro") && (
-              <a href="/admin/financeiro" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
+              <Link href="/admin/financeiro" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
                 Financeiro
-              </a>
+              </Link>
             )}
             {(adminRole === "super_admin" || adminRole === "admin") && (
-              <a href="/admin/lgpd" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
+              <Link href="/admin/lgpd" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
                 LGPD
-              </a>
+              </Link>
             )}
             {(adminRole === "super_admin" || adminRole === "admin" || adminRole === "comercial") && (
-              <a href="/admin/publicidade" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
+              <Link href="/admin/publicidade" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
                 Publicidade
-              </a>
+              </Link>
             )}
             {(adminRole === "super_admin" || adminRole === "admin") && (
-              <a href="/admin/blog" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
+              <Link href="/admin/blog" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
                 Blog
-              </a>
+              </Link>
             )}
             {(adminRole === "super_admin" || adminRole === "admin") && (
-              <a href="/admin/parceiros" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
+              <Link href="/admin/parceiros" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
                 Parceiros
-              </a>
+              </Link>
             )}
             {(adminRole === "super_admin" || adminRole === "admin") && (
-              <a href="/admin/hoteis" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
+              <Link href="/admin/hoteis" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
                 Hotéis
-              </a>
+              </Link>
             )}
             {(adminRole === "super_admin" || adminRole === "admin") && (
-              <a href="/admin/auditorios" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
+              <Link href="/admin/auditorios" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
                 Auditórios
-              </a>
+              </Link>
             )}
             {(adminRole === "super_admin" || adminRole === "admin") && (
-              <a href="/admin/imobiliarias" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
+              <Link href="/admin/imobiliarias" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
                 Imobiliárias
-              </a>
+              </Link>
             )}
             {adminRole === "super_admin" && (
-              <a href="/admin/usuarios" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
+              <Link href="/admin/usuarios" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
                 Usuários
-              </a>
+              </Link>
             )}
             <SignOutButton action={logout} />
           </div>

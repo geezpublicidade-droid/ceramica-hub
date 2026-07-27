@@ -23,7 +23,7 @@ export default async function AdminPublicidadePage() {
             <h1 className="text-2xl font-semibold text-foreground">Publicidade</h1>
             <p className="mt-2 text-[16px] text-muted">
               Campanhas de anunciantes externos — nunca aparecem como membro do complexo, sempre
-              rotuladas "Patrocinado".
+              rotuladas &quot;Patrocinado&quot;.
             </p>
           </div>
           <BackLink href="/admin" />

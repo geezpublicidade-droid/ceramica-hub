@@ -32,13 +32,19 @@ export function GlobalSearchOverlay({ open, onClose }: { open: boolean; onClose:
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => {
+  const [prevOpen, setPrevOpen] = useState(open);
+  if (open !== prevOpen) {
+    setPrevOpen(open);
     if (open) {
       setTerm("");
       setResults([]);
-      const id = setTimeout(() => inputRef.current?.focus(), 50);
-      return () => clearTimeout(id);
     }
+  }
+
+  useEffect(() => {
+    if (!open) return;
+    const id = setTimeout(() => inputRef.current?.focus(), 50);
+    return () => clearTimeout(id);
   }, [open]);
 
   useEffect(() => {
@@ -56,13 +62,9 @@ export function GlobalSearchOverlay({ open, onClose }: { open: boolean; onClose:
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    if (!term.trim()) {
-      setResults([]);
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
+    if (!term.trim()) return;
     debounceRef.current = setTimeout(async () => {
+      setLoading(true);
       try {
         const res = await fetch(`/api/search?q=${encodeURIComponent(term)}&locale=${locale}`);
         const data = await res.json();

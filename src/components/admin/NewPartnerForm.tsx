@@ -36,7 +36,7 @@ export function NewPartnerForm() {
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-3xl border border-border bg-white/70 p-6">
       <p className="text-[14px] font-medium uppercase tracking-[0.15em] text-muted">Novo parceiro institucional</p>
       <p className="text-[13px] text-muted">
-        Entra sempre como "Rascunho" — nunca aparece publicamente até você confirmar a autorização real e mudar pra "Ativo".
+        Entra sempre como &quot;Rascunho&quot; — nunca aparece publicamente até você confirmar a autorização real e mudar pra &quot;Ativo&quot;.
       </p>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <label>

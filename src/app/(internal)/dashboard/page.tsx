@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { auth, signOut } from "@/auth";
 import { getBusinessById, getMetricsSummary, getOwnedInvoices, getDailyPageViews } from "@/lib/services/platform";
 import { listStaff } from "@/lib/actions/business-staff";
@@ -44,12 +45,12 @@ export default async function DashboardPage() {
             </h1>
           </div>
           <div className="flex items-center gap-3">
-            <a
+            <Link
               href="/dashboard/editar"
               className="neu-primary rounded-full px-6 py-3 text-[16px] font-semibold text-white"
             >
               Editar página
-            </a>
+            </Link>
             <SignOutButton action={logout} />
           </div>
         </div>
