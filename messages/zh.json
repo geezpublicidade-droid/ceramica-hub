@@ -262,6 +262,8 @@
       "ofertas": "优惠",
       "blog": "博客",
       "noticias": "新闻",
+      "businessTravel": "商务差旅",
+      "auditorios": "礼堂",
       "cadastrarEmpresa": "登记企业",
       "contato": "联系我们",
       "termos": "使用条款",
@@ -303,6 +305,22 @@
     "empty": "暂无新闻。",
     "readFull": "阅读全文",
     "sourceLabel": "来源"
+  },
+  "BusinessTravel": {
+    "metaTitle": "商务差旅 — Cerâmica Hub",
+    "title": "商务差旅",
+    "subtitle": "为途经 Espaço Cerâmica 的访客提供的商务住宿和服务。",
+    "empty": "暂无合作酒店。",
+    "whatsapp": "WhatsApp",
+    "bookingLink": "预订"
+  },
+  "Auditorios": {
+    "metaTitle": "礼堂与会议室 — Cerâmica Hub",
+    "title": "礼堂与会议室",
+    "subtitle": "Espaço Cerâmica 内的活动与会议空间 — 请咨询信息与可用情况。",
+    "empty": "暂无已登记的空间。",
+    "requestInfo": "咨询信息",
+    "capacity": "人"
   },
   "Termos": {
     "metaTitle": "使用条款 — Cerâmica Hub",

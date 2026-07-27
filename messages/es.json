@@ -262,6 +262,8 @@
       "ofertas": "Ofertas",
       "blog": "Blog",
       "noticias": "Noticias",
+      "businessTravel": "Business Travel",
+      "auditorios": "Auditorios",
       "cadastrarEmpresa": "Registrar empresa",
       "contato": "Contacto",
       "termos": "Términos de Uso",
@@ -303,6 +305,22 @@
     "empty": "Aún no hay noticias.",
     "readFull": "Leer nota completa",
     "sourceLabel": "Fuente"
+  },
+  "BusinessTravel": {
+    "metaTitle": "Business Travel — Cerâmica Hub",
+    "title": "Business Travel",
+    "subtitle": "Hospedaje corporativo y servicios para quien está de paso por Espaço Cerâmica.",
+    "empty": "Aún no hay hoteles asociados registrados.",
+    "whatsapp": "WhatsApp",
+    "bookingLink": "Reservar"
+  },
+  "Auditorios": {
+    "metaTitle": "Auditorios y Salas de Reunión — Cerâmica Hub",
+    "title": "Auditorios y salas de reunión",
+    "subtitle": "Espacios para eventos y reuniones dentro de Espaço Cerâmica — solicite información y disponibilidad.",
+    "empty": "Aún no hay espacios registrados.",
+    "requestInfo": "Solicitar información",
+    "capacity": "personas"
   },
   "Termos": {
     "metaTitle": "Términos de Uso — Cerâmica Hub",
