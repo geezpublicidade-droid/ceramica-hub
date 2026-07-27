@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Alexandria } from "next/font/google";
 import { routing } from "@/i18n/routing";
 import "../globals.css";
 
@@ -14,6 +14,13 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+// Usada só no banner de anúncios (ver AdBanner.tsx) -- é a fonte do esboço
+// do Figma pra esse componente especificamente, não o resto do site.
+const alexandria = Alexandria({
+  variable: "--font-alexandria",
   subsets: ["latin"],
 });
 
@@ -85,7 +92,7 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale}
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${alexandria.variable} h-full antialiased`}
     >
       <head>
         <script

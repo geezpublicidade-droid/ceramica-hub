@@ -13,6 +13,8 @@
   --primary-light: #2997ff;
   --connection: #5ac8fa;
   --glow: rgba(41, 151, 255, 0.35);
+  /* só o banner de anúncios (AdBanner) usa essa cor -- vem do esboço no Figma */
+  --ad-teal: #1ea6d3;
 
   /* aliases mantidos para as seções ainda não redesenhadas (Directory, Pricing, CTA) */
   --accent: var(--primary);
@@ -33,8 +35,10 @@
   --color-connection: var(--connection);
   --color-accent: var(--accent);
   --color-accent-dark: var(--accent-dark);
+  --color-ad-teal: var(--ad-teal);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-alexandria: var(--font-alexandria);
 }
 
 body {
