@@ -1,7 +1,13 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { setBusinessFounder, grantTrial, getBusinessHistory, type BusinessHistoryEntry } from "@/lib/actions/admin-business";
+import {
+  setBusinessFounder,
+  grantTrial,
+  suspendBusiness,
+  getBusinessHistory,
+  type BusinessHistoryEntry,
+} from "@/lib/actions/admin-business";
 
 type ApprovedBusiness = {
   id: string;
@@ -20,6 +26,8 @@ const ACTION_LABEL: Record<string, string> = {
   reject_business: "Rejeição",
   set_business_founder: "Alteração de selo Fundadora",
   grant_trial: "Liberação de trial",
+  suspend_business: "Suspensão",
+  reactivate_business: "Reativação",
 };
 
 export function ApprovedBusinessRow({ business }: { business: ApprovedBusiness }) {
@@ -27,6 +35,8 @@ export function ApprovedBusinessRow({ business }: { business: ApprovedBusiness }
   const [trialError, setTrialError] = useState<string | null>(null);
   const [history, setHistory] = useState<BusinessHistoryEntry[] | null>(null);
   const [loadingHistory, setLoadingHistory] = useState(false);
+  const [showSuspendReason, setShowSuspendReason] = useState(false);
+  const [suspendReason, setSuspendReason] = useState("");
 
   const eligibleForTrial = business.plan === "presenca" && business.trialStatus !== "active";
 
@@ -88,10 +98,37 @@ export function ApprovedBusinessRow({ business }: { business: ApprovedBusiness }
             />
             Empresa Fundadora
           </label>
+          <button
+            type="button"
+            disabled={isPending}
+            onClick={() => setShowSuspendReason((v) => !v)}
+            className="rounded-full border border-red-200 px-3 py-1.5 text-[12px] font-medium text-red-600 disabled:opacity-60"
+          >
+            Suspender
+          </button>
         </div>
       </div>
 
       {trialError && <p className="mt-2 text-[13px] text-red-600">{trialError}</p>}
+
+      {showSuspendReason && (
+        <div className="mt-3 flex gap-2">
+          <input
+            className="flex-1 rounded-xl border border-border bg-white px-3 py-2 text-[14px]"
+            placeholder="Motivo da suspensão (opcional)"
+            value={suspendReason}
+            onChange={(e) => setSuspendReason(e.target.value)}
+          />
+          <button
+            type="button"
+            disabled={isPending}
+            onClick={() => startTransition(() => suspendBusiness(business.id, suspendReason))}
+            className="rounded-xl bg-red-600 px-4 py-2 text-[13px] font-medium text-white disabled:opacity-60"
+          >
+            Confirmar suspensão
+          </button>
+        </div>
+      )}
 
       {history !== null && (
         <div className="mt-3 rounded-xl border border-border bg-white/70 p-3">

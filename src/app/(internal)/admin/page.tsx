@@ -3,6 +3,7 @@ import { requireAdminPage } from "@/lib/auth-guards";
 import { createServiceClient } from "@/lib/supabase/server";
 import { AdminBusinessRow } from "@/components/admin/AdminBusinessRow";
 import { ApprovedBusinessRow } from "@/components/admin/ApprovedBusinessRow";
+import { SuspendedBusinessRow } from "@/components/admin/SuspendedBusinessRow";
 import { getAdminDashboardStats, getProfileCompletenessMap } from "@/lib/services/admin-dashboard";
 import { SignOutButton } from "@/components/nav/SignOutButton";
 import { signOut } from "@/auth";
@@ -24,20 +25,21 @@ type PendingBusiness = {
   document: string | null;
   floor: string;
   room_number: string;
-  status: "pending" | "approved" | "rejected";
+  status: "pending" | "approved" | "rejected" | "suspended";
   created_at: string;
   founder: boolean;
   plan: "presenca" | "profissional" | "destaque" | "experiencia";
   trial_status: "none" | "active" | "expired";
+  rejection_reason: string | null;
   towers: { name: string } | null;
 };
 
-async function getBusinessesByStatus(status: "pending" | "approved" | "rejected") {
+async function getBusinessesByStatus(status: "pending" | "approved" | "rejected" | "suspended") {
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("businesses")
     .select(
-      "id, name, responsible_name, email, category, phone, document, floor, room_number, status, created_at, founder, plan, trial_status, towers(name)",
+      "id, name, responsible_name, email, category, phone, document, floor, room_number, status, created_at, founder, plan, trial_status, rejection_reason, towers(name)",
     )
     .eq("status", status)
     .order("created_at", { ascending: true });
@@ -48,10 +50,11 @@ async function getBusinessesByStatus(status: "pending" | "approved" | "rejected"
 export default async function AdminPage() {
   const { adminRole } = await requireAdminPage(["super_admin", "admin", "moderador"]);
 
-  const [pending, approved, rejected, stats, completeness] = await Promise.all([
+  const [pending, approved, rejected, suspended, stats, completeness] = await Promise.all([
     getBusinessesByStatus("pending"),
     getBusinessesByStatus("approved"),
     getBusinessesByStatus("rejected"),
+    getBusinessesByStatus("suspended"),
     getAdminDashboardStats(),
     getProfileCompletenessMap(),
   ]);
@@ -59,6 +62,7 @@ export default async function AdminPage() {
   const statCards: { label: string; value: number }[] = [
     { label: "Pendentes", value: pending.length },
     { label: "Aprovadas", value: approved.length },
+    { label: "Suspensas", value: suspended.length },
     { label: "Cadastros (7 dias)", value: stats.recentSignups7d },
     { label: "Campanhas ativas", value: stats.activeCampaigns },
     { label: "Impressões de anúncio (30d)", value: stats.adImpressionsLast30d },
@@ -173,6 +177,28 @@ export default async function AdminPage() {
                   plan: b.plan,
                   trialStatus: b.trial_status,
                   missingItems: completeness.get(b.id) ?? [],
+                }}
+              />
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-12">
+          <h2 className="text-[17px] font-semibold text-foreground">
+            Suspensas ({suspended.length})
+          </h2>
+          <div className="mt-4 flex flex-col gap-2">
+            {suspended.length === 0 && <p className="text-[16px] text-muted">Nenhuma empresa suspensa.</p>}
+            {suspended.map((b) => (
+              <SuspendedBusinessRow
+                key={b.id}
+                business={{
+                  id: b.id,
+                  name: b.name,
+                  towerName: b.towers?.name ?? null,
+                  floor: b.floor,
+                  roomNumber: b.room_number,
+                  rejectionReason: b.rejection_reason,
                 }}
               />
             ))}

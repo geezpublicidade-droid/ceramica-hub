@@ -45,7 +45,7 @@ type BusinessRow = {
   photographed: boolean;
   founder: boolean;
   plan: "presenca" | "profissional" | "destaque" | "experiencia";
-  status: "pending" | "approved" | "rejected";
+  status: "pending" | "approved" | "rejected" | "suspended";
   trial_status: "none" | "active" | "expired";
   trial_plan: "presenca" | "profissional" | "destaque" | "experiencia" | null;
   trial_ends_at: string | null;

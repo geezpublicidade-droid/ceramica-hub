@@ -40,7 +40,7 @@ export type Business = {
     plan: "presenca" | "profissional" | "destaque" | "experiencia" | null;
     endsAt: string | null;
   };
-  status: "pending" | "approved" | "rejected";
+  status: "pending" | "approved" | "rejected" | "suspended";
   /** logo quadrado (1:1) da empresa — opcional; sem isso, o card mostra as iniciais */
   logo?: string;
   coverPhoto?: string;

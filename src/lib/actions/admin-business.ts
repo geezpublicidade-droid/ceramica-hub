@@ -113,6 +113,41 @@ export async function getBusinessHistory(businessId: string): Promise<BusinessHi
   return (data ?? []).map((row) => ({ id: row.id, action: row.action, createdAt: row.created_at, metadata: row.metadata }));
 }
 
+/** Suspende uma empresa já aprovada -- some de toda superfície pública
+ * imediatamente, porque todo lugar que lista/exibe empresa filtra
+ * explicitamente por status = "approved" (nunca por exclusão de
+ * "rejected"), então bastar sair desse valor já esconde. Reversível via
+ * reactivateBusiness. */
+export async function suspendBusiness(businessId: string, reason: string) {
+  const adminId = await requireAdmin(["super_admin", "admin", "moderador"]);
+  const supabase = createServiceClient();
+  const { error } = await supabase
+    .from("businesses")
+    .update({ status: "suspended", rejection_reason: reason || null })
+    .eq("id", businessId);
+  if (error) throw error;
+
+  await logAdminAction(adminId, "suspend_business", "business", businessId, { reason: reason || null });
+
+  revalidatePath("/admin");
+  revalidatePath("/");
+}
+
+export async function reactivateBusiness(businessId: string) {
+  const adminId = await requireAdmin(["super_admin", "admin", "moderador"]);
+  const supabase = createServiceClient();
+  const { error } = await supabase
+    .from("businesses")
+    .update({ status: "approved", rejection_reason: null })
+    .eq("id", businessId);
+  if (error) throw error;
+
+  await logAdminAction(adminId, "reactivate_business", "business", businessId, {});
+
+  revalidatePath("/admin");
+  revalidatePath("/");
+}
+
 export async function rejectBusiness(businessId: string, reason: string) {
   const adminId = await requireAdmin(["super_admin", "admin", "moderador"]);
   const supabase = createServiceClient();
