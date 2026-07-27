@@ -10,6 +10,7 @@ import { CollectiveMovement } from "@/components/landing/CollectiveMovement";
 import { Pricing } from "@/components/Pricing";
 import { FounderCTA } from "@/components/landing/FounderCTA";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
+import { InstitutionalPartners } from "@/components/landing/InstitutionalPartners";
 import { SearchProvider } from "@/components/landing/SearchContext";
 import { AdSlot } from "@/components/ads/AdSlot";
 import { AdBanner } from "@/components/ads/AdBanner";
@@ -45,6 +46,7 @@ export default async function Preview({ params }: { params: Promise<{ locale: st
       <main className="flex-1">
         <SearchProvider>
           <NetworkNarrative />
+          <InstitutionalPartners />
           <AdBanner placementKey="hero_abaixo" />
           <div className="py-10">
             <AdCarousel placementKey="carrossel_home" />
