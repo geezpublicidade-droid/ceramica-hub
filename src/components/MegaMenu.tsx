@@ -77,7 +77,7 @@ export function MegaMenuItem({ group }: { group: MegaMenuGroup }) {
           aria-label={group.label}
           className="absolute left-1/2 top-full z-40 w-[320px] -translate-x-1/2 pt-3"
         >
-          <div className="glass-light rounded-2xl border border-border p-2 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.25)]">
+          <div className="rounded-2xl border border-border bg-white p-2 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.25)]">
             <nav className="flex flex-col gap-0.5">
               {group.columns.map((link) => (
                 <Link
