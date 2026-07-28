@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import NextLink from "next/link";
 import { Link } from "@/i18n/navigation";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { MegaMenuItem, type MegaMenuGroup } from "@/components/MegaMenu";
+import type { MegaMenuGroup } from "@/components/MegaMenu";
 import { AdSlot } from "@/components/ads/AdSlot";
 import { GlobalSearchOverlay } from "@/components/GlobalSearchOverlay";
 import { slugFromCategory } from "@/lib/category-slug";
@@ -94,16 +94,6 @@ export function Header() {
         <Link href="/#top" className="shrink-0 text-[17px] font-semibold tracking-tight text-foreground sm:text-[20px]">
           Cerâmica <span className="text-primary">Hub</span>
         </Link>
-        <nav className="hidden items-center gap-5 lg:flex">
-          {megaMenuGroups.map((group) => (
-            <MegaMenuItem key={group.key} group={group} />
-          ))}
-          {secondaryLinks.map((link) => (
-            <Link key={link.href} href={link.href} className="whitespace-nowrap text-[15px] font-medium text-muted transition-colors hover:text-foreground xl:text-[16px]">
-              {link.label}
-            </Link>
-          ))}
-        </nav>
         <div className="flex items-center gap-2 sm:gap-3">
           <button
             type="button"
@@ -116,13 +106,6 @@ export function Header() {
               <path d="M14 14L18 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
           </button>
-          <LanguageSwitcher className="hidden lg:block" />
-          <NextLink
-            href="/login"
-            className="hidden text-[15px] text-muted transition-colors hover:text-foreground lg:block"
-          >
-            {t("entrar")}
-          </NextLink>
           <Link
             href="/cadastro"
             className="neu-primary whitespace-nowrap rounded-full px-3 py-2 text-[14px] font-semibold text-white sm:px-6 sm:py-3 sm:text-[16px]"
@@ -134,7 +117,7 @@ export function Header() {
             type="button"
             aria-label={menuOpen ? t("fecharMenu") : t("abrirMenu")}
             onClick={() => setMenuOpen((v) => !v)}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-white text-foreground shadow-[0_2px_10px_rgba(0,0,0,0.12)] lg:hidden"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-white text-foreground shadow-[0_2px_10px_rgba(0,0,0,0.12)]"
           >
             {menuOpen ? (
               <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4">
@@ -153,7 +136,7 @@ export function Header() {
       <div
         aria-hidden={!menuOpen}
         onClick={() => setMenuOpen(false)}
-        className={`fixed inset-0 z-40 bg-black/40 transition-opacity duration-300 lg:hidden ${
+        className={`fixed inset-0 z-40 bg-black/40 transition-opacity duration-300 ${
           menuOpen ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       />
@@ -161,7 +144,7 @@ export function Header() {
       {/* lateral drawer */}
       <nav
         aria-hidden={!menuOpen}
-        className={`fixed right-0 top-0 z-50 flex h-full w-[85%] max-w-sm flex-col overflow-y-auto bg-white p-4 text-[16px] shadow-2xl transition-transform duration-300 ease-out lg:hidden ${
+        className={`fixed right-0 top-0 z-50 flex h-full w-[85%] max-w-sm flex-col overflow-y-auto bg-white p-4 text-[16px] shadow-2xl transition-transform duration-300 ease-out ${
           menuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
