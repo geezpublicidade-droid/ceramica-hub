@@ -74,6 +74,20 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    const { overflow } = document.body.style;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = overflow;
+    };
+  }, [menuOpen]);
+
   return (
     <header className="fixed top-0 z-50 w-full border-b border-border bg-white py-3 sm:py-4">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6">
@@ -135,8 +149,38 @@ export function Header() {
         </div>
       </div>
 
-      {menuOpen && (
-        <nav className="mx-6 mt-3 flex max-h-[70vh] flex-col gap-1 overflow-y-auto rounded-2xl border border-border bg-white p-3 text-[16px] lg:hidden">
+      {/* backdrop */}
+      <div
+        aria-hidden={!menuOpen}
+        onClick={() => setMenuOpen(false)}
+        className={`fixed inset-0 z-40 bg-black/40 transition-opacity duration-300 lg:hidden ${
+          menuOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      />
+
+      {/* lateral drawer */}
+      <nav
+        aria-hidden={!menuOpen}
+        className={`fixed right-0 top-0 z-50 flex h-full w-[85%] max-w-sm flex-col overflow-y-auto bg-white p-4 text-[16px] shadow-2xl transition-transform duration-300 ease-out lg:hidden ${
+          menuOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div className="mb-2 flex items-center justify-between">
+          <Link href="/#top" onClick={() => setMenuOpen(false)} className="text-[17px] font-semibold tracking-tight text-foreground">
+            Cerâmica <span className="text-primary">Hub</span>
+          </Link>
+          <button
+            type="button"
+            aria-label={t("fecharMenu")}
+            onClick={() => setMenuOpen(false)}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-black/5 hover:text-foreground"
+          >
+            <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4">
+              <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+        <div className="flex flex-1 flex-col gap-1">
           {megaMenuGroups.map((group) => (
             <div key={group.key} className="border-b border-border pb-2 last:border-0">
               <p className="px-3 pt-2 text-[13px] font-semibold uppercase tracking-wide text-muted">{group.label}</p>
@@ -169,11 +213,11 @@ export function Header() {
           >
             {t("entrar")}
           </NextLink>
-          <div className="mt-2 border-t border-border pt-2">
-            <LanguageSwitcher />
-          </div>
-        </nav>
-      )}
+        </div>
+        <div className="mt-2 border-t border-border pt-3">
+          <LanguageSwitcher />
+        </div>
+      </nav>
 
       <GlobalSearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
