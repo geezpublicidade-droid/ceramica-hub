@@ -29,12 +29,6 @@ export default auth((req) => {
       return NextResponse.redirect(loginUrl);
     }
 
-    // admin sem MFA configurado ainda: só pode acessar a tela de setup,
-    // qualquer outra rota do admin redireciona pra lá primeiro.
-    if (req.auth.user.role === "admin" && req.auth.user.mfaSetupRequired && pathname !== "/admin/mfa-setup") {
-      return NextResponse.redirect(new URL("/admin/mfa-setup", req.nextUrl.origin));
-    }
-
     return; // autorizado, rota interna nunca passa pelo next-intl
   }
 

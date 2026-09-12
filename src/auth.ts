@@ -1,7 +1,6 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { verify as verifyTotp } from "otplib";
 import { createServiceClient } from "@/lib/supabase/server";
 
 type Role = "business" | "business_staff" | "member" | "admin";
@@ -34,8 +33,7 @@ async function tryAuthenticate(
   supabase: ReturnType<typeof createServiceClient>,
   email: string,
   password: string,
-  role: Role,
-  totpCode: unknown
+  role: Role
 ): Promise<AuthorizedUser | null> {
   const { data: account } = await supabase
     .from(TABLE_BY_ROLE[role])
@@ -47,24 +45,9 @@ async function tryAuthenticate(
   const valid = await bcrypt.compare(password, account.password_hash);
   if (!valid) return null;
 
-  // MFA obrigatório pra admin: se já configurado, exige código válido.
-  // Se ainda não configurado (primeiro acesso), deixa entrar sinalizado
-  // pra fazer o setup — o middleware trava qualquer outra tela do
-  // admin até isso acontecer (ver /admin/mfa-setup).
-  let mfaSetupRequired = false;
-  if (role === "admin") {
-    const admin = account as { mfa_secret: string | null; mfa_enabled: boolean; role: AdminRole };
-    if (admin.mfa_enabled) {
-      if (typeof totpCode !== "string" || totpCode.trim().length === 0 || !admin.mfa_secret) return null;
-      // tolerância de 30s pra cada lado: sem isso, o código expira antes
-      // de chegar no servidor (rede + tempo de digitar), e login legítimo
-      // falharia quase sempre — o default da lib é 0 (janela exata).
-      const result = await verifyTotp({ secret: admin.mfa_secret, token: totpCode.trim(), epochTolerance: 30 });
-      if (!result.valid) return null;
-    } else {
-      mfaSetupRequired = true;
-    }
-  }
+  // MFA removido: não é mais exigido no login de admin, mesmo pra contas
+  // que tinham mfa_enabled=true de antes.
+  const mfaSetupRequired = false;
 
   let businessId: string | undefined;
   if (role === "business") businessId = account.id;
@@ -91,7 +74,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         email: { label: "E-mail", type: "email" },
         password: { label: "Senha", type: "password" },
         role: { label: "Role", type: "text" },
-        totpCode: { label: "Código do autenticador", type: "text" },
       },
       async authorize(credentials, request) {
         const email = credentials?.email;
@@ -100,7 +82,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         // admin) — o form não distingue owner de staff, os dois usam a
         // mesma tela em /login. Ver rolesToTry abaixo.
         const area = credentials?.role as "business" | "member" | "admin" | undefined;
-        const totpCode = credentials?.totpCode;
         if (typeof email !== "string" || typeof password !== "string") return null;
         if (area !== "business" && area !== "member" && area !== "admin") return null;
 
@@ -123,7 +104,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const rolesToTry: Role[] = area === "business" ? ["business", "business_staff"] : [area];
         let user: AuthorizedUser | null = null;
         for (const role of rolesToTry) {
-          user = await tryAuthenticate(supabase, email, password, role, totpCode);
+          user = await tryAuthenticate(supabase, email, password, role);
           if (user) break;
         }
         await supabase.from("login_attempts").insert({ identifier, ip, success: Boolean(user) });
