@@ -87,7 +87,6 @@
           "Category",
           "Tower, floor and room",
           "Short description",
-          "Up to three services",
           "One photo",
           "WhatsApp",
           "Instagram",
@@ -169,10 +168,7 @@
       "coverPhotoUrl": "Cover photo URL (optional for now)",
       "instagram": "Instagram",
       "websiteUrl": "Website (if you have one)",
-      "openingHours": "Business hours",
-      "services": "Services (up to 3)",
-      "serviceName": "Service name",
-      "serviceDescription": "Short description (optional)"
+      "openingHours": "Business hours"
     },
     "placeholders": {
       "categorySelect": "Select",
@@ -183,7 +179,6 @@
       "openingHours": "Mon–Fri, 9am–6pm"
     },
     "towerAddress": "Address: {address}",
-    "addService": "+ Add service",
     "consent": {
       "address": "I confirm my business operates at the address provided.",
       "terms": "I have read and accept the <termsLink>Terms of Use</termsLink>.",

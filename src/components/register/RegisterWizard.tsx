@@ -10,8 +10,6 @@ import type { TowerOption } from "@/app/[locale]/cadastro/page";
 
 const realCategories = categories.filter((c) => c !== "Todas");
 
-type ServiceDraft = { name: string; description: string };
-
 type FormState = {
   name: string;
   responsibleName: string;
@@ -29,7 +27,6 @@ type FormState = {
   instagram: string;
   websiteUrl: string;
   openingHours: string;
-  services: ServiceDraft[];
   termsAccepted: boolean;
   privacyAccepted: boolean;
   registrationPolicyAccepted: boolean;
@@ -54,7 +51,6 @@ const initialState: FormState = {
   instagram: "",
   websiteUrl: "",
   openingHours: "",
-  services: [{ name: "", description: "" }],
   termsAccepted: false,
   privacyAccepted: false,
   registrationPolicyAccepted: false,
@@ -81,13 +77,6 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
-  }
-
-  function updateService(index: number, patch: Partial<ServiceDraft>) {
-    setForm((prev) => ({
-      ...prev,
-      services: prev.services.map((s, i) => (i === index ? { ...s, ...patch } : s)),
-    }));
   }
 
   function validateStep(current: number): string | null {
@@ -317,36 +306,6 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
               placeholder={t("placeholders.openingHours")}
             />
           </label>
-          <div>
-            <span className={labelClass}>{t("labels.services")}</span>
-            <div className="mt-2 flex flex-col gap-3">
-              {form.services.map((service, index) => (
-                <div key={index} className="rounded-xl border border-border p-3">
-                  <input
-                    className={inputClass}
-                    placeholder={t("labels.serviceName")}
-                    value={service.name}
-                    onChange={(e) => updateService(index, { name: e.target.value })}
-                  />
-                  <input
-                    className={inputClass}
-                    placeholder={t("labels.serviceDescription")}
-                    value={service.description}
-                    onChange={(e) => updateService(index, { description: e.target.value })}
-                  />
-                </div>
-              ))}
-              {form.services.length < 3 && (
-                <button
-                  type="button"
-                  onClick={() => update("services", [...form.services, { name: "", description: "" }])}
-                  className="self-start text-[15px] font-medium text-primary"
-                >
-                  {t("addService")}
-                </button>
-              )}
-            </div>
-          </div>
         </div>
       )}
 

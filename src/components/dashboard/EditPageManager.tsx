@@ -267,7 +267,13 @@ export function EditPageManager({
         </div>
 
         {services.length >= limits.maxServices ? (
-          <UpgradeNotice message={`Seu plano permite até ${limits.maxServices} serviços.`} />
+          <UpgradeNotice
+            message={
+              limits.maxServices === 0
+                ? "Cadastro de serviços é exclusivo dos planos pagos."
+                : `Seu plano permite até ${limits.maxServices} serviços.`
+            }
+          />
         ) : (
           <div className="mt-4 flex flex-col gap-2">
             <input

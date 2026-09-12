@@ -10,7 +10,7 @@ export type PlanLimits = {
 };
 
 export const PLAN_LIMITS: Record<Business["plan"], PlanLimits> = {
-  presenca: { maxServices: 3, maxPhotos: 1, maxPromotions: 0, couponsAllowed: false, videoAllowed: false, virtualTourAllowed: false },
+  presenca: { maxServices: 0, maxPhotos: 1, maxPromotions: 0, couponsAllowed: false, videoAllowed: false, virtualTourAllowed: false },
   profissional: { maxServices: 10, maxPhotos: 10, maxPromotions: 1, couponsAllowed: false, videoAllowed: false, virtualTourAllowed: false },
   destaque: { maxServices: Infinity, maxPhotos: 20, maxPromotions: 4, couponsAllowed: true, videoAllowed: false, virtualTourAllowed: false },
   experiencia: { maxServices: Infinity, maxPhotos: 30, maxPromotions: 4, couponsAllowed: true, videoAllowed: true, virtualTourAllowed: true },

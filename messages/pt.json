@@ -87,7 +87,6 @@
           "Categoria",
           "Torre, andar e sala",
           "Descrição curta",
-          "Até três serviços",
           "Uma imagem",
           "WhatsApp",
           "Instagram",
@@ -169,10 +168,7 @@
       "coverPhotoUrl": "URL da foto de capa (opcional por enquanto)",
       "instagram": "Instagram",
       "websiteUrl": "Site (se possuir)",
-      "openingHours": "Horário de atendimento",
-      "services": "Serviços (até 3)",
-      "serviceName": "Nome do serviço",
-      "serviceDescription": "Descrição curta (opcional)"
+      "openingHours": "Horário de atendimento"
     },
     "placeholders": {
       "categorySelect": "Selecione",
@@ -183,7 +179,6 @@
       "openingHours": "Seg a sex, 9h às 18h"
     },
     "towerAddress": "Endereço: {address}",
-    "addService": "+ Adicionar serviço",
     "consent": {
       "address": "Confirmo que minha empresa funciona no endereço informado.",
       "terms": "Li e aceito os <termsLink>Termos de Uso</termsLink>.",

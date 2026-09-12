@@ -84,7 +84,10 @@ export async function addService(name: string, description: string): Promise<Act
   if ((count ?? 0) >= limits.maxServices) {
     return {
       success: false,
-      error: `Esse recurso faz parte do plano superior. Seu plano atual permite até ${limits.maxServices} serviços.`,
+      error:
+        limits.maxServices === 0
+          ? "Cadastro de serviços é exclusivo dos planos pagos."
+          : `Esse recurso faz parte do plano superior. Seu plano atual permite até ${limits.maxServices} serviços.`,
     };
   }
 

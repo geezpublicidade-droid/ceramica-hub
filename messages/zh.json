@@ -87,7 +87,6 @@
           "行业分类",
           "所在大厦、楼层与房间号",
           "简短描述",
-          "最多三项服务",
           "一张图片",
           "WhatsApp",
           "Instagram",
@@ -169,10 +168,7 @@
       "coverPhotoUrl": "封面图片链接(暂时可选)",
       "instagram": "Instagram",
       "websiteUrl": "网站(如有)",
-      "openingHours": "营业时间",
-      "services": "服务项目(最多 3 项)",
-      "serviceName": "服务名称",
-      "serviceDescription": "简短描述(可选)"
+      "openingHours": "营业时间"
     },
     "placeholders": {
       "categorySelect": "请选择",
@@ -183,7 +179,6 @@
       "openingHours": "周一至周五,9:00–18:00"
     },
     "towerAddress": "地址:{address}",
-    "addService": "+ 添加服务",
     "consent": {
       "address": "我确认本企业在所填地址正常营业。",
       "terms": "我已阅读并接受<termsLink>使用条款</termsLink>。",

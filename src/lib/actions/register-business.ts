@@ -28,7 +28,6 @@ const registerBusinessSchema = z
     instagram: z.string(),
     websiteUrl: z.string(),
     openingHours: z.string(),
-    services: z.array(z.object({ name: z.string(), description: z.string() })).max(3),
     termsAccepted: z.boolean(),
     privacyAccepted: z.boolean(),
     registrationPolicyAccepted: z.boolean(),
@@ -130,30 +129,6 @@ export async function registerBusiness(rawInput: RegisterBusinessInput): Promise
     description: input.shortDescription.trim(),
     opening_hours: input.openingHours.trim(),
   });
-
-  const services = input.services.filter((s) => s.name.trim()).slice(0, 3);
-  if (services.length > 0) {
-    const { data: insertedServices } = await supabase
-      .from("business_services")
-      .insert(
-        services.map((s, index) => ({
-          business_id: business.id,
-          name: s.name.trim(),
-          description: s.description.trim() || null,
-          sort_order: index,
-        }))
-      )
-      .select("id, name, description");
-
-    await Promise.all(
-      (insertedServices ?? []).map((service) =>
-        translateAndStore("business_service", service.id, {
-          name: service.name,
-          description: service.description,
-        })
-      )
-    );
-  }
 
   return { success: true, businessId: business.id };
 }
