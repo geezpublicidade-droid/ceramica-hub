@@ -89,6 +89,9 @@ export function ApprovedBusinessRow({ business }: { business: ApprovedBusiness }
           >
             {history !== null ? "Ocultar histórico" : "Ver histórico"}
           </button>
+          <a href={`/api/business/${business.id}/qrcode`} className="text-[12px] font-medium text-primary underline">
+            QR Code
+          </a>
           <label className="flex items-center gap-2 text-[13px] text-muted">
             <input
               type="checkbox"

@@ -16,3 +16,7 @@ export async function logWhatsAppClick(businessId: string) {
 export async function logAdClick(campaignId: string) {
   await logMetricEvent("ad_click", undefined, { campaignId });
 }
+
+export async function logEventInterest(eventId: string) {
+  await logMetricEvent("event_interest_clicked", undefined, { eventId });
+}

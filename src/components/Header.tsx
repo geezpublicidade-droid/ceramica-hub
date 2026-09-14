@@ -63,6 +63,8 @@ export function Header() {
   const secondaryLinks = [
     { href: "/blog", label: t("navBlog") },
     { href: "/noticias", label: t("navNoticias") },
+    { href: "/forum-de-negocios", label: t("navForum") },
+    { href: "/impacto", label: t("navImpacto") },
   ];
 
   const [menuOpen, setMenuOpen] = useState(false);

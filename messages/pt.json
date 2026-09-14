@@ -17,6 +17,8 @@
     "navPlanos": "Planos",
     "navBlog": "Blog",
     "navNoticias": "Notícias",
+    "navForum": "Fórum de Negócios",
+    "navImpacto": "Relatório de Impacto",
     "navCorporate": "Corporate",
     "navLifestyle": "Lifestyle",
     "navHoteisEventos": "Hotéis & Eventos",
@@ -293,6 +295,8 @@
       "businessTravel": "Business Travel",
       "auditorios": "Auditórios",
       "imobiliarias": "Imobiliárias",
+      "forumNegocios": "Fórum de Negócios",
+      "impacto": "Relatório de Impacto",
       "sejaUmParceiro": "Seja um Parceiro",
       "cadastrarEmpresa": "Cadastrar empresa",
       "contato": "Contato",
@@ -398,6 +402,53 @@
     "available": "Disponível",
     "unavailable": "Indisponível",
     "onRequest": "Sob consulta"
+  },
+  "ForumNegocios": {
+    "metaTitle": "Fórum de Negócios — Cerâmica Hub",
+    "metaDescription": "Agenda de eventos, workshops e networking B2B entre as empresas do Espaço Cerâmica.",
+    "title": "Fórum de Negócios",
+    "subtitle": "Eventos, workshops e rodadas de negócio entre as empresas do Espaço Cerâmica.",
+    "empty": "Nenhum evento agendado no momento.",
+    "whatsapp": "WhatsApp",
+    "registrationLink": "Inscrever-se",
+    "capacityPrefix": "Até",
+    "capacity": "vagas"
+  },
+  "Impacto": {
+    "metaTitle": "Relatório de Impacto — Cerâmica Hub",
+    "metaDescription": "Indicadores públicos e auditáveis do Cerâmica Hub: economia, oportunidades, fluxo, visibilidade e confiança gerados na rede.",
+    "eyebrow": "Mensuração",
+    "title": "Relatório de Impacto",
+    "subtitle": "Indicadores gerados pela própria plataforma. Sem histórico de eventos, o número aparece como zero — nunca estimado.",
+    "disclaimer": "Estes indicadores medem a entrega do Cerâmica Hub como plataforma, não o resultado agregado da economia de São Caetano do Sul.",
+    "groups": {
+      "economia": {
+        "label": "Economia",
+        "empresasAtivas": "Empresas ativas na rede",
+        "empresasFundadoras": "Empresas fundadoras",
+        "contatosGerados": "Contatos gerados via WhatsApp e agendamento"
+      },
+      "emprego": {
+        "label": "Emprego",
+        "oportunidadesPublicadas": "Oportunidades publicadas",
+        "vagasContratando": "Vagas de contratação"
+      },
+      "fluxo": {
+        "label": "Fluxo",
+        "rotasSolicitadas": "Rotas solicitadas até uma empresa",
+        "interesseEmEventos": "Manifestações de interesse em eventos"
+      },
+      "visibilidade": {
+        "label": "Visibilidade",
+        "buscasRealizadas": "Buscas realizadas na plataforma",
+        "visualizacoesDePagina": "Visualizações de página comercial"
+      },
+      "confianca": {
+        "label": "Confiança",
+        "perfisCompletos": "Perfis com cadastro completo",
+        "enderecosVerificados": "Endereços verificados"
+      }
+    }
   },
   "Termos": {
     "metaTitle": "Termos de Uso — Cerâmica Hub",

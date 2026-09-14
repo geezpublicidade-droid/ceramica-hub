@@ -522,7 +522,8 @@ export type MetricEventType =
   | "website_upgrade_clicked"
   | "search_performed"
   | "ad_impression"
-  | "ad_click";
+  | "ad_click"
+  | "event_interest_clicked";
 
 /** Log de evento append-only. Nunca inventar número no painel: sem linha aqui, mostra 0/vazio. */
 export async function logMetricEvent(

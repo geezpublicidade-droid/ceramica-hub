@@ -17,6 +17,8 @@
     "navPlanos": "套餐",
     "navBlog": "博客",
     "navNoticias": "新闻",
+    "navForum": "商业论坛",
+    "navImpacto": "影响力报告",
     "navCorporate": "企业",
     "navLifestyle": "生活方式",
     "navHoteisEventos": "酒店与活动",
@@ -293,6 +295,8 @@
       "businessTravel": "商务差旅",
       "auditorios": "礼堂",
       "imobiliarias": "房地产",
+      "forumNegocios": "商业论坛",
+      "impacto": "影响力报告",
       "sejaUmParceiro": "成为合作伙伴",
       "cadastrarEmpresa": "登记企业",
       "contato": "联系我们",
@@ -398,6 +402,53 @@
     "available": "可用",
     "unavailable": "不可用",
     "onRequest": "咨询价格"
+  },
+  "ForumNegocios": {
+    "metaTitle": "商业论坛 — Cerâmica Hub",
+    "metaDescription": "Espaço Cerâmica 企业间的活动、工作坊与 B2B 社交日程。",
+    "title": "商业论坛",
+    "subtitle": "Espaço Cerâmica 企业间的活动、工作坊与商务洽谈会。",
+    "empty": "目前没有已安排的活动。",
+    "whatsapp": "WhatsApp",
+    "registrationLink": "报名",
+    "capacityPrefix": "限",
+    "capacity": "个名额"
+  },
+  "Impacto": {
+    "metaTitle": "影响力报告 — Cerâmica Hub",
+    "metaDescription": "Cerâmica Hub 公开、可核实的指标：网络中产生的经济、机会、流量、曝光度与信任度。",
+    "eyebrow": "数据测量",
+    "title": "影响力报告",
+    "subtitle": "由平台自身生成的指标。没有记录的事件，数字显示为零——从不估算。",
+    "disclaimer": "这些指标衡量的是 Cerâmica Hub 平台自身的成果，而非圣卡塔诺-杜苏尔市整体经济的综合结果。",
+    "groups": {
+      "economia": {
+        "label": "经济",
+        "empresasAtivas": "网络中的活跃企业",
+        "empresasFundadoras": "创始企业",
+        "contatosGerados": "通过 WhatsApp 和预约产生的联系"
+      },
+      "emprego": {
+        "label": "就业",
+        "oportunidadesPublicadas": "已发布的机会",
+        "vagasContratando": "招聘职位"
+      },
+      "fluxo": {
+        "label": "流量",
+        "rotasSolicitadas": "请求前往企业的路线",
+        "interesseEmEventos": "对活动表达的兴趣"
+      },
+      "visibilidade": {
+        "label": "曝光度",
+        "buscasRealizadas": "平台上的搜索次数",
+        "visualizacoesDePagina": "商业页面浏览量"
+      },
+      "confianca": {
+        "label": "信任度",
+        "perfisCompletos": "资料完整的档案",
+        "enderecosVerificados": "已核实的地址"
+      }
+    }
   },
   "Termos": {
     "metaTitle": "使用条款 — Cerâmica Hub",

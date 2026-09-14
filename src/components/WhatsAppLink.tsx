@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { TrackedLink } from "@/components/TrackedLink";
 import { logWhatsAppClick } from "@/lib/actions/log-search";
 
 type WhatsAppLinkProps = {
@@ -12,16 +13,8 @@ type WhatsAppLinkProps = {
 
 export function WhatsAppLink({ href, businessId, className, children }: WhatsAppLinkProps) {
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={className}
-      onClick={() => {
-        void logWhatsAppClick(businessId);
-      }}
-    >
+    <TrackedLink href={href} className={className} onTrack={() => void logWhatsAppClick(businessId)}>
       {children}
-    </a>
+    </TrackedLink>
   );
 }

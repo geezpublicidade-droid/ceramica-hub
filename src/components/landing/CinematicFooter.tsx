@@ -14,6 +14,8 @@ export async function CinematicFooter() {
     { label: t("links.businessTravel"), href: "/business-travel" },
     { label: t("links.auditorios"), href: "/auditorios-reunioes" },
     { label: t("links.imobiliarias"), href: "/imobiliarias" },
+    { label: t("links.forumNegocios"), href: "/forum-de-negocios" },
+    { label: t("links.impacto"), href: "/impacto" },
     { label: t("links.sejaUmParceiro"), href: "/seja-um-parceiro" },
     { label: t("links.cadastrarEmpresa"), href: "/cadastro" },
     { label: t("links.contato"), href: "/contato" },

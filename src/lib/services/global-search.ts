@@ -3,11 +3,12 @@ import { getOpportunities, getBenefits } from "@/lib/services/platform";
 import { getActiveHotels } from "@/lib/services/hotels";
 import { getActiveMeetingSpaces } from "@/lib/services/meeting-spaces";
 import { getActiveListings } from "@/lib/services/real-estate";
+import { getUpcomingEvents } from "@/lib/services/events";
 import { categories } from "@/data/businesses";
 import { slugFromCategory } from "@/lib/category-slug";
 
 export type SearchResult = {
-  type: "empresa" | "categoria" | "hotel" | "espaco" | "imovel" | "oportunidade" | "promocao";
+  type: "empresa" | "categoria" | "hotel" | "espaco" | "imovel" | "oportunidade" | "promocao" | "evento";
   title: string;
   subtitle: string;
   href: string;
@@ -22,6 +23,7 @@ export const SEARCH_TYPE_LABEL: Record<SearchResult["type"], string> = {
   imovel: "Imóvel",
   oportunidade: "Oportunidade",
   promocao: "Promoção",
+  evento: "Evento",
 };
 
 const PLAN_RANK: Record<string, number> = { experiencia: 3, destaque: 2, profissional: 1, presenca: 0 };
@@ -48,13 +50,14 @@ export async function searchGlobal(term: string, locale?: string): Promise<Searc
   const normalized = term.trim();
   if (!normalized) return [];
 
-  const [businesses, opportunities, benefits, hotels, spaces, listings] = await Promise.all([
+  const [businesses, opportunities, benefits, hotels, spaces, listings, events] = await Promise.all([
     getAllBusinesses(locale),
     getOpportunities(locale),
     getBenefits(locale),
     getActiveHotels(),
     getActiveMeetingSpaces(),
     getActiveListings(),
+    getUpcomingEvents(),
   ]);
 
   type Scored = SearchResult & { tier: number; planRank: number };
@@ -131,6 +134,20 @@ export async function searchGlobal(term: string, locale?: string): Promise<Searc
       title: opportunity.title,
       subtitle: `Oportunidade · ${opportunity.business.name}`,
       href: `/empresa/${opportunity.business.slug}`,
+      sponsored: false,
+      tier,
+      planRank: 0,
+    });
+  }
+
+  for (const event of events) {
+    const tier = relevanceTier(normalized, `${event.title} ${event.description ?? ""} ${event.location ?? ""}`);
+    if (tier === null) continue;
+    scored.push({
+      type: "evento",
+      title: event.title,
+      subtitle: "Fórum de Negócios",
+      href: "/forum-de-negocios",
       sponsored: false,
       tier,
       planRank: 0,

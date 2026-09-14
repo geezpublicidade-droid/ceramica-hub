@@ -151,6 +151,21 @@ export default async function DashboardPage() {
               )}
             </div>
 
+            <div className="glass-light flex flex-wrap items-center justify-between gap-4 rounded-3xl p-6">
+              <div>
+                <p className="text-[15px] font-medium uppercase tracking-[0.15em] text-muted">QR Code</p>
+                <p className="mt-2 max-w-md text-[15px] text-muted">
+                  Baixe o QR Code da sua página pra usar em placas, cartões ou material impresso da sua empresa.
+                </p>
+              </div>
+              <a
+                href={`/api/business/${business.slug}/qrcode`}
+                className="neu rounded-full px-6 py-3 text-[15px] font-medium text-foreground"
+              >
+                Baixar QR Code
+              </a>
+            </div>
+
             {isOwner && <PlanBilling currentPlan={business.plan} invoices={invoices} />}
             {isOwner && <StaffManagement staff={staff} />}
             <PrivacyControls isOwner={isOwner} />
