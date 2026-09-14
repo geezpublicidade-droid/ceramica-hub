@@ -208,6 +208,12 @@
     "doneTitle": "登记已成功提交。",
     "doneDescription": "我们的团队将在发布您的主页前核实相关信息。"
   },
+  "HeroMasthead": {
+    "titlePrefix": "Cerâmica",
+    "titleHighlight": "Hub",
+    "subtitlePrefix": "连接人、企业与",
+    "subtitleHighlight": "机会"
+  },
   "NetworkNarrative": {
     "eyebrow": "Espaço Cerâmica 商业网络",
     "headline": "近在咫尺,发现企业、服务与商机。",

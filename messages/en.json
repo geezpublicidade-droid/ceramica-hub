@@ -208,6 +208,12 @@
     "doneTitle": "Registration received successfully.",
     "doneDescription": "Our team will verify your details before publishing your page."
   },
+  "HeroMasthead": {
+    "titlePrefix": "Cerâmica",
+    "titleHighlight": "Hub",
+    "subtitlePrefix": "connecting people, businesses and",
+    "subtitleHighlight": "opportunities"
+  },
   "NetworkNarrative": {
     "eyebrow": "The Espaço Cerâmica business network",
     "headline": "Find businesses, services and opportunities just a few floors away.",

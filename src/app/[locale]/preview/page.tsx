@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { Header } from "@/components/Header";
+import { HeroMasthead } from "@/components/landing/HeroMasthead";
 import { NetworkNarrative } from "@/components/landing/NetworkNarrative";
 import { ScaleSequence } from "@/components/landing/ScaleSequence";
 import { PlatformReveal } from "@/components/landing/PlatformReveal";
@@ -47,6 +48,7 @@ export default async function Preview({ params }: { params: Promise<{ locale: st
       <main className="flex-1">
         <SearchProvider>
           <NetworkNarrative />
+          <HeroMasthead />
           <InstitutionalPartners />
           <AdBanner placementKey="hero_abaixo" />
           <div className="py-10">
