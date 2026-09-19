@@ -166,6 +166,7 @@
       "tower": "Torre",
       "floor": "Piso",
       "roomNumber": "Sala",
+      "comprovante": "Comprobante de instalación en la torre (contrato, factura de luz, etc.)",
       "logoUrl": "URL del logo (opcional por ahora)",
       "coverPhotoUrl": "URL de la foto de portada (opcional por ahora)",
       "instagram": "Instagram",
@@ -181,6 +182,9 @@
       "openingHours": "Lun a vie, 9h a 18h"
     },
     "towerAddress": "Dirección: {address}",
+    "comprovanteHint": "PDF, JPG, PNG o WEBP, hasta 10MB. Solo nuestro equipo tiene acceso a este archivo.",
+    "comprovanteUploading": "Enviando archivo...",
+    "comprovanteSelected": "Archivo enviado: {fileName}",
     "consent": {
       "address": "Confirmo que mi empresa opera en la dirección indicada.",
       "terms": "He leído y acepto los <termsLink>Términos de Uso</termsLink>.",
@@ -198,6 +202,7 @@
       "tower": "Selecciona la torre.",
       "floor": "Indica el piso.",
       "roomNumber": "Indica la sala.",
+      "comprovante": "Envía el comprobante de instalación en la torre.",
       "consent": "Debes aceptar los términos, la política de privacidad, la política de registro y confirmar el funcionamiento en la dirección.",
       "turnstile": "Confirma que no eres un robot antes de enviar."
     },

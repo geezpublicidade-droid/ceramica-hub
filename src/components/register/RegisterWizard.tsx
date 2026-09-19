@@ -3,7 +3,7 @@
 import { useState, useTransition, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { categories } from "@/data/businesses";
-import { registerBusiness } from "@/lib/actions/register-business";
+import { registerBusiness, uploadComprovante } from "@/lib/actions/register-business";
 import { Link } from "@/i18n/navigation";
 import { TurnstileWidget } from "@/components/TurnstileWidget";
 import type { TowerOption } from "@/app/[locale]/cadastro/page";
@@ -22,6 +22,8 @@ type FormState = {
   towerId: string;
   floor: string;
   roomNumber: string;
+  comprovantePath: string;
+  comprovanteFileName: string;
   logoUrl: string;
   coverPhotoUrl: string;
   instagram: string;
@@ -46,6 +48,8 @@ const initialState: FormState = {
   towerId: "",
   floor: "",
   roomNumber: "",
+  comprovantePath: "",
+  comprovanteFileName: "",
   logoUrl: "",
   coverPhotoUrl: "",
   instagram: "",
@@ -72,6 +76,8 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
   const [isPending, startTransition] = useTransition();
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const turnstileRequired = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
+  const [comprovanteUploading, setComprovanteUploading] = useState(false);
+  const [comprovanteError, setComprovanteError] = useState<string | null>(null);
 
   const selectedTower = towers.find((t) => t.id === form.towerId);
 
@@ -92,8 +98,25 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
       if (!form.towerId) return t("errors.tower");
       if (!form.floor.trim()) return t("errors.floor");
       if (!form.roomNumber.trim()) return t("errors.roomNumber");
+      if (!form.comprovantePath) return t("errors.comprovante");
     }
     return null;
+  }
+
+  async function handleComprovanteChange(file: File | null) {
+    if (!file) return;
+    setComprovanteError(null);
+    setComprovanteUploading(true);
+    const uploadForm = new FormData();
+    uploadForm.set("file", file);
+    const result = await uploadComprovante(uploadForm);
+    setComprovanteUploading(false);
+    if (!result.success) {
+      setComprovanteError(result.error);
+      return;
+    }
+    update("comprovantePath", result.path);
+    update("comprovanteFileName", file.name);
   }
 
   function goNext() {
@@ -261,6 +284,21 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
               value={form.roomNumber}
               onChange={(e) => update("roomNumber", e.target.value)}
             />
+          </label>
+          <label>
+            <span className={labelClass}>{t("labels.comprovante")}</span>
+            <input
+              type="file"
+              accept="application/pdf,image/jpeg,image/png,image/webp"
+              className={inputClass}
+              onChange={(e) => handleComprovanteChange(e.target.files?.[0] ?? null)}
+            />
+            <p className="mt-1.5 text-[13px] text-muted">{t("comprovanteHint")}</p>
+            {comprovanteUploading && <p className="mt-1 text-[13px] text-muted">{t("comprovanteUploading")}</p>}
+            {form.comprovanteFileName && !comprovanteUploading && (
+              <p className="mt-1 text-[13px] text-primary">{t("comprovanteSelected", { fileName: form.comprovanteFileName })}</p>
+            )}
+            {comprovanteError && <p className="mt-1 text-[13px] text-red-600">{comprovanteError}</p>}
           </label>
         </div>
       )}

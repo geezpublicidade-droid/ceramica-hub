@@ -82,7 +82,7 @@ function resolveEffectivePlan(row: BusinessRow): {
 
 /** `translation` é o mapa field->value já resolvido pra ESSA empresa num idioma específico (ver `getTranslationsFor`); ausente/sem entrada = mantém o texto em português. */
 function mapBusiness(row: BusinessRow, translation?: Record<string, string>): Business {
-  const verified = row.status === "approved";
+  const verified = row.status === "approved" && row.address_verified;
   const { effectivePlan, trialStatus } = resolveEffectivePlan(row);
   return {
     id: row.id,

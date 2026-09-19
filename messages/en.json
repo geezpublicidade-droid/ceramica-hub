@@ -166,6 +166,7 @@
       "tower": "Tower",
       "floor": "Floor",
       "roomNumber": "Room",
+      "comprovante": "Proof of installation in the tower (lease, utility bill, etc.)",
       "logoUrl": "Logo URL (optional for now)",
       "coverPhotoUrl": "Cover photo URL (optional for now)",
       "instagram": "Instagram",
@@ -181,6 +182,9 @@
       "openingHours": "Mon–Fri, 9am–6pm"
     },
     "towerAddress": "Address: {address}",
+    "comprovanteHint": "PDF, JPG, PNG or WEBP, up to 10MB. Only our team can access this file.",
+    "comprovanteUploading": "Uploading file...",
+    "comprovanteSelected": "File uploaded: {fileName}",
     "consent": {
       "address": "I confirm my business operates at the address provided.",
       "terms": "I have read and accept the <termsLink>Terms of Use</termsLink>.",
@@ -198,6 +202,7 @@
       "tower": "Select the tower.",
       "floor": "Enter the floor.",
       "roomNumber": "Enter the room number.",
+      "comprovante": "Upload proof of installation in the tower.",
       "consent": "You must accept the terms, the privacy policy, the registration policy, and confirm the business address.",
       "turnstile": "Please confirm you're not a robot before submitting."
     },

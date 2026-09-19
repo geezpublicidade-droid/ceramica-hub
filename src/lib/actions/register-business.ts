@@ -33,6 +33,7 @@ const registerBusinessSchema = z
     registrationPolicyAccepted: z.boolean(),
     imageUsageAuthorized: z.boolean(),
     addressConfirmed: z.boolean(),
+    comprovantePath: z.string().min(1, "Envie o comprovante de instalação na torre."),
     turnstileToken: z.string().nullable().optional(),
   })
   .superRefine((data, ctx) => {
@@ -48,6 +49,41 @@ const registerBusinessSchema = z
 export type RegisterBusinessInput = z.input<typeof registerBusinessSchema>;
 
 export type RegisterBusinessResult = { success: true; businessId: string } | { success: false; error: string };
+
+type UploadComprovanteResult = { success: true; path: string } | { success: false; error: string };
+
+const MAX_COMPROVANTE_BYTES = 10 * 1024 * 1024;
+const ALLOWED_COMPROVANTE_TYPES = ["application/pdf", "image/jpeg", "image/png", "image/webp"];
+
+/** Sobe o comprovante de instalação na torre (contrato, conta de luz, etc.)
+ * antes de o cadastro da empresa existir -- por isso o caminho vive sob
+ * `pending/`, identificado só por um UUID aleatório, e é referenciado por
+ * `comprovante_path` quando o registro é criado logo em seguida. O bucket
+ * `comprovantes` é privado (nunca exposto por URL pública, só signed URL
+ * gerada pelo admin em getComprovanteSignedUrl). */
+export async function uploadComprovante(formData: FormData): Promise<UploadComprovanteResult> {
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return { success: false, error: "Selecione o arquivo do comprovante." };
+  }
+  if (!ALLOWED_COMPROVANTE_TYPES.includes(file.type)) {
+    return { success: false, error: "Envie um PDF, JPG, PNG ou WEBP." };
+  }
+  if (file.size > MAX_COMPROVANTE_BYTES) {
+    return { success: false, error: "Arquivo muito grande (máximo 10MB)." };
+  }
+
+  const extension = file.name.split(".").pop()?.toLowerCase() || "pdf";
+  const path = `pending/${crypto.randomUUID()}.${extension}`;
+
+  const supabase = createServiceClient();
+  const { error } = await supabase.storage
+    .from("comprovantes")
+    .upload(path, file, { contentType: file.type, upsert: false });
+  if (error) return { success: false, error: "Não foi possível enviar o arquivo. Tente novamente." };
+
+  return { success: true, path };
+}
 
 async function generateUniqueSlug(
   supabase: ReturnType<typeof createServiceClient>,
@@ -101,6 +137,7 @@ export async function registerBusiness(rawInput: RegisterBusinessInput): Promise
       website_url: input.websiteUrl.trim() || null,
       opening_hours: input.openingHours.trim() || null,
       image_usage_authorized: input.imageUsageAuthorized,
+      comprovante_path: input.comprovantePath,
       plan: "presenca",
       status: "pending",
     })

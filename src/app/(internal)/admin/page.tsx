@@ -31,6 +31,8 @@ type PendingBusiness = {
   plan: "presenca" | "profissional" | "destaque" | "experiencia";
   trial_status: "none" | "active" | "expired";
   rejection_reason: string | null;
+  comprovante_path: string | null;
+  address_verified: boolean;
   towers: { name: string } | null;
 };
 
@@ -39,7 +41,7 @@ async function getBusinessesByStatus(status: "pending" | "approved" | "rejected"
   const { data, error } = await supabase
     .from("businesses")
     .select(
-      "id, name, responsible_name, email, category, phone, document, floor, room_number, status, created_at, founder, plan, trial_status, rejection_reason, towers(name)",
+      "id, name, responsible_name, email, category, phone, document, floor, room_number, status, created_at, founder, plan, trial_status, rejection_reason, comprovante_path, address_verified, towers(name)",
     )
     .eq("status", status)
     .order("created_at", { ascending: true });
@@ -182,6 +184,8 @@ export default async function AdminPage() {
                   plan: b.plan,
                   trialStatus: b.trial_status,
                   missingItems: completeness.get(b.id) ?? [],
+                  comprovantePath: b.comprovante_path,
+                  addressVerified: b.address_verified,
                 }}
               />
             ))}

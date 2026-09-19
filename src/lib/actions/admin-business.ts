@@ -148,6 +148,48 @@ export async function reactivateBusiness(businessId: string) {
   revalidatePath("/");
 }
 
+/** Confirma (ou desfaz) que o admin conferiu o comprovante de instalação na
+ * torre -- é isso que efetivamente libera o selo público "Verificado" (ver
+ * mapBusiness em platform.ts: verified = approved && address_verified),
+ * separado da aprovação geral pra o admin poder aprovar primeiro e conferir
+ * o documento depois, ou vice-versa. */
+export async function verifyBusinessAddress(businessId: string, verified: boolean) {
+  const adminId = await requireAdmin(["super_admin", "admin", "moderador"]);
+  const supabase = createServiceClient();
+  const { error } = await supabase.from("businesses").update({ address_verified: verified }).eq("id", businessId);
+  if (error) throw error;
+
+  await logAdminAction(adminId, "verify_business_address", "business", businessId, { verified });
+
+  revalidatePath("/admin");
+  revalidatePath("/");
+  revalidatePath("/preview");
+}
+
+/** Signed URL de curta duração pro admin abrir o comprovante enviado no
+ * cadastro -- o bucket `comprovantes` é privado, então nunca tem URL pública
+ * fixa (ver uploadComprovante em register-business.ts). */
+export async function getComprovanteSignedUrl(businessId: string): Promise<{ success: true; url: string } | { success: false; error: string }> {
+  await requireAdmin(["super_admin", "admin", "moderador"]);
+  const supabase = createServiceClient();
+
+  const { data: business, error: fetchError } = await supabase
+    .from("businesses")
+    .select("comprovante_path")
+    .eq("id", businessId)
+    .single();
+  if (fetchError || !business?.comprovante_path) {
+    return { success: false, error: "Nenhum comprovante encontrado pra essa empresa." };
+  }
+
+  const { data, error } = await supabase.storage
+    .from("comprovantes")
+    .createSignedUrl(business.comprovante_path, 300);
+  if (error || !data) return { success: false, error: "Não foi possível gerar o link do comprovante." };
+
+  return { success: true, url: data.signedUrl };
+}
+
 export async function rejectBusiness(businessId: string, reason: string) {
   const adminId = await requireAdmin(["super_admin", "admin", "moderador"]);
   const supabase = createServiceClient();

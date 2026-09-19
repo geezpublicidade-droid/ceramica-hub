@@ -6,6 +6,8 @@ import {
   grantTrial,
   suspendBusiness,
   getBusinessHistory,
+  verifyBusinessAddress,
+  getComprovanteSignedUrl,
   type BusinessHistoryEntry,
 } from "@/lib/actions/admin-business";
 
@@ -19,12 +21,15 @@ type ApprovedBusiness = {
   plan: "presenca" | "profissional" | "destaque" | "experiencia";
   trialStatus: "none" | "active" | "expired";
   missingItems: string[];
+  comprovantePath: string | null;
+  addressVerified: boolean;
 };
 
 const ACTION_LABEL: Record<string, string> = {
   approve_business: "Aprovação",
   reject_business: "Rejeição",
   set_business_founder: "Alteração de selo Fundadora",
+  verify_business_address: "Confirmação de endereço",
   grant_trial: "Liberação de trial",
   suspend_business: "Suspensão",
   reactivate_business: "Reativação",
@@ -37,8 +42,19 @@ export function ApprovedBusinessRow({ business }: { business: ApprovedBusiness }
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [showSuspendReason, setShowSuspendReason] = useState(false);
   const [suspendReason, setSuspendReason] = useState("");
+  const [comprovanteError, setComprovanteError] = useState<string | null>(null);
 
   const eligibleForTrial = business.plan === "presenca" && business.trialStatus !== "active";
+
+  async function handleViewComprovante() {
+    setComprovanteError(null);
+    const result = await getComprovanteSignedUrl(business.id);
+    if (!result.success) {
+      setComprovanteError(result.error);
+      return;
+    }
+    window.open(result.url, "_blank", "noopener,noreferrer");
+  }
 
   async function handleToggleHistory() {
     if (history !== null) {
@@ -92,6 +108,20 @@ export function ApprovedBusinessRow({ business }: { business: ApprovedBusiness }
           <a href={`/api/business/${business.id}/qrcode`} className="text-[12px] font-medium text-primary underline">
             QR Code
           </a>
+          {business.comprovantePath && (
+            <button type="button" onClick={handleViewComprovante} className="text-[12px] font-medium text-primary underline">
+              Ver comprovante
+            </button>
+          )}
+          <label className="flex items-center gap-2 text-[13px] text-muted">
+            <input
+              type="checkbox"
+              checked={business.addressVerified}
+              disabled={isPending}
+              onChange={(e) => startTransition(() => verifyBusinessAddress(business.id, e.target.checked))}
+            />
+            Endereço confirmado
+          </label>
           <label className="flex items-center gap-2 text-[13px] text-muted">
             <input
               type="checkbox"
@@ -113,6 +143,7 @@ export function ApprovedBusinessRow({ business }: { business: ApprovedBusiness }
       </div>
 
       {trialError && <p className="mt-2 text-[13px] text-red-600">{trialError}</p>}
+      {comprovanteError && <p className="mt-2 text-[13px] text-red-600">{comprovanteError}</p>}
 
       {showSuspendReason && (
         <div className="mt-3 flex gap-2">

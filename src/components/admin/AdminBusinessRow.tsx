@@ -1,7 +1,12 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { approveBusiness, rejectBusiness } from "@/lib/actions/admin-business";
+import {
+  approveBusiness,
+  rejectBusiness,
+  verifyBusinessAddress,
+  getComprovanteSignedUrl,
+} from "@/lib/actions/admin-business";
 
 type Business = {
   id: string;
@@ -13,6 +18,8 @@ type Business = {
   document: string | null;
   floor: string;
   room_number: string;
+  comprovante_path: string | null;
+  address_verified: boolean;
   towers: { name: string } | null;
 };
 
@@ -20,6 +27,17 @@ export function AdminBusinessRow({ business }: { business: Business }) {
   const [isPending, startTransition] = useTransition();
   const [showRejectReason, setShowRejectReason] = useState(false);
   const [reason, setReason] = useState("");
+  const [comprovanteError, setComprovanteError] = useState<string | null>(null);
+
+  async function handleViewComprovante() {
+    setComprovanteError(null);
+    const result = await getComprovanteSignedUrl(business.id);
+    if (!result.success) {
+      setComprovanteError(result.error);
+      return;
+    }
+    window.open(result.url, "_blank", "noopener,noreferrer");
+  }
 
   return (
     <div className="rounded-3xl border border-border bg-white/70 p-6">
@@ -35,6 +53,25 @@ export function AdminBusinessRow({ business }: { business: Business }) {
             {business.phone}
           </p>
           {business.document && <p className="text-[15px] text-muted">Documento: {business.document}</p>}
+          <div className="mt-2 flex flex-wrap items-center gap-3">
+            {business.comprovante_path ? (
+              <button type="button" onClick={handleViewComprovante} className="text-[13px] font-medium text-primary underline">
+                Ver comprovante
+              </button>
+            ) : (
+              <span className="text-[13px] text-amber-700">Sem comprovante enviado</span>
+            )}
+            <label className="flex items-center gap-2 text-[13px] text-muted">
+              <input
+                type="checkbox"
+                checked={business.address_verified}
+                disabled={isPending}
+                onChange={(e) => startTransition(() => verifyBusinessAddress(business.id, e.target.checked))}
+              />
+              Endereço confirmado (libera o selo Verificado)
+            </label>
+          </div>
+          {comprovanteError && <p className="mt-1 text-[13px] text-red-600">{comprovanteError}</p>}
         </div>
         <div className="flex gap-2">
           <button

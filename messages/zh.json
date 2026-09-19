@@ -166,6 +166,7 @@
       "tower": "所在大厦",
       "floor": "楼层",
       "roomNumber": "房间号",
+      "comprovante": "大厦入驻证明(租约、电费账单等)",
       "logoUrl": "标志图片链接(暂时可选)",
       "coverPhotoUrl": "封面图片链接(暂时可选)",
       "instagram": "Instagram",
@@ -181,6 +182,9 @@
       "openingHours": "周一至周五,9:00–18:00"
     },
     "towerAddress": "地址:{address}",
+    "comprovanteHint": "PDF、JPG、PNG 或 WEBP,最大 10MB。仅我们的团队可以访问此文件。",
+    "comprovanteUploading": "正在上传文件...",
+    "comprovanteSelected": "已上传文件:{fileName}",
     "consent": {
       "address": "我确认本企业在所填地址正常营业。",
       "terms": "我已阅读并接受<termsLink>使用条款</termsLink>。",
@@ -198,6 +202,7 @@
       "tower": "请选择大厦。",
       "floor": "请填写楼层。",
       "roomNumber": "请填写房间号。",
+      "comprovante": "请上传大厦入驻证明。",
       "consent": "必须接受条款、隐私政策、登记政策,并确认营业地址。",
       "turnstile": "提交前请确认您不是机器人。"
     },
