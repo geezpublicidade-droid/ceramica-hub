@@ -114,6 +114,17 @@ export function Header() {
           >
             {t("cadastrarEmpresa")}
           </Link>
+          <NextLink
+            href="/entrar"
+            aria-label={t("entrar")}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-black/5 hover:text-foreground sm:h-auto sm:w-auto sm:gap-1.5 sm:rounded-full sm:border sm:border-border sm:px-4 sm:py-2 sm:text-[14px] sm:font-medium sm:text-foreground sm:hover:border-primary sm:hover:text-primary"
+          >
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sm:hidden">
+              <circle cx="12" cy="8" r="4" />
+              <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" />
+            </svg>
+            <span className="hidden sm:inline">{t("entrar")}</span>
+          </NextLink>
           <button
             type="button"
             aria-label={menuOpen ? t("fecharMenu") : t("abrirMenu")}
@@ -198,7 +209,7 @@ export function Header() {
             {t("cadastrarEmpresa")}
           </Link>
           <NextLink
-            href="/login"
+            href="/entrar"
             onClick={() => setMenuOpen(false)}
             className="rounded-xl px-3 py-2.5 text-foreground transition-colors hover:bg-black/5"
           >

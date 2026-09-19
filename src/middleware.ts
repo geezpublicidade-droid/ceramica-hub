@@ -11,7 +11,7 @@ const ROLE_BY_PREFIX: { prefix: string; roles: ("business" | "business_staff" | 
 ];
 
 // Rotas fora de src/app/[locale] — nunca passam pelo roteamento de idioma.
-const NO_LOCALE_PATHS = ["/login", "/esqueci-senha", "/redefinir-senha"];
+const NO_LOCALE_PATHS = ["/login", "/entrar", "/esqueci-senha", "/redefinir-senha"];
 
 const intlMiddleware = createMiddleware(routing);
 
