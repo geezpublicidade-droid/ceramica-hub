@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #faf6f2;
   --foreground: #09090b;
   --muted: #86868b;
-  --surface: #f5f5f7;
+  --surface: #f2ece4;
   --surface-dark: #050505;
   --foreground-dark: #f5f5f7;
   /* momentos institucionais (ex: AdvertisersCTA) -- cinza-grafite, não preto puro */
