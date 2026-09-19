@@ -11,10 +11,10 @@
   --graphite: #1c1c1e;
   --border: rgba(0, 0, 0, 0.08);
   --border-dark: rgba(255, 255, 255, 0.12);
-  --primary: #0071e3;
-  --primary-light: #2997ff;
-  --connection: #5ac8fa;
-  --glow: rgba(41, 151, 255, 0.35);
+  --primary: #e35336;
+  --primary-light: #e8755e;
+  --connection: #f2a88c;
+  --glow: rgba(232, 117, 94, 0.35);
   /* só o banner de anúncios (AdBanner) usa essa cor -- vem do esboço no Figma */
   --ad-teal: #1ea6d3;
 
@@ -49,9 +49,9 @@ body {
      painéis de vidro (glass-light/glass-card-light) refratam; vidro sobre
      branco puro não lê como vidro, precisa de cor por trás pra desfocar. */
   background:
-    radial-gradient(1100px circle at 12% -8%, rgba(41, 151, 255, 0.16), transparent 55%),
-    radial-gradient(900px circle at 92% 8%, rgba(90, 200, 250, 0.14), transparent 50%),
-    radial-gradient(1000px circle at 50% 105%, rgba(0, 113, 227, 0.09), transparent 55%),
+    radial-gradient(1100px circle at 12% -8%, rgba(232, 117, 94, 0.16), transparent 55%),
+    radial-gradient(900px circle at 92% 8%, rgba(242, 168, 140, 0.14), transparent 50%),
+    radial-gradient(1000px circle at 50% 105%, rgba(227, 83, 54, 0.09), transparent 55%),
     var(--surface);
   background-attachment: fixed;
   color: var(--foreground);
@@ -97,7 +97,9 @@ body {
 .glass-card-light {
   background: rgba(255, 255, 255, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 16px 32px -18px rgba(40, 20, 15, 0.22);
 }
 
 /* Neumorfismo — usado nos botões: elemento "moldado" no mesmo material do
@@ -136,22 +138,57 @@ body {
 .neu-primary {
   background: var(--primary);
   box-shadow:
-    6px 6px 14px rgba(0, 55, 130, 0.35),
-    -6px -6px 14px rgba(140, 195, 255, 0.45);
+    6px 6px 14px rgba(92, 30, 18, 0.35),
+    -6px -6px 14px rgba(255, 190, 165, 0.45);
   transition: box-shadow 0.15s ease, transform 0.1s ease;
 }
 
 .neu-primary:hover {
   box-shadow:
-    4px 4px 10px rgba(0, 55, 130, 0.3),
-    -4px -4px 10px rgba(140, 195, 255, 0.4);
+    4px 4px 10px rgba(92, 30, 18, 0.3),
+    -4px -4px 10px rgba(255, 190, 165, 0.4);
 }
 
 .neu-primary:active {
   box-shadow:
-    inset 3px 3px 7px rgba(0, 40, 100, 0.45),
-    inset -3px -3px 7px rgba(150, 205, 255, 0.4);
+    inset 3px 3px 7px rgba(75, 22, 12, 0.45),
+    inset -3px -3px 7px rgba(255, 200, 178, 0.4);
   transform: scale(0.98);
+}
+
+/* Gradiente terracota "vivo" -- pros DIVs que precisam de mais presença
+   (cards de plano em destaque). Só aplicar em elementos poucos e grandes;
+   não usar em botões pequenos repetidos (ex: neu-primary), onde o
+   movimento constante em muitas instâncias vira ruído visual. */
+@keyframes gradient-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient-terracotta-animated {
+  background: linear-gradient(
+    120deg,
+    var(--primary) 0%,
+    var(--primary-light) 35%,
+    var(--connection) 65%,
+    var(--primary) 100%
+  );
+  background-size: 300% 300%;
+  animation: gradient-flow 9s ease infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gradient-terracotta-animated {
+    animation: none;
+    background: linear-gradient(135deg, var(--primary-light), var(--primary));
+  }
 }
 
 @keyframes node-pulse {

@@ -47,10 +47,9 @@ export async function Pricing() {
               key={plan.key}
               className={`relative rounded-3xl p-8 ${
                 plan.highlight
-                  ? "text-white shadow-[0_30px_60px_-20px_rgba(0,113,227,0.45)]"
+                  ? "gradient-terracotta-animated text-white shadow-[0_30px_60px_-20px_rgba(227,83,54,0.45)]"
                   : "glass-light text-foreground"
               }`}
-              style={plan.highlight ? { background: "linear-gradient(135deg, #2997ff, #0071e3)" } : undefined}
             >
               {plan.badge && (
                 <span className="absolute -top-3 left-8 rounded-full bg-white px-3 py-1 text-[13px] font-medium text-primary shadow-[0_4px_12px_rgba(0,0,0,0.15)]">
@@ -77,7 +76,7 @@ export async function Pricing() {
                 href="/cadastro"
                 className={`mt-8 block rounded-full px-6 py-3 text-center text-[16px] font-medium transition-transform active:scale-[0.98] ${
                   plan.highlight
-                    ? "bg-white text-primary shadow-[6px_6px_14px_rgba(0,40,100,0.25),-6px_-6px_14px_rgba(255,255,255,0.5)]"
+                    ? "bg-white text-primary shadow-[6px_6px_14px_rgba(75,22,12,0.25),-6px_-6px_14px_rgba(255,255,255,0.5)]"
                     : "neu-primary text-white"
                 }`}
               >

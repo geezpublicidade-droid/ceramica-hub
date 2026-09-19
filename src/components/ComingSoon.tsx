@@ -38,7 +38,7 @@ export async function ComingSoon() {
             leitura do texto independente de qual das 4 imagens está no topo */}
         <div className="absolute inset-0 bg-gradient-to-b from-white/20 via-white/55 to-white/92" />
         <div className="absolute inset-0 bg-[radial-gradient(1100px_circle_at_50%_38%,rgba(255,255,255,0.6),transparent_65%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(1200px_circle_at_50%_-10%,rgba(41,151,255,0.18),transparent_60%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(1200px_circle_at_50%_-10%,rgba(232,117,94,0.18),transparent_60%)]" />
       </div>
 
       <header className="relative z-10 flex items-center justify-between px-6 py-6 sm:px-10">

@@ -44,9 +44,8 @@ export async function PricingSummary() {
             <div
               key={plan.key}
               className={`relative rounded-3xl p-7 ${
-                plan.highlight ? "text-white" : "border border-border text-foreground"
+                plan.highlight ? "gradient-terracotta-animated text-white" : "border border-border text-foreground"
               }`}
-              style={plan.highlight ? { background: "linear-gradient(135deg, #2997ff, #0071e3)" } : undefined}
             >
               {plan.badge && (
                 <span className="absolute -top-3 left-7 rounded-full bg-white px-3 py-1 text-[12px] font-medium text-primary shadow-[0_4px_12px_rgba(0,0,0,0.15)]">
