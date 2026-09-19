@@ -74,6 +74,11 @@ export function LoginForm({
             Entrar
           </button>
         </form>
+        {role === "business" && (
+          <Link href="/esqueci-senha" className="mt-4 block text-center text-[14px] text-primary underline">
+            Esqueci minha senha
+          </Link>
+        )}
         </div>
       </div>
     </main>
