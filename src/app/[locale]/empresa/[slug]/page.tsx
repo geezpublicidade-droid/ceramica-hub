@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { BusinessAvatar } from "@/components/BusinessAvatar";
+import { FavoriteButton } from "@/components/FavoriteButton";
 import { VirtualTourViewer } from "@/components/VirtualTourViewer";
 import { Link, redirect } from "@/i18n/navigation";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
@@ -225,6 +226,7 @@ export default async function BusinessProfilePage({ params }: PageProps) {
                   >
                     {t("instagram")}
                   </a>
+                  <FavoriteButton businessId={business.id} />
                 </div>
               </div>
             </div>

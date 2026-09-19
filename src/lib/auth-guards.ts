@@ -76,6 +76,16 @@ export async function requireAdmin(allowedRoles?: AdminRole[]): Promise<string> 
   return session.user.id;
 }
 
+/**
+ * Diferente das outras guards, não lança erro — favoritar é uma ação que
+ * qualquer visitante pode tentar sem estar logado, e a resposta certa é
+ * mandar pra tela de login do membro, não quebrar a request.
+ */
+export async function getMemberId(): Promise<string | null> {
+  const session = await auth();
+  return session?.user?.memberId ?? null;
+}
+
 /** Versão pra Server Component: redireciona em vez de lançar erro. */
 export async function requireAdminPage(allowedRoles?: AdminRole[]): Promise<{ adminId: string; adminRole: AdminRole }> {
   const session = await auth();

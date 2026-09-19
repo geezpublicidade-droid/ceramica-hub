@@ -43,6 +43,7 @@ essas chegam sozinhas em toda branch/preview/produção:
 | `NEXT_PUBLIC_SITE_URL` | Sim | URL pública do site (`https://ceramicahub.com.br`). |
 | `CRON_SECRET` | Sim | String aleatória própria — protege `/api/cron/*` contra chamada externa. |
 | `DEEPL_API_KEY` | Sim (i18n dinâmico) | Conta DeepL API — sem ela, conteúdo cadastrado pelas empresas não é traduzido automaticamente pra en/es/zh. |
+| `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` | Sim (login com Google) | Google Cloud Console → APIs & Services → Credentials → OAuth client ID (tipo "Web application"). Redirect URI autorizado: `https://ceramicahub.com.br/api/auth/callback/google` (produção) e `http://localhost:3000/api/auth/callback/google` (dev local). Sem essas variáveis, o botão "Continuar com Google" (empresa, membro e admin) falha no callback — login por e-mail/senha continua funcionando normalmente. |
 
 ### Contas externas ainda pendentes (código já pronto, funciona em modo graceful no-op sem elas)
 

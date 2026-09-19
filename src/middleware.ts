@@ -2,11 +2,12 @@ import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "@/i18n/routing";
+import { LOGIN_PATH_BY_AREA } from "@/lib/login-paths";
 
 const ROLE_BY_PREFIX: { prefix: string; roles: ("business" | "business_staff" | "member" | "admin")[]; loginPath: string }[] = [
-  { prefix: "/dashboard", roles: ["business", "business_staff"], loginPath: "/login" },
-  { prefix: "/membro", roles: ["member"], loginPath: "/membro/login" },
-  { prefix: "/admin", roles: ["admin"], loginPath: "/admin/login" },
+  { prefix: "/dashboard", roles: ["business", "business_staff"], loginPath: LOGIN_PATH_BY_AREA.business },
+  { prefix: "/membro", roles: ["member"], loginPath: LOGIN_PATH_BY_AREA.member },
+  { prefix: "/admin", roles: ["admin"], loginPath: LOGIN_PATH_BY_AREA.admin },
 ];
 
 // Rotas fora de src/app/[locale] — nunca passam pelo roteamento de idioma.

@@ -244,6 +244,28 @@ export async function getAllBusinesses(locale?: string): Promise<Business[]> {
   return rows.map((row) => mapBusiness(row, translations[row.id]));
 }
 
+/** Favoritos do membro, mais recente primeiro — empresa desaprovada/removida some da lista sem quebrar. */
+export async function getMemberFavorites(memberId: string, locale?: string): Promise<Business[]> {
+  const supabase = createServiceClient();
+  const { data: favorites, error: favoritesError } = await supabase
+    .from("member_favorites")
+    .select("business_id")
+    .eq("member_id", memberId)
+    .order("created_at", { ascending: false });
+  if (favoritesError) throw favoritesError;
+
+  const businessIds = (favorites ?? []).map((row) => row.business_id as string);
+  if (businessIds.length === 0) return [];
+
+  const { data, error } = await supabase.from("businesses").select(BUSINESS_SELECT).in("id", businessIds);
+  if (error) throw error;
+
+  const rows = (data ?? []) as BusinessRow[];
+  const translations = await translationsByEntityId("business", rows.map((row) => row.id), locale);
+  const byId = new Map(rows.map((row) => [row.id, mapBusiness(row, translations[row.id])]));
+  return businessIds.map((id) => byId.get(id)).filter((business): business is Business => Boolean(business));
+}
+
 export const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export async function getBusinessById(id: string, locale?: string): Promise<Business | undefined> {
