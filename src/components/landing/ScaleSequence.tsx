@@ -6,12 +6,14 @@ import { useTranslations } from "next-intl";
 import { ScrollStage } from "@/components/motion/ScrollStage";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
-type Stage = "connection" | "disconnected" | "grow";
+type Stage = "near" | "needs" | "unconnected" | "point" | "grow";
 
 /** a mensagem final ganha a maior janela de progresso — fica visível por mais tempo */
 function resolveStage(progress: number): Stage {
-  if (progress < 0.36) return "connection";
-  if (progress < 0.64) return "disconnected";
+  if (progress < 0.18) return "near";
+  if (progress < 0.36) return "needs";
+  if (progress < 0.54) return "unconnected";
+  if (progress < 0.72) return "point";
   return "grow";
 }
 
@@ -63,8 +65,8 @@ const highlight = (chunks: ReactNode) => <span className="text-primary">{chunks}
 
 export function ScaleSequence() {
   const t = useTranslations("ScaleSequence");
-  const [stage, setStage] = useState<Stage>("connection");
-  const stageRef = useRef<Stage>("connection");
+  const [stage, setStage] = useState<Stage>("near");
+  const stageRef = useRef<Stage>("near");
 
   const handleProgress = useCallback((progress: number) => {
     const next = resolveStage(progress);
@@ -76,22 +78,34 @@ export function ScaleSequence() {
 
   return (
     <section aria-label={t("sectionLabel")}>
-      <ScrollStage heightVh={100} onProgress={handleProgress} className="relative bg-surface">
-        <PhraseBlock active={stage === "connection"}>
+      <ScrollStage heightVh={160} onProgress={handleProgress} className="relative bg-surface">
+        <PhraseBlock active={stage === "near"}>
           <h2 className="text-[clamp(1.9rem,5.2vw,3.75rem)] font-semibold leading-[1.15] tracking-tight text-foreground">
             {t.rich("phrase1", { primary: highlight })}
           </h2>
         </PhraseBlock>
 
-        <PhraseBlock active={stage === "disconnected"}>
+        <PhraseBlock active={stage === "needs"}>
           <h2 className="text-[clamp(1.9rem,5.2vw,3.75rem)] font-semibold leading-[1.15] tracking-tight text-foreground">
             {t.rich("phrase2", { primary: highlight })}
           </h2>
         </PhraseBlock>
 
+        <PhraseBlock active={stage === "unconnected"}>
+          <h2 className="text-[clamp(1.9rem,5.2vw,3.75rem)] font-semibold leading-[1.15] tracking-tight text-foreground">
+            {t.rich("phrase3", { primary: highlight })}
+          </h2>
+        </PhraseBlock>
+
+        <PhraseBlock active={stage === "point"}>
+          <h2 className="text-[clamp(1.9rem,5.2vw,3.75rem)] font-semibold leading-[1.15] tracking-tight text-foreground">
+            {t.rich("phrase4", { primary: highlight })}
+          </h2>
+        </PhraseBlock>
+
         <PhraseBlock active={stage === "grow"} large>
           <p className="text-[clamp(2.1rem,6vw,4.5rem)] font-semibold leading-[1.15] tracking-tight text-foreground">
-            {t.rich("phrase3", { primary: highlight })}
+            {t.rich("phrase5", { primary: highlight })}
           </p>
         </PhraseBlock>
       </ScrollStage>

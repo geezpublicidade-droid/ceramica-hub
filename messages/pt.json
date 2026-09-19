@@ -75,7 +75,7 @@
   },
   "Pricing": {
     "heading": "Comece com sua página comercial. Cresça quando fizer sentido.",
-    "subheading": "A fotografia e a produção de vídeo não estão incluídas automaticamente na mensalidade — são serviços adicionais da Geez Marketing, salvo promoções específicas.",
+    "subheading": "Veja o que cada plano inclui e escolha o que faz sentido agora pro seu negócio.",
     "ctaChoosePlan": "Quero esse plano",
     "mostChosen": "Mais escolhido",
     "perMonth": "/mês",
@@ -222,20 +222,54 @@
     "subtitleHighlight": "oportunidades"
   },
   "NetworkNarrative": {
-    "eyebrow": "A rede de negócios do Espaço Cerâmica",
-    "headline": "Encontre empresas, serviços e oportunidades a poucos andares de distância.",
-    "subhead": "O Cerâmica Hub conecta visitantes e empresas das torres Park, Union, Way e Gate em uma única plataforma.",
-    "searchPlaceholder": "O que você procura?",
+    "eyebrow": "Cerâmica Hub — o ecossistema do Bairro Cerâmica",
+    "headline": "Tudo o que acontece no Cerâmica, em um só lugar.",
+    "subhead": "Encontre empresas, serviços, benefícios e oportunidades nas torres Park, Union, Way e Gate.",
+    "searchPlaceholder": "O que você precisa encontrar?",
     "searchButton": "Buscar",
-    "ctaRegister": "Cadastrar empresa gratuitamente",
-    "ctaExplore": "Explorar empresas →",
+    "ctaRegister": "Tenho uma empresa no Cerâmica",
+    "ctaExplore": "Explorar o Cerâmica",
     "sectionLabel": "A rede de negócios do Cerâmica Hub"
+  },
+  "ProofOfRelevance": {
+    "empresasVerificadas": "Empresas verificadas",
+    "categorias": "Categorias",
+    "torres": "Torres participantes",
+    "ofertas": "Ofertas e oportunidades",
+    "contatosGerados": "Contatos gerados"
+  },
+  "FourUniverses": {
+    "eyebrow": "Quatro universos, um só ecossistema",
+    "headline": "Cada porta de entrada do Cerâmica.",
+    "corporate": {
+      "name": "Corporate",
+      "description": "Contabilidade, jurídico, tecnologia, marketing, design e educação — os serviços que sustentam quem trabalha no Cerâmica."
+    },
+    "lifestyle": {
+      "name": "Lifestyle",
+      "description": "Gastronomia, saúde, estética e moda — o que transforma o dia a dia em experiência."
+    },
+    "hoteis": {
+      "name": "Hotéis & Eventos",
+      "description": "Hospedagem corporativa, auditórios e turismo de negócios pra quem chega de fora."
+    },
+    "imobiliarias": {
+      "name": "Imobiliárias",
+      "description": "Salas, lajes e oportunidades pra quem quer crescer dentro do Cerâmica."
+    }
+  },
+  "FeaturedBusinesses": {
+    "eyebrow": "Quem já está no Cerâmica",
+    "headline": "Empresas em destaque.",
+    "ctaKnowBusiness": "Conhecer empresa"
   },
   "ScaleSequence": {
     "sectionLabel": "A escala do Cerâmica Hub",
-    "phrase1": "Um único ponto de <primary>conexão</primary>.",
-    "phrase2": "Trabalhar perto não significa estar <primary>conectado</primary>.",
-    "phrase3": "Quando os negócios se conectam, todo o ecossistema <primary>cresce</primary>."
+    "phrase1": "Empresas <primary>próximas</primary>.",
+    "phrase2": "Necessidades em <primary>comum</primary>.",
+    "phrase3": "Conexões que ainda não <primary>aconteceram</primary>.",
+    "phrase4": "Um único ponto de <primary>conexão</primary>.",
+    "phrase5": "Quando os negócios se conectam, todo o ecossistema <primary>cresce</primary>."
   },
   "PlatformReveal": {
     "eyebrow": "A plataforma",
@@ -270,19 +304,28 @@
     "headline": "Um prédio deixa de ser apenas um endereço quando seus negócios começam a se conectar.",
     "subhead": "A Cerâmica Hub nasce para transformar proximidade em visibilidade, colaboração e novas oportunidades."
   },
+  "PricingSummary": {
+    "eyebrow": "Planos",
+    "ctaSeeAllPlans": "Ver comparação completa dos planos"
+  },
+  "AdvertisersCTA": {
+    "eyebrow": "Pra marcas e anunciantes",
+    "headline": "Conecte sua marca a quem vive, trabalha e circula pelo Cerâmica.",
+    "cta": "Quero anunciar"
+  },
   "FounderCTA": {
-    "eyebrow": "Fase de lançamento",
-    "headline": "Faça parte da primeira geração de empresas da Cerâmica Hub.",
-    "subhead": "Cadastre seu negócio gratuitamente e receba o selo de Empresa Fundadora da plataforma.",
+    "eyebrow": "Pra empresas do Cerâmica",
+    "headline": "Sua empresa já está no Cerâmica. Agora ela também pode fazer parte da rede.",
+    "subhead": "Cadastre-se gratuitamente e ganhe visibilidade real diante de quem já circula, trabalha e decide dentro do complexo.",
     "ctaRegister": "Cadastrar minha empresa gratuitamente",
-    "ctaKnowPlatform": "Conhecer a plataforma",
+    "ctaKnowPlatform": "Ver planos",
     "benefits": [
       "Perfil público no diretório",
-      "Divulgação na fase inicial da plataforma",
-      "Presença garantida nas categorias",
+      "Selo de Empresa Fundadora na fase de lançamento",
+      "Presença garantida na sua categoria",
       "Contato direto pelo WhatsApp",
-      "Participação nas primeiras ações",
-      "Possibilidade de novas parcerias"
+      "Participação em eventos e no Fórum de Negócios",
+      "Espaço pra novas parcerias dentro do complexo"
     ]
   },
   "CinematicFooter": {
@@ -393,6 +436,33 @@
     "empty": "Nenhum espaço cadastrado ainda.",
     "requestInfo": "Solicitar informações",
     "capacity": "pessoas"
+  },
+  "PlanosPage": {
+    "metaTitle": "Planos — Cerâmica Hub",
+    "metaDescription": "Compare os planos do Cerâmica Hub e escolha o ideal pra sua empresa crescer dentro do ecossistema."
+  },
+  "FaqPage": {
+    "metaTitle": "Perguntas frequentes — Cerâmica Hub",
+    "metaDescription": "Tire dúvidas sobre planos, verificação de endereço, selo Fundadora e fotografia/vídeo no Cerâmica Hub.",
+    "heading": "Perguntas frequentes",
+    "items": [
+      {
+        "question": "A fotografia e a produção de vídeo estão incluídas no plano?",
+        "answer": "Não. Fotografia e produção de vídeo não estão incluídas automaticamente na mensalidade — são serviços adicionais da Geez Marketing, salvo promoções específicas."
+      },
+      {
+        "question": "Preciso pagar pra cadastrar minha empresa?",
+        "answer": "Não. O plano Presença é gratuito e já garante uma página pública no diretório do Cerâmica Hub."
+      },
+      {
+        "question": "Como minha empresa recebe o selo Verificado?",
+        "answer": "Depois que o cadastro é aprovado e o endereço na torre é confirmado pelo nosso time a partir do comprovante enviado (contrato, conta de luz, etc.)."
+      },
+      {
+        "question": "O que é o selo Empresa Fundadora?",
+        "answer": "É um reconhecimento dado pelo time do Cerâmica Hub pras empresas que fazem parte da fase de lançamento da plataforma."
+      }
+    ]
   },
   "Imobiliarias": {
     "metaTitle": "Imobiliárias — Cerâmica Hub",

@@ -110,10 +110,9 @@ export function Header() {
           </button>
           <Link
             href="/cadastro"
-            className="neu-primary whitespace-nowrap rounded-full px-3 py-2 text-[14px] font-semibold text-white sm:px-6 sm:py-3 sm:text-[16px]"
+            className="hidden whitespace-nowrap rounded-full border border-border px-4 py-2 text-[14px] font-medium text-foreground transition-colors hover:border-primary hover:text-primary sm:inline-block sm:px-5 sm:py-2.5 sm:text-[15px]"
           >
-            <span className="sm:hidden">{t("cadastrarEmpresaCurto")}</span>
-            <span className="hidden sm:inline">{t("cadastrarEmpresa")}</span>
+            {t("cadastrarEmpresa")}
           </Link>
           <button
             type="button"
@@ -191,6 +190,13 @@ export function Header() {
               {link.label}
             </Link>
           ))}
+          <Link
+            href="/cadastro"
+            onClick={() => setMenuOpen(false)}
+            className="rounded-xl px-3 py-2.5 text-foreground transition-colors hover:bg-black/5"
+          >
+            {t("cadastrarEmpresa")}
+          </Link>
           <NextLink
             href="/login"
             onClick={() => setMenuOpen(false)}

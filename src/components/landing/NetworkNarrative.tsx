@@ -115,10 +115,7 @@ export function NetworkNarrative() {
             <div className="mx-auto w-full max-w-6xl">
               <RevealText active={heroActive} stagger={0.12}>
                 <div className="max-w-2xl rounded-2xl border border-white/70 bg-white/90 p-4 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.25)] backdrop-blur-md sm:rounded-3xl sm:bg-white/95 sm:p-7">
-                  <p className="text-[13px] font-medium uppercase tracking-[0.15em] text-muted sm:text-[15px] sm:tracking-[0.2em]">
-                    Cerâmica Hub
-                  </p>
-                  <p className="mt-2 text-[13px] font-medium uppercase tracking-[0.15em] text-primary sm:mt-2 sm:text-[15px] sm:tracking-[0.2em]">
+                  <p className="text-[13px] font-medium uppercase tracking-[0.15em] text-primary sm:text-[15px] sm:tracking-[0.2em]">
                     {t("eyebrow")}
                   </p>
                   <h1 className="mt-3 text-[1.65rem] font-semibold leading-[1.15] tracking-tight text-foreground sm:mt-4 sm:text-[clamp(2.1rem,5vw,4rem)] sm:leading-[1.08]">
@@ -149,18 +146,18 @@ export function NetworkNarrative() {
                     </button>
                   </form>
                   <div className="mt-4 flex flex-wrap items-center gap-3 sm:mt-5 sm:gap-4">
-                    <Link
-                      href="/cadastro"
-                      className="neu-primary rounded-full px-5 py-2.5 text-[15px] font-medium text-white sm:px-7 sm:py-3.5 sm:text-[17px]"
-                    >
-                      {t("ctaRegister")}
-                    </Link>
                     <a
                       href="#empresas"
-                      className="text-[15px] font-medium text-foreground transition-colors hover:text-primary sm:text-[16px]"
+                      className="neu-primary rounded-full px-5 py-2.5 text-[15px] font-medium text-white sm:px-7 sm:py-3.5 sm:text-[17px]"
                     >
                       {t("ctaExplore")}
                     </a>
+                    <Link
+                      href="/cadastro"
+                      className="text-[15px] font-medium text-foreground transition-colors hover:text-primary sm:text-[16px]"
+                    >
+                      {t("ctaRegister")}
+                    </Link>
                   </div>
                 </div>
               </RevealText>

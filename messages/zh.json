@@ -75,7 +75,7 @@
   },
   "Pricing": {
     "heading": "从您的商业主页开始。按需求逐步升级。",
-    "subheading": "摄影与视频制作不包含在月费套餐内 — 属于 Geez Marketing 的附加服务,特定优惠活动除外。",
+    "subheading": "查看每个方案包含的内容,选择现在最适合您企业的方案。",
     "ctaChoosePlan": "选择此套餐",
     "mostChosen": "最受欢迎",
     "perMonth": "/月",
@@ -222,20 +222,54 @@
     "subtitleHighlight": "机会"
   },
   "NetworkNarrative": {
-    "eyebrow": "Espaço Cerâmica 商业网络",
-    "headline": "近在咫尺,发现企业、服务与商机。",
-    "subhead": "Cerâmica Hub 将 Park、Union、Way 和 Gate 四座大厦的访客与企业连接在同一平台上。",
-    "searchPlaceholder": "您在寻找什么?",
+    "eyebrow": "Cerâmica Hub — Bairro Cerâmica 生态系统",
+    "headline": "Cerâmica 里发生的一切,尽在此处。",
+    "subhead": "在 Park、Union、Way 和 Gate 四座大厦中,发现企业、服务、优惠与商机。",
+    "searchPlaceholder": "您想找什么?",
     "searchButton": "搜索",
-    "ctaRegister": "免费登记企业",
-    "ctaExplore": "探索企业 →",
+    "ctaRegister": "我在 Cerâmica 有企业",
+    "ctaExplore": "探索 Cerâmica",
     "sectionLabel": "Cerâmica Hub 商业网络"
+  },
+  "ProofOfRelevance": {
+    "empresasVerificadas": "已认证企业",
+    "categorias": "行业分类",
+    "torres": "参与大厦",
+    "ofertas": "优惠与商机",
+    "contatosGerados": "已产生联系"
+  },
+  "FourUniverses": {
+    "eyebrow": "四大领域,一个生态系统",
+    "headline": "通往 Cerâmica 的每一扇门。",
+    "corporate": {
+      "name": "Corporate 商务",
+      "description": "会计、法律、科技、营销、设计与教育——支撑 Cerâmica 从业者的各类服务。"
+    },
+    "lifestyle": {
+      "name": "Lifestyle 生活方式",
+      "description": "餐饮、健康、美容与时尚——让日常生活变成体验。"
+    },
+    "hoteis": {
+      "name": "酒店与活动",
+      "description": "为外来访客提供的商务住宿、礼堂与商务旅行服务。"
+    },
+    "imobiliarias": {
+      "name": "地产",
+      "description": "为想在 Cerâmica 内发展的人提供办公室、楼层与商机。"
+    }
+  },
+  "FeaturedBusinesses": {
+    "eyebrow": "已入驻 Cerâmica 的企业",
+    "headline": "精选企业。",
+    "ctaKnowBusiness": "了解企业"
   },
   "ScaleSequence": {
     "sectionLabel": "Cerâmica Hub 的规模",
-    "phrase1": "一个统一的<primary>连接</primary>点。",
-    "phrase2": "近在咫尺,不代表彼此<primary>相连</primary>。",
-    "phrase3": "当企业彼此连接,整个生态便随之<primary>成长</primary>。"
+    "phrase1": "<primary>近在咫尺</primary>的企业。",
+    "phrase2": "<primary>共同</primary>的需求。",
+    "phrase3": "尚未<primary>发生</primary>的连接。",
+    "phrase4": "一个统一的<primary>连接</primary>点。",
+    "phrase5": "当企业彼此连接,整个生态便随之<primary>成长</primary>。"
   },
   "PlatformReveal": {
     "eyebrow": "平台",
@@ -270,19 +304,28 @@
     "headline": "当楼内的企业开始互联,一栋大厦便不再只是一个地址。",
     "subhead": "Cerâmica Hub 致力于将地理上的邻近,转化为可见度、协作与全新商机。"
   },
+  "PricingSummary": {
+    "eyebrow": "方案",
+    "ctaSeeAllPlans": "查看完整方案对比"
+  },
+  "AdvertisersCTA": {
+    "eyebrow": "致品牌与广告主",
+    "headline": "让您的品牌触达在 Cerâmica 生活、工作与往来的人群。",
+    "cta": "我想投放广告"
+  },
   "FounderCTA": {
-    "eyebrow": "上线阶段",
-    "headline": "加入 Cerâmica Hub 首批入驻企业。",
-    "subhead": "免费登记您的企业,获得平台颁发的创始企业标识。",
+    "eyebrow": "致 Cerâmica 的企业",
+    "headline": "您的企业已经在 Cerâmica。现在,它也可以成为这张网络的一部分。",
+    "subhead": "免费登记,在每天往来、工作与决策都发生在这里的人群面前,获得真实的曝光。",
     "ctaRegister": "免费登记我的企业",
-    "ctaKnowPlatform": "了解平台详情",
+    "ctaKnowPlatform": "查看方案",
     "benefits": [
       "目录中的公开主页",
-      "平台上线初期的专属推广",
-      "行业分类中的固定展示位",
+      "上线阶段专属的创始企业标识",
+      "所属行业分类中的固定展示位",
       "通过 WhatsApp 直接联系",
-      "参与首批平台活动",
-      "拓展新合作的机会"
+      "参与活动与商务论坛",
+      "拓展园区内新合作的空间"
     ]
   },
   "CinematicFooter": {
@@ -393,6 +436,33 @@
     "empty": "暂无已登记的空间。",
     "requestInfo": "咨询信息",
     "capacity": "人"
+  },
+  "PlanosPage": {
+    "metaTitle": "方案 — Cerâmica Hub",
+    "metaDescription": "比较 Cerâmica Hub 的各个方案,为您的企业在生态系统中的成长选择最合适的一个。"
+  },
+  "FaqPage": {
+    "metaTitle": "常见问题 — Cerâmica Hub",
+    "metaDescription": "关于方案、地址认证、创始企业标识以及摄影/视频服务的常见问题解答。",
+    "heading": "常见问题",
+    "items": [
+      {
+        "question": "方案里包含摄影和视频制作吗?",
+        "answer": "不包含。摄影与视频制作不自动包含在月费方案内——属于 Geez Marketing 的附加服务,特定优惠活动除外。"
+      },
+      {
+        "question": "登记企业需要付费吗?",
+        "answer": "不需要。Presença(入门)方案是免费的,已经能在 Cerâmica Hub 目录中获得一个公开主页。"
+      },
+      {
+        "question": "我的企业如何获得「已认证」标识?",
+        "answer": "在登记获批后,我们的团队会根据您提交的证明文件(租约、电费账单等)确认大厦地址。"
+      },
+      {
+        "question": "什么是「创始企业」标识?",
+        "answer": "这是 Cerâmica Hub 团队授予参与平台上线阶段企业的一项认可。"
+      }
+    ]
   },
   "Imobiliarias": {
     "metaTitle": "房地产 — Cerâmica Hub",

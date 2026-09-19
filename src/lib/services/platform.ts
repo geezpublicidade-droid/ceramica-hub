@@ -158,6 +158,56 @@ export async function getPlatformStats(): Promise<PlatformStats> {
   };
 }
 
+export type HomeProofStats = {
+  empresasVerificadas: number;
+  categorias: number;
+  torres: number;
+  ofertas: number;
+  contatosGerados: number;
+};
+
+/** Números pra seção "Prova de Relevância" da home -- só contagem real
+ * (nunca estimativa), mesmo princípio do /impacto (ver impact-report.ts).
+ * "Empresas verificadas" aqui é status=approved AND address_verified=true,
+ * o mesmo critério que libera o selo público (ver mapBusiness acima). */
+export async function getHomeProofStats(): Promise<HomeProofStats> {
+  const supabase = createServiceClient();
+  const count = async (query: PromiseLike<{ count: number | null }>) => (await query).count ?? 0;
+
+  const [empresasVerificadas, categoriasComEmpresa, torres, benefits, opportunities, contatosGerados] =
+    await Promise.all([
+      count(
+        supabase
+          .from("businesses")
+          .select("id", { count: "exact", head: true })
+          .eq("status", "approved")
+          .eq("address_verified", true),
+      ),
+      supabase.from("businesses").select("category").eq("status", "approved"),
+      supabase.from("towers").select("id", { count: "exact", head: true }).eq("active", true),
+      count(supabase.from("benefits").select("id", { count: "exact", head: true })),
+      count(supabase.from("opportunities").select("id", { count: "exact", head: true })),
+      count(
+        supabase
+          .from("metrics_events")
+          .select("id", { count: "exact", head: true })
+          .in("event_type", ["whatsapp_clicked", "appointment_clicked"]),
+      ),
+    ]);
+
+  const categorias = new Set(
+    ((categoriasComEmpresa.data ?? []) as { category: string }[]).map((row) => row.category),
+  ).size;
+
+  return {
+    empresasVerificadas,
+    categorias,
+    torres: torres.count ?? 0,
+    ofertas: benefits + opportunities,
+    contatosGerados,
+  };
+}
+
 export async function getCategoryBreakdown(): Promise<CategoryBreakdown[]> {
   const supabase = createServiceClient();
   const { data, error } = await supabase.from("businesses").select("category").eq("status", "approved");
