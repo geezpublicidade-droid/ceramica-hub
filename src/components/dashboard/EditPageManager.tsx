@@ -6,6 +6,7 @@ import Link from "next/link";
 import type { Business, BusinessService } from "@/data/businesses";
 import type { OwnedPhoto, OwnedPromotion, VirtualTourScene } from "@/lib/services/platform";
 import type { PlanLimits } from "@/lib/plan-limits";
+import { EDITAR_ANCHOR } from "@/lib/dashboard-anchors";
 import {
   updateBusinessProfile,
   addService,
@@ -163,7 +164,7 @@ export function EditPageManager({
   return (
     <div className="mt-10 flex flex-col gap-10">
       {/* Perfil */}
-      <section className="glass-light rounded-3xl p-6">
+      <section id={EDITAR_ANCHOR.perfil} className="glass-light scroll-mt-24 rounded-3xl p-6">
         <h2 className="text-[17px] font-semibold text-foreground">Perfil da página</h2>
         <div className="mt-4 flex flex-col gap-4">
           <label>
@@ -242,7 +243,7 @@ export function EditPageManager({
       </section>
 
       {/* Serviços */}
-      <section className="glass-light rounded-3xl p-6">
+      <section id={EDITAR_ANCHOR.servicos} className="glass-light scroll-mt-24 rounded-3xl p-6">
         <h2 className="text-[17px] font-semibold text-foreground">
           Serviços ({services.length}
           {Number.isFinite(limits.maxServices) ? `/${limits.maxServices}` : ""})
@@ -302,7 +303,7 @@ export function EditPageManager({
       </section>
 
       {/* Galeria */}
-      <section className="glass-light rounded-3xl p-6">
+      <section id={EDITAR_ANCHOR.fotos} className="glass-light scroll-mt-24 rounded-3xl p-6">
         <h2 className="text-[17px] font-semibold text-foreground">
           Galeria ({photos.length}/{limits.maxPhotos})
         </h2>
@@ -404,7 +405,7 @@ export function EditPageManager({
       </section>
 
       {/* Promoções */}
-      <section className="glass-light rounded-3xl p-6">
+      <section id={EDITAR_ANCHOR.promocoes} className="glass-light scroll-mt-24 rounded-3xl p-6">
         <h2 className="text-[17px] font-semibold text-foreground">
           Promoções ativas ({activePromotions.length}
           {limits.maxPromotions > 0 ? `/${limits.maxPromotions}` : ""})

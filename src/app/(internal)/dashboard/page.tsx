@@ -1,12 +1,28 @@
 import Link from "next/link";
 import { auth, signOut } from "@/auth";
-import { getBusinessById, getMetricsSummary, getOwnedInvoices, getDailyPageViews } from "@/lib/services/platform";
+import {
+  getBusinessById,
+  getMetricsSummary,
+  getOwnedInvoices,
+  getDailyPageViews,
+  getBusinessServices,
+  getBusinessPhotos,
+  getOwnedPromotions,
+} from "@/lib/services/platform";
 import { listStaff } from "@/lib/actions/business-staff";
 import { planLabels } from "@/data/businesses";
+import { calculatePresenceScore, getNextStepRecommendation } from "@/lib/services/presence-score";
+import { DASHBOARD_ANCHOR } from "@/lib/dashboard-anchors";
 import { PlanBilling } from "@/components/dashboard/PlanBilling";
 import { PrivacyControls } from "@/components/dashboard/PrivacyControls";
 import { StaffManagement } from "@/components/dashboard/StaffManagement";
 import { SignOutButton } from "@/components/nav/SignOutButton";
+import { DashboardNav } from "@/components/dashboard/DashboardNav";
+import { StatusPill, type StatusPillTone } from "@/components/dashboard/StatusPill";
+import { PresenceScoreCard } from "@/components/dashboard/PresenceScoreCard";
+import { NextStepCard } from "@/components/dashboard/NextStepCard";
+import { ChannelsCard } from "@/components/dashboard/ChannelsCard";
+import { StatTile } from "@/components/dashboard/StatTile";
 
 export const metadata = { title: "Painel — Cerâmica Hub" };
 
@@ -15,24 +31,42 @@ async function logout() {
   await signOut({ redirectTo: "/" });
 }
 
+const PROFILE_STATUS: Record<string, { label: string; tone: StatusPillTone }> = {
+  approved: { label: "Online", tone: "positive" },
+  pending: { label: "Em análise", tone: "pending" },
+  rejected: { label: "Inativo", tone: "neutral" },
+  suspended: { label: "Inativo", tone: "neutral" },
+};
+
 export default async function DashboardPage() {
   const session = await auth();
   const isOwner = session?.user?.role === "business";
-  const business = session?.user?.businessId
-    ? await getBusinessById(session.user.businessId)
-    : undefined;
-  const metrics = session?.user?.businessId
-    ? await getMetricsSummary(session.user.businessId)
-    : undefined;
-  const invoices = session?.user?.businessId ? await getOwnedInvoices(session.user.businessId) : [];
-  const staff = isOwner ? await listStaff() : [];
+  const businessId = session?.user?.businessId;
+
+  const [business, metrics, invoices, staff, services, photos, promotions, dailyViewsRaw] =
+    await Promise.all([
+      businessId ? getBusinessById(businessId) : Promise.resolve(undefined),
+      businessId ? getMetricsSummary(businessId) : Promise.resolve(undefined),
+      businessId ? getOwnedInvoices(businessId) : Promise.resolve([]),
+      isOwner ? listStaff() : Promise.resolve([]),
+      businessId ? getBusinessServices(businessId) : Promise.resolve([]),
+      businessId ? getBusinessPhotos(businessId) : Promise.resolve([]),
+      businessId ? getOwnedPromotions(businessId) : Promise.resolve([]),
+      businessId ? getDailyPageViews(businessId, 7) : Promise.resolve([]),
+    ]);
 
   const totalViews = metrics?.commercial_page_viewed ?? 0;
-  const totalContacts =
-    (metrics?.whatsapp_clicked ?? 0) + (metrics?.appointment_clicked ?? 0);
+  const totalContacts = (metrics?.whatsapp_clicked ?? 0) + (metrics?.appointment_clicked ?? 0);
   const hasDetailedMetrics = business?.effectivePlan !== "presenca";
-  const dailyViews =
-    hasDetailedMetrics && session?.user?.businessId ? await getDailyPageViews(session.user.businessId, 7) : [];
+  const dailyViews = hasDetailedMetrics ? dailyViewsRaw : [];
+
+  const hasActivePromotion = promotions.some((promotion) => promotion.active);
+  const presenceInput = business
+    ? { business, serviceCount: services.length, photoCount: photos.length, hasActivePromotion }
+    : undefined;
+  const score = presenceInput ? calculatePresenceScore(presenceInput) : undefined;
+  const nextStep = presenceInput ? getNextStepRecommendation(presenceInput) : null;
+  const status = business ? PROFILE_STATUS[business.status] : undefined;
 
   return (
     <main className="min-h-screen px-6 py-24">
@@ -44,16 +78,10 @@ export default async function DashboardPage() {
               {business?.name ?? "Empresa não encontrada"}
             </h1>
           </div>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/dashboard/editar"
-              className="neu-primary rounded-full px-6 py-3 text-[16px] font-semibold text-white"
-            >
-              Editar página
-            </Link>
-            <SignOutButton action={logout} />
-          </div>
+          <SignOutButton action={logout} />
         </div>
+
+        <DashboardNav currentPath="/dashboard" />
 
         {business?.trial.status === "active" && business.trial.endsAt && (
           <div className="rounded-2xl border border-primary/30 bg-primary/5 px-5 py-4">
@@ -85,8 +113,130 @@ export default async function DashboardPage() {
           </div>
         )}
 
-        {business ? (
+        {business && score && status ? (
           <>
+            {/* Hero — "Marketing em movimento" */}
+            <div className="glass-light rounded-3xl p-6">
+              <div className="flex flex-wrap items-center gap-2">
+                <StatusPill label={status.label} tone={status.tone} />
+                <span className="text-[13px] text-muted">
+                  Atualizado em{" "}
+                  {new Date(business.updatedAt).toLocaleDateString("pt-BR", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </span>
+              </div>
+              <h2 className="mt-4 text-[26px] font-semibold tracking-tight text-foreground">
+                Seu marketing está em movimento.
+              </h2>
+              <p className="mt-2 text-[16px] leading-relaxed text-muted">
+                Acompanhe sua presença no Cerâmica Hub, veja onde sua empresa está aparecendo e
+                descubra o próximo passo para fortalecer seu perfil.
+              </p>
+
+              <div className="mt-6 border-t border-border pt-6">
+                <PresenceScoreCard score={score} />
+              </div>
+
+              <div className="mt-6 flex flex-wrap gap-3">
+                {business.status === "approved" ? (
+                  <Link
+                    href={`/empresa/${business.slug}`}
+                    target="_blank"
+                    className="neu rounded-full px-6 py-3 text-[15px] font-medium text-foreground"
+                  >
+                    Ver perfil publicado
+                  </Link>
+                ) : (
+                  <span
+                    title="Disponível depois que seu cadastro for aprovado"
+                    className="neu cursor-not-allowed rounded-full px-6 py-3 text-[15px] font-medium text-muted"
+                  >
+                    Ver perfil publicado
+                  </span>
+                )}
+                <Link
+                  href="/dashboard/editar"
+                  className="neu-primary rounded-full px-6 py-3 text-[15px] font-medium text-white"
+                >
+                  Editar conteúdo
+                </Link>
+              </div>
+            </div>
+
+            {/* Resultados (resumo — versão completa com 7/30/90 dias vem numa fase futura) */}
+            <div id={DASHBOARD_ANCHOR.resultados} className="glass-light scroll-mt-24 rounded-3xl p-6">
+              <div className="flex items-baseline justify-between">
+                <p className="text-[15px] font-medium uppercase tracking-[0.15em] text-muted">
+                  Resultados
+                </p>
+                <span className="text-[13px] text-muted">Em breve: 7, 30 e 90 dias</span>
+              </div>
+              <div className="mt-4 grid grid-cols-2 gap-4">
+                <StatTile label="Visualizações da página" value={totalViews} />
+                <StatTile label="Contatos recebidos" value={totalContacts} />
+              </div>
+              {!hasDetailedMetrics && (
+                <p className="mt-5 rounded-xl bg-primary/5 px-4 py-3 text-[15px] text-foreground">
+                  Sua página recebeu interesse. Faça upgrade para visualizar a origem das
+                  buscas, períodos e serviços mais acessados.
+                </p>
+              )}
+              {hasDetailedMetrics && dailyViews.length > 0 && (
+                <div className="mt-5 border-t border-border pt-4">
+                  <p className="text-[14px] text-muted">Visualizações por dia (últimos 7 dias)</p>
+                  <div className="mt-2 flex flex-col gap-1">
+                    {dailyViews.map((row) => (
+                      <div key={row.day} className="flex items-center justify-between text-[15px]">
+                        <span className="text-muted">
+                          {new Date(row.day).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })}
+                        </span>
+                        <span className="font-medium text-foreground">{row.count}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {totalViews === 0 && totalContacts === 0 && (
+                <p className="mt-5 text-[15px] text-muted">
+                  Seu perfil acabou de entrar no ar. As primeiras métricas aparecerão assim que
+                  ele começar a ser exibido.
+                </p>
+              )}
+            </div>
+
+            <NextStepCard recommendation={nextStep} />
+
+            <ChannelsCard business={business} hasActivePromotion={hasActivePromotion} />
+
+            {/* Prévia do perfil — versão com preview ao vivo vem numa fase futura */}
+            <div className="glass-light flex flex-wrap items-center justify-between gap-4 rounded-3xl p-6">
+              <div>
+                <p className="text-[15px] font-medium uppercase tracking-[0.15em] text-muted">
+                  Prévia do perfil
+                </p>
+                <p className="mt-2 max-w-md text-[15px] text-muted">
+                  Veja exatamente como visitantes enxergam sua página pública.
+                </p>
+              </div>
+              {business.status === "approved" ? (
+                <Link
+                  href={`/empresa/${business.slug}`}
+                  target="_blank"
+                  className="neu rounded-full px-6 py-3 text-[15px] font-medium text-foreground"
+                >
+                  Ver como visitante vê
+                </Link>
+              ) : (
+                <span className="neu cursor-not-allowed rounded-full px-6 py-3 text-[15px] font-medium text-muted">
+                  Aguardando aprovação
+                </span>
+              )}
+            </div>
+
+            {/* Resumo cadastral */}
             <div className="glass-light grid gap-4 rounded-3xl p-6 sm:grid-cols-2">
               <div>
                 <p className="text-[14px] text-muted">Plano</p>
@@ -114,43 +264,6 @@ export default async function DashboardPage() {
               </div>
             </div>
 
-            <div className="glass-light rounded-3xl p-6">
-              <p className="text-[15px] font-medium uppercase tracking-[0.15em] text-muted">
-                Métricas
-              </p>
-              <div className="mt-4 grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-3xl font-semibold text-foreground">{totalViews}</p>
-                  <p className="mt-1 text-[15px] text-muted">Visualizações da página</p>
-                </div>
-                <div>
-                  <p className="text-3xl font-semibold text-foreground">{totalContacts}</p>
-                  <p className="mt-1 text-[15px] text-muted">Contatos recebidos</p>
-                </div>
-              </div>
-              {!hasDetailedMetrics && (
-                <p className="mt-5 rounded-xl bg-primary/5 px-4 py-3 text-[15px] text-foreground">
-                  Sua página recebeu interesse. Faça upgrade para visualizar a origem das
-                  buscas, períodos e serviços mais acessados.
-                </p>
-              )}
-              {hasDetailedMetrics && dailyViews.length > 0 && (
-                <div className="mt-5 border-t border-border pt-4">
-                  <p className="text-[14px] text-muted">Visualizações por dia (últimos 7 dias)</p>
-                  <div className="mt-2 flex flex-col gap-1">
-                    {dailyViews.map((row) => (
-                      <div key={row.day} className="flex items-center justify-between text-[15px]">
-                        <span className="text-muted">
-                          {new Date(row.day).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })}
-                        </span>
-                        <span className="font-medium text-foreground">{row.count}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
             <div className="glass-light flex flex-wrap items-center justify-between gap-4 rounded-3xl p-6">
               <div>
                 <p className="text-[15px] font-medium uppercase tracking-[0.15em] text-muted">QR Code</p>
@@ -166,9 +279,15 @@ export default async function DashboardPage() {
               </a>
             </div>
 
-            {isOwner && <PlanBilling currentPlan={business.plan} invoices={invoices} />}
+            {isOwner && (
+              <div id={DASHBOARD_ANCHOR.plano} className="scroll-mt-24">
+                <PlanBilling currentPlan={business.plan} invoices={invoices} />
+              </div>
+            )}
             {isOwner && <StaffManagement staff={staff} />}
-            <PrivacyControls isOwner={isOwner} />
+            <div id={DASHBOARD_ANCHOR.privacidade} className="scroll-mt-24">
+              <PrivacyControls isOwner={isOwner} />
+            </div>
           </>
         ) : null}
       </div>

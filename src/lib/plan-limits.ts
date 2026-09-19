@@ -7,13 +7,14 @@ export type PlanLimits = {
   couponsAllowed: boolean;
   videoAllowed: boolean;
   virtualTourAllowed: boolean;
+  featuredAllowed: boolean;
 };
 
 export const PLAN_LIMITS: Record<Business["plan"], PlanLimits> = {
-  presenca: { maxServices: 0, maxPhotos: 1, maxPromotions: 0, couponsAllowed: false, videoAllowed: false, virtualTourAllowed: false },
-  profissional: { maxServices: 10, maxPhotos: 10, maxPromotions: 1, couponsAllowed: false, videoAllowed: false, virtualTourAllowed: false },
-  destaque: { maxServices: Infinity, maxPhotos: 20, maxPromotions: 4, couponsAllowed: true, videoAllowed: false, virtualTourAllowed: false },
-  experiencia: { maxServices: Infinity, maxPhotos: 30, maxPromotions: 4, couponsAllowed: true, videoAllowed: true, virtualTourAllowed: true },
+  presenca: { maxServices: 0, maxPhotos: 1, maxPromotions: 0, couponsAllowed: false, videoAllowed: false, virtualTourAllowed: false, featuredAllowed: false },
+  profissional: { maxServices: 10, maxPhotos: 10, maxPromotions: 1, couponsAllowed: false, videoAllowed: false, virtualTourAllowed: false, featuredAllowed: false },
+  destaque: { maxServices: Infinity, maxPhotos: 20, maxPromotions: 4, couponsAllowed: true, videoAllowed: false, virtualTourAllowed: false, featuredAllowed: true },
+  experiencia: { maxServices: Infinity, maxPhotos: 30, maxPromotions: 4, couponsAllowed: true, videoAllowed: true, virtualTourAllowed: true, featuredAllowed: true },
 };
 
 export function limitsFor(plan: Business["plan"]): PlanLimits {

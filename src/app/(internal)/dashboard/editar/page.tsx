@@ -10,6 +10,7 @@ import {
 import { limitsFor } from "@/lib/plan-limits";
 import { EditPageManager } from "@/components/dashboard/EditPageManager";
 import { BackLink } from "@/components/nav/BackLink";
+import { DashboardNav } from "@/components/dashboard/DashboardNav";
 
 export const metadata = { title: "Editar página — Cerâmica Hub" };
 
@@ -33,6 +34,9 @@ export default async function EditarPaginaPage() {
       <div className="mx-auto max-w-3xl">
         <div className="mb-6">
           <BackLink href="/dashboard" />
+        </div>
+        <div className="mb-6">
+          <DashboardNav currentPath="/dashboard/editar" />
         </div>
         <h1 className="text-2xl font-semibold text-foreground">Editar página comercial</h1>
         <p className="mt-2 text-[16px] text-muted">

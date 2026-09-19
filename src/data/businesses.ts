@@ -51,6 +51,7 @@ export type Business = {
   imageUsageAuthorized: boolean;
   virtualVisit: VirtualVisit;
   seals: BusinessSeals;
+  updatedAt: string;
 };
 
 export const planLabels: Record<Business["plan"], string> = {

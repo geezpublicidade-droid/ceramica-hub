@@ -49,6 +49,7 @@ type BusinessRow = {
   trial_status: "none" | "active" | "expired";
   trial_plan: "presenca" | "profissional" | "destaque" | "experiencia" | null;
   trial_ends_at: string | null;
+  updated_at: string;
   towers: TowerJoin;
 };
 
@@ -121,6 +122,7 @@ function mapBusiness(row: BusinessRow, translation?: Record<string, string>): Bu
       virtualVisitAvailable: row.virtual_visit_active,
       founder: row.founder,
     },
+    updatedAt: row.updated_at,
   };
 }
 
