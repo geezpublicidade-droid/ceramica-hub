@@ -17,32 +17,32 @@ export async function FourUniverses() {
   const t = await getTranslations("FourUniverses");
 
   return (
-    <section className="bg-surface px-6 py-28 text-foreground">
+    <section className="bg-primary px-6 py-28 text-white">
       <div className="mx-auto max-w-6xl">
         <FadeUp className="max-w-2xl">
-          <p className="text-[15px] font-medium uppercase tracking-[0.2em] text-primary">{t("eyebrow")}</p>
-          <h2 className="mt-4 text-[clamp(2rem,4.5vw,3.5rem)] font-semibold leading-tight tracking-tight">
+          <p className="text-[15px] font-medium uppercase tracking-[0.2em] text-white/70">{t("eyebrow")}</p>
+          <h2 className="mt-4 text-[clamp(2rem,4.5vw,3.5rem)] font-semibold leading-tight tracking-tight text-white">
             {t("headline")}
           </h2>
         </FadeUp>
 
-        <div className="mt-16 divide-y divide-border border-t border-border">
+        <div className="mt-16 divide-y divide-white/20 border-t border-white/20">
           {UNIVERSES.map((universe, i) => (
             <FadeUp key={universe.key} delay={i * 0.05}>
               <Link
                 href={universe.href}
-                className="group flex flex-col gap-3 py-8 transition-colors sm:flex-row sm:items-center sm:gap-8 sm:py-10"
+                className="group flex flex-col gap-3 py-8 transition-opacity sm:flex-row sm:items-center sm:gap-8 sm:py-10"
               >
-                <span className="text-[15px] font-medium tabular-nums text-muted">{universe.index}</span>
-                <span className="text-[clamp(1.6rem,3.5vw,2.5rem)] font-semibold tracking-tight transition-colors group-hover:text-primary sm:w-[280px] sm:shrink-0">
+                <span className="text-[15px] font-medium tabular-nums text-white/60">{universe.index}</span>
+                <span className="text-[clamp(1.6rem,3.5vw,2.5rem)] font-semibold tracking-tight text-white transition-opacity group-hover:opacity-80 sm:w-[280px] sm:shrink-0">
                   {t(`${universe.key}.name`)}
                 </span>
-                <span className="text-[16px] leading-relaxed text-muted sm:max-w-md">
+                <span className="text-[16px] leading-relaxed text-white/70 sm:max-w-md">
                   {t(`${universe.key}.description`)}
                 </span>
                 <span
                   aria-hidden="true"
-                  className="ml-auto hidden text-[20px] text-muted transition-all group-hover:translate-x-1 group-hover:text-primary sm:block"
+                  className="ml-auto hidden text-[20px] text-white/70 transition-all group-hover:translate-x-1 group-hover:text-white sm:block"
                 >
                   →
                 </span>

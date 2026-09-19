@@ -10,19 +10,19 @@ export async function LocalBenefits({ benefits }: LocalBenefitsProps) {
   const t = await getTranslations("LocalBenefits");
   const tKinds = await getTranslations("benefitKindLabels");
   return (
-    <section id="beneficios" className="relative overflow-hidden bg-background px-6 py-28">
+    <section id="beneficios" className="relative overflow-hidden bg-primary px-6 py-28 text-white">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -left-40 bottom-0 h-[420px] w-[420px] rounded-full opacity-25 blur-[120px]"
-        style={{ background: "radial-gradient(circle, var(--primary), transparent 70%)" }}
+        className="pointer-events-none absolute -left-40 bottom-0 h-[420px] w-[420px] rounded-full opacity-20 blur-[120px]"
+        style={{ background: "radial-gradient(circle, rgba(255,255,255,0.6), transparent 70%)" }}
       />
 
       <div className="relative mx-auto max-w-6xl">
         <FadeUp className="max-w-2xl">
-          <p className="text-[15px] font-medium uppercase tracking-[0.2em] text-primary">
+          <p className="text-[15px] font-medium uppercase tracking-[0.2em] text-white/70">
             {t("eyebrow")}
           </p>
-          <h2 className="mt-4 text-[clamp(2rem,4.5vw,3.5rem)] font-semibold leading-tight tracking-tight">
+          <h2 className="mt-4 text-[clamp(2rem,4.5vw,3.5rem)] font-semibold leading-tight tracking-tight text-white">
             {t("headline")}
           </h2>
         </FadeUp>
