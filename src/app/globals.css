@@ -1,20 +1,25 @@
 @import "tailwindcss";
 
 :root {
-  --background: #faf6f2;
-  --foreground: #09090b;
+  /* Paleta oficial do Manual de Identidade Visual v1.0 (Terracota/Grafite/
+     Off-white/Bege Apoio). primary-light/connection/glow não vêm do manual
+     (ele só define as 4 cores-base) -- são tintas calculadas a partir do
+     novo terracota (mistura com branco em ~25%/~55%), mesmo raciocínio das
+     tintas antigas que substituem. */
+  --background: #f6f2eb;
+  --foreground: #2e2e2e;
   --muted: #86868b;
   --surface: #f2ece4;
   --surface-dark: #050505;
   --foreground-dark: #f5f5f7;
-  /* momentos institucionais (ex: AdvertisersCTA) -- cinza-grafite, não preto puro */
-  --graphite: #1c1c1e;
+  --graphite: #2e2e2e;
+  --beige-support: #dccfc2;
   --border: rgba(0, 0, 0, 0.08);
   --border-dark: rgba(255, 255, 255, 0.12);
-  --primary: #e35336;
-  --primary-light: #e8755e;
-  --connection: #f2a88c;
-  --glow: rgba(232, 117, 94, 0.35);
+  --primary: #b3553a;
+  --primary-light: #c6806b;
+  --connection: #ddb3a6;
+  --glow: rgba(198, 128, 107, 0.35);
   /* só o banner de anúncios (AdBanner) usa essa cor -- vem do esboço no Figma */
   --ad-teal: #1ea6d3;
 
@@ -31,6 +36,7 @@
   --color-surface-dark: var(--surface-dark);
   --color-foreground-dark: var(--foreground-dark);
   --color-graphite: var(--graphite);
+  --color-beige-support: var(--beige-support);
   --color-border: var(--border);
   --color-border-dark: var(--border-dark);
   --color-primary: var(--primary);
@@ -39,7 +45,8 @@
   --color-accent: var(--accent);
   --color-accent-dark: var(--accent-dark);
   --color-ad-teal: var(--ad-teal);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-montserrat);
+  --font-display: var(--font-playfair);
   --font-mono: var(--font-geist-mono);
   --font-alexandria: var(--font-alexandria);
 }

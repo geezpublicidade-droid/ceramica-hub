@@ -1,9 +1,16 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Montserrat, Playfair_Display, Geist_Mono } from "next/font/google";
 import "../globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Ver nota em src/app/[locale]/layout.tsx -- mesma tipografia oficial
+// aplicada aqui pro painel/portal (área interna).
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin"],
+});
+
+const playfairDisplay = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
 });
 
@@ -29,7 +36,7 @@ export default function InternalRootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${montserrat.variable} ${playfairDisplay.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

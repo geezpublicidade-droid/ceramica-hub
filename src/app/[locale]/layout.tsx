@@ -3,14 +3,24 @@ import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Geist, Geist_Mono, Alexandria } from "next/font/google";
+import { Montserrat, Playfair_Display, Geist_Mono, Alexandria } from "next/font/google";
 import { routing } from "@/i18n/routing";
 import { siteUrl, buildSocialMetadata } from "@/lib/seo";
 import { SupportWhatsAppButton } from "@/components/support/SupportWhatsAppButton";
 import "../globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Tipografia oficial do Manual de Identidade Visual v1.0 -- Montserrat é a
+// principal (títulos/textos), Playfair Display fica disponível via
+// `.font-display`/`--font-display` pra destaques pontuais (o manual não
+// pede pra trocar TODO título por serifada, só usar em "frases que reforçam
+// o propósito").
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin"],
+});
+
+const playfairDisplay = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
 });
 
@@ -73,7 +83,7 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale}
-      className={`${geistSans.variable} ${geistMono.variable} ${alexandria.variable} h-full antialiased`}
+      className={`${montserrat.variable} ${playfairDisplay.variable} ${geistMono.variable} ${alexandria.variable} h-full antialiased`}
     >
       <head>
         <script

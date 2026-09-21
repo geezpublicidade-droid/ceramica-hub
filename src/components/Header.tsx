@@ -93,7 +93,8 @@ export function Header() {
   return (
     <header className="fixed top-0 z-50 w-full border-b border-border bg-white py-3 sm:py-4">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6">
-        <Link href="/#top" className="shrink-0 text-[17px] font-semibold tracking-tight text-foreground sm:text-[20px]">
+        <Link href="/#top" className="flex shrink-0 items-center gap-2 text-[17px] font-semibold tracking-tight text-foreground sm:text-[20px]">
+          <img src="/images/logo-ceramica-hub.png" alt="" className="h-7 w-7 sm:h-8 sm:w-8" />
           Cerâmica <span className="text-primary">Hub</span>
         </Link>
         <div className="flex items-center gap-2 sm:gap-3">
@@ -161,7 +162,12 @@ export function Header() {
         }`}
       >
         <div className="mb-2 flex items-center justify-between">
-          <Link href="/#top" onClick={() => setMenuOpen(false)} className="text-[17px] font-semibold tracking-tight text-foreground">
+          <Link
+            href="/#top"
+            onClick={() => setMenuOpen(false)}
+            className="flex items-center gap-2 text-[17px] font-semibold tracking-tight text-foreground"
+          >
+            <img src="/images/logo-ceramica-hub.png" alt="" className="h-7 w-7" />
             Cerâmica <span className="text-primary">Hub</span>
           </Link>
           <button

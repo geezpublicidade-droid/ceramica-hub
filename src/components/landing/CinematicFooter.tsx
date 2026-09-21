@@ -31,7 +31,8 @@ export async function CinematicFooter() {
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col gap-10 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-[19px] font-semibold tracking-tight">
+            <p className="flex items-center gap-2 text-[19px] font-semibold tracking-tight">
+              <img src="/images/logo-ceramica-hub.png" alt="" className="h-7 w-7" />
               Cerâmica <span className="text-primary">Hub</span>
             </p>
             <p className="mt-3 max-w-sm text-[16px] leading-relaxed text-muted">{t("tagline")}</p>

@@ -25,7 +25,8 @@ export function ForgotPasswordForm() {
           <BackLink href="/login" label="Voltar ao login" />
         </div>
         <div className="glass-light rounded-3xl p-8">
-          <Link href="/" className="text-[17px] font-semibold tracking-tight text-foreground">
+          <Link href="/" className="flex items-center gap-2 text-[17px] font-semibold tracking-tight text-foreground">
+            <img src="/images/logo-ceramica-hub.png" alt="" className="h-7 w-7" />
             Cerâmica <span className="text-primary">Hub</span>
           </Link>
           <h1 className="mt-6 text-xl font-semibold text-foreground">Esqueci minha senha</h1>

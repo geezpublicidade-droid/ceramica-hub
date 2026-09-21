@@ -36,7 +36,8 @@ export function ResetPasswordForm({ token }: { token: string | undefined }) {
     <main className="flex min-h-screen items-center justify-center px-6 py-24">
       <div className="w-full max-w-sm">
         <div className="glass-light rounded-3xl p-8">
-          <Link href="/" className="text-[17px] font-semibold tracking-tight text-foreground">
+          <Link href="/" className="flex items-center gap-2 text-[17px] font-semibold tracking-tight text-foreground">
+            <img src="/images/logo-ceramica-hub.png" alt="" className="h-7 w-7" />
             Cerâmica <span className="text-primary">Hub</span>
           </Link>
           <h1 className="mt-6 text-xl font-semibold text-foreground">Criar nova senha</h1>
