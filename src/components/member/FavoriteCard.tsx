@@ -30,7 +30,7 @@ export function FavoriteCard({ business }: { business: Business }) {
       <Link href={`/empresa/${business.slug}`} className="shrink-0">
         <BusinessAvatar
           business={business}
-          className="h-14 w-14 rounded-xl bg-white"
+          className="h-14 w-14 rounded-full bg-white"
           textClassName="text-[15px] font-semibold text-foreground"
         />
       </Link>

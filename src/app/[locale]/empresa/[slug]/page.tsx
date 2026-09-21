@@ -181,7 +181,7 @@ export default async function BusinessProfilePage({ params }: PageProps) {
                 <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center">
                   <BusinessAvatar
                     business={business}
-                    className="h-24 w-24 rounded-2xl bg-white shadow-lg ring-4 ring-white"
+                    className="h-24 w-24 rounded-full bg-white shadow-lg ring-4 ring-white"
                     textClassName="text-[26px] font-semibold"
                   />
                   <div className="min-w-0">
@@ -358,7 +358,7 @@ export default async function BusinessProfilePage({ params }: PageProps) {
                   >
                     <BusinessAvatar
                       business={candidate}
-                      className="h-11 w-11 rounded-xl bg-white"
+                      className="h-11 w-11 rounded-full bg-white"
                       textClassName="text-[15px] font-semibold text-foreground"
                     />
                     <div className="min-w-0">

@@ -59,7 +59,7 @@ export function BusinessCardGrid({
           <Link href={`/empresa/${business.slug}`} className="shrink-0">
             <BusinessAvatar
               business={business}
-              className="h-20 w-20 rounded-2xl bg-white"
+              className="h-20 w-20 rounded-full bg-white"
               textClassName="text-[20px] font-semibold text-foreground"
             />
           </Link>

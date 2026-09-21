@@ -64,7 +64,7 @@ export function CouponCard({
       <div className="flex items-start gap-4">
         <BusinessAvatar
           business={business}
-          className="h-12 w-12 shrink-0 rounded-xl bg-white"
+          className="h-12 w-12 shrink-0 rounded-full bg-white"
           textClassName="text-[15px] font-semibold text-foreground"
         />
         <div className="min-w-0 flex-1">

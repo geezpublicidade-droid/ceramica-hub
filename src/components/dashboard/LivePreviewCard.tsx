@@ -31,7 +31,7 @@ export function LivePreviewCard({ business, photos }: { business: Business; phot
       <div className="mt-4 flex gap-5 rounded-2xl border border-border bg-white/70 p-5">
         <BusinessAvatar
           business={business}
-          className="h-16 w-16 shrink-0 rounded-2xl bg-white"
+          className="h-16 w-16 shrink-0 rounded-full bg-white"
           textClassName="text-[18px] font-semibold text-foreground"
         />
         <div className="min-w-0 flex-1">

@@ -85,7 +85,7 @@ export default async function DashboardPage() {
             {business && (
               <BusinessAvatar
                 business={business}
-                className="h-14 w-14 rounded-2xl bg-white shadow-[0_4px_16px_-6px_rgba(0,0,0,0.2)]"
+                className="h-14 w-14 rounded-full bg-white shadow-[0_4px_16px_-6px_rgba(0,0,0,0.2)]"
                 textClassName="text-[18px] font-semibold text-foreground"
               />
             )}

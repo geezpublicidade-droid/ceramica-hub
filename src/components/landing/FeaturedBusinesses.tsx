@@ -39,7 +39,7 @@ export async function FeaturedBusinesses({ businesses }: FeaturedBusinessesProps
                 <div className="flex items-start justify-between gap-3">
                   <BusinessAvatar
                     business={business}
-                    className="h-14 w-14 rounded-2xl bg-surface"
+                    className="h-14 w-14 rounded-full bg-surface"
                     textClassName="text-[17px] font-semibold text-foreground"
                   />
                   {business.verified && (
