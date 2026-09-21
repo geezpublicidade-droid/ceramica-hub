@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { auth, signOut } from "@/auth";
-import { getMemberFavorites } from "@/lib/services/platform";
+import { getMemberFavorites, getClaimableCoupons } from "@/lib/services/platform";
 import { SignOutButton } from "@/components/nav/SignOutButton";
+import { IconCoupon } from "@/components/dashboard/nav-icons";
 
 export const metadata = { title: "Meus favoritos — Cerâmica Hub" };
 
@@ -13,7 +14,10 @@ async function logout() {
 export default async function MemberPage() {
   const session = await auth();
   const memberId = session?.user?.memberId;
-  const favorites = memberId ? await getMemberFavorites(memberId) : [];
+  const [favorites, coupons] = await Promise.all([
+    memberId ? getMemberFavorites(memberId) : Promise.resolve([]),
+    getClaimableCoupons(),
+  ]);
 
   return (
     <main className="min-h-screen px-6 py-24">
@@ -27,6 +31,26 @@ export default async function MemberPage() {
           </div>
           <SignOutButton action={logout} />
         </div>
+
+        <Link
+          href="/membro/cupons"
+          className="gradient-terracotta-animated flex items-center justify-between gap-4 rounded-3xl p-6 text-white transition-transform hover:-translate-y-0.5"
+        >
+          <div className="flex items-center gap-4">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/20">
+              <IconCoupon className="h-6 w-6" />
+            </span>
+            <div>
+              <p className="text-[15px] font-medium uppercase tracking-[0.15em] text-white/70">Novidade</p>
+              <p className="mt-0.5 text-[18px] font-semibold">
+                {coupons.length > 0
+                  ? `${coupons.length} ${coupons.length === 1 ? "cupom disponível" : "cupons disponíveis"}`
+                  : "Cupons e descontos"}
+              </p>
+            </div>
+          </div>
+          <span aria-hidden="true" className="text-[20px]">→</span>
+        </Link>
 
         <Link
           href="/membro/suporte"

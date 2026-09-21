@@ -372,6 +372,16 @@ export async function getBenefits(locale?: string): Promise<BenefitWithBusiness[
   });
 }
 
+/** Só os benefícios que viram "cupom" de verdade pro membro resgatar --
+ * precisa ter `couponCode` (senão não há nada pra revelar) e não estar
+ * vencido. Reaproveita `getBenefits()` (já filtra `active` + empresa
+ * aprovada) em vez de duplicar a query. */
+export async function getClaimableCoupons(locale?: string): Promise<BenefitWithBusiness[]> {
+  const benefits = await getBenefits(locale);
+  const today = new Date().toISOString().slice(0, 10);
+  return benefits.filter((benefit) => benefit.couponCode && (!benefit.validUntil || benefit.validUntil >= today));
+}
+
 export async function getBusinessServices(businessId: string, locale?: string): Promise<BusinessService[]> {
   const supabase = createServiceClient();
   const { data, error } = await supabase

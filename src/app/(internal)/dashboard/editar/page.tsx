@@ -32,7 +32,7 @@ export default async function EditarPaginaPage() {
   return (
     <main className="min-h-screen bg-background px-6 py-16">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 lg:flex-row lg:items-start lg:gap-10">
-        <aside className="lg:sticky lg:top-10 lg:w-56 lg:shrink-0">
+        <aside className="lg:sticky lg:top-10 lg:w-64 lg:shrink-0">
           <DashboardNav currentPath="/dashboard/editar" />
         </aside>
 
