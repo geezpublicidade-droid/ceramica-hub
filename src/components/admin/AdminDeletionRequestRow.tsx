@@ -10,7 +10,14 @@ export function AdminDeletionRequestRow({ request }: { request: PendingDeletionR
 
   return (
     <div className="rounded-3xl border border-border bg-white/70 p-6">
-      <p className="text-[17px] font-semibold text-foreground">{request.businessName}</p>
+      <div className="flex items-center gap-2">
+        <p className="text-[17px] font-semibold text-foreground">
+          {request.requesterType === "member" ? request.memberName : request.businessName}
+        </p>
+        <span className="rounded-full bg-black/5 px-2.5 py-0.5 text-[12px] font-medium text-muted">
+          {request.requesterType === "member" ? "Membro" : "Empresa"}
+        </span>
+      </div>
       {request.reason && <p className="mt-1 text-[15px] text-muted">Motivo: {request.reason}</p>}
       <p className="mt-1 text-[14px] text-muted">
         Solicitado em {new Date(request.requestedAt).toLocaleDateString("pt-BR")}

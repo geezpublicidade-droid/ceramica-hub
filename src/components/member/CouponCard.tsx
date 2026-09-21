@@ -24,6 +24,7 @@ export function CouponCard({
   couponCode,
   validUntil,
   business,
+  claimedAt,
 }: {
   id: string;
   kind: BenefitKind;
@@ -32,8 +33,11 @@ export function CouponCard({
   couponCode: string;
   validUntil?: string;
   business: Pick<Business, "id" | "name" | "slug" | "initials" | "logo">;
+  /** Presente = card de histórico (já revelado antes, sem botão "Revelar"
+   * de novo, mostra quando foi resgatado no lugar do CTA). */
+  claimedAt?: string;
 }) {
-  const [revealed, setRevealed] = useState(false);
+  const [revealed, setRevealed] = useState(Boolean(claimedAt));
   const [copied, setCopied] = useState(false);
   const [, startTransition] = useTransition();
 
@@ -83,17 +87,25 @@ export function CouponCard({
 
       <div className="mt-4 border-t border-dashed border-primary/30 pt-4">
         {revealed ? (
-          <div className="flex items-center justify-between gap-3">
-            <span className="rounded-xl bg-primary/10 px-4 py-2.5 font-mono text-[16px] font-semibold tracking-wider text-primary">
-              {couponCode}
-            </span>
-            <button
-              type="button"
-              onClick={copyCode}
-              className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground"
-            >
-              {copied ? "Copiado!" : "Copiar"}
-            </button>
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between gap-3">
+              <span className="rounded-xl bg-primary/10 px-4 py-2.5 font-mono text-[16px] font-semibold tracking-wider text-primary">
+                {couponCode}
+              </span>
+              <button
+                type="button"
+                onClick={copyCode}
+                className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground"
+              >
+                {copied ? "Copiado!" : "Copiar"}
+              </button>
+            </div>
+            {claimedAt && (
+              <p className="text-[12px] text-muted">
+                Resgatado em{" "}
+                {new Date(claimedAt).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" })}
+              </p>
+            )}
           </div>
         ) : (
           <button

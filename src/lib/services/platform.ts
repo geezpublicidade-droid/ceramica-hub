@@ -382,6 +382,62 @@ export async function getClaimableCoupons(locale?: string): Promise<BenefitWithB
   return benefits.filter((benefit) => benefit.couponCode && (!benefit.validUntil || benefit.validUntil >= today));
 }
 
+export type ClaimedCoupon = BenefitWithBusiness & { claimedAt: string };
+
+/** Histórico de cupons que o membro já revelou -- `metrics_events` não tem
+ * coluna própria de membro (o log é genérico, ver logMetricEvent), então
+ * filtra pelo `memberId` guardado em `metadata` no momento do log. Dedupe
+ * por benefício, mantendo só o resgate mais recente de cada um, e junta
+ * com o benefício/empresa de verdade pra exibir (benefício desativado
+ * desde então ainda aparece -- só some se a empresa foi excluída de fato,
+ * já que `benefits` tem cascade em `business_id`). */
+export async function getMemberCouponHistory(memberId: string, locale?: string): Promise<ClaimedCoupon[]> {
+  const supabase = createServiceClient();
+  const { data: events, error } = await supabase
+    .from("metrics_events")
+    .select("metadata, created_at")
+    .eq("event_type", "coupon_redeemed")
+    .contains("metadata", { memberId })
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+
+  const claimedAtByBenefitId = new Map<string, string>();
+  for (const row of events ?? []) {
+    const benefitId = (row.metadata as Record<string, unknown> | null)?.benefitId as string | undefined;
+    if (benefitId && !claimedAtByBenefitId.has(benefitId)) claimedAtByBenefitId.set(benefitId, row.created_at);
+  }
+  if (claimedAtByBenefitId.size === 0) return [];
+
+  const { data: benefitRows, error: benefitsError } = await supabase
+    .from("benefits")
+    .select(`id, kind, title, description, valid_until, coupon_code, business_id, businesses!inner(${BUSINESS_SELECT})`)
+    .in("id", [...claimedAtByBenefitId.keys()]);
+  if (benefitsError) throw benefitsError;
+
+  const businessTranslations = await translationsByEntityId(
+    "business",
+    (benefitRows ?? []).map((row) => row.business_id),
+    locale
+  );
+
+  return (benefitRows ?? [])
+    .map((row) => {
+      const business = mapBusiness(row.businesses as unknown as BusinessRow, businessTranslations[row.business_id]);
+      return {
+        id: row.id,
+        businessId: row.business_id,
+        kind: row.kind,
+        title: row.title,
+        description: row.description ?? "",
+        validUntil: row.valid_until ?? undefined,
+        couponCode: row.coupon_code ?? undefined,
+        business,
+        claimedAt: claimedAtByBenefitId.get(row.id)!,
+      };
+    })
+    .sort((a, b) => b.claimedAt.localeCompare(a.claimedAt));
+}
+
 export async function getBusinessServices(businessId: string, locale?: string): Promise<BusinessService[]> {
   const supabase = createServiceClient();
   const { data, error } = await supabase
@@ -535,8 +591,11 @@ export async function getPendingInvoices(): Promise<PendingInvoice[]> {
 
 export type PendingDeletionRequest = {
   id: string;
-  businessId: string;
-  businessName: string;
+  requesterType: "business" | "member";
+  businessId: string | null;
+  businessName: string | null;
+  memberId: string | null;
+  memberName: string | null;
   reason: string | null;
   requestedAt: string;
 };
@@ -546,15 +605,18 @@ export async function getPendingDataDeletionRequests(): Promise<PendingDeletionR
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("data_deletion_requests")
-    .select("id, business_id, business_name, reason, requested_at")
+    .select("id, requester_type, business_id, business_name, member_id, member_name, reason, requested_at")
     .eq("status", "pending")
     .order("requested_at", { ascending: true });
   if (error) throw error;
 
   return (data ?? []).map((row) => ({
     id: row.id,
+    requesterType: row.requester_type,
     businessId: row.business_id,
     businessName: row.business_name,
+    memberId: row.member_id,
+    memberName: row.member_name,
     reason: row.reason,
     requestedAt: row.requested_at,
   }));

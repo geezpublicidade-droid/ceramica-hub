@@ -3,6 +3,8 @@ import { auth, signOut } from "@/auth";
 import { getMemberFavorites, getClaimableCoupons } from "@/lib/services/platform";
 import { SignOutButton } from "@/components/nav/SignOutButton";
 import { IconCoupon } from "@/components/dashboard/nav-icons";
+import { FavoriteCard } from "@/components/member/FavoriteCard";
+import { MemberPrivacyControls } from "@/components/member/MemberPrivacyControls";
 
 export const metadata = { title: "Meus favoritos — Cerâmica Hub" };
 
@@ -71,17 +73,12 @@ export default async function MemberPage() {
         ) : (
           <div className="grid gap-4 sm:grid-cols-2">
             {favorites.map((business) => (
-              <Link
-                key={business.id}
-                href={`/empresa/${business.slug}`}
-                className="glass-light rounded-2xl p-4 transition hover:bg-black/5"
-              >
-                <p className="font-semibold text-foreground">{business.name}</p>
-                <p className="text-[14px] text-muted">{business.category}</p>
-              </Link>
+              <FavoriteCard key={business.id} business={business} />
             ))}
           </div>
         )}
+
+        <MemberPrivacyControls />
       </div>
     </main>
   );

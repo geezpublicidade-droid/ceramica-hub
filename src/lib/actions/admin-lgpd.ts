@@ -8,9 +8,10 @@ import { logAdminAction } from "@/lib/audit-log";
 type ActionResult = { success: true } | { success: false; error: string };
 
 /**
- * Aprova ou recusa um pedido de exclusão de dados. Aprovar apaga a empresa
- * de verdade (cascade já cuida de serviços/fotos/benefícios/oportunidades/
- * cenas de tour/assinaturas/faturas/consentimentos — ver migrations) — não
+ * Aprova ou recusa um pedido de exclusão de dados (empresa OU membro).
+ * Aprovar apaga a linha de verdade (cascade já cuida do resto -- serviços/
+ * fotos/benefícios/oportunidades/cenas de tour/assinaturas/faturas/
+ * consentimentos pra empresa, favoritos pro membro — ver migrations) — não
  * dá pra desfazer. O registro do pedido em si sobrevive (sem FK/cascade de
  * propósito) como comprovação de que o pedido foi atendido.
  */
@@ -24,15 +25,18 @@ export async function resolveDataDeletionRequest(
 
   const { data: request, error: fetchError } = await supabase
     .from("data_deletion_requests")
-    .select("id, business_id, status")
+    .select("id, requester_type, business_id, member_id, status")
     .eq("id", requestId)
     .single();
   if (fetchError || !request) return { success: false, error: "Solicitação não encontrada." };
   if (request.status !== "pending") return { success: false, error: "Essa solicitação já foi resolvida." };
 
+  const isMember = request.requester_type === "member";
+  const entityId = isMember ? request.member_id : request.business_id;
+
   if (approve) {
-    const { error: deleteError } = await supabase.from("businesses").delete().eq("id", request.business_id);
-    if (deleteError) return { success: false, error: "Não foi possível excluir a empresa." };
+    const { error: deleteError } = await supabase.from(isMember ? "members" : "businesses").delete().eq("id", entityId);
+    if (deleteError) return { success: false, error: `Não foi possível excluir ${isMember ? "o membro" : "a empresa"}.` };
   }
 
   const { error: updateError } = await supabase
@@ -46,7 +50,7 @@ export async function resolveDataDeletionRequest(
     .eq("id", requestId);
   if (updateError) return { success: false, error: "Não foi possível atualizar a solicitação." };
 
-  await logAdminAction(adminId, approve ? "approve_data_deletion" : "reject_data_deletion", "business", request.business_id, {
+  await logAdminAction(adminId, approve ? "approve_data_deletion" : "reject_data_deletion", request.requester_type, entityId!, {
     notes: notes.trim() || null,
   });
 
