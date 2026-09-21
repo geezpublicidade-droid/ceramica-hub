@@ -77,21 +77,19 @@
     "heading": "Empieza con tu página comercial. Crece cuando tenga sentido.",
     "subheading": "Mira lo que incluye cada plan y elige el que tiene sentido ahora para tu negocio.",
     "ctaChoosePlan": "Quiero este plan",
+    "ctaTalkToUs": "Agendar una llamada",
     "mostChosen": "El más elegido",
     "perMonth": "/mes",
+    "priceOnRequest": "A consultar",
     "plans": {
       "presenca": {
         "name": "Presencia Gratuita",
-        "description": "Comienza tu presencia en Cerâmica sin costo.",
+        "description": "Comienza tu presencia en Cerâmica sin costo -- solo nombre y logo.",
         "features": [
           "Página básica en Cerâmica Hub",
           "Nombre y logo",
           "Categoría",
           "Torre, piso y sala",
-          "Descripción breve",
-          "Una imagen",
-          "WhatsApp",
-          "Instagram",
           "Participación en las búsquedas",
           "URL exclusiva"
         ]
@@ -101,15 +99,14 @@
         "description": "Página comercial completa, para empresas que ya quieren crecer.",
         "features": [
           "Todo del plan gratuito",
-          "Hasta 10 servicios",
-          "Galería con hasta 10 imágenes",
-          "Descripción completa",
-          "Sitio web y redes sociales",
-          "Horarios",
+          "Hasta 3 servicios con foto y descripción",
+          "Galería con hasta 3 fotos reales (sin artes)",
+          "Descripción completa de la empresa",
+          "Botón de WhatsApp y redes sociales",
+          "Horario de atención",
           "Una promoción activa",
-          "Métricas básicas",
-          "Soporte",
-          "Sello de empresa aprobada"
+          "Sello de empresa patrocinada",
+          "Soporte"
         ]
       },
       "destaque": {
@@ -117,14 +114,12 @@
         "description": "Para quienes quieren aparecer primero y ser vistos por más gente.",
         "features": [
           "Todo del plan Profesional",
-          "Servicios ilimitados",
-          "Galería ampliada",
+          "Hasta 6 servicios con fotos",
+          "Galería con hasta 6 fotos",
           "Hasta cuatro promociones",
           "Cupones rastreables",
-          "Prioridad en los resultados",
-          "Destaque visual en las tarjetas",
-          "Informe mensual",
-          "Difusión en Stories",
+          "Destaque rotativo en las tarjetas",
+          "Difusión semanal en Stories",
           "Publicación de oportunidades",
           "Condiciones especiales en Geez Marketing"
         ]
@@ -135,16 +130,23 @@
         "features": [
           "Todo del plan Destacado",
           "Landing page personalizada",
-          "Colores y presentación de la empresa",
           "Video destacado",
-          "Formulario propio",
-          "Botón de reserva",
-          "Destaque en la página principal",
-          "Un cambio mensual",
+          "Formulario propio directo al WhatsApp",
+          "Destaque rotativo en la página principal",
           "Métricas completas",
-          "Difusión especial",
-          "Preparación para visita virtual",
-          "Condiciones premium en Geez Marketing"
+          "Sala 3D (visita virtual)",
+          "Condiciones premium en Geez Marketing (próximamente)"
+        ]
+      },
+      "patrocinador": {
+        "name": "Patrocinador",
+        "description": "Para marcas que quieren ir más allá y convertirse en patrocinadoras oficiales de Cerâmica Hub.",
+        "features": [
+          "Todo del plan Experiencia",
+          "Propuesta a medida con el equipo de Cerâmica Hub",
+          "Posiciones de patrocinio exclusivas",
+          "Activaciones y presencia institucional",
+          "Reunión de diagnóstico con nuestro equipo"
         ]
       }
     }
