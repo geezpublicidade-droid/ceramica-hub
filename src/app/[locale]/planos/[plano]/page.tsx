@@ -105,9 +105,9 @@ export default async function PlanoDetailPage({ params }: PageProps) {
               {isSponsor ? t("ctaTalkToUs") : t("ctaChoosePlan")}
             </Link>
 
-            <div className="mt-14 grid grid-cols-1 gap-8 lg:grid-cols-[1.1fr_1fr]">
+            <div className="mt-14 grid grid-cols-1 items-start gap-6 lg:grid-cols-[1.1fr_1fr]">
               {!isSponsor && <PlanShowcaseCard plan={plano} />}
-              <div className={isSponsor ? "lg:col-span-2" : undefined}>
+              <div className={`glass-light rounded-3xl p-6 sm:p-7 ${isSponsor ? "lg:col-span-2" : ""}`}>
                 <p className="text-[13px] font-medium uppercase tracking-[0.15em] text-muted">
                   {tDetail("featuresHeading")}
                 </p>

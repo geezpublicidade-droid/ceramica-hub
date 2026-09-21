@@ -1,15 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-
-type SummaryPlanKey = "presenca" | "destaque" | "experiencia";
-
-const SUMMARY_PRICE: Record<SummaryPlanKey, string> = {
-  presenca: "R$ 0",
-  destaque: "R$ 97",
-  experiencia: "R$ 197",
-};
-
-const SUMMARY_ORDER: SummaryPlanKey[] = ["presenca", "destaque", "experiencia"];
+import { PLAN_ORDER, PLAN_PRICE_DISPLAY } from "@/lib/plan-limits";
 
 /** Versão resumida dos planos pra home -- só nome, preço, 1 linha e CTA. A
  * comparação completa com todas as features mora em /planos (ver
@@ -18,19 +9,22 @@ export async function PricingSummary() {
   const t = await getTranslations("Pricing");
   const tSummary = await getTranslations("PricingSummary");
 
-  const plans = SUMMARY_ORDER.map((key) => ({
-    key,
-    name: t(`plans.${key}.name`),
-    description: t(`plans.${key}.description`),
-    price: SUMMARY_PRICE[key],
-    period: key === "presenca" ? "" : t("perMonth"),
-    highlight: key === "destaque",
-    badge: key === "destaque" ? t("mostChosen") : null,
-  }));
+  const plans = PLAN_ORDER.map((key) => {
+    const { price, hasPeriod } = PLAN_PRICE_DISPLAY[key];
+    return {
+      key,
+      name: t(`plans.${key}.name`),
+      description: t(`plans.${key}.description`),
+      price,
+      period: hasPeriod ? t("perMonth") : "",
+      highlight: key === "destaque",
+      badge: key === "destaque" ? t("mostChosen") : null,
+    };
+  });
 
   return (
     <section id="planos" className="bg-surface px-6 py-28">
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-6xl">
         <div className="max-w-2xl">
           <p className="text-[15px] font-medium uppercase tracking-[0.2em] text-primary">{tSummary("eyebrow")}</p>
           <h2 className="mt-4 text-[clamp(2rem,4.5vw,3.5rem)] font-semibold leading-tight tracking-tight">
@@ -39,11 +33,11 @@ export async function PricingSummary() {
           <p className="mt-3 text-[17px] text-muted">{t("subheading")}</p>
         </div>
 
-        <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-3">
+        <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {plans.map((plan) => (
             <div
               key={plan.key}
-              className={`relative rounded-3xl p-7 ${
+              className={`relative flex flex-col rounded-3xl p-7 ${
                 plan.highlight ? "gradient-terracotta-animated text-white" : "border border-border text-foreground"
               }`}
             >
@@ -53,7 +47,7 @@ export async function PricingSummary() {
                 </span>
               )}
               <h3 className="text-[17px] font-semibold">{plan.name}</h3>
-              <p className={`mt-1.5 text-[14px] ${plan.highlight ? "text-white/70" : "text-muted"}`}>
+              <p className={`mt-1.5 flex-1 text-[14px] ${plan.highlight ? "text-white/70" : "text-muted"}`}>
                 {plan.description}
               </p>
               <p className="mt-5 flex items-baseline gap-1">
@@ -68,8 +62,34 @@ export async function PricingSummary() {
               >
                 {t("ctaChoosePlan")}
               </Link>
+              <Link
+                href={`/planos/${plan.key}`}
+                className={`mt-2 block text-center text-[13px] font-medium hover:underline ${
+                  plan.highlight ? "text-white/80" : "text-primary"
+                }`}
+              >
+                {t("ctaSeeDetails")}
+              </Link>
             </div>
           ))}
+        </div>
+
+        {/* Patrocinador não é autoatendimento -- faixa compacta separada,
+           mesma lógica de disposição da versão completa em Pricing.tsx. */}
+        <div className="mt-5 flex flex-col items-start gap-4 rounded-3xl bg-graphite p-6 text-white sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h3 className="text-[16px] font-semibold">{t("plans.patrocinador.name")}</h3>
+            <p className="mt-1 text-[14px] text-white/70">{t("plans.patrocinador.description")}</p>
+          </div>
+          <div className="flex shrink-0 items-center gap-4">
+            <span className="text-[15px] font-medium text-white/80">{t("priceOnRequest")}</span>
+            <Link
+              href="/seja-um-parceiro"
+              className="whitespace-nowrap rounded-full bg-white px-5 py-2.5 text-[14px] font-medium text-graphite"
+            >
+              {t("ctaTalkToUs")}
+            </Link>
+          </div>
         </div>
 
         <Link href="/planos" className="mt-10 inline-block text-[15px] font-medium text-primary hover:underline">
