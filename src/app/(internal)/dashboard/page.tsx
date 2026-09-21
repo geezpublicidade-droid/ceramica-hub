@@ -69,8 +69,13 @@ export default async function DashboardPage() {
   const status = business ? PROFILE_STATUS[business.status] : undefined;
 
   return (
-    <main className="min-h-screen px-6 py-24">
-      <div className="mx-auto flex max-w-3xl flex-col gap-6">
+    <main className="min-h-screen px-6 py-16 lg:py-20">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 lg:flex-row lg:items-start lg:gap-10">
+        <aside className="lg:sticky lg:top-10 lg:w-56 lg:shrink-0">
+          <DashboardNav currentPath="/dashboard" />
+        </aside>
+
+        <div className="flex min-w-0 flex-1 flex-col gap-6 lg:max-w-3xl">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-[15px] text-muted">Painel da empresa</p>
@@ -80,8 +85,6 @@ export default async function DashboardPage() {
           </div>
           <SignOutButton action={logout} />
         </div>
-
-        <DashboardNav currentPath="/dashboard" />
 
         {business?.trial.status === "active" && business.trial.endsAt && (
           <div className="rounded-2xl border border-primary/30 bg-primary/5 px-5 py-4">
@@ -290,6 +293,7 @@ export default async function DashboardPage() {
             </div>
           </>
         ) : null}
+        </div>
       </div>
     </main>
   );
