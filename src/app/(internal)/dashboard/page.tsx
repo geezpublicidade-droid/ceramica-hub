@@ -18,11 +18,15 @@ import { PrivacyControls } from "@/components/dashboard/PrivacyControls";
 import { StaffManagement } from "@/components/dashboard/StaffManagement";
 import { SignOutButton } from "@/components/nav/SignOutButton";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
+import { BusinessAvatar } from "@/components/BusinessAvatar";
 import { StatusPill, type StatusPillTone } from "@/components/dashboard/StatusPill";
 import { PresenceScoreCard } from "@/components/dashboard/PresenceScoreCard";
 import { NextStepCard } from "@/components/dashboard/NextStepCard";
 import { ChannelsCard } from "@/components/dashboard/ChannelsCard";
 import { StatTile } from "@/components/dashboard/StatTile";
+import { DailyViewsChart } from "@/components/dashboard/DailyViewsChart";
+import { LivePreviewCard } from "@/components/dashboard/LivePreviewCard";
+import { buildWhatsAppLink } from "@/lib/whatsapp";
 
 export const metadata = { title: "Painel — Cerâmica Hub" };
 
@@ -76,12 +80,21 @@ export default async function DashboardPage() {
         </aside>
 
         <div className="flex min-w-0 flex-1 flex-col gap-6 lg:max-w-3xl">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-[15px] text-muted">Painel da empresa</p>
-            <h1 className="text-2xl font-semibold text-foreground">
-              {business?.name ?? "Empresa não encontrada"}
-            </h1>
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex min-w-0 items-center gap-4">
+            {business && (
+              <BusinessAvatar
+                business={business}
+                className="h-14 w-14 rounded-2xl bg-white shadow-[0_4px_16px_-6px_rgba(0,0,0,0.2)]"
+                textClassName="text-[18px] font-semibold text-foreground"
+              />
+            )}
+            <div className="min-w-0">
+              <p className="text-[15px] text-muted">Painel da empresa</p>
+              <h1 className="truncate text-2xl font-semibold text-foreground">
+                {business?.name ?? "Empresa não encontrada"}
+              </h1>
+            </div>
           </div>
           <SignOutButton action={logout} />
         </div>
@@ -188,18 +201,9 @@ export default async function DashboardPage() {
                 </p>
               )}
               {hasDetailedMetrics && dailyViews.length > 0 && (
-                <div className="mt-5 border-t border-border pt-4">
-                  <p className="text-[14px] text-muted">Visualizações por dia (últimos 7 dias)</p>
-                  <div className="mt-2 flex flex-col gap-1">
-                    {dailyViews.map((row) => (
-                      <div key={row.day} className="flex items-center justify-between text-[15px]">
-                        <span className="text-muted">
-                          {new Date(row.day).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })}
-                        </span>
-                        <span className="font-medium text-foreground">{row.count}</span>
-                      </div>
-                    ))}
-                  </div>
+                <div className="mt-5 border-t border-border pt-5">
+                  <p className="mb-4 text-[14px] text-muted">Visualizações por dia (últimos 7 dias)</p>
+                  <DailyViewsChart data={dailyViews} />
                 </div>
               )}
               {totalViews === 0 && totalContacts === 0 && (
@@ -214,30 +218,7 @@ export default async function DashboardPage() {
 
             <ChannelsCard business={business} hasActivePromotion={hasActivePromotion} />
 
-            {/* Prévia do perfil — versão com preview ao vivo vem numa fase futura */}
-            <div className="glass-light flex flex-wrap items-center justify-between gap-4 rounded-3xl p-6">
-              <div>
-                <p className="text-[15px] font-medium uppercase tracking-[0.15em] text-muted">
-                  Prévia do perfil
-                </p>
-                <p className="mt-2 max-w-md text-[15px] text-muted">
-                  Veja exatamente como visitantes enxergam sua página pública.
-                </p>
-              </div>
-              {business.status === "approved" ? (
-                <Link
-                  href={`/empresa/${business.slug}`}
-                  target="_blank"
-                  className="neu rounded-full px-6 py-3 text-[15px] font-medium text-foreground"
-                >
-                  Ver como visitante vê
-                </Link>
-              ) : (
-                <span className="neu cursor-not-allowed rounded-full px-6 py-3 text-[15px] font-medium text-muted">
-                  Aguardando aprovação
-                </span>
-              )}
-            </div>
+            <LivePreviewCard business={business} photos={photos} />
 
             {/* Resumo cadastral */}
             <div className="glass-light grid gap-4 rounded-3xl p-6 sm:grid-cols-2">
@@ -255,11 +236,27 @@ export default async function DashboardPage() {
               </div>
               <div>
                 <p className="text-[14px] text-muted">Instagram</p>
-                <p className="text-[16px] text-foreground">{business.instagram}</p>
+                {business.instagram ? (
+                  <a
+                    href={`https://instagram.com/${business.instagram.replace(/^@/, "")}`}
+                    target="_blank"
+                    className="text-[16px] font-medium text-primary hover:underline"
+                  >
+                    {business.instagram}
+                  </a>
+                ) : (
+                  <p className="text-[16px] text-muted">Não informado</p>
+                )}
               </div>
               <div>
                 <p className="text-[14px] text-muted">WhatsApp</p>
-                <p className="text-[16px] text-foreground">{business.phone}</p>
+                <a
+                  href={buildWhatsAppLink(business.phone, business.name)}
+                  target="_blank"
+                  className="text-[16px] font-medium text-primary hover:underline"
+                >
+                  {business.phone}
+                </a>
               </div>
               <div className="sm:col-span-2">
                 <p className="text-[14px] text-muted">Descrição</p>
