@@ -5,6 +5,7 @@ import { AdminBusinessRow } from "@/components/admin/AdminBusinessRow";
 import { ApprovedBusinessRow } from "@/components/admin/ApprovedBusinessRow";
 import { SuspendedBusinessRow } from "@/components/admin/SuspendedBusinessRow";
 import { getAdminDashboardStats, getProfileCompletenessMap } from "@/lib/services/admin-dashboard";
+import { countOpenTicketsForAdmin } from "@/lib/services/support";
 import { SignOutButton } from "@/components/nav/SignOutButton";
 import { signOut } from "@/auth";
 
@@ -52,13 +53,14 @@ async function getBusinessesByStatus(status: "pending" | "approved" | "rejected"
 export default async function AdminPage() {
   const { adminRole } = await requireAdminPage(["super_admin", "admin", "moderador"]);
 
-  const [pending, approved, rejected, suspended, stats, completeness] = await Promise.all([
+  const [pending, approved, rejected, suspended, stats, completeness, openTickets] = await Promise.all([
     getBusinessesByStatus("pending"),
     getBusinessesByStatus("approved"),
     getBusinessesByStatus("rejected"),
     getBusinessesByStatus("suspended"),
     getAdminDashboardStats(),
     getProfileCompletenessMap(),
+    countOpenTicketsForAdmin(),
   ]);
 
   const statCards: { label: string; value: number }[] = [
@@ -73,6 +75,7 @@ export default async function AdminPage() {
     { label: "Oportunidades ativas", value: stats.activeOpportunities },
     { label: "Promoções ativas", value: stats.activePromotions },
     { label: "Perfis incompletos", value: stats.incompleteProfiles },
+    { label: "Chamados de suporte abertos", value: openTickets },
   ];
 
   return (
@@ -141,6 +144,9 @@ export default async function AdminPage() {
                 Usuários
               </Link>
             )}
+            <Link href="/admin/suporte" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
+              Suporte
+            </Link>
             <SignOutButton action={logout} />
           </div>
         </div>

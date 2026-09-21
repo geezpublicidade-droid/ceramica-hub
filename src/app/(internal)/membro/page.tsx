@@ -28,6 +28,14 @@ export default async function MemberPage() {
           <SignOutButton action={logout} />
         </div>
 
+        <Link
+          href="/membro/suporte"
+          className="glass-light flex items-center justify-between gap-3 rounded-2xl px-5 py-4 transition hover:bg-black/5"
+        >
+          <span className="text-[15px] font-medium text-foreground">Precisa de ajuda? Fale com o suporte</span>
+          <span aria-hidden="true" className="text-primary">→</span>
+        </Link>
+
         {favorites.length === 0 ? (
           <p className="text-[15px] text-muted">
             Você ainda não favoritou nenhuma empresa. Explore o{" "}

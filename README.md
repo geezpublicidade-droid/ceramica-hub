@@ -52,6 +52,7 @@ essas chegam sozinhas em toda branch/preview/produção:
 | `MERCADOPAGO_ACCESS_TOKEN` | Cobrança fica 100% manual (admin confirma pagamento em `/admin/financeiro`) — decisão consciente, pagamento automático fica pra depois do lançamento. |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` / `TURNSTILE_SECRET_KEY` | Formulário de cadastro fica sem proteção anti-spam/bot. |
 | `NEXT_PUBLIC_SENTRY_DSN` / `SENTRY_DSN` / `SENTRY_AUTH_TOKEN` / `SENTRY_ORG` / `SENTRY_PROJECT` | Erros de produção não são reportados automaticamente. |
+| `NEXT_PUBLIC_SUPPORT_WHATSAPP_PHONE` | Sem essa variável, o botão flutuante de "Fale com o suporte" (WhatsApp, visível em todo o site) fica escondido — o canal de suporte por chamado (`/dashboard/suporte`, `/membro/suporte`, `/admin/suporte`) funciona normalmente sem ela. Formato: só dígitos com DDI+DDD, ex: `5511999998888`. |
 
 Quando qualquer uma dessas for configurada na Vercel, o recurso correspondente liga
 sozinho no próximo deploy — nenhum código precisa mudar.

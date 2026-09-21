@@ -6,6 +6,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Geist, Geist_Mono, Alexandria } from "next/font/google";
 import { routing } from "@/i18n/routing";
 import { siteUrl, buildSocialMetadata } from "@/lib/seo";
+import { SupportWhatsAppButton } from "@/components/support/SupportWhatsAppButton";
 import "../globals.css";
 
 const geistSans = Geist({
@@ -82,6 +83,7 @@ export default async function LocaleLayout({
       </head>
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <SupportWhatsAppButton />
       </body>
     </html>
   );
