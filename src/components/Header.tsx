@@ -61,6 +61,7 @@ export function Header() {
   ];
 
   const secondaryLinks = [
+    { href: "/planos", label: t("navPlanos") },
     { href: "/blog", label: t("navBlog") },
     { href: "/noticias", label: t("navNoticias") },
     { href: "/forum-de-negocios", label: t("navForum") },

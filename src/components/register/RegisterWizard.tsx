@@ -306,6 +306,12 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
       {step === 3 && (
         <div className="flex flex-col gap-4">
           <p className="text-[15px] font-medium uppercase tracking-[0.15em] text-muted">{t("step3Eyebrow")}</p>
+          <p className="-mt-2 text-[14px] text-muted">
+            {t("step3PlanNote")}{" "}
+            <Link href="/planos" className="font-medium text-primary hover:underline">
+              {t("step3PlanCta")}
+            </Link>
+          </p>
           <label>
             <span className={labelClass}>{t("labels.logoUrl")}</span>
             <input className={inputClass} value={form.logoUrl} onChange={(e) => update("logoUrl", e.target.value)} />

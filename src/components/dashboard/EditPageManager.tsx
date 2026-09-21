@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { Business, BusinessService } from "@/data/businesses";
 import type { OwnedPhoto, OwnedPromotion, VirtualTourScene } from "@/lib/services/platform";
-import type { PlanLimits } from "@/lib/plan-limits";
+import { upgradeTargetPlan, type PlanLimits } from "@/lib/plan-limits";
+import { planLabels } from "@/data/businesses";
 import { EDITAR_ANCHOR } from "@/lib/dashboard-anchors";
 import {
   updateBusinessProfile,
@@ -24,13 +25,16 @@ const inputClass =
   "mt-1.5 w-full rounded-xl border border-border bg-white px-4 py-2.5 text-[16px] text-foreground outline-none focus:border-primary";
 const labelClass = "text-[15px] font-medium text-foreground";
 
-function UpgradeNotice({ message }: { message: string }) {
+function UpgradeNotice({ message, targetPlan }: { message: string; targetPlan: Business["plan"] | null }) {
   return (
     <div className="mt-3 rounded-xl bg-primary/5 px-4 py-3 text-[15px] text-foreground">
       <p className="font-medium">Esse recurso faz parte de um plano superior.</p>
       <p className="mt-1 text-muted">{message}</p>
-      <Link href="/#planos" className="mt-2 inline-block font-medium text-primary hover:underline">
-        Conhecer o plano →
+      <Link
+        href={targetPlan ? `/planos/${targetPlan}` : "/planos"}
+        className="mt-2 inline-block font-medium text-primary hover:underline"
+      >
+        {targetPlan ? `Conhecer o plano ${planLabels[targetPlan]} →` : "Conhecer os planos →"}
       </Link>
     </div>
   );
@@ -227,7 +231,10 @@ export function EditPageManager({
             />
           </label>
           {!limits.videoAllowed && (
-            <UpgradeNotice message="Vídeo em destaque é um recurso do plano Experiência." />
+            <UpgradeNotice
+              message="Vídeo em destaque é um recurso do plano Experiência."
+              targetPlan={upgradeTargetPlan(business.plan, "videoAllowed")}
+            />
           )}
           {profileError && <p className="text-[15px] text-red-600">{profileError}</p>}
           {profileSaved && <p className="text-[15px] text-primary">Salvo.</p>}
@@ -274,6 +281,7 @@ export function EditPageManager({
                 ? "Cadastro de serviços é exclusivo dos planos pagos."
                 : `Seu plano permite até ${limits.maxServices} serviços.`
             }
+            targetPlan={upgradeTargetPlan(business.plan, "maxServices")}
           />
         ) : (
           <div className="mt-4 flex flex-col gap-2">
@@ -325,7 +333,10 @@ export function EditPageManager({
         </div>
 
         {photos.length >= limits.maxPhotos ? (
-          <UpgradeNotice message={`Seu plano permite até ${limits.maxPhotos} imagens na galeria.`} />
+          <UpgradeNotice
+            message={`Seu plano permite até ${limits.maxPhotos} imagens na galeria.`}
+            targetPlan={upgradeTargetPlan(business.plan, "maxPhotos")}
+          />
         ) : (
           <div className="mt-4 flex gap-2">
             <input
@@ -376,7 +387,10 @@ export function EditPageManager({
         )}
 
         {!limits.virtualTourAllowed ? (
-          <UpgradeNotice message="Visita virtual 360° é um recurso do plano Experiência." />
+          <UpgradeNotice
+            message="Visita virtual 360° é um recurso do plano Experiência."
+            targetPlan={upgradeTargetPlan(business.plan, "virtualTourAllowed")}
+          />
         ) : (
           <div className="mt-4 flex flex-col gap-2">
             <input
@@ -431,9 +445,15 @@ export function EditPageManager({
         </div>
 
         {limits.maxPromotions === 0 ? (
-          <UpgradeNotice message="Promoções fazem parte dos planos Profissional, Destaque e Experiência." />
+          <UpgradeNotice
+            message="Promoções fazem parte dos planos Profissional, Destaque e Experiência."
+            targetPlan={upgradeTargetPlan(business.plan, "maxPromotions")}
+          />
         ) : activePromotions.length >= limits.maxPromotions ? (
-          <UpgradeNotice message={`Seu plano permite até ${limits.maxPromotions} promoção(ões) ativa(s) por vez.`} />
+          <UpgradeNotice
+            message={`Seu plano permite até ${limits.maxPromotions} promoção(ões) ativa(s) por vez.`}
+            targetPlan={upgradeTargetPlan(business.plan, "maxPromotions")}
+          />
         ) : (
           <div className="mt-4 flex flex-col gap-2">
             <input

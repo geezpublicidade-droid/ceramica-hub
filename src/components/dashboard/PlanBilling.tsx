@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Link from "next/link";
 import { createPaymentLink } from "@/lib/actions/billing";
 import { planLabels } from "@/data/businesses";
 import { PLAN_PRICES_CENTS, type PayablePlan } from "@/lib/plan-limits";
@@ -74,20 +75,24 @@ export function PlanBilling({
 
       <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
         {PAYABLE_PLANS.map((plan) => (
-          <button
-            key={plan}
-            type="button"
-            disabled={isPending || currentPlan === plan}
-            onClick={() => handleChoosePlan(plan)}
-            className="neu rounded-xl px-4 py-3 text-left text-[15px] font-medium text-foreground disabled:opacity-50"
-          >
-            <span className="block">{planLabels[plan]}</span>
-            <span className="mt-1 block text-[14px] font-normal text-muted">
-              {formatCents(PLAN_PRICES_CENTS[plan])}/mês
-              {currentPlan === plan ? " — plano atual" : ""}
-            </span>
-            {pendingPlan === plan && isPending && <span className="mt-1 block text-[13px] text-primary">Gerando fatura...</span>}
-          </button>
+          <div key={plan} className="neu rounded-xl p-1">
+            <button
+              type="button"
+              disabled={isPending || currentPlan === plan}
+              onClick={() => handleChoosePlan(plan)}
+              className="w-full rounded-lg px-3 py-2.5 text-left text-[15px] font-medium text-foreground disabled:opacity-50"
+            >
+              <span className="block">{planLabels[plan]}</span>
+              <span className="mt-1 block text-[14px] font-normal text-muted">
+                {formatCents(PLAN_PRICES_CENTS[plan])}/mês
+                {currentPlan === plan ? " — plano atual" : ""}
+              </span>
+              {pendingPlan === plan && isPending && <span className="mt-1 block text-[13px] text-primary">Gerando fatura...</span>}
+            </button>
+            <Link href={`/planos/${plan}`} target="_blank" className="block px-3 pb-2 text-[13px] font-medium text-primary hover:underline">
+              Ver detalhes →
+            </Link>
+          </div>
         ))}
       </div>
 

@@ -3,7 +3,10 @@ import { getAllBusinesses } from "@/lib/services/platform";
 import { getPublishedPosts } from "@/lib/services/blog";
 import { categorySlugs } from "@/lib/category-slug";
 import { getActiveTowers } from "@/lib/services/towers";
+import { PLAN_ORDER } from "@/lib/plan-limits";
 import { routing } from "@/i18n/routing";
+
+const PLANO_SLUGS = [...PLAN_ORDER, "patrocinador"];
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
@@ -53,6 +56,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entry("/impacto", "monthly", 0.4),
     entry("/parceiros", "weekly", 0.4),
     entry("/seja-um-parceiro", "monthly", 0.4),
+    entry("/planos", "monthly", 0.6),
+    ...PLANO_SLUGS.map((plano) => entry(`/planos/${plano}`, "monthly", 0.5)),
     ...categorySlugs.map((slug) => entry(`/categoria/${slug}`, "weekly", 0.6)),
     ...towers.map((tower) => entry(`/torres/${tower.slug}`, "weekly", 0.5)),
     ...businesses.map((business) => entry(`/empresa/${business.slug}`, "weekly", 0.6)),

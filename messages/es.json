@@ -19,6 +19,7 @@
     "navNoticias": "Noticias",
     "navForum": "Foro de Negocios",
     "navImpacto": "Informe de Impacto",
+    "navPlanos": "Planes",
     "navCorporate": "Corporate",
     "navLifestyle": "Lifestyle",
     "navHoteisEventos": "Hoteles y Eventos",
@@ -77,6 +78,7 @@
     "heading": "Empieza con tu página comercial. Crece cuando tenga sentido.",
     "subheading": "Mira lo que incluye cada plan y elige el que tiene sentido ahora para tu negocio.",
     "ctaChoosePlan": "Quiero este plan",
+    "ctaSeeDetails": "Ver detalles del plan",
     "ctaTalkToUs": "Agendar una llamada",
     "mostChosen": "El más elegido",
     "perMonth": "/mes",
@@ -151,10 +153,20 @@
       }
     }
   },
+  "PlanDetailPage": {
+    "eyebrow": "Planes Cerâmica Hub",
+    "metaTitle": "{plan} — Planes Cerâmica Hub",
+    "metaDescription": "Mira lo que incluye el plan {plan} de Cerâmica Hub, cuánto cuesta y cómo queda la página de tu empresa.",
+    "backToAll": "← Ver todos los planes",
+    "featuresHeading": "Qué incluye",
+    "nextPlanTeaser": "¿Quieres más alcance? Conoce el plan {plan} →"
+  },
   "RegisterWizard": {
     "step1Eyebrow": "Paso 1 · Datos de la empresa",
     "step2Eyebrow": "Paso 2 · Ubicación",
     "step3Eyebrow": "Paso 3 · Página gratuita",
+    "step3PlanNote": "Este registro es para el plan Presencia, gratuito.",
+    "step3PlanCta": "Conoce los planes pagos →",
     "step4Eyebrow": "Paso 4 · Verificación",
     "labels": {
       "name": "Nombre de la empresa",

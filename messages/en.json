@@ -19,6 +19,7 @@
     "navNoticias": "News",
     "navForum": "Business Forum",
     "navImpacto": "Impact Report",
+    "navPlanos": "Plans",
     "navCorporate": "Corporate",
     "navLifestyle": "Lifestyle",
     "navHoteisEventos": "Hotels & Events",
@@ -77,6 +78,7 @@
     "heading": "Start with your business page. Grow when it makes sense.",
     "subheading": "See what each plan includes and pick what makes sense for your business right now.",
     "ctaChoosePlan": "I want this plan",
+    "ctaSeeDetails": "See plan details",
     "ctaTalkToUs": "Schedule a call",
     "mostChosen": "Most popular",
     "perMonth": "/mo",
@@ -151,10 +153,20 @@
       }
     }
   },
+  "PlanDetailPage": {
+    "eyebrow": "Cerâmica Hub Plans",
+    "metaTitle": "{plan} — Cerâmica Hub Plans",
+    "metaDescription": "See what the {plan} plan from Cerâmica Hub includes, how much it costs, and what your business page looks like.",
+    "backToAll": "← See all plans",
+    "featuresHeading": "What's included",
+    "nextPlanTeaser": "Want more reach? Check out the {plan} plan →"
+  },
   "RegisterWizard": {
     "step1Eyebrow": "Step 1 · Business details",
     "step2Eyebrow": "Step 2 · Location",
     "step3Eyebrow": "Step 3 · Free page",
+    "step3PlanNote": "This registration is for the free Presence plan.",
+    "step3PlanCta": "See paid plans →",
     "step4Eyebrow": "Step 4 · Verification",
     "labels": {
       "name": "Business name",

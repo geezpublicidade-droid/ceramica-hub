@@ -19,6 +19,7 @@
     "navNoticias": "新闻",
     "navForum": "商业论坛",
     "navImpacto": "影响力报告",
+    "navPlanos": "套餐",
     "navCorporate": "企业",
     "navLifestyle": "生活方式",
     "navHoteisEventos": "酒店与活动",
@@ -77,6 +78,7 @@
     "heading": "从您的商业主页开始。按需求逐步升级。",
     "subheading": "查看每个方案包含的内容,选择现在最适合您企业的方案。",
     "ctaChoosePlan": "选择此套餐",
+    "ctaSeeDetails": "查看套餐详情",
     "ctaTalkToUs": "预约沟通",
     "mostChosen": "最受欢迎",
     "perMonth": "/月",
@@ -151,10 +153,20 @@
       }
     }
   },
+  "PlanDetailPage": {
+    "eyebrow": "Cerâmica Hub 套餐",
+    "metaTitle": "{plan} — Cerâmica Hub 套餐",
+    "metaDescription": "查看 Cerâmica Hub {plan} 套餐包含的内容、价格以及您企业主页的呈现效果。",
+    "backToAll": "← 查看所有套餐",
+    "featuresHeading": "套餐包含",
+    "nextPlanTeaser": "想要更多曝光?了解 {plan} 套餐 →"
+  },
   "RegisterWizard": {
     "step1Eyebrow": "第 1 步 · 企业信息",
     "step2Eyebrow": "第 2 步 · 位置信息",
     "step3Eyebrow": "第 3 步 · 免费主页",
+    "step3PlanNote": "此注册对应免费的展示套餐。",
+    "step3PlanCta": "查看付费套餐 →",
     "step4Eyebrow": "第 4 步 · 验证",
     "labels": {
       "name": "企业名称",
