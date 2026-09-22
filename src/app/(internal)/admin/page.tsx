@@ -139,6 +139,11 @@ export default async function AdminPage() {
                 Eventos
               </Link>
             )}
+            {(adminRole === "super_admin" || adminRole === "admin" || adminRole === "moderador") && (
+              <Link href="/admin/avaliacoes" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
+                Avaliações
+              </Link>
+            )}
             {adminRole === "super_admin" && (
               <Link href="/admin/usuarios" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
                 Usuários

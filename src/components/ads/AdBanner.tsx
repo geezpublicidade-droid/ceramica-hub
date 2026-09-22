@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AdLink } from "@/components/ads/AdLink";
+import { Link } from "@/i18n/navigation";
 import type { ActiveCampaign } from "@/lib/services/ads";
 
 /**
@@ -40,7 +41,26 @@ export function AdBanner({ placementKey }: { placementKey: string }) {
     }, 200);
   }
 
-  if (campaigns.length === 0) return null;
+  // Sem campanha paga pra essa posição -- mostra o anúncio "casa" em vez de
+  // deixar o banner sumir por completo.
+  if (campaigns.length === 0) {
+    return (
+      <div className="px-6 py-10 sm:py-14">
+        <Link
+          href="/seja-um-parceiro"
+          className="mx-auto block max-w-3xl overflow-hidden border border-border"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/ceramica-hub-anuncie-quadrado.webp"
+            alt="Anuncie aqui — destaque sua marca no Cerâmica Hub"
+            className="w-full"
+            loading="lazy"
+          />
+        </Link>
+      </div>
+    );
+  }
 
   const visibleCampaigns =
     campaigns.length === 1

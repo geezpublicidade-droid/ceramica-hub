@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { FadeUp } from "@/components/motion/FadeUp";
@@ -9,6 +10,18 @@ import type { Business } from "@/data/businesses";
 type FeaturedBusinessesProps = {
   businesses: Business[];
 };
+
+/** Foto real só quando a empresa autorizou uso de imagem (image_usage_
+ * authorized no banco) -- nunca mostra a foto cadastrada sem essa
+ * autorização, mesmo que exista. Sem foto real/autorizada, cai numa
+ * imagem genérica por categoria (gastronomia pra Alimentação, corporativa
+ * pro resto) -- nunca susbtitui foto real por gerada. */
+function resolveCardImage(business: Business): string {
+  if (business.imageUsageAuthorized && business.coverPhoto) return business.coverPhoto;
+  return business.category === "Alimentação"
+    ? "/images/ceramica-hub-gastronomia.webp"
+    : "/images/ceramica-hub-corporativo.webp";
+}
 
 /** Editorial, não grade genérica: poucos cards (o que existir de verdade,
  * nunca preenchido com lixo de teste), com 1 linha de descrição
@@ -35,44 +48,60 @@ export async function FeaturedBusinesses({ businesses }: FeaturedBusinessesProps
           {businesses.map((business) => {
             const towerName = business.floor.split(" · ")[0];
             return (
-              <FadeUp key={business.id} className="group flex flex-col rounded-2xl border border-border bg-white p-5">
-                <div className="flex items-start justify-between gap-3">
-                  <BusinessAvatar
-                    business={business}
-                    className="h-12 w-12 rounded-full bg-surface"
-                    textClassName="text-[15px] font-semibold text-foreground"
+              <FadeUp
+                key={business.id}
+                className="group flex flex-col overflow-hidden border border-border bg-white"
+              >
+                <div className="relative h-[150px] w-full overflow-hidden bg-surface">
+                  <Image
+                    src={resolveCardImage(business)}
+                    alt=""
+                    fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    loading="lazy"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  {business.verified && (
-                    <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[12px] font-medium text-primary">
-                      {tCommon("verified")}
-                    </span>
-                  )}
                 </div>
 
-                <Link href={`/empresa/${business.slug}`} className="mt-4 block">
-                  <h3 className="text-[17px] font-semibold tracking-tight transition-colors group-hover:text-primary">
-                    {business.name}
-                  </h3>
-                </Link>
-                <p className="mt-1 text-[13px] text-muted">
-                  {tCategories(business.category)} · {towerName}
-                </p>
-                <p className="mt-2 line-clamp-2 text-[14px] leading-relaxed text-muted">{business.description}</p>
+                <div className="relative z-10 flex flex-1 flex-col bg-white p-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <BusinessAvatar
+                      business={business}
+                      className="-mt-9 h-12 w-12 shrink-0 rounded-full border-2 border-white bg-surface shadow-sm"
+                      textClassName="text-[15px] font-semibold text-foreground"
+                    />
+                    {business.verified && (
+                      <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[12px] font-medium text-primary">
+                        {tCommon("verified")}
+                      </span>
+                    )}
+                  </div>
 
-                <div className="mt-4 flex items-center gap-4 pt-1">
-                  <Link
-                    href={`/empresa/${business.slug}`}
-                    className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground"
-                  >
-                    {t("ctaKnowBusiness")}
+                  <Link href={`/empresa/${business.slug}`} className="mt-3 block">
+                    <h3 className="text-[17px] font-semibold tracking-tight transition-colors group-hover:text-primary">
+                      {business.name}
+                    </h3>
                   </Link>
-                  <WhatsAppLink
-                    href={buildWhatsAppLink(business.phone, business.name)}
-                    businessId={business.id}
-                    className="text-[13px] font-medium text-primary transition-transform hover:translate-x-1"
-                  >
-                    {tCommon("whatsapp")} →
-                  </WhatsAppLink>
+                  <p className="mt-1 text-[13px] text-muted">
+                    {tCategories(business.category)} · {towerName}
+                  </p>
+                  <p className="mt-2 line-clamp-2 text-[14px] leading-relaxed text-muted">{business.description}</p>
+
+                  <div className="mt-4 flex items-center gap-4 pt-1">
+                    <Link
+                      href={`/empresa/${business.slug}`}
+                      className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground"
+                    >
+                      {t("ctaKnowBusiness")}
+                    </Link>
+                    <WhatsAppLink
+                      href={buildWhatsAppLink(business.phone, business.name)}
+                      businessId={business.id}
+                      className="text-[13px] font-medium text-primary transition-transform hover:translate-x-1"
+                    >
+                      {tCommon("whatsapp")} →
+                    </WhatsAppLink>
+                  </div>
                 </div>
               </FadeUp>
             );

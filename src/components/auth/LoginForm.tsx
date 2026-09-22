@@ -33,12 +33,17 @@ export function LoginForm({
 }: LoginFormProps) {
   const redirectTarget = callbackUrl ?? defaultRedirect;
   return (
-    <main className="flex min-h-screen items-center justify-center px-6 py-24">
-      <div className="w-full max-w-sm">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-graphite px-6 py-16">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[900px] w-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-40 blur-[100px]"
+        style={{ background: "radial-gradient(circle, var(--primary-light), var(--primary) 60%, transparent 75%)" }}
+      />
+      <div className="relative w-full max-w-sm">
         <div className="mb-4">
           <BackLink href="/preview" label="Voltar ao site" />
         </div>
-        <div className="glass-light rounded-3xl p-8">
+        <div className="rounded-[28px] border border-white/10 bg-white p-8 shadow-[0_40px_80px_-30px_rgba(0,0,0,0.6)]">
         <Link href="/" className="flex items-center gap-2 text-[17px] font-semibold tracking-tight text-foreground">
           <img src="/images/logo-ceramica-hub.png" alt="" className="h-7 w-7" />
           Cerâmica <span className="text-primary">Hub</span>

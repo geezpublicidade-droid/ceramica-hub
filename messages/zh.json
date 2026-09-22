@@ -19,8 +19,8 @@
     "navNoticias": "新闻",
     "navForum": "商业论坛",
     "navImpacto": "影响力报告",
-    "navCorporate": "企业",
-    "navLifestyle": "生活方式",
+    "navCorporate": "商务",
+    "navLifestyle": "服务",
     "navHoteisEventos": "酒店与活动",
     "navImobiliarias": "房地产",
     "catHospedagemCorporativa": "商务住宿",
@@ -33,7 +33,8 @@
     "cadastrarEmpresa": "登记企业",
     "cadastrarEmpresaCurto": "登记",
     "abrirMenu": "打开菜单",
-    "fecharMenu": "关闭菜单"
+    "fecharMenu": "关闭菜单",
+    "navAncoras": "合作伙伴"
   },
   "LanguageSwitcher": {
     "label": "语言"
@@ -682,5 +683,15 @@
     "comoChegarCta": "路线与停车",
     "faleConoscoLabel": "联系我们",
     "faleConoscoCta": "解答您的疑问"
+  },
+  "PremiumSponsors": {
+    "eyebrow": "高级赞助商",
+    "headline": "支持 Cerâmica Hub 的品牌。",
+    "slide2Title": "活动与机构形象展示。",
+    "slide2Description": "与 Cerâmica Hub 团队量身定制的专属赞助位置。",
+    "slide3Title": "与我们团队共同打造的方案。",
+    "slide3Description": "一次诊断会议,找到适合您品牌的方式。",
+    "ctaAction": "我想成为赞助商",
+    "partnerBadge": "合作伙伴"
   }
 }

@@ -76,9 +76,9 @@ export async function UtilityStrip({ towers }: UtilityStripProps) {
 
         <Link
           href="/cadastro"
-          className="flex flex-col justify-center rounded-2xl bg-primary px-6 py-5 text-white transition-colors hover:bg-primary-light"
+          className="flex flex-col justify-center rounded-2xl bg-primary/10 px-6 py-5 text-foreground transition-colors hover:bg-primary/15"
         >
-          <span className="text-[13px] font-medium uppercase tracking-[0.12em] text-white/75">
+          <span className="text-[13px] font-medium uppercase tracking-[0.12em] text-primary">
             {tFounder("eyebrow")}
           </span>
           <span className="mt-1 text-[16px] font-semibold leading-snug tracking-tight">

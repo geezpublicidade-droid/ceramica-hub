@@ -6,6 +6,7 @@ import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { BusinessAvatar } from "@/components/BusinessAvatar";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { VirtualTourViewer } from "@/components/VirtualTourViewer";
+import { ReviewsSection } from "@/components/business/ReviewsSection";
 import { Link, redirect } from "@/i18n/navigation";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { localizedUrl, buildSocialMetadata } from "@/lib/seo";
@@ -342,6 +343,8 @@ export default async function BusinessProfilePage({ params }: PageProps) {
             </div>
           </section>
         )}
+
+        <ReviewsSection businessId={business.id} />
 
         {related.length > 0 && (
           <section className="bg-background px-6 py-16">

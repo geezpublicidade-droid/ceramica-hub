@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useSearch } from "@/components/landing/SearchContext";
@@ -8,23 +8,20 @@ import { logSearchPerformed } from "@/lib/actions/log-search";
 import { Link } from "@/i18n/navigation";
 import type { Tower } from "@/lib/services/towers";
 
-const heroImages = [
-  "/images/ceramica-hero-1.jpg",
-  "/images/ceramica-hero-2.jpg",
-  "/images/ceramica-hero-3.jpg",
-  "/images/ceramica-hero-4.jpg",
-];
-
-const CYCLE_SECONDS = 24;
-
 type NetworkNarrativeProps = {
   towers: Tower[];
+  /** Carrossel de patrocinadores -- Server Component pronto, vindo da página
+   * (NetworkNarrative é client component e não pode buscar dado no servidor
+   * sozinho). */
+  sponsorsSlot?: ReactNode;
 };
 
-/** Hero estático (não mais scroll-jacked) -- editorial, com o mesmo
- * crossfade de fotos do ComingSoon (CSS puro via .hero-slide), painel das
- * torres reais à direita no desktop e seletor horizontal no mobile. */
-export function NetworkNarrative({ towers }: NetworkNarrativeProps) {
+/** Hero estático (não mais scroll-jacked), dividido ~78/22 entre foto e
+ * painel das torres reais (desktop) -- seletor horizontal no mobile. Imagem
+ * única (não mais crossfade de 4 fotos): é uma foto conceitual do complexo,
+ * não um carrossel de verdade, então não ganhou controles de navegação
+ * decorativos que sugeririam mais slides do que existem. */
+export function NetworkNarrative({ towers, sponsorsSlot }: NetworkNarrativeProps) {
   const t = useTranslations("NetworkNarrative");
   const { setQuery } = useSearch();
   const [heroSearchValue, setHeroSearchValue] = useState("");
@@ -38,20 +35,19 @@ export function NetworkNarrative({ towers }: NetworkNarrativeProps) {
 
   return (
     <section id="top" aria-label={t("sectionLabel")} className="relative overflow-hidden bg-graphite text-white">
-      <div className="flex min-h-[560px] flex-col lg:h-[clamp(500px,52vw,580px)] lg:min-h-0 lg:flex-row">
-        {/* Foto + texto principal */}
-        <div className="relative flex flex-1 flex-col justify-center overflow-hidden px-5 pb-10 pt-24 sm:px-[var(--page-padding)] lg:pt-0">
+      <div className="flex min-h-[640px] flex-col lg:h-[clamp(640px,66vw,760px)] lg:min-h-0 lg:flex-row">
+        {/* Foto + texto principal -- ~78% da largura no desktop */}
+        <div className="relative flex flex-1 flex-col justify-end overflow-hidden px-5 pb-10 pt-24 sm:px-[var(--page-padding)] lg:w-[78%] lg:flex-none lg:pb-14 lg:pt-0">
           <div className="absolute inset-0 -z-10">
-            {heroImages.map((src, i) => (
-              <div
-                key={src}
-                className="hero-slide absolute inset-0"
-                style={{ animationDelay: `${i * -(CYCLE_SECONDS / heroImages.length)}s` }}
-              >
-                <Image src={src} alt="" fill priority={i === 0} sizes="100vw" className="object-cover" />
-              </div>
-            ))}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/10" />
+            <Image
+              src="/images/ceramica-hub-hero.webp"
+              alt=""
+              fill
+              priority
+              sizes="(min-width: 1024px) 78vw, 100vw"
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10" />
           </div>
 
           <div className="max-w-[600px]">
@@ -102,6 +98,8 @@ export function NetworkNarrative({ towers }: NetworkNarrativeProps) {
               </Link>
             </div>
 
+            {sponsorsSlot}
+
             {/* Torres -- seletor horizontal no mobile, o painel dedicado abaixo cobre o desktop */}
             {towers.length > 0 && (
               <div className="mt-[28px] flex gap-2 overflow-x-auto pb-1 lg:hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -121,7 +119,7 @@ export function NetworkNarrative({ towers }: NetworkNarrativeProps) {
 
         {/* Painel das torres -- desktop */}
         {towers.length > 0 && (
-          <div className="hidden shrink-0 flex-col justify-between bg-graphite px-9 py-12 lg:flex lg:w-[310px]">
+          <div className="hidden shrink-0 flex-col justify-between bg-graphite px-10 py-12 lg:flex lg:w-[22%] lg:min-w-[260px]">
             <nav aria-label={t("towersPanelLabel")} className="flex flex-col gap-3">
               {towers.map((tower) => (
                 <Link

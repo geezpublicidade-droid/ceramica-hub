@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import NextLink from "next/link";
 import { Link } from "@/i18n/navigation";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import type { MegaMenuGroup } from "@/components/MegaMenu";
+import { MegaMenuItem, type MegaMenuGroup } from "@/components/MegaMenu";
 import { AdSlot } from "@/components/ads/AdSlot";
 import { GlobalSearchOverlay } from "@/components/GlobalSearchOverlay";
 import { slugFromCategory } from "@/lib/category-slug";
@@ -60,6 +60,11 @@ export function Header() {
     },
   ];
 
+  const flatLinks = [
+    { href: "/forum-de-negocios", label: t("navForum") },
+    { href: "/parceiros", label: t("navAncoras") },
+  ];
+
   const secondaryLinks = [
     { href: "/planos", label: t("navPlanos") },
     { href: "/blog", label: t("navBlog") },
@@ -98,6 +103,23 @@ export function Header() {
           <img src="/images/logo-ceramica-hub.png" alt="" className="h-7 w-7 sm:h-8 sm:w-8" />
           Cerâmica <span className="text-primary">Hub</span>
         </Link>
+
+        {/* Menu central -- desktop apenas; tablet/mobile usam a gaveta lateral */}
+        <nav className="hidden items-center gap-6 lg:flex xl:gap-8">
+          {megaMenuGroups.map((group) => (
+            <MegaMenuItem key={group.key} group={group} />
+          ))}
+          {flatLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="whitespace-nowrap py-2 text-[15px] font-medium text-muted transition-colors hover:text-foreground xl:text-[16px]"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+
         <div className="flex items-center gap-2 sm:gap-3">
           <button
             type="button"
@@ -110,12 +132,6 @@ export function Header() {
               <path d="M14 14L18 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
           </button>
-          <Link
-            href="/cadastro"
-            className="hidden whitespace-nowrap rounded-full border border-border px-4 py-2 text-[14px] font-medium text-foreground transition-colors hover:border-primary hover:text-primary sm:inline-block sm:px-5 sm:py-2.5 sm:text-[15px]"
-          >
-            {t("cadastrarEmpresa")}
-          </Link>
           <NextLink
             href="/entrar"
             aria-label={t("entrar")}
@@ -127,11 +143,17 @@ export function Header() {
             </svg>
             <span className="hidden sm:inline">{t("entrar")}</span>
           </NextLink>
+          <Link
+            href="/cadastro"
+            className="hidden whitespace-nowrap rounded-full bg-primary px-4 py-2 text-[14px] font-medium text-white transition-colors hover:bg-primary-light sm:inline-block sm:px-5 sm:py-2.5 sm:text-[15px]"
+          >
+            {t("cadastrarEmpresa")}
+          </Link>
           <button
             type="button"
             aria-label={menuOpen ? t("fecharMenu") : t("abrirMenu")}
             onClick={() => setMenuOpen((v) => !v)}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-white text-foreground shadow-[0_2px_10px_rgba(0,0,0,0.12)]"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-white text-foreground shadow-[0_2px_10px_rgba(0,0,0,0.12)] lg:hidden"
           >
             {menuOpen ? (
               <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4">

@@ -19,8 +19,8 @@
     "navNoticias": "Notícias",
     "navForum": "Fórum de Negócios",
     "navImpacto": "Relatório de Impacto",
-    "navCorporate": "Corporate",
-    "navLifestyle": "Lifestyle",
+    "navCorporate": "Negócios",
+    "navLifestyle": "Serviços",
     "navHoteisEventos": "Hotéis & Eventos",
     "navImobiliarias": "Imobiliárias",
     "catHospedagemCorporativa": "Hospedagem Corporativa",
@@ -33,7 +33,8 @@
     "cadastrarEmpresa": "Cadastrar empresa",
     "cadastrarEmpresaCurto": "Cadastrar",
     "abrirMenu": "Abrir menu",
-    "fecharMenu": "Fechar menu"
+    "fecharMenu": "Fechar menu",
+    "navAncoras": "Âncoras"
   },
   "LanguageSwitcher": {
     "label": "Idioma"
@@ -682,5 +683,15 @@
     "comoChegarCta": "Rotas e estacionamento",
     "faleConoscoLabel": "Fale conosco",
     "faleConoscoCta": "Tire suas dúvidas"
+  },
+  "PremiumSponsors": {
+    "eyebrow": "PATROCINADORES PREMIUM",
+    "headline": "Marcas que apoiam o Cerâmica Hub.",
+    "slide2Title": "Ativações e presença institucional.",
+    "slide2Description": "Posições de patrocínio exclusivas, feitas sob medida com o time Cerâmica Hub.",
+    "slide3Title": "Uma proposta pensada com o nosso time.",
+    "slide3Description": "Reunião de diagnóstico pra entender o que faz sentido pra sua marca.",
+    "ctaAction": "Quero ser patrocinador",
+    "partnerBadge": "Parceiro"
   }
 }

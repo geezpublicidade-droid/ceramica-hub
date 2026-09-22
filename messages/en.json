@@ -19,8 +19,8 @@
     "navNoticias": "News",
     "navForum": "Business Forum",
     "navImpacto": "Impact Report",
-    "navCorporate": "Corporate",
-    "navLifestyle": "Lifestyle",
+    "navCorporate": "Business",
+    "navLifestyle": "Services",
     "navHoteisEventos": "Hotels & Events",
     "navImobiliarias": "Real Estate",
     "catHospedagemCorporativa": "Corporate Lodging",
@@ -33,7 +33,8 @@
     "cadastrarEmpresa": "List your business",
     "cadastrarEmpresaCurto": "List",
     "abrirMenu": "Open menu",
-    "fecharMenu": "Close menu"
+    "fecharMenu": "Close menu",
+    "navAncoras": "Anchors"
   },
   "LanguageSwitcher": {
     "label": "Language"
@@ -682,5 +683,15 @@
     "comoChegarCta": "Routes and parking",
     "faleConoscoLabel": "Contact us",
     "faleConoscoCta": "Get your questions answered"
+  },
+  "PremiumSponsors": {
+    "eyebrow": "PREMIUM SPONSORS",
+    "headline": "Brands that support Cerâmica Hub.",
+    "slide2Title": "Activations and institutional presence.",
+    "slide2Description": "Exclusive sponsorship positions, tailored with the Cerâmica Hub team.",
+    "slide3Title": "A proposal built together with our team.",
+    "slide3Description": "A discovery call to find what fits your brand.",
+    "ctaAction": "I want to sponsor",
+    "partnerBadge": "Partner"
   }
 }

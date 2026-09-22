@@ -11,7 +11,8 @@ type Block = {
   headline: string;
   cta: string;
   href: string;
-  image: string;
+  image?: string;
+  objectPosition?: string;
   dark?: boolean;
 };
 
@@ -31,7 +32,7 @@ export async function DestaqueBlocks() {
       headline: events.length > 0 ? t("eventos.headline") : t("eventos.headlineEmpty"),
       cta: t("eventos.cta"),
       href: "/forum-de-negocios",
-      image: "/images/ceramica-hero-2.jpg",
+      image: "/images/ceramica-hub-eventos.webp",
     },
     {
       key: "ancoras",
@@ -39,7 +40,6 @@ export async function DestaqueBlocks() {
       headline: t("ancoras.headline"),
       cta: t("ancoras.cta"),
       href: "/parceiros",
-      image: "/images/ceramica-hero-3.jpg",
       dark: true,
     },
     {
@@ -48,7 +48,8 @@ export async function DestaqueBlocks() {
       headline: t("complexo.headline"),
       cta: t("complexo.cta"),
       href: towers.length > 0 ? `/torres/${towers[0].slug}` : "/",
-      image: "/images/ceramica-hero-4.jpg",
+      image: "/images/ceramica-hub-hero.webp",
+      objectPosition: "50% 30%",
     },
   ];
 
@@ -59,21 +60,33 @@ export async function DestaqueBlocks() {
           <FadeUp key={block.key}>
             <Link
               href={block.href}
-              className={`group relative flex h-[280px] flex-col justify-end overflow-hidden rounded-2xl p-8 sm:h-[300px] ${
+              className={`group relative flex h-[280px] flex-col justify-end overflow-hidden p-8 sm:h-[300px] ${
                 block.dark ? "bg-primary" : ""
               }`}
             >
-              {!block.dark && (
-                <>
-                  <Image
-                    src={block.image}
-                    alt=""
-                    fill
-                    sizes="(min-width: 640px) 33vw, 100vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
-                </>
+              {block.dark ? (
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 opacity-[0.15]"
+                  style={{
+                    backgroundImage:
+                      "repeating-linear-gradient(135deg, transparent 0 22px, rgba(255,255,255,0.6) 22px 23px)",
+                  }}
+                />
+              ) : (
+                block.image && (
+                  <>
+                    <Image
+                      src={block.image}
+                      alt=""
+                      fill
+                      sizes="(min-width: 640px) 33vw, 100vw"
+                      style={{ objectPosition: block.objectPosition ?? "center" }}
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
+                  </>
+                )
               )}
               <div className="relative">
                 <p className="text-[13px] font-medium uppercase tracking-[0.15em] text-white/75">
