@@ -26,6 +26,23 @@
   /* aliases mantidos para as seções ainda não redesenhadas (Directory, Pricing, CTA) */
   --accent: var(--primary);
   --accent-dark: var(--primary-light);
+
+  /* Sistema de espaçamento editorial (redesign 2026-09-22, ver docs no PR) --
+     todo container/seção nova usa esses tokens em vez de max-w-6xl/py-N
+     soltos, pra manter margem, respiro e ritmo vertical consistentes pela
+     página inteira. */
+  --page-padding: clamp(20px, 4vw, 64px);
+  --container-max: 1320px;
+
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 40px;
+  --space-xl: 64px;
+  --space-2xl: 88px;
+
+  --card-gap: clamp(12px, 1.4vw, 20px);
+  --section-gap: clamp(56px, 6vw, 88px);
 }
 
 @theme inline {
@@ -70,6 +87,20 @@ body {
 ::selection {
   background: var(--primary);
   color: white;
+}
+
+/* Container editorial compartilhado -- toda seção da home usa a mesma
+   largura/margem, em vez de cada uma declarar seu próprio max-w-*. */
+.container-page {
+  width: min(100% - (var(--page-padding) * 2), var(--container-max));
+  margin-inline: auto;
+}
+
+/* Padding vertical padrão de seção editorial (Negócios em destaque,
+   Novidades, Benefícios etc.) -- separação vem do espaçamento + fundo
+   alternado, não de divisores grandes vazios. */
+.section-pad-y {
+  padding-block: var(--section-gap);
 }
 
 /* Glassmorfismo — vidro fosco reutilizável em cima de fundo escuro ou claro.

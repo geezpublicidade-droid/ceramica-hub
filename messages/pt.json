@@ -19,7 +19,6 @@
     "navNoticias": "Notícias",
     "navForum": "Fórum de Negócios",
     "navImpacto": "Relatório de Impacto",
-    "navPlanos": "Planos",
     "navCorporate": "Corporate",
     "navLifestyle": "Lifestyle",
     "navHoteisEventos": "Hotéis & Eventos",
@@ -243,7 +242,10 @@
     "searchButton": "Buscar",
     "ctaRegister": "Tenho uma empresa no Cerâmica",
     "ctaExplore": "Explorar o Cerâmica",
-    "sectionLabel": "A rede de negócios do Cerâmica Hub"
+    "sectionLabel": "A rede de negócios do Cerâmica Hub",
+    "towersPanelLabel": "Torres do Cerâmica Hub",
+    "towersPanelDescription": "Um ecossistema de empresas e conexões que impulsiona o Bairro Cerâmica em São Caetano do Sul.",
+    "towersPanelCta": "Conheça o complexo"
   },
   "ProofOfRelevance": {
     "empresasVerificadas": "Empresas verificadas",
@@ -270,7 +272,8 @@
     "imobiliarias": {
       "name": "Imobiliárias",
       "description": "Salas, lajes e oportunidades pra quem quer crescer dentro do Cerâmica."
-    }
+    },
+    "verTodas": "Ver todas"
   },
   "FeaturedBusinesses": {
     "eyebrow": "Quem já está no Cerâmica",
@@ -297,12 +300,30 @@
     "searchButton": "Buscar",
     "viewAllInDirectory": "Ver todos no diretório →",
     "suggestions": [
-      { "label": "Preciso de uma agência de marketing.", "term": "marketing" },
-      { "label": "Estou procurando um contador.", "term": "contabilidade" },
-      { "label": "Quero encontrar uma clínica.", "term": "estética" },
-      { "label": "Preciso de um advogado.", "term": "advocacia" },
-      { "label": "Procuro um restaurante.", "term": "alimentação" },
-      { "label": "Quero fazer uma parceria.", "term": "__oportunidades__" }
+      {
+        "label": "Preciso de uma agência de marketing.",
+        "term": "marketing"
+      },
+      {
+        "label": "Estou procurando um contador.",
+        "term": "contabilidade"
+      },
+      {
+        "label": "Quero encontrar uma clínica.",
+        "term": "estética"
+      },
+      {
+        "label": "Preciso de um advogado.",
+        "term": "advocacia"
+      },
+      {
+        "label": "Procuro um restaurante.",
+        "term": "alimentação"
+      },
+      {
+        "label": "Quero fazer uma parceria.",
+        "term": "__oportunidades__"
+      }
     ]
   },
   "OpportunityNetwork": {
@@ -367,7 +388,8 @@
       "politicaCadastro": "Política de Cadastro",
       "politicaCancelamento": "Cancelamento",
       "solicitarRemocao": "Solicitação de Remoção"
-    }
+    },
+    "location": "São Caetano do Sul - SP"
   },
   "EmpresaPage": {
     "backToDirectory": "Voltar ao diretório",
@@ -624,5 +646,41 @@
     "avaliacao-gratis": "Avaliação grátis",
     "beneficio-funcionario": "Para funcionários",
     "promocao": "Promoção"
+  },
+  "DestaqueBlocks": {
+    "eventos": {
+      "eyebrow": "EVENTOS",
+      "headline": "Conexões que movimentam o complexo.",
+      "headlineEmpty": "Novos eventos em breve.",
+      "cta": "Ver eventos"
+    },
+    "ancoras": {
+      "eyebrow": "ÂNCORAS INSTITUCIONAIS",
+      "headline": "Marcas que impulsionam o Cerâmica Hub.",
+      "cta": "Conheça nossos parceiros"
+    },
+    "complexo": {
+      "eyebrow": "O COMPLEXO",
+      "headline": "Quatro torres, um só endereço para o seu negócio.",
+      "cta": "Conheça as torres"
+    }
+  },
+  "BrandsStrip": {
+    "intro": "Marcas que fazem parte",
+    "cta": "Ver todas as âncoras"
+  },
+  "HomeNovidades": {
+    "eyebrow": "NOVIDADES",
+    "headline": "Acontece no Cerâmica.",
+    "cta": "Ver todas as novidades",
+    "empty": "Em breve, novidades por aqui."
+  },
+  "UtilityStrip": {
+    "mapaLabel": "Mapa do complexo",
+    "mapaCta": "Encontre sua empresa",
+    "comoChegarLabel": "Como chegar",
+    "comoChegarCta": "Rotas e estacionamento",
+    "faleConoscoLabel": "Fale conosco",
+    "faleConoscoCta": "Tire suas dúvidas"
   }
 }

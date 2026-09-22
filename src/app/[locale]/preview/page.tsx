@@ -6,16 +6,19 @@ import { InstitutionalPartners } from "@/components/landing/InstitutionalPartner
 import { FourUniverses } from "@/components/landing/FourUniverses";
 import { FeaturedBusinesses } from "@/components/landing/FeaturedBusinesses";
 import { Directory } from "@/components/Directory";
-import { ScaleSequence } from "@/components/landing/ScaleSequence";
+import { DestaqueBlocks } from "@/components/landing/DestaqueBlocks";
+import { HomeNovidades } from "@/components/landing/HomeNovidades";
 import { OpportunityNetwork } from "@/components/landing/OpportunityNetwork";
 import { LocalBenefits } from "@/components/landing/LocalBenefits";
 import { FounderCTA } from "@/components/landing/FounderCTA";
 import { PricingSummary } from "@/components/landing/PricingSummary";
 import { AdvertisersCTA } from "@/components/landing/AdvertisersCTA";
+import { UtilityStrip } from "@/components/landing/UtilityStrip";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { SearchProvider } from "@/components/landing/SearchContext";
 import { AdBanner } from "@/components/ads/AdBanner";
 import { AdCarousel } from "@/components/ads/AdCarousel";
+import { getActiveTowers } from "@/lib/services/towers";
 import {
   getAllBusinesses,
   getFeaturedBusinesses,
@@ -32,12 +35,13 @@ export const revalidate = 60;
 
 export default async function Preview({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const [allBusinesses, featuredBusinesses, opportunities, benefits, proofStats] = await Promise.all([
+  const [allBusinesses, featuredBusinesses, opportunities, benefits, proofStats, towers] = await Promise.all([
     getAllBusinesses(locale),
     getFeaturedBusinesses(6, locale),
     getOpportunities(locale),
     getBenefits(locale),
     getHomeProofStats(),
+    getActiveTowers(),
   ]);
 
   return (
@@ -45,41 +49,47 @@ export default async function Preview({ params }: { params: Promise<{ locale: st
       <Header />
       <main className="flex-1">
         <SearchProvider>
-          {/* 1. Hero */}
-          <NetworkNarrative />
+          {/* 1. Hero -- estático, painel das torres reais à direita (desktop) */}
+          <NetworkNarrative towers={towers} />
 
-          {/* 2. Prova de relevância */}
-          <ProofOfRelevance stats={proofStats} />
-          <InstitutionalPartners />
-
-          {/* 3. Quatro universos */}
+          {/* 2. Faixa de categorias */}
           <FourUniverses />
 
-          {/* 4. Empresas em destaque + diretório completo (destino da busca do hero) */}
+          {/* 3. Negócios em destaque + diretório completo (destino da busca do hero) */}
           <FeaturedBusinesses businesses={featuredBusinesses} />
           <Suspense fallback={null}>
             <Directory businesses={allBusinesses} />
           </Suspense>
           <AdBanner placementKey="hero_abaixo" />
 
-          {/* 5. Sequência emocional */}
-          <ScaleSequence />
+          {/* 4. Eventos / Âncoras institucionais / O Complexo */}
+          <DestaqueBlocks />
 
-          {/* 6. Benefícios e descoberta */}
+          {/* 5. Prova de relevância + marcas participantes */}
+          <ProofOfRelevance stats={proofStats} />
+          <InstitutionalPartners />
+
+          {/* 6. Novidades (agregador de notícias reais) */}
+          <HomeNovidades locale={locale} />
+
+          {/* 7. Oportunidades e benefícios da rede (funcionalidades existentes) */}
           <OpportunityNetwork opportunities={opportunities} />
           <LocalBenefits benefits={benefits} />
           <div className="py-10">
             <AdCarousel placementKey="carrossel_home" />
           </div>
 
-          {/* 7. Área para empresas */}
+          {/* 8. Área para empresas */}
           <FounderCTA />
 
-          {/* 8. Planos (resumo -- comparação completa em /planos) */}
+          {/* 9. Planos (resumo -- comparação completa em /planos) */}
           <PricingSummary />
 
-          {/* 9. Anunciantes */}
+          {/* 10. Anunciantes */}
           <AdvertisersCTA />
+
+          {/* 11. Bloco final de utilidade -- mapa, como chegar, fale conosco, cadastro */}
+          <UtilityStrip towers={towers} />
         </SearchProvider>
       </main>
       <CinematicFooter />

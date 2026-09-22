@@ -10,24 +10,24 @@ export async function LocalBenefits({ benefits }: LocalBenefitsProps) {
   const t = await getTranslations("LocalBenefits");
   const tKinds = await getTranslations("benefitKindLabels");
   return (
-    <section id="beneficios" className="relative overflow-hidden bg-primary px-6 py-28 text-white">
+    <section id="beneficios" className="section-pad-y relative overflow-hidden bg-primary text-white">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -left-40 bottom-0 h-[420px] w-[420px] rounded-full opacity-20 blur-[120px]"
         style={{ background: "radial-gradient(circle, rgba(255,255,255,0.6), transparent 70%)" }}
       />
 
-      <div className="relative mx-auto max-w-6xl">
+      <div className="container-page relative">
         <FadeUp className="max-w-2xl">
           <p className="text-[15px] font-medium uppercase tracking-[0.2em] text-white/70">
             {t("eyebrow")}
           </p>
-          <h2 className="mt-4 text-[clamp(2rem,4.5vw,3.5rem)] font-semibold leading-tight tracking-tight text-white">
+          <h2 className="mt-3 text-[clamp(1.8rem,3.2vw,2.5rem)] font-semibold leading-tight tracking-tight text-white">
             {t("headline")}
           </h2>
         </FadeUp>
 
-        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid grid-cols-1 gap-[var(--card-gap)] sm:grid-cols-2 lg:grid-cols-3">
           {benefits.map((benefit, index) => (
             <FadeUp key={benefit.id} delay={index * 0.05} className="glass-card-light rounded-2xl p-6">
               <span className="inline-block rounded-full bg-primary/10 px-2.5 py-1 text-[13px] font-medium text-primary">

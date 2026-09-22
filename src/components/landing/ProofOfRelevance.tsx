@@ -22,8 +22,8 @@ export async function ProofOfRelevance({ stats }: ProofOfRelevanceProps) {
   ];
 
   return (
-    <section className="border-y border-border bg-surface px-6 py-14 sm:py-16">
-      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-8 sm:grid-cols-5 sm:gap-6">
+    <section className="border-y border-border bg-surface py-[var(--space-xl)]">
+      <div className="container-page grid grid-cols-2 gap-8 sm:grid-cols-5 sm:gap-6">
         {tiles.map((tile) => (
           <FadeUp key={tile.label} className="text-center sm:text-left">
             <p className="text-[clamp(2rem,4vw,2.75rem)] font-semibold leading-none tracking-tight text-foreground">

@@ -19,7 +19,6 @@
     "navNoticias": "新闻",
     "navForum": "商业论坛",
     "navImpacto": "影响力报告",
-    "navPlanos": "套餐",
     "navCorporate": "企业",
     "navLifestyle": "生活方式",
     "navHoteisEventos": "酒店与活动",
@@ -243,7 +242,10 @@
     "searchButton": "搜索",
     "ctaRegister": "我在 Cerâmica 有企业",
     "ctaExplore": "探索 Cerâmica",
-    "sectionLabel": "Cerâmica Hub 商业网络"
+    "sectionLabel": "Cerâmica Hub 商业网络",
+    "towersPanelLabel": "Cerâmica Hub 大厦",
+    "towersPanelDescription": "推动圣卡耶塔诺杜苏尔 Bairro Cerâmica 发展的企业与联系网络。",
+    "towersPanelCta": "了解园区"
   },
   "ProofOfRelevance": {
     "empresasVerificadas": "已认证企业",
@@ -270,7 +272,8 @@
     "imobiliarias": {
       "name": "地产",
       "description": "为想在 Cerâmica 内发展的人提供办公室、楼层与商机。"
-    }
+    },
+    "verTodas": "查看全部"
   },
   "FeaturedBusinesses": {
     "eyebrow": "已入驻 Cerâmica 的企业",
@@ -297,12 +300,30 @@
     "searchButton": "搜索",
     "viewAllInDirectory": "查看目录中的全部企业 →",
     "suggestions": [
-      { "label": "我需要一家营销代理公司。", "term": "marketing" },
-      { "label": "我在寻找会计师。", "term": "contabilidade" },
-      { "label": "我想找一家诊所。", "term": "estética" },
-      { "label": "我需要一位律师。", "term": "advocacia" },
-      { "label": "我在找一家餐厅。", "term": "alimentação" },
-      { "label": "我想寻求合作。", "term": "__oportunidades__" }
+      {
+        "label": "我需要一家营销代理公司。",
+        "term": "marketing"
+      },
+      {
+        "label": "我在寻找会计师。",
+        "term": "contabilidade"
+      },
+      {
+        "label": "我想找一家诊所。",
+        "term": "estética"
+      },
+      {
+        "label": "我需要一位律师。",
+        "term": "advocacia"
+      },
+      {
+        "label": "我在找一家餐厅。",
+        "term": "alimentação"
+      },
+      {
+        "label": "我想寻求合作。",
+        "term": "__oportunidades__"
+      }
     ]
   },
   "OpportunityNetwork": {
@@ -367,7 +388,8 @@
       "politicaCadastro": "登记政策",
       "politicaCancelamento": "取消政策",
       "solicitarRemocao": "数据删除申请"
-    }
+    },
+    "location": "São Caetano do Sul - SP"
   },
   "EmpresaPage": {
     "backToDirectory": "返回企业目录",
@@ -624,5 +646,41 @@
     "avaliacao-gratis": "免费试用",
     "beneficio-funcionario": "员工福利",
     "promocao": "促销活动"
+  },
+  "DestaqueBlocks": {
+    "eventos": {
+      "eyebrow": "活动",
+      "headline": "推动园区发展的联系。",
+      "headlineEmpty": "新活动即将公布。",
+      "cta": "查看活动"
+    },
+    "ancoras": {
+      "eyebrow": "机构合作伙伴",
+      "headline": "推动 Cerâmica Hub 的品牌。",
+      "cta": "了解我们的合作伙伴"
+    },
+    "complexo": {
+      "eyebrow": "园区",
+      "headline": "四座大厦,一个属于您企业的地址。",
+      "cta": "了解大厦"
+    }
+  },
+  "BrandsStrip": {
+    "intro": "参与其中的品牌",
+    "cta": "查看全部合作伙伴"
+  },
+  "HomeNovidades": {
+    "eyebrow": "最新动态",
+    "headline": "Cerâmica 的最新动态。",
+    "cta": "查看全部动态",
+    "empty": "动态即将上线。"
+  },
+  "UtilityStrip": {
+    "mapaLabel": "园区地图",
+    "mapaCta": "查找您的企业",
+    "comoChegarLabel": "如何抵达",
+    "comoChegarCta": "路线与停车",
+    "faleConoscoLabel": "联系我们",
+    "faleConoscoCta": "解答您的疑问"
   }
 }

@@ -18,20 +18,20 @@ export async function OpportunityNetwork({ opportunities }: OpportunityNetworkPr
   const t = await getTranslations("OpportunityNetwork");
   const tTypes = await getTranslations("opportunityTypeLabels");
   return (
-    <section id="oportunidades" className="bg-surface px-6 py-28 text-foreground">
-      <div className="mx-auto max-w-6xl">
+    <section id="oportunidades" className="section-pad-y bg-surface text-foreground">
+      <div className="container-page">
         <FadeUp className="max-w-2xl">
           <p className="text-[15px] font-medium uppercase tracking-[0.2em] text-primary">
             {t("eyebrow")}
           </p>
-          <h2 className="mt-4 text-[clamp(2rem,4.5vw,3.5rem)] font-semibold leading-tight tracking-tight">
+          <h2 className="mt-3 text-[clamp(1.8rem,3.2vw,2.5rem)] font-semibold leading-tight tracking-tight">
             {t("headline")}
           </h2>
         </FadeUp>
 
         <FadeUp
           delay={0.1}
-          className="mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="mt-10 flex snap-x snap-mandatory gap-[var(--card-gap)] overflow-x-auto pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {opportunities.map((opportunity) => (
             <div

@@ -7,8 +7,8 @@ export async function FounderCTA() {
   const benefits = t.raw("benefits") as string[];
 
   return (
-    <section id="cadastro" className="bg-surface px-6 py-28 text-foreground">
-      <div className="mx-auto max-w-4xl text-center">
+    <section id="cadastro" className="section-pad-y bg-surface text-foreground">
+      <div className="container-page max-w-4xl text-center">
         <FadeUp className="text-[15px] font-medium uppercase tracking-[0.2em] text-primary">
           {t("eyebrow")}
         </FadeUp>

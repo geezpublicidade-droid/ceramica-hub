@@ -9,8 +9,8 @@ export async function AdvertisersCTA() {
   const t = await getTranslations("AdvertisersCTA");
 
   return (
-    <section className="bg-graphite px-6 py-24 text-white">
-      <FadeUp className="mx-auto flex max-w-4xl flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
+    <section className="bg-graphite py-[var(--space-2xl)] text-white">
+      <FadeUp className="container-page flex max-w-4xl flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-[14px] font-medium uppercase tracking-[0.2em] text-white/60">{t("eyebrow")}</p>
           <h2 className="mt-3 max-w-xl text-[clamp(1.6rem,3.5vw,2.5rem)] font-semibold leading-tight tracking-tight">

@@ -1,14 +1,12 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
-import { motion, type Variants } from "motion/react";
+import { useState } from "react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { ScrollStage } from "@/components/motion/ScrollStage";
-import { RevealText } from "@/components/motion/RevealText";
-import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useSearch } from "@/components/landing/SearchContext";
 import { logSearchPerformed } from "@/lib/actions/log-search";
 import { Link } from "@/i18n/navigation";
+import type { Tower } from "@/lib/services/towers";
 
 const heroImages = [
   "/images/ceramica-hero-1.jpg",
@@ -17,30 +15,17 @@ const heroImages = [
   "/images/ceramica-hero-4.jpg",
 ];
 
-function resolveImageIndex(progress: number) {
-  if (progress < 0.25) return 0;
-  if (progress < 0.5) return 1;
-  if (progress < 0.75) return 2;
-  return 3;
-}
+const CYCLE_SECONDS = 24;
 
-const image: Variants = {
-  hidden: { opacity: 0, filter: "blur(28px)", scale: 1.06 },
-  visible: {
-    opacity: 1,
-    filter: "blur(0px)",
-    scale: 1,
-    transition: { duration: 1.1, ease: [0.16, 1, 0.3, 1] },
-  },
+type NetworkNarrativeProps = {
+  towers: Tower[];
 };
 
-export function NetworkNarrative() {
+/** Hero estático (não mais scroll-jacked) -- editorial, com o mesmo
+ * crossfade de fotos do ComingSoon (CSS puro via .hero-slide), painel das
+ * torres reais à direita no desktop e seletor horizontal no mobile. */
+export function NetworkNarrative({ towers }: NetworkNarrativeProps) {
   const t = useTranslations("NetworkNarrative");
-  const reducedMotion = useReducedMotion();
-  const [heroActive, setHeroActive] = useState(true);
-  const heroActiveRef = useRef(true);
-  const [imageIndex, setImageIndex] = useState(0);
-  const imageIndexRef = useRef(0);
   const { setQuery } = useSearch();
   const [heroSearchValue, setHeroSearchValue] = useState("");
 
@@ -51,127 +36,117 @@ export function NetworkNarrative() {
     document.getElementById("empresas")?.scrollIntoView({ block: "start" });
   }
 
-  const handleProgress = useCallback((progress: number) => {
-    const active = progress < 0.85;
-    if (active !== heroActiveRef.current) {
-      heroActiveRef.current = active;
-      setHeroActive(active);
-    }
-
-    const nextImage = resolveImageIndex(progress);
-    if (nextImage !== imageIndexRef.current) {
-      imageIndexRef.current = nextImage;
-      setImageIndex(nextImage);
-    }
-  }, []);
-
   return (
-    <section id="top" aria-label={t("sectionLabel")}>
-      <ScrollStage
-        heightVh={175}
-        onProgress={handleProgress}
-        className="relative bg-surface text-foreground"
-      >
-        <div
-          className={`relative ${
-            reducedMotion ? "min-h-[100svh]" : "h-[100svh] overflow-hidden"
-          }`}
-        >
-          {reducedMotion ? (
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: `url(${heroImages[0]})` }}
-            />
-          ) : (
-            heroImages.map((src, index) => (
-              <motion.div
+    <section id="top" aria-label={t("sectionLabel")} className="relative overflow-hidden bg-graphite text-white">
+      <div className="flex min-h-[560px] flex-col lg:h-[clamp(500px,52vw,580px)] lg:min-h-0 lg:flex-row">
+        {/* Foto + texto principal */}
+        <div className="relative flex flex-1 flex-col justify-center overflow-hidden px-5 pb-10 pt-24 sm:px-[var(--page-padding)] lg:pt-0">
+          <div className="absolute inset-0 -z-10">
+            {heroImages.map((src, i) => (
+              <div
                 key={src}
-                aria-hidden="true"
-                className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url(${src})` }}
-                initial="hidden"
-                animate={imageIndex === index ? "visible" : "hidden"}
-                variants={image}
-              />
-            ))
-          )}
-          <div
-            aria-hidden="true"
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.3) 45%, rgba(245,245,247,0.65) 80%, rgba(245,245,247,0.9) 100%)",
-            }}
-          />
+                className="hero-slide absolute inset-0"
+                style={{ animationDelay: `${i * -(CYCLE_SECONDS / heroImages.length)}s` }}
+              >
+                <Image src={src} alt="" fill priority={i === 0} sizes="100vw" className="object-cover" />
+              </div>
+            ))}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/10" />
+          </div>
 
-          <div
-            className={
-              reducedMotion
-                ? "relative w-full px-4 pb-16 pt-28 sm:px-6 sm:pb-24 sm:pt-36"
-                : "absolute inset-0 flex flex-col items-center justify-center px-4 pt-14 sm:items-start sm:px-6 sm:pt-20"
-            }
-          >
-            <div className="mx-auto w-full max-w-6xl">
-              <RevealText active={heroActive} stagger={0.12}>
-                <div className="max-w-2xl rounded-2xl border border-white/70 bg-white/90 p-4 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.25)] backdrop-blur-md sm:rounded-3xl sm:bg-white/95 sm:p-7">
-                  <p className="text-[13px] font-medium uppercase tracking-[0.15em] text-primary sm:text-[15px] sm:tracking-[0.2em]">
-                    {t("eyebrow")}
-                  </p>
-                  <h1 className="mt-3 text-[1.65rem] font-semibold leading-[1.15] tracking-tight text-foreground sm:mt-4 sm:text-[clamp(2.1rem,5vw,4rem)] sm:leading-[1.08]">
-                    {t("headline")}
-                  </h1>
-                  <p className="mt-3 max-w-xl text-[16px] leading-relaxed text-foreground/75 sm:mt-4 sm:text-lg">
-                    {t("subhead")}
-                  </p>
-                  <form
-                    onSubmit={(event) => {
-                      event.preventDefault();
-                      submitHeroSearch(heroSearchValue);
-                    }}
-                    className="mt-4 flex items-center gap-2 rounded-full border border-border bg-white/80 p-1 pl-4 sm:mt-5 sm:p-1.5 sm:pl-5"
-                  >
-                    <input
-                      type="text"
-                      value={heroSearchValue}
-                      onChange={(event) => setHeroSearchValue(event.target.value)}
-                      placeholder={t("searchPlaceholder")}
-                      className="min-w-0 flex-1 bg-transparent py-2 text-[15px] text-foreground placeholder:text-muted focus:outline-none sm:py-2.5 sm:text-[16px]"
-                    />
-                    <button
-                      type="submit"
-                      className="neu-primary shrink-0 rounded-full px-4 py-2 text-[14px] font-medium text-white sm:px-5 sm:py-2.5 sm:text-[15px]"
-                    >
-                      {t("searchButton")}
-                    </button>
-                  </form>
-                  <div className="mt-4 flex flex-wrap items-center gap-3 sm:mt-5 sm:gap-4">
-                    <a
-                      href="#empresas"
-                      className="neu-primary rounded-full px-5 py-2.5 text-[15px] font-medium text-white sm:px-7 sm:py-3.5 sm:text-[17px]"
-                    >
-                      {t("ctaExplore")}
-                    </a>
-                    <Link
-                      href="/cadastro"
-                      className="text-[15px] font-medium text-foreground transition-colors hover:text-primary sm:text-[16px]"
-                    >
-                      {t("ctaRegister")}
-                    </Link>
-                  </div>
-                </div>
-              </RevealText>
-            </div>
+          <div className="max-w-[600px]">
+            <p className="text-[13px] font-medium uppercase tracking-[0.2em] text-white/80 sm:text-[14px]">
+              {t("eyebrow")}
+            </p>
+            <h1 className="mt-[14px] text-[clamp(1.9rem,4.6vw,3.4rem)] font-semibold leading-[1.1] tracking-tight text-white">
+              {t("headline")}
+            </h1>
+            <p className="mt-[20px] max-w-xl text-[16px] leading-relaxed text-white/80 sm:text-[18px]">
+              {t("subhead")}
+            </p>
 
-            <div
-              className="pointer-events-none absolute bottom-10 left-1/2 -translate-x-1/2 text-muted transition-opacity duration-500"
-              style={{ opacity: heroActive ? 1 : 0 }}
+            <form
+              onSubmit={(event) => {
+                event.preventDefault();
+                submitHeroSearch(heroSearchValue);
+              }}
+              className="mt-[28px] flex items-center gap-2 rounded-full border border-white/25 bg-white/10 p-1 pl-4 backdrop-blur-md sm:p-1.5 sm:pl-5"
             >
-              <span className="block h-9 w-[1px] bg-foreground/20" />
+              <input
+                type="text"
+                value={heroSearchValue}
+                onChange={(event) => setHeroSearchValue(event.target.value)}
+                placeholder={t("searchPlaceholder")}
+                className="min-w-0 flex-1 bg-transparent py-2 text-[15px] text-white placeholder:text-white/60 focus:outline-none sm:py-2.5 sm:text-[16px]"
+              />
+              <button
+                type="submit"
+                className="shrink-0 rounded-full bg-primary px-4 py-2 text-[14px] font-medium text-white transition-colors hover:bg-primary-light sm:px-5 sm:py-2.5 sm:text-[15px]"
+              >
+                {t("searchButton")}
+              </button>
+            </form>
+
+            <div className="mt-[20px] flex flex-wrap items-center gap-4">
+              <a
+                href="#empresas"
+                className="rounded-full border border-white/70 px-5 py-2.5 text-[14px] font-medium text-white transition-colors hover:bg-white hover:text-graphite sm:px-6 sm:py-3 sm:text-[15px]"
+              >
+                {t("ctaExplore")}
+              </a>
+              <Link
+                href="/cadastro"
+                className="text-[14px] font-medium text-white/85 underline underline-offset-4 transition-colors hover:text-white sm:text-[15px]"
+              >
+                {t("ctaRegister")}
+              </Link>
             </div>
+
+            {/* Torres -- seletor horizontal no mobile, o painel dedicado abaixo cobre o desktop */}
+            {towers.length > 0 && (
+              <div className="mt-[28px] flex gap-2 overflow-x-auto pb-1 lg:hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {towers.map((tower) => (
+                  <Link
+                    key={tower.id}
+                    href={`/torres/${tower.slug}`}
+                    className="shrink-0 rounded-full border border-white/30 bg-white/10 px-4 py-2 text-[13px] font-medium text-white/90"
+                  >
+                    {tower.name}
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         </div>
-      </ScrollStage>
+
+        {/* Painel das torres -- desktop */}
+        {towers.length > 0 && (
+          <div className="hidden shrink-0 flex-col justify-between bg-graphite px-9 py-12 lg:flex lg:w-[310px]">
+            <nav aria-label={t("towersPanelLabel")} className="flex flex-col gap-3">
+              {towers.map((tower) => (
+                <Link
+                  key={tower.id}
+                  href={`/torres/${tower.slug}`}
+                  className="text-[26px] font-semibold uppercase leading-tight tracking-tight text-white/80 transition-colors hover:text-white"
+                >
+                  {tower.name.replace(/^Torre\s+/i, "")}
+                </Link>
+              ))}
+            </nav>
+            <div>
+              <span className="block h-px w-10 bg-white/30" />
+              <p className="mt-4 text-[15px] leading-relaxed text-white/70">{t("towersPanelDescription")}</p>
+              <a
+                href="#complexo"
+                className="mt-4 inline-flex items-center gap-1.5 text-[14px] font-medium text-white transition-transform hover:translate-x-1"
+              >
+                {t("towersPanelCta")}
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
     </section>
   );
 }

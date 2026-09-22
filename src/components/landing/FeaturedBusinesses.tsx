@@ -22,25 +22,25 @@ export async function FeaturedBusinesses({ businesses }: FeaturedBusinessesProps
   if (businesses.length === 0) return null;
 
   return (
-    <section className="bg-surface px-6 py-28 text-foreground">
-      <div className="mx-auto max-w-6xl">
-        <FadeUp className="max-w-2xl">
+    <section className="section-pad-y bg-surface text-foreground">
+      <div className="container-page grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(240px,0.8fr)_minmax(0,2.2fr)] lg:gap-[clamp(32px,5vw,72px)]">
+        <FadeUp>
           <p className="text-[15px] font-medium uppercase tracking-[0.2em] text-primary">{t("eyebrow")}</p>
-          <h2 className="mt-4 text-[clamp(2rem,4.5vw,3.5rem)] font-semibold leading-tight tracking-tight">
+          <h2 className="mt-3 text-[clamp(1.8rem,3.2vw,2.5rem)] font-semibold leading-tight tracking-tight">
             {t("headline")}
           </h2>
         </FadeUp>
 
-        <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-[var(--card-gap)] sm:grid-cols-2 lg:grid-cols-3">
           {businesses.map((business) => {
             const towerName = business.floor.split(" · ")[0];
             return (
-              <FadeUp key={business.id} className="group rounded-3xl border border-border bg-white p-7">
+              <FadeUp key={business.id} className="group flex flex-col rounded-2xl border border-border bg-white p-5">
                 <div className="flex items-start justify-between gap-3">
                   <BusinessAvatar
                     business={business}
-                    className="h-14 w-14 rounded-full bg-surface"
-                    textClassName="text-[17px] font-semibold text-foreground"
+                    className="h-12 w-12 rounded-full bg-surface"
+                    textClassName="text-[15px] font-semibold text-foreground"
                   />
                   {business.verified && (
                     <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[12px] font-medium text-primary">
@@ -49,27 +49,27 @@ export async function FeaturedBusinesses({ businesses }: FeaturedBusinessesProps
                   )}
                 </div>
 
-                <Link href={`/empresa/${business.slug}`} className="mt-5 block">
-                  <h3 className="text-[19px] font-semibold tracking-tight transition-colors group-hover:text-primary">
+                <Link href={`/empresa/${business.slug}`} className="mt-4 block">
+                  <h3 className="text-[17px] font-semibold tracking-tight transition-colors group-hover:text-primary">
                     {business.name}
                   </h3>
                 </Link>
-                <p className="mt-1 text-[14px] text-muted">
+                <p className="mt-1 text-[13px] text-muted">
                   {tCategories(business.category)} · {towerName}
                 </p>
-                <p className="mt-3 line-clamp-1 text-[15px] leading-relaxed text-muted">{business.description}</p>
+                <p className="mt-2 line-clamp-2 text-[14px] leading-relaxed text-muted">{business.description}</p>
 
-                <div className="mt-6 flex items-center gap-4">
+                <div className="mt-4 flex items-center gap-4 pt-1">
                   <Link
                     href={`/empresa/${business.slug}`}
-                    className="neu rounded-full px-5 py-2.5 text-[14px] font-medium text-foreground"
+                    className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground"
                   >
                     {t("ctaKnowBusiness")}
                   </Link>
                   <WhatsAppLink
                     href={buildWhatsAppLink(business.phone, business.name)}
                     businessId={business.id}
-                    className="text-[14px] font-medium text-primary transition-transform hover:translate-x-1"
+                    className="text-[13px] font-medium text-primary transition-transform hover:translate-x-1"
                   >
                     {tCommon("whatsapp")} →
                   </WhatsAppLink>

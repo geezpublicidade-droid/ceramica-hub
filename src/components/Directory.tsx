@@ -30,14 +30,14 @@ export function Directory({ businesses }: DirectoryProps) {
   }, [active, businesses, query]);
 
   return (
-    <section id="empresas" className="relative overflow-hidden bg-surface px-6 py-28">
+    <section id="empresas" className="section-pad-y relative overflow-hidden bg-surface">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-40 top-0 h-[420px] w-[420px] rounded-full opacity-30 blur-[120px]"
         style={{ background: "radial-gradient(circle, var(--primary-light), transparent 70%)" }}
       />
 
-      <div className="relative mx-auto max-w-6xl">
+      <div className="container-page relative">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h2 className="text-[clamp(1.75rem,3.5vw,2.75rem)] font-semibold leading-tight tracking-tight">

@@ -23,17 +23,17 @@ export async function PricingSummary() {
   });
 
   return (
-    <section id="planos" className="bg-surface px-6 py-28">
-      <div className="mx-auto max-w-6xl">
+    <section id="planos" className="section-pad-y bg-surface">
+      <div className="container-page">
         <div className="max-w-2xl">
           <p className="text-[15px] font-medium uppercase tracking-[0.2em] text-primary">{tSummary("eyebrow")}</p>
-          <h2 className="mt-4 text-[clamp(2rem,4.5vw,3.5rem)] font-semibold leading-tight tracking-tight">
+          <h2 className="mt-3 text-[clamp(1.8rem,3.2vw,2.5rem)] font-semibold leading-tight tracking-tight">
             {t("heading")}
           </h2>
           <p className="mt-3 text-[17px] text-muted">{t("subheading")}</p>
         </div>
 
-        <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid grid-cols-1 gap-[var(--card-gap)] sm:grid-cols-2 lg:grid-cols-4">
           {plans.map((plan) => (
             <div
               key={plan.key}
