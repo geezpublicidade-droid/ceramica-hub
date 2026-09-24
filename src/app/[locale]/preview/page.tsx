@@ -62,10 +62,13 @@ export default async function Preview({ params }: { params: Promise<{ locale: st
       <main className="flex-1">
         <SearchProvider>
           {/* 1. Hero -- estático, painel das torres reais à direita (desktop) */}
-          <NetworkNarrative towers={towers} sponsorsSlot={<PremiumSponsorsCarousel partners={partners} />} />
+          <NetworkNarrative towers={towers} />
 
-          {/* 2. Faixa de categorias */}
+          {/* 2. Faixa de categorias -- direto abaixo do hero */}
           <FourUniverses />
+
+          {/* 2b. Patrocinadores premium -- seção própria, grande */}
+          <PremiumSponsorsCarousel partners={partners} />
 
           {/* 3. Negócios em destaque + diretório completo (destino da busca do hero) */}
           <FeaturedBusinesses businesses={featuredBusinesses} />

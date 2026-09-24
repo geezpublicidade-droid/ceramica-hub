@@ -6,13 +6,13 @@ type PremiumSponsorsCarouselProps = {
   partners: InstitutionalPartner[];
 };
 
-const mark = (text: string) => <span className="text-sm font-medium tracking-tight text-white">{text}</span>;
+const mark = (text: string) => <span className="text-[18px] font-medium tracking-tight text-white sm:text-xl">{text}</span>;
 
-/** "Patrocinadores Premium" logo abaixo dos botões do hero -- com patrocinador
- * real cadastrado (institutional_partners, status "ativo"), mostra eles.
- * Sem nenhum ainda (caso de hoje), cai em slides promocionais que reusam
- * texto real já existente no site (plano Patrocinador em Pricing.tsx,
- * AdvertisersCTA) -- nunca inventa marca ou depoimento fictício. */
+/** "Patrocinadores Premium" -- seção própria logo abaixo do hero. Com
+ * patrocinador real cadastrado (institutional_partners, status "ativo"),
+ * mostra eles. Sem nenhum ainda (caso de hoje), cai em slides promocionais
+ * que reusam texto real já existente no site (plano Patrocinador em
+ * Pricing.tsx, AdvertisersCTA) -- nunca inventa marca ou depoimento fictício. */
 export async function PremiumSponsorsCarousel({ partners }: PremiumSponsorsCarouselProps) {
   const [t, tPricing, tAds] = await Promise.all([
     getTranslations("PremiumSponsors"),
@@ -64,18 +64,23 @@ export async function PremiumSponsorsCarousel({ partners }: PremiumSponsorsCarou
         ];
 
   return (
-    <div className="mt-[28px] max-w-2xl">
-      <p className="text-[12px] font-medium uppercase tracking-[0.15em] text-white/70">{t("eyebrow")}</p>
-      <div className="mt-3">
-        <SqueezeCarousel
-          slides={slides}
-          height={140}
-          radius={8}
-          label={t("headline")}
-          accent="var(--primary)"
-          accentForeground="#fff"
-        />
+    <section className="section-pad-y bg-white">
+      <div className="container-page">
+        <p className="text-[13px] font-medium uppercase tracking-[0.2em] text-primary">{t("eyebrow")}</p>
+        <h2 className="mt-3 text-[clamp(1.8rem,3.2vw,2.5rem)] font-semibold leading-tight tracking-tight text-foreground">
+          {t("headline")}
+        </h2>
+        <div className="mt-8">
+          <SqueezeCarousel
+            slides={slides}
+            height="clamp(420px, 46vw, 640px)"
+            radius={12}
+            label={t("headline")}
+            accent="var(--primary)"
+            accentForeground="#fff"
+          />
+        </div>
       </div>
-    </div>
+    </section>
   );
 }

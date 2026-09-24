@@ -42,19 +42,18 @@ export function AdBanner({ placementKey }: { placementKey: string }) {
   }
 
   // Sem campanha paga pra essa posição -- mostra o anúncio "casa" em vez de
-  // deixar o banner sumir por completo.
+  // deixar o banner sumir por completo. Banner cheio (largura total da
+  // viewport, não só do container de leitura) pra ter o mesmo peso visual
+  // que um anúncio pago de verdade teria.
   if (campaigns.length === 0) {
     return (
-      <div className="px-6 py-10 sm:py-14">
-        <Link
-          href="/seja-um-parceiro"
-          className="mx-auto block max-w-3xl overflow-hidden border border-border"
-        >
+      <div className="py-10 sm:py-14">
+        <Link href="/seja-um-parceiro" className="group block w-full overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/ceramica-hub-anuncie-quadrado.webp"
-            alt="Anuncie aqui — destaque sua marca no Cerâmica Hub"
-            className="w-full"
+            src="/images/ceramica-hub-anuncie-banner.webp"
+            alt="Anuncie aqui — sua marca no coração do Cerâmica"
+            className="h-[220px] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03] sm:h-[320px] lg:h-[380px]"
             loading="lazy"
           />
         </Link>

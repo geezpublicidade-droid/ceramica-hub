@@ -56,11 +56,11 @@ export async function DestaqueBlocks() {
   return (
     <section id="complexo" className="section-pad-y bg-surface">
       <div className="container-page grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-3">
-        {blocks.map((block) => (
-          <FadeUp key={block.key}>
+        {blocks.map((block, index) => (
+          <FadeUp key={block.key} delay={index * 0.1}>
             <Link
               href={block.href}
-              className={`group relative flex h-[280px] flex-col justify-end overflow-hidden p-8 sm:h-[300px] ${
+              className={`group relative flex h-[280px] flex-col justify-end overflow-hidden p-8 shadow-none transition-shadow duration-300 hover:shadow-[0_24px_48px_-20px_rgba(0,0,0,0.35)] sm:h-[300px] ${
                 block.dark ? "bg-primary" : ""
               }`}
             >

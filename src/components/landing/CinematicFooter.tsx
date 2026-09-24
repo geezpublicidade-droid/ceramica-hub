@@ -28,17 +28,17 @@ export async function CinematicFooter() {
 
   return (
     <footer className="border-t border-border bg-surface text-foreground">
-      <div className="container-page py-[var(--space-xl)]">
-        <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
+      <div className="container-page py-8">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="flex items-center gap-2 text-[18px] font-semibold tracking-tight">
-              <img src="/images/logo-ceramica-hub.png" alt="" className="h-7 w-7" />
+            <p className="flex items-center gap-2 text-[16px] font-semibold tracking-tight">
+              <img src="/images/logo-ceramica-hub.png" alt="" className="h-6 w-6" />
               Cerâmica <span className="text-primary">Hub</span>
             </p>
-            <p className="mt-2 max-w-sm text-[15px] leading-relaxed text-muted">{t("tagline")}</p>
+            <p className="mt-1 max-w-sm text-[13px] leading-snug text-muted">{t("tagline")}</p>
           </div>
 
-          <nav className="flex flex-wrap items-center gap-x-6 gap-y-3 text-[14px] text-muted sm:max-w-xl sm:justify-end">
+          <nav className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[12px] text-muted sm:max-w-xl sm:justify-end">
             {linkGroups.map((link) => (
               <Link key={link.label} href={link.href} className="transition-colors hover:text-foreground">
                 {link.label}
@@ -48,9 +48,9 @@ export async function CinematicFooter() {
           </nav>
         </div>
 
-        <div className="mt-8 border-t border-border pt-5">
-          <p className="max-w-3xl text-[13px] leading-relaxed text-muted">{t("disclaimer")}</p>
-          <div className="mt-4 flex flex-col gap-2 text-[13px] text-muted sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-5 border-t border-border pt-3.5">
+          <p className="max-w-3xl text-[11px] leading-snug text-muted">{t("disclaimer")}</p>
+          <div className="mt-2.5 flex flex-col gap-1.5 text-[11px] text-muted sm:flex-row sm:items-center sm:justify-between">
             <a
               href="https://www.geezmarketing.com.br"
               target="_blank"

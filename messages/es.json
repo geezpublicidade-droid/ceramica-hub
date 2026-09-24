@@ -267,14 +267,21 @@
       "description": "Gastronomía, salud, estética y moda — lo que transforma el día a día en experiencia."
     },
     "hoteis": {
-      "name": "Hoteles y Eventos",
+      "name": "Hoteles",
       "description": "Hospedaje corporativo, auditorios y turismo de negocios para quien llega de fuera."
     },
     "imobiliarias": {
       "name": "Inmobiliarias",
       "description": "Salas, pisos y oportunidades para quien quiere crecer dentro del Cerâmica."
     },
-    "verTodas": "Ver todas"
+    "verTodas": "Ver todas",
+    "short": {
+      "contabilidade-e-juridico": "Jurídico",
+      "saude-e-estetica": "Salud",
+      "moda-e-beleza": "Moda",
+      "tecnologia-e-marketing": "Tecnología",
+      "design-e-arquitetura": "Diseño"
+    }
   },
   "FeaturedBusinesses": {
     "eyebrow": "Quién ya está en el Cerâmica",

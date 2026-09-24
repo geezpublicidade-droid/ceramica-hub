@@ -1,19 +1,19 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import Image from "next/image";
+import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { useSearch } from "@/components/landing/SearchContext";
 import { logSearchPerformed } from "@/lib/actions/log-search";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { Link } from "@/i18n/navigation";
 import type { Tower } from "@/lib/services/towers";
 
+const EASE = [0.16, 1, 0.3, 1] as const;
+
 type NetworkNarrativeProps = {
   towers: Tower[];
-  /** Carrossel de patrocinadores -- Server Component pronto, vindo da página
-   * (NetworkNarrative é client component e não pode buscar dado no servidor
-   * sozinho). */
-  sponsorsSlot?: ReactNode;
 };
 
 /** Hero estático (não mais scroll-jacked), dividido ~78/22 entre foto e
@@ -21,10 +21,11 @@ type NetworkNarrativeProps = {
  * única (não mais crossfade de 4 fotos): é uma foto conceitual do complexo,
  * não um carrossel de verdade, então não ganhou controles de navegação
  * decorativos que sugeririam mais slides do que existem. */
-export function NetworkNarrative({ towers, sponsorsSlot }: NetworkNarrativeProps) {
+export function NetworkNarrative({ towers }: NetworkNarrativeProps) {
   const t = useTranslations("NetworkNarrative");
   const { setQuery } = useSearch();
   const [heroSearchValue, setHeroSearchValue] = useState("");
+  const reducedMotion = useReducedMotion();
 
   function submitHeroSearch(term: string) {
     const value = term.trim();
@@ -38,19 +39,24 @@ export function NetworkNarrative({ towers, sponsorsSlot }: NetworkNarrativeProps
       <div className="flex min-h-[640px] flex-col lg:h-[clamp(640px,66vw,760px)] lg:min-h-0 lg:flex-row">
         {/* Foto + texto principal -- ~78% da largura no desktop */}
         <div className="relative flex flex-1 flex-col justify-end overflow-hidden px-5 pb-10 pt-24 sm:px-[var(--page-padding)] lg:w-[78%] lg:flex-none lg:pb-14 lg:pt-0">
-          <div className="absolute inset-0 -z-10">
+          <div className="absolute inset-0 -z-10 overflow-hidden">
             <Image
               src="/images/ceramica-hub-hero.webp"
               alt=""
               fill
               priority
               sizes="(min-width: 1024px) 78vw, 100vw"
-              className="object-cover"
+              className={`object-cover ${reducedMotion ? "" : "hero-zoom"}`}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10" />
           </div>
 
-          <div className="max-w-[600px]">
+          <motion.div
+            initial={reducedMotion ? undefined : { opacity: 0, y: 28, filter: "blur(6px)" }}
+            animate={reducedMotion ? undefined : { opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{ duration: 0.9, ease: EASE }}
+            className="max-w-[600px]"
+          >
             <p className="text-[13px] font-medium uppercase tracking-[0.2em] text-white/80 sm:text-[14px]">
               {t("eyebrow")}
             </p>
@@ -86,7 +92,7 @@ export function NetworkNarrative({ towers, sponsorsSlot }: NetworkNarrativeProps
             <div className="mt-[20px] flex flex-wrap items-center gap-4">
               <a
                 href="#empresas"
-                className="rounded-full border border-white/70 px-5 py-2.5 text-[14px] font-medium text-white transition-colors hover:bg-white hover:text-graphite sm:px-6 sm:py-3 sm:text-[15px]"
+                className="rounded-full border border-white/70 px-5 py-2.5 text-[14px] font-medium text-white transition-all duration-300 hover:scale-105 hover:bg-white hover:text-graphite sm:px-6 sm:py-3 sm:text-[15px]"
               >
                 {t("ctaExplore")}
               </a>
@@ -97,8 +103,6 @@ export function NetworkNarrative({ towers, sponsorsSlot }: NetworkNarrativeProps
                 {t("ctaRegister")}
               </Link>
             </div>
-
-            {sponsorsSlot}
 
             {/* Torres -- seletor horizontal no mobile, o painel dedicado abaixo cobre o desktop */}
             {towers.length > 0 && (
@@ -114,21 +118,27 @@ export function NetworkNarrative({ towers, sponsorsSlot }: NetworkNarrativeProps
                 ))}
               </div>
             )}
-          </div>
+          </motion.div>
         </div>
 
         {/* Painel das torres -- desktop */}
         {towers.length > 0 && (
           <div className="hidden shrink-0 flex-col justify-between bg-graphite px-10 py-12 lg:flex lg:w-[22%] lg:min-w-[260px]">
             <nav aria-label={t("towersPanelLabel")} className="flex flex-col gap-3">
-              {towers.map((tower) => (
-                <Link
+              {towers.map((tower, index) => (
+                <motion.div
                   key={tower.id}
-                  href={`/torres/${tower.slug}`}
-                  className="text-[26px] font-semibold uppercase leading-tight tracking-tight text-white/80 transition-colors hover:text-white"
+                  initial={reducedMotion ? undefined : { opacity: 0, x: 16 }}
+                  animate={reducedMotion ? undefined : { opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, ease: EASE, delay: 0.3 + index * 0.08 }}
                 >
-                  {tower.name.replace(/^Torre\s+/i, "")}
-                </Link>
+                  <Link
+                    href={`/torres/${tower.slug}`}
+                    className="inline-block text-[26px] font-semibold uppercase leading-tight tracking-tight text-white/80 transition-all duration-300 hover:translate-x-1 hover:text-white"
+                  >
+                    {tower.name.replace(/^Torre\s+/i, "")}
+                  </Link>
+                </motion.div>
               ))}
             </nav>
             <div>

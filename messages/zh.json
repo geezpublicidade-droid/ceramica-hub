@@ -267,14 +267,21 @@
       "description": "餐饮、健康、美容与时尚——让日常生活变成体验。"
     },
     "hoteis": {
-      "name": "酒店与活动",
+      "name": "酒店",
       "description": "为外来访客提供的商务住宿、礼堂与商务旅行服务。"
     },
     "imobiliarias": {
       "name": "地产",
       "description": "为想在 Cerâmica 内发展的人提供办公室、楼层与商机。"
     },
-    "verTodas": "查看全部"
+    "verTodas": "查看全部",
+    "short": {
+      "contabilidade-e-juridico": "法律",
+      "saude-e-estetica": "健康",
+      "moda-e-beleza": "时尚",
+      "tecnologia-e-marketing": "科技",
+      "design-e-arquitetura": "设计"
+    }
   },
   "FeaturedBusinesses": {
     "eyebrow": "已入驻 Cerâmica 的企业",

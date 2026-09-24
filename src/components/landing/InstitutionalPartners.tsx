@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { FadeUp } from "@/components/motion/FadeUp";
 import { getActivePartners } from "@/lib/services/institutional-partners";
 
 /**
@@ -14,7 +15,7 @@ export async function InstitutionalPartners() {
 
   return (
     <div className="border-y border-border bg-white">
-      <div className="container-page flex min-h-[104px] flex-col flex-wrap items-center justify-center gap-x-10 gap-y-4 py-6 sm:flex-row sm:justify-between sm:py-0">
+      <FadeUp className="container-page flex min-h-[104px] flex-col flex-wrap items-center justify-center gap-x-10 gap-y-4 py-6 sm:flex-row sm:justify-between sm:py-0">
         <p className="shrink-0 text-[13px] font-medium uppercase tracking-[0.12em] text-muted">{t("intro")}</p>
         <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
           {partners.map((partner) =>
@@ -28,7 +29,11 @@ export async function InstitutionalPartners() {
             >
               {partner.logoUrl && (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={partner.logoUrl} alt={partner.name} className="h-8 w-auto grayscale opacity-70" />
+                <img
+                  src={partner.logoUrl}
+                  alt={partner.name}
+                  className="h-8 w-auto grayscale opacity-70 transition-all duration-300 hover:scale-105 hover:opacity-100 hover:grayscale-0"
+                />
               )}
               {!partner.logoUrl && partner.name}
             </a>
@@ -49,7 +54,7 @@ export async function InstitutionalPartners() {
         >
           {t("cta")} →
         </Link>
-      </div>
+      </FadeUp>
     </div>
   );
 }

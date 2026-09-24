@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { FadeUp } from "@/components/motion/FadeUp";
 import { PLAN_ORDER, PLAN_PRICE_DISPLAY } from "@/lib/plan-limits";
 
 /** Versão resumida dos planos pra home -- só nome, preço, 1 linha e CTA. A
@@ -25,19 +26,20 @@ export async function PricingSummary() {
   return (
     <section id="planos" className="section-pad-y bg-surface">
       <div className="container-page">
-        <div className="max-w-2xl">
+        <FadeUp className="max-w-2xl">
           <p className="text-[15px] font-medium uppercase tracking-[0.2em] text-primary">{tSummary("eyebrow")}</p>
           <h2 className="mt-3 text-[clamp(1.8rem,3.2vw,2.5rem)] font-semibold leading-tight tracking-tight">
             {t("heading")}
           </h2>
           <p className="mt-3 text-[17px] text-muted">{t("subheading")}</p>
-        </div>
+        </FadeUp>
 
         <div className="mt-10 grid grid-cols-1 gap-[var(--card-gap)] sm:grid-cols-2 lg:grid-cols-4">
-          {plans.map((plan) => (
-            <div
+          {plans.map((plan, index) => (
+            <FadeUp
               key={plan.key}
-              className={`relative flex flex-col rounded-3xl p-7 ${
+              delay={index * 0.08}
+              className={`relative flex flex-col rounded-3xl p-7 transition-transform duration-300 hover:-translate-y-1.5 ${
                 plan.highlight ? "gradient-terracotta-animated text-white" : "border border-border text-foreground"
               }`}
             >
@@ -70,13 +72,16 @@ export async function PricingSummary() {
               >
                 {t("ctaSeeDetails")}
               </Link>
-            </div>
+            </FadeUp>
           ))}
         </div>
 
         {/* Patrocinador não é autoatendimento -- faixa compacta separada,
            mesma lógica de disposição da versão completa em Pricing.tsx. */}
-        <div className="mt-5 flex flex-col items-start gap-4 rounded-3xl bg-graphite p-6 text-white sm:flex-row sm:items-center sm:justify-between">
+        <FadeUp
+          delay={0.2}
+          className="mt-5 flex flex-col items-start gap-4 rounded-3xl bg-graphite p-6 text-white transition-transform duration-300 hover:-translate-y-1 sm:flex-row sm:items-center sm:justify-between"
+        >
           <div>
             <h3 className="text-[16px] font-semibold">{t("plans.patrocinador.name")}</h3>
             <p className="mt-1 text-[14px] text-white/70">{t("plans.patrocinador.description")}</p>
@@ -90,7 +95,7 @@ export async function PricingSummary() {
               {t("ctaTalkToUs")}
             </Link>
           </div>
-        </div>
+        </FadeUp>
 
         <Link href="/planos" className="mt-10 inline-block text-[15px] font-medium text-primary hover:underline">
           {tSummary("ctaSeeAllPlans")} →

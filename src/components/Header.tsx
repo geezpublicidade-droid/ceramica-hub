@@ -143,6 +143,7 @@ export function Header() {
             </svg>
             <span className="hidden sm:inline">{t("entrar")}</span>
           </NextLink>
+          <LanguageSwitcher className="hidden sm:block" />
           <Link
             href="/cadastro"
             className="hidden whitespace-nowrap rounded-full bg-primary px-4 py-2 text-[14px] font-medium text-white transition-colors hover:bg-primary-light sm:inline-block sm:px-5 sm:py-2.5 sm:text-[15px]"

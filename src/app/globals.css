@@ -296,3 +296,19 @@ body {
     opacity: 1;
   }
 }
+
+/* Zoom lento na foto do hero estático (NetworkNarrative) -- efeito Ken
+   Burns discreto, uma passada só (não fica em loop, pra não distrair). A
+   regra global de prefers-reduced-motion já zera a duração disso. */
+@keyframes hero-zoom {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+
+.hero-zoom {
+  animation: hero-zoom 20s ease-out forwards;
+}

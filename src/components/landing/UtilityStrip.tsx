@@ -1,6 +1,7 @@
 import { MapPin, Navigation, MessageCircle } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { FadeUp } from "@/components/motion/FadeUp";
 import type { Tower } from "@/lib/services/towers";
 
 type UtilityStripProps = {
@@ -29,7 +30,7 @@ export async function UtilityStrip({ towers }: UtilityStripProps) {
 
   return (
     <section className="border-t border-border bg-white">
-      <div className="container-page grid grid-cols-1 gap-6 py-[var(--space-lg)] sm:grid-cols-4 sm:items-center sm:gap-4">
+      <FadeUp className="container-page grid grid-cols-1 gap-6 py-[var(--space-lg)] sm:grid-cols-4 sm:items-center sm:gap-4">
         {address && (
           <a
             href={mapsSearchUrl(address)}
@@ -37,7 +38,11 @@ export async function UtilityStrip({ towers }: UtilityStripProps) {
             rel="noopener noreferrer"
             className="group flex items-center gap-3"
           >
-            <MapPin aria-hidden="true" className="h-5 w-5 shrink-0 text-primary" strokeWidth={1.75} />
+            <MapPin
+              aria-hidden="true"
+              className="h-5 w-5 shrink-0 text-primary transition-transform duration-300 group-hover:scale-125"
+              strokeWidth={1.75}
+            />
             <span>
               <span className="block text-[15px] font-medium text-foreground">{t("mapaLabel")}</span>
               <span className="text-[13px] text-muted transition-transform group-hover:translate-x-1">
@@ -54,7 +59,11 @@ export async function UtilityStrip({ towers }: UtilityStripProps) {
             rel="noopener noreferrer"
             className="group flex items-center gap-3"
           >
-            <Navigation aria-hidden="true" className="h-5 w-5 shrink-0 text-primary" strokeWidth={1.75} />
+            <Navigation
+              aria-hidden="true"
+              className="h-5 w-5 shrink-0 text-primary transition-transform duration-300 group-hover:scale-125"
+              strokeWidth={1.75}
+            />
             <span>
               <span className="block text-[15px] font-medium text-foreground">{t("comoChegarLabel")}</span>
               <span className="text-[13px] text-muted transition-transform group-hover:translate-x-1">
@@ -65,7 +74,11 @@ export async function UtilityStrip({ towers }: UtilityStripProps) {
         )}
 
         <Link href="/contato" className="group flex items-center gap-3">
-          <MessageCircle aria-hidden="true" className="h-5 w-5 shrink-0 text-primary" strokeWidth={1.75} />
+          <MessageCircle
+            aria-hidden="true"
+            className="h-5 w-5 shrink-0 text-primary transition-transform duration-300 group-hover:scale-125"
+            strokeWidth={1.75}
+          />
           <span>
             <span className="block text-[15px] font-medium text-foreground">{t("faleConoscoLabel")}</span>
             <span className="text-[13px] text-muted transition-transform group-hover:translate-x-1">
@@ -76,7 +89,7 @@ export async function UtilityStrip({ towers }: UtilityStripProps) {
 
         <Link
           href="/cadastro"
-          className="flex flex-col justify-center rounded-2xl bg-primary/10 px-6 py-5 text-foreground transition-colors hover:bg-primary/15"
+          className="flex flex-col justify-center rounded-2xl bg-primary/10 px-6 py-5 text-foreground transition-all duration-300 hover:-translate-y-1 hover:bg-primary/15"
         >
           <span className="text-[13px] font-medium uppercase tracking-[0.12em] text-primary">
             {tFounder("eyebrow")}
@@ -85,7 +98,7 @@ export async function UtilityStrip({ towers }: UtilityStripProps) {
             {tFounder("ctaRegister")} →
           </span>
         </Link>
-      </div>
+      </FadeUp>
     </section>
   );
 }

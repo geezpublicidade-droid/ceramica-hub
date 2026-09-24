@@ -45,12 +45,13 @@ export async function FeaturedBusinesses({ businesses }: FeaturedBusinessesProps
         </FadeUp>
 
         <div className="grid grid-cols-1 gap-[var(--card-gap)] sm:grid-cols-2 lg:grid-cols-3">
-          {businesses.map((business) => {
+          {businesses.map((business, index) => {
             const towerName = business.floor.split(" · ")[0];
             return (
               <FadeUp
                 key={business.id}
-                className="group flex flex-col overflow-hidden border border-border bg-white"
+                delay={(index % 3) * 0.08}
+                className="group flex flex-col overflow-hidden border border-border bg-white transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_48px_-24px_rgba(0,0,0,0.25)]"
               >
                 <div className="relative h-[150px] w-full overflow-hidden bg-surface">
                   <Image
@@ -85,7 +86,7 @@ export async function FeaturedBusinesses({ businesses }: FeaturedBusinessesProps
                   <p className="mt-1 text-[13px] text-muted">
                     {tCategories(business.category)} · {towerName}
                   </p>
-                  <p className="mt-2 line-clamp-2 text-[14px] leading-relaxed text-muted">{business.description}</p>
+                  <p className="mt-1.5 line-clamp-1 text-[13px] leading-snug text-muted/85">{business.description}</p>
 
                   <div className="mt-4 flex items-center gap-4 pt-1">
                     <Link

@@ -267,14 +267,21 @@
       "description": "Food, health, aesthetics and fashion — what turns everyday life into experience."
     },
     "hoteis": {
-      "name": "Hotels & Events",
+      "name": "Hotels",
       "description": "Corporate lodging, auditoriums and business travel for those arriving from outside."
     },
     "imobiliarias": {
       "name": "Real Estate",
       "description": "Offices, floors and opportunities for those looking to grow inside Cerâmica."
     },
-    "verTodas": "See all"
+    "verTodas": "See all",
+    "short": {
+      "contabilidade-e-juridico": "Legal",
+      "saude-e-estetica": "Health",
+      "moda-e-beleza": "Fashion",
+      "tecnologia-e-marketing": "Technology",
+      "design-e-arquitetura": "Design"
+    }
   },
   "FeaturedBusinesses": {
     "eyebrow": "Who's already in Cerâmica",
