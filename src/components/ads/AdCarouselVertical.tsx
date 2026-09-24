@@ -36,8 +36,8 @@ export function AdCarouselVertical({ placementKey }: { placementKey: string }) {
   }, [placementKey]);
 
   const fallbackSlides = [
-    { eyebrow: tAds("eyebrow"), headline: tAds("headline"), cta: tAds("cta") },
-    { eyebrow: tSponsors("eyebrow"), headline: tSponsors("headline"), cta: tSponsors("ctaAction") },
+    { eyebrow: tAds("eyebrow"), headline: tAds("headline"), cta: tAds("cta"), bg: "bg-primary" },
+    { eyebrow: tSponsors("eyebrow"), headline: tSponsors("headline"), cta: tSponsors("ctaAction"), bg: "bg-graphite" },
   ];
   const count = campaigns.length > 0 ? campaigns.length : fallbackSlides.length;
 
@@ -48,17 +48,31 @@ export function AdCarouselVertical({ placementKey }: { placementKey: string }) {
   }, [count]);
 
   // Sem campanha paga nessa posição ainda -- vende o próprio espaço com um
-  // mini-carrossel de texto, sem foto, em terracota (--primary).
+  // mini-carrossel de texto, sem foto, alternando de cor a cada slide, com
+  // transição em 3D (cubo girando no eixo Y via perspective + rotateY).
   if (campaigns.length === 0) {
-    const slide = fallbackSlides[index % fallbackSlides.length];
     return (
-      <Link href="/seja-um-parceiro" className="absolute inset-0 flex flex-col justify-end bg-primary p-6">
-        <p className="text-[12px] font-medium uppercase tracking-[0.18em] text-white/80">{slide.eyebrow}</p>
-        <p className="mt-2 text-[19px] font-semibold leading-snug text-white">{slide.headline}</p>
-        <span className="mt-4 inline-flex w-fit items-center gap-1.5 rounded-full bg-white px-4 py-2 text-[13px] font-semibold text-foreground transition-transform hover:scale-105">
-          {slide.cta}
-          <span aria-hidden="true">→</span>
-        </span>
+      <Link href="/seja-um-parceiro" className="absolute inset-0 block overflow-hidden [perspective:1200px]">
+        {fallbackSlides.map((slide, i) => {
+          const active = i === index % fallbackSlides.length;
+          return (
+            <div
+              key={i}
+              className={`absolute inset-0 flex flex-col justify-end p-6 transition-all duration-700 ease-out ${slide.bg} ${
+                active
+                  ? "[transform:rotateY(0deg)_translateZ(0px)] opacity-100"
+                  : "pointer-events-none opacity-0 [transform:rotateY(90deg)_translateZ(-120px)]"
+              }`}
+            >
+              <p className="text-[12px] font-medium uppercase tracking-[0.18em] text-white/80">{slide.eyebrow}</p>
+              <p className="mt-2 text-[19px] font-semibold leading-snug text-white">{slide.headline}</p>
+              <span className="mt-4 inline-flex w-fit items-center gap-1.5 rounded-full bg-white px-4 py-2 text-[13px] font-semibold text-foreground transition-transform hover:scale-105">
+                {slide.cta}
+                <span aria-hidden="true">→</span>
+              </span>
+            </div>
+          );
+        })}
       </Link>
     );
   }
