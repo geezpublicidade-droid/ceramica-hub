@@ -35,7 +35,7 @@ export function NetworkNarrative({ towers }: NetworkNarrativeProps) {
   }
 
   return (
-    <section id="top" aria-label={t("sectionLabel")} className="relative overflow-hidden bg-graphite text-white">
+    <section id="top" aria-label={t("sectionLabel")} className="relative isolate overflow-hidden bg-graphite text-white">
       <div className="flex min-h-[640px] flex-col lg:h-[clamp(640px,66vw,760px)] lg:min-h-0 lg:flex-row">
         {/* Foto + texto principal -- ~78% da largura no desktop */}
         <div className="relative flex flex-1 flex-col justify-end overflow-hidden px-5 pb-10 pt-24 sm:px-[var(--page-padding)] lg:w-[78%] lg:flex-none lg:pb-14 lg:pt-0">
