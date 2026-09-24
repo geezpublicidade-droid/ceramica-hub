@@ -78,6 +78,8 @@ export async function PremiumSponsorsCarousel({ partners }: PremiumSponsorsCarou
             label={t("headline")}
             accent="var(--primary)"
             accentForeground="#fff"
+            autoplay
+            interval={2000}
           />
         </div>
       </div>

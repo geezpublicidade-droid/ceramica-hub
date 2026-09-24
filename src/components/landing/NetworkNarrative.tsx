@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
+import { AdCarouselVertical } from "@/components/ads/AdCarouselVertical";
 import { useSearch } from "@/components/landing/SearchContext";
 import { logSearchPerformed } from "@/lib/actions/log-search";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
@@ -26,9 +27,11 @@ type NetworkNarrativeProps = {
 };
 
 /** Hero estático (não mais scroll-jacked), dividido ~78/22 entre foto e
- * painel das torres reais (desktop) -- seletor horizontal no mobile. Mesmo
- * crossfade de 4 fotos do ComingSoon (.hero-slide), pra manter a identidade
- * visual do "em breve" quando o visitante chega na home de verdade. */
+ * painel lateral de anúncios (desktop) -- seletor de torres horizontal no
+ * mobile, já que o painel lateral nessa largura fica reservado pro anúncio.
+ * Mesmo crossfade de 4 fotos do ComingSoon (.hero-slide), pra manter a
+ * identidade visual do "em breve" quando o visitante chega na home de
+ * verdade. */
 export function NetworkNarrative({ towers }: NetworkNarrativeProps) {
   const t = useTranslations("NetworkNarrative");
   const { setQuery } = useSearch();
@@ -120,7 +123,7 @@ export function NetworkNarrative({ towers }: NetworkNarrativeProps) {
               </Link>
             </div>
 
-            {/* Torres -- seletor horizontal no mobile, o painel dedicado abaixo cobre o desktop */}
+            {/* Torres -- só no mobile; no desktop esse espaço lateral virou o carrossel de anúncios */}
             {towers.length > 0 && (
               <div className="mt-[28px] flex gap-2 overflow-x-auto pb-1 lg:hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {towers.map((tower) => (
@@ -137,39 +140,10 @@ export function NetworkNarrative({ towers }: NetworkNarrativeProps) {
           </motion.div>
         </div>
 
-        {/* Painel das torres -- desktop */}
-        {towers.length > 0 && (
-          <div className="hidden shrink-0 flex-col justify-between bg-graphite px-10 py-12 lg:flex lg:w-[22%] lg:min-w-[260px]">
-            <nav aria-label={t("towersPanelLabel")} className="flex flex-col gap-3">
-              {towers.map((tower, index) => (
-                <motion.div
-                  key={tower.id}
-                  initial={reducedMotion ? undefined : { opacity: 0, x: 16 }}
-                  animate={reducedMotion ? undefined : { opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, ease: EASE, delay: 0.3 + index * 0.08 }}
-                >
-                  <Link
-                    href={`/torres/${tower.slug}`}
-                    className="inline-block text-[26px] font-semibold uppercase leading-tight tracking-tight text-white/80 transition-all duration-300 hover:translate-x-1 hover:text-white"
-                  >
-                    {tower.name.replace(/^Torre\s+/i, "")}
-                  </Link>
-                </motion.div>
-              ))}
-            </nav>
-            <div>
-              <span className="block h-px w-10 bg-white/30" />
-              <p className="mt-4 text-[15px] leading-relaxed text-white/70">{t("towersPanelDescription")}</p>
-              <a
-                href="#complexo"
-                className="mt-4 inline-flex items-center gap-1.5 text-[14px] font-medium text-white transition-transform hover:translate-x-1"
-              >
-                {t("towersPanelCta")}
-                <span aria-hidden="true">→</span>
-              </a>
-            </div>
-          </div>
-        )}
+        {/* Painel lateral -- carrossel de anúncios (desktop) */}
+        <div className="relative hidden shrink-0 overflow-hidden bg-graphite lg:block lg:w-[22%] lg:min-w-[260px]">
+          <AdCarouselVertical placementKey="hero_lateral" />
+        </div>
       </div>
     </section>
   );
