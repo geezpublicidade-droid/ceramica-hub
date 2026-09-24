@@ -12,15 +12,23 @@ import type { Tower } from "@/lib/services/towers";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
+const heroImages = [
+  "/images/ceramica-hero-1.jpg",
+  "/images/ceramica-hero-2.jpg",
+  "/images/ceramica-hero-3.jpg",
+  "/images/ceramica-hero-4.jpg",
+];
+
+const CYCLE_SECONDS = 24;
+
 type NetworkNarrativeProps = {
   towers: Tower[];
 };
 
 /** Hero estático (não mais scroll-jacked), dividido ~78/22 entre foto e
- * painel das torres reais (desktop) -- seletor horizontal no mobile. Imagem
- * única (não mais crossfade de 4 fotos): é uma foto conceitual do complexo,
- * não um carrossel de verdade, então não ganhou controles de navegação
- * decorativos que sugeririam mais slides do que existem. */
+ * painel das torres reais (desktop) -- seletor horizontal no mobile. Mesmo
+ * crossfade de 4 fotos do ComingSoon (.hero-slide), pra manter a identidade
+ * visual do "em breve" quando o visitante chega na home de verdade. */
 export function NetworkNarrative({ towers }: NetworkNarrativeProps) {
   const t = useTranslations("NetworkNarrative");
   const { setQuery } = useSearch();
@@ -40,14 +48,22 @@ export function NetworkNarrative({ towers }: NetworkNarrativeProps) {
         {/* Foto + texto principal -- ~78% da largura no desktop */}
         <div className="relative flex flex-1 flex-col justify-end overflow-hidden px-5 pb-10 pt-24 sm:px-[var(--page-padding)] lg:w-[78%] lg:flex-none lg:pb-14 lg:pt-0">
           <div className="absolute inset-0 -z-10 overflow-hidden">
-            <Image
-              src="/images/ceramica-hub-hero.webp"
-              alt=""
-              fill
-              priority
-              sizes="(min-width: 1024px) 78vw, 100vw"
-              className={`object-cover ${reducedMotion ? "" : "hero-zoom"}`}
-            />
+            {heroImages.map((src, i) => (
+              <div
+                key={src}
+                className="hero-slide absolute inset-0"
+                style={{ animationDelay: `${i * -(CYCLE_SECONDS / heroImages.length)}s` }}
+              >
+                <Image
+                  src={src}
+                  alt=""
+                  fill
+                  priority={i === 0}
+                  sizes="(min-width: 1024px) 78vw, 100vw"
+                  className="object-cover"
+                />
+              </div>
+            ))}
             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10" />
           </div>
 

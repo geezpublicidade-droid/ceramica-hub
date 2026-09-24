@@ -44,7 +44,7 @@ export async function ComingSoon() {
       <header className="relative z-10 flex items-center justify-between px-6 py-6 sm:px-10">
         <span className="flex items-center gap-2 text-[17px] font-semibold tracking-tight text-white">
           <img src="/images/logo-ceramica-hub.png" alt="" className="h-7 w-7" />
-          Cerâmica <span className="text-primary">Hub</span>
+          Cerâmica <span className="text-white">Hub</span>
         </span>
         <Link
           href="/login"
