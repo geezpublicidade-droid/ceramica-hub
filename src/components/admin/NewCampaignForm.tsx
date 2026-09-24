@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { createAdCampaign } from "@/lib/actions/admin-ads";
+import { formatCents } from "@/lib/utils";
 import type { AdPlacement } from "@/lib/services/ads";
 
 const inputClass = "mt-1.5 w-full rounded-xl border border-border bg-white px-4 py-2.5 text-[16px] text-foreground outline-none focus:border-primary";
@@ -125,7 +126,7 @@ export function NewCampaignForm({ placements }: { placements: AdPlacement[] }) {
           <option value="">Selecione</option>
           {placements.map((p) => (
             <option key={p.id} value={p.id}>
-              {p.name} ({p.width}x{p.height})
+              {p.name} ({p.width}x{p.height}){p.monthlyPriceCents != null ? ` — ${formatCents(p.monthlyPriceCents)}/mês` : ""}
             </option>
           ))}
         </select>

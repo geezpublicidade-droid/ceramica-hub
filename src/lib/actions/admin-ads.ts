@@ -129,3 +129,94 @@ export async function toggleBlockAdvertiser(accountId: string, blocked: boolean)
   revalidatePath("/admin/publicidade");
   return { success: true };
 }
+
+const placementSchema = z.object({
+  key: z
+    .string()
+    .trim()
+    .min(1, "Informe a key.")
+    .regex(/^[a-z0-9_]+$/, "Use só letras minúsculas, números e _ (ex: hero_lateral)."),
+  name: z.string().trim().min(1, "Informe o nome."),
+  description: z.string().trim().max(300, "Descrição muito longa.").optional().or(z.literal("")),
+  width: z.number().int().positive("Largura inválida."),
+  height: z.number().int().positive("Altura inválida."),
+  monthlyPriceCents: z.number().int().nonnegative().nullable(),
+});
+
+export type PlacementInput = z.input<typeof placementSchema>;
+
+/** Cadastra uma posição de anúncio nova sem precisar de migration -- key
+ * tem que ser única (mesmo unique constraint do banco) e é o que o código
+ * do site usa pra saber onde renderizar (AdSlot/AdCarousel/AdBanner). */
+export async function createPlacement(rawInput: PlacementInput): Promise<ActionResult> {
+  const adminId = await requireAdmin(["super_admin", "admin", "comercial"]);
+  const parsed = placementSchema.safeParse(rawInput);
+  if (!parsed.success) return { success: false, error: parsed.error.issues[0]?.message ?? "Dados inválidos." };
+  const input = parsed.data;
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from("ad_placements")
+    .insert({
+      key: input.key,
+      name: input.name,
+      description: input.description?.trim() || null,
+      width: input.width,
+      height: input.height,
+      monthly_price_cents: input.monthlyPriceCents,
+    })
+    .select("id")
+    .single();
+  if (error) {
+    return { success: false, error: error.code === "23505" ? "Já existe uma posição com essa key." : "Não foi possível criar a posição." };
+  }
+
+  await logAdminAction(adminId, "ad_placement_created", "ad_placement", data.id);
+  revalidatePath("/admin/publicidade");
+  revalidatePath("/admin/publicidade/espacos");
+  return { success: true };
+}
+
+/** Edita nome/descrição/dimensões/preço -- a key não muda depois de criada (o código-fonte referencia ela em string literal). */
+export async function updatePlacement(
+  placementId: string,
+  rawInput: Omit<PlacementInput, "key">
+): Promise<ActionResult> {
+  const adminId = await requireAdmin(["super_admin", "admin", "comercial"]);
+  const parsed = placementSchema.omit({ key: true }).safeParse(rawInput);
+  if (!parsed.success) return { success: false, error: parsed.error.issues[0]?.message ?? "Dados inválidos." };
+  const input = parsed.data;
+  const supabase = createServiceClient();
+
+  const { error } = await supabase
+    .from("ad_placements")
+    .update({
+      name: input.name,
+      description: input.description?.trim() || null,
+      width: input.width,
+      height: input.height,
+      monthly_price_cents: input.monthlyPriceCents,
+    })
+    .eq("id", placementId);
+  if (error) return { success: false, error: "Não foi possível salvar a posição." };
+
+  await logAdminAction(adminId, "ad_placement_updated", "ad_placement", placementId);
+  revalidatePath("/admin/publicidade");
+  revalidatePath("/admin/publicidade/espacos");
+  return { success: true };
+}
+
+/** Arquivar (active=false) tira a posição do formulário de nova campanha
+ * sem apagar histórico -- ad_campaigns referencia placement_id com "on
+ * delete restrict", então excluir de verdade quebraria campanhas antigas. */
+export async function setPlacementActive(placementId: string, active: boolean): Promise<ActionResult> {
+  const adminId = await requireAdmin(["super_admin", "admin", "comercial"]);
+  const supabase = createServiceClient();
+  const { error } = await supabase.from("ad_placements").update({ active }).eq("id", placementId);
+  if (error) return { success: false, error: "Não foi possível atualizar a posição." };
+
+  await logAdminAction(adminId, active ? "ad_placement_activated" : "ad_placement_archived", "ad_placement", placementId);
+  revalidatePath("/admin/publicidade");
+  revalidatePath("/admin/publicidade/espacos");
+  return { success: true };
+}

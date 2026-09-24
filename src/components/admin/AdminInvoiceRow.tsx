@@ -3,11 +3,8 @@
 import { useTransition } from "react";
 import { confirmInvoicePayment } from "@/lib/actions/admin-billing";
 import { planLabels } from "@/data/businesses";
+import { formatCents } from "@/lib/utils";
 import type { PendingInvoice } from "@/lib/services/platform";
-
-function formatCents(cents: number): string {
-  return (cents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-}
 
 export function AdminInvoiceRow({ invoice }: { invoice: PendingInvoice }) {
   const [isPending, startTransition] = useTransition();

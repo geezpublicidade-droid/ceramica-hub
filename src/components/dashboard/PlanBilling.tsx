@@ -5,13 +5,10 @@ import Link from "next/link";
 import { createPaymentLink } from "@/lib/actions/billing";
 import { planLabels } from "@/data/businesses";
 import { PLAN_PRICES_CENTS, type PayablePlan } from "@/lib/plan-limits";
+import { formatCents } from "@/lib/utils";
 import type { OwnedInvoice } from "@/lib/services/platform";
 
 const PAYABLE_PLANS: PayablePlan[] = ["profissional", "destaque", "experiencia"];
-
-function formatCents(cents: number): string {
-  return (cents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-}
 
 const INVOICE_STATUS_LABEL: Record<OwnedInvoice["status"], string> = {
   pending: "Aguardando pagamento",

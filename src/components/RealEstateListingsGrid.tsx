@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { formatCents } from "@/lib/utils";
 import type { RealEstateListing } from "@/lib/services/real-estate";
 
 type Labels = {
@@ -66,7 +67,7 @@ export function RealEstateListingsGrid({ listings, labels }: { listings: RealEst
               <p className="mt-1 text-[13px] font-medium text-primary">{labels[AVAILABILITY_LABEL_KEY[listing.availabilityStatus]]}</p>
               {listing.priceCents != null && (
                 <p className="mt-2 text-[16px] font-semibold text-foreground">
-                  {(listing.priceCents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+                  {formatCents(listing.priceCents)}
                 </p>
               )}
               {listing.description && <p className="mt-3 text-[16px] leading-relaxed text-muted">{listing.description}</p>}

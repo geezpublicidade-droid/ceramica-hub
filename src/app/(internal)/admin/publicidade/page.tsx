@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireAdminPage } from "@/lib/auth-guards";
 import { getAllCampaigns, getAllPlacements, getCampaignMetrics } from "@/lib/services/ads";
 import { AdCampaignRow } from "@/components/admin/AdCampaignRow";
@@ -26,11 +27,16 @@ export default async function AdminPublicidadePage() {
               rotuladas &quot;Patrocinado&quot;.
             </p>
           </div>
-          <BackLink href="/admin" />
+          <div className="flex gap-2">
+            <Link href="/admin/publicidade/espacos" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
+              Espaços
+            </Link>
+            <BackLink href="/admin" />
+          </div>
         </div>
 
         <div className="mt-10">
-          <NewCampaignForm placements={placements} />
+          <NewCampaignForm placements={placements.filter((p) => p.active)} />
         </div>
 
         <div className="mt-10 flex items-center justify-between">
