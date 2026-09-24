@@ -16,7 +16,7 @@ export async function ComingSoon() {
   const year = new Date().getFullYear();
 
   return (
-    <div className="relative flex min-h-screen flex-col overflow-hidden bg-surface text-foreground">
+    <div className="relative flex min-h-screen flex-col overflow-hidden bg-graphite text-white">
       <div className="absolute inset-0">
         {heroImages.map((src, i) => (
           <div
@@ -34,39 +34,39 @@ export async function ComingSoon() {
             />
           </div>
         ))}
-        {/* esfumaçado branco — vela as fotos gradualmente pra baixo, garantindo
+        {/* esfumaçado preto — vela as fotos gradualmente pra baixo, garantindo
             leitura do texto independente de qual das 4 imagens está no topo */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/20 via-white/55 to-white/92" />
-        <div className="absolute inset-0 bg-[radial-gradient(1100px_circle_at_50%_38%,rgba(255,255,255,0.6),transparent_65%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(1200px_circle_at_50%_-10%,rgba(232,117,94,0.18),transparent_60%)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/55 to-black/92" />
+        <div className="absolute inset-0 bg-[radial-gradient(1100px_circle_at_50%_38%,rgba(0,0,0,0.6),transparent_65%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(1200px_circle_at_50%_-10%,rgba(232,117,94,0.22),transparent_60%)]" />
       </div>
 
       <header className="relative z-10 flex items-center justify-between px-6 py-6 sm:px-10">
-        <span className="flex items-center gap-2 text-[17px] font-semibold tracking-tight text-foreground">
+        <span className="flex items-center gap-2 text-[17px] font-semibold tracking-tight text-white">
           <img src="/images/logo-ceramica-hub.png" alt="" className="h-7 w-7" />
           Cerâmica <span className="text-primary">Hub</span>
         </span>
         <Link
           href="/login"
-          className="glass-light rounded-full px-4 py-2 text-[15px] font-medium text-foreground transition-colors hover:bg-white/80"
+          className="glass-dark rounded-full px-4 py-2 text-[15px] font-medium text-white transition-colors hover:bg-white/15"
         >
           {t("acessar")}
         </Link>
       </header>
 
       <main className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 text-center">
-        <span className="glass-light mb-6 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[13px] font-medium uppercase tracking-[0.18em] text-muted sm:text-[14px]">
+        <span className="glass-dark mb-6 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[13px] font-medium uppercase tracking-[0.18em] text-white/80 sm:text-[14px]">
           {t("badge")}
         </span>
-        <h1 className="max-w-3xl text-[16vw] font-semibold leading-[0.95] tracking-tight text-foreground sm:text-7xl md:text-8xl">
+        <h1 className="max-w-3xl text-[16vw] font-semibold leading-[0.95] tracking-tight text-white sm:text-7xl md:text-8xl">
           {t("title")}
         </h1>
-        <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-muted sm:text-[19px]">
+        <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-white/70 sm:text-[19px]">
           {t("description")}
         </p>
       </main>
 
-      <footer className="relative z-10 flex items-center justify-center px-6 py-8 text-[14px] text-muted">
+      <footer className="relative z-10 flex items-center justify-center px-6 py-8 text-[14px] text-white/70">
         {t("footer", { year })}
       </footer>
     </div>
