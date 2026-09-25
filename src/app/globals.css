@@ -140,58 +140,127 @@ body {
     0 16px 32px -18px rgba(40, 20, 15, 0.22);
 }
 
-/* Neumorfismo — usado nos botões: elemento "moldado" no mesmo material do
-   fundo (--surface), profundidade via par de sombras (clara + escura) em
-   vez de preenchimento sólido ou vidro. Estado pressionado inverte pra
-   sombra interna (inset), como se afundasse na superfície. */
+/* Liquid glass nos botões -- mantém os nomes .neu/.neu-primary (usados em
+   ~50 arquivos) mas o material agora é vidro líquido: gradiente translúcido,
+   brilho especular interno, borda de luz, reflexo que varre no hover e
+   "gota" que achata ao pressionar. */
+.neu,
+.neu-primary {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.25s ease,
+    filter 0.25s ease;
+}
+
+/* reflexo curvo no topo (o "menisco" do líquido) */
+.neu::before,
+.neu-primary::before {
+  content: "";
+  position: absolute;
+  inset: 1px 1px 46% 1px;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0));
+  opacity: 0.7;
+  pointer-events: none;
+  z-index: -1;
+  transition: opacity 0.25s ease;
+}
+
+/* faixa de luz que atravessa o botão no hover */
+.neu::after,
+.neu-primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.65) 50%, transparent 65%);
+  background-size: 250% 100%;
+  background-position: 130% 0;
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+  transition: background-position 0.7s ease, opacity 0.3s ease;
+}
+
+.neu:hover::after,
+.neu-primary:hover::after {
+  background-position: -30% 0;
+  opacity: 1;
+}
+
 .neu {
-  background: var(--surface);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.75), rgba(246, 236, 226, 0.45));
   box-shadow:
-    6px 6px 14px rgba(163, 177, 198, 0.55),
-    -6px -6px 14px rgba(255, 255, 255, 0.9);
-  transition: box-shadow 0.15s ease, transform 0.1s ease;
+    inset 0 1px 1px rgba(255, 255, 255, 0.95),
+    inset 0 -8px 14px -8px rgba(179, 85, 58, 0.14),
+    0 1px 2px rgba(60, 30, 20, 0.08),
+    0 12px 24px -12px rgba(60, 30, 20, 0.28);
 }
 
 .neu:hover {
+  transform: translateY(-2px) scale(1.02);
   box-shadow:
-    4px 4px 10px rgba(163, 177, 198, 0.5),
-    -4px -4px 10px rgba(255, 255, 255, 0.85);
+    inset 0 1px 1px rgba(255, 255, 255, 1),
+    inset 0 -8px 14px -8px rgba(179, 85, 58, 0.2),
+    0 2px 4px rgba(60, 30, 20, 0.08),
+    0 18px 30px -12px rgba(60, 30, 20, 0.34);
 }
 
-.neu:active {
-  box-shadow:
-    inset 3px 3px 7px rgba(163, 177, 198, 0.55),
-    inset -3px -3px 7px rgba(255, 255, 255, 0.9);
-  transform: scale(0.98);
-}
-
+.neu:active,
 .neu-pressed {
+  transform: scale(0.96, 0.94);
   box-shadow:
-    inset 3px 3px 7px rgba(163, 177, 198, 0.55),
-    inset -3px -3px 7px rgba(255, 255, 255, 0.9);
+    inset 0 3px 8px rgba(120, 60, 40, 0.22),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.8),
+    0 4px 10px -6px rgba(60, 30, 20, 0.25);
 }
 
-/* variante colorida — mesma lógica, tingida de --primary, pra CTAs
-   principais que precisam manter o peso visual do azul */
+/* variante colorida -- gota de terracota translúcida, pros CTAs principais */
 .neu-primary {
-  background: var(--primary);
+  background: linear-gradient(160deg, rgba(214, 106, 78, 0.95), rgba(179, 85, 58, 0.9));
+  border-color: rgba(255, 210, 190, 0.55);
   box-shadow:
-    6px 6px 14px rgba(92, 30, 18, 0.35),
-    -6px -6px 14px rgba(255, 190, 165, 0.45);
-  transition: box-shadow 0.15s ease, transform 0.1s ease;
+    inset 0 1px 1px rgba(255, 225, 210, 0.85),
+    inset 0 -10px 16px -8px rgba(92, 30, 18, 0.45),
+    0 1px 2px rgba(92, 30, 18, 0.25),
+    0 14px 26px -10px rgba(179, 85, 58, 0.6);
 }
 
 .neu-primary:hover {
+  transform: translateY(-2px) scale(1.02);
+  filter: saturate(1.1) brightness(1.04);
   box-shadow:
-    4px 4px 10px rgba(92, 30, 18, 0.3),
-    -4px -4px 10px rgba(255, 190, 165, 0.4);
+    inset 0 1px 1px rgba(255, 235, 222, 0.95),
+    inset 0 -10px 16px -8px rgba(92, 30, 18, 0.5),
+    0 2px 4px rgba(92, 30, 18, 0.25),
+    0 20px 32px -10px rgba(179, 85, 58, 0.7);
 }
 
 .neu-primary:active {
+  transform: scale(0.96, 0.94);
+  filter: brightness(0.96);
   box-shadow:
-    inset 3px 3px 7px rgba(75, 22, 12, 0.45),
-    inset -3px -3px 7px rgba(255, 200, 178, 0.4);
-  transform: scale(0.98);
+    inset 0 4px 10px rgba(75, 22, 12, 0.5),
+    inset 0 -1px 1px rgba(255, 210, 190, 0.5),
+    0 4px 10px -6px rgba(179, 85, 58, 0.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .neu,
+  .neu-primary,
+  .neu::after,
+  .neu-primary::after {
+    transition: none;
+  }
+  .neu:hover,
+  .neu-primary:hover {
+    transform: none;
+  }
 }
 
 /* Gradiente terracota "vivo" -- pros DIVs que precisam de mais presença
@@ -311,4 +380,50 @@ body {
 
 .hero-zoom {
   animation: hero-zoom 20s ease-out forwards;
+}
+
+/* Liquid glass sobre fundo escuro/foto (botão secundário do hero) -- mesmo
+   material do .neu, mas transparente com luz branca em vez de sombra clara. */
+.liquid-dark {
+  position: relative;
+  isolation: isolate;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.06));
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.55),
+    inset 0 -8px 14px -8px rgba(255, 255, 255, 0.12),
+    0 12px 24px -12px rgba(0, 0, 0, 0.5);
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background 0.25s ease;
+}
+
+.liquid-dark::before {
+  content: "";
+  position: absolute;
+  inset: 1px 1px 46% 1px;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0));
+  pointer-events: none;
+  z-index: -1;
+}
+
+.liquid-dark:hover {
+  transform: translateY(-2px) scale(1.03);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.12));
+}
+
+.liquid-dark:active {
+  transform: scale(0.96, 0.94);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liquid-dark {
+    transition: none;
+  }
+  .liquid-dark:hover {
+    transform: none;
+  }
 }

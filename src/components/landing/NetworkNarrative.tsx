@@ -102,7 +102,7 @@ export function NetworkNarrative({ towers }: NetworkNarrativeProps) {
               />
               <button
                 type="submit"
-                className="shrink-0 rounded-full bg-primary px-4 py-2 text-[14px] font-medium text-white transition-colors hover:bg-primary-light sm:px-5 sm:py-2.5 sm:text-[15px]"
+                className="shrink-0 neu-primary rounded-full px-4 py-2 text-[14px] font-medium text-white sm:px-5 sm:py-2.5 sm:text-[15px]"
               >
                 {t("searchButton")}
               </button>
@@ -111,7 +111,7 @@ export function NetworkNarrative({ towers }: NetworkNarrativeProps) {
             <div className="mt-[20px] flex flex-wrap items-center gap-4">
               <a
                 href="#empresas"
-                className="rounded-full border border-white/70 px-5 py-2.5 text-[14px] font-medium text-white transition-all duration-300 hover:scale-105 hover:bg-white hover:text-graphite sm:px-6 sm:py-3 sm:text-[15px]"
+                className="liquid-dark rounded-full px-5 py-2.5 text-[14px] font-medium text-white sm:px-6 sm:py-3 sm:text-[15px]"
               >
                 {t("ctaExplore")}
               </a>

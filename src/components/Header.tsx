@@ -135,7 +135,7 @@ export function Header() {
           <NextLink
             href="/entrar"
             aria-label={t("entrar")}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-black/5 hover:text-foreground sm:h-auto sm:w-auto sm:gap-1.5 sm:rounded-full sm:border sm:border-border sm:px-4 sm:py-2 sm:text-[14px] sm:font-medium sm:text-foreground sm:hover:border-primary sm:hover:text-primary"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:text-foreground sm:h-auto sm:w-auto sm:gap-1.5 neu sm:rounded-full sm:px-4 sm:py-2 sm:text-[14px] sm:font-medium sm:text-foreground"
           >
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sm:hidden">
               <circle cx="12" cy="8" r="4" />
@@ -146,7 +146,7 @@ export function Header() {
           <LanguageSwitcher className="hidden sm:block" />
           <Link
             href="/cadastro"
-            className="hidden whitespace-nowrap rounded-full bg-primary px-4 py-2 text-[14px] font-medium text-white transition-colors hover:bg-primary-light sm:inline-block sm:px-5 sm:py-2.5 sm:text-[15px]"
+            className="hidden whitespace-nowrap neu-primary rounded-full px-4 py-2 text-[14px] font-medium text-white sm:inline-block sm:px-5 sm:py-2.5 sm:text-[15px]"
           >
             {t("cadastrarEmpresa")}
           </Link>
