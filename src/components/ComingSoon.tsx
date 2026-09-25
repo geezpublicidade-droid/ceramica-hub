@@ -1,15 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-
-const heroImages = [
-  "/images/ceramica-hero-1.jpg",
-  "/images/ceramica-hero-2.jpg",
-  "/images/ceramica-hero-3.jpg",
-  "/images/ceramica-hero-4.jpg",
-];
-
-const CYCLE_SECONDS = 24;
+import WovenCloth from "@/components/ui/woven-cloth";
 
 export async function ComingSoon() {
   const t = await getTranslations("ComingSoon");
@@ -18,27 +9,10 @@ export async function ComingSoon() {
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden bg-graphite text-white">
       <div className="absolute inset-0">
-        {heroImages.map((src, i) => (
-          <div
-            key={src}
-            className="hero-slide absolute inset-0"
-            style={{ animationDelay: `${i * -(CYCLE_SECONDS / heroImages.length)}s` }}
-          >
-            <Image
-              src={src}
-              alt=""
-              fill
-              priority={i === 0}
-              sizes="100vw"
-              className="object-cover"
-            />
-          </div>
-        ))}
-        {/* esfumaçado preto — vela as fotos gradualmente pra baixo, garantindo
-            leitura do texto independente de qual das 4 imagens está no topo */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/55 to-black/92" />
-        <div className="absolute inset-0 bg-[radial-gradient(1100px_circle_at_50%_38%,rgba(0,0,0,0.6),transparent_65%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(1200px_circle_at_50%_-10%,rgba(232,117,94,0.22),transparent_60%)]" />
+        <WovenCloth className="absolute inset-0 h-full w-full" />
+        {/* véu grafite — garante leitura do texto sobre a trama */}
+        <div className="absolute inset-0 bg-[radial-gradient(900px_circle_at_50%_45%,rgba(30,30,30,0.72),rgba(30,30,30,0.25)_70%)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/55" />
       </div>
 
       <header className="relative z-10 flex items-center justify-between px-6 py-6 sm:px-10">
@@ -58,7 +32,7 @@ export async function ComingSoon() {
         <span className="glass-dark mb-6 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[13px] font-medium uppercase tracking-[0.18em] text-white/80 sm:text-[14px]">
           {t("badge")}
         </span>
-        <h1 className="max-w-3xl text-[16vw] font-semibold leading-[0.95] tracking-tight text-white sm:text-7xl md:text-8xl">
+        <h1 className="max-w-3xl text-[11vw] font-semibold leading-[1] tracking-tight text-white sm:text-6xl md:text-7xl">
           {t("title")}
         </h1>
         <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-white/70 sm:text-[19px]">
