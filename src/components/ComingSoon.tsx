@@ -7,13 +7,8 @@ export async function ComingSoon() {
   const year = new Date().getFullYear();
 
   return (
-    <div className="relative flex min-h-screen flex-col overflow-hidden bg-graphite text-white">
-      <div className="absolute inset-0">
-        <WovenCloth className="absolute inset-0 h-full w-full" />
-        {/* véu grafite — garante leitura do texto sobre a trama */}
-        <div className="absolute inset-0 bg-[radial-gradient(900px_circle_at_50%_45%,rgba(30,30,30,0.72),rgba(30,30,30,0.25)_70%)]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/55" />
-      </div>
+    <div className="relative flex min-h-screen flex-col overflow-hidden bg-[#16090b] text-white">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1000px_circle_at_50%_0%,rgba(179,85,58,0.28),transparent_65%)]" />
 
       <header className="relative z-10 flex items-center justify-between px-6 py-6 sm:px-10">
         <span className="flex items-center gap-2 text-[17px] font-semibold tracking-tight text-white">
@@ -28,14 +23,22 @@ export async function ComingSoon() {
         </Link>
       </header>
 
-      <main className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 text-center">
-        <span className="glass-dark mb-6 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[13px] font-medium uppercase tracking-[0.18em] text-white/80 sm:text-[14px]">
-          {t("badge")}
-        </span>
-        <h1 className="max-w-3xl text-[11vw] font-semibold leading-[1] tracking-tight text-white sm:text-6xl md:text-7xl">
-          {t("title")}
-        </h1>
-        <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-white/70 sm:text-[19px]">
+      <main className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 py-6 sm:px-10">
+        {/* a bandeira: tecido tramado tremulando, com a frase sobre ele */}
+        <div className="relative h-[420px] w-full max-w-5xl overflow-hidden rounded-2xl border border-white/10 bg-[#16090b] shadow-[0_40px_90px_-30px_rgba(179,85,58,0.55)] sm:h-[520px]">
+          <WovenCloth className="absolute inset-0 h-full w-full" />
+          <div className="absolute inset-0 bg-[radial-gradient(600px_circle_at_50%_50%,rgba(22,9,11,0.7),rgba(22,9,11,0.15)_75%)]" />
+          <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+            <span className="mb-5 inline-flex items-center rounded-full border border-white/25 bg-black/25 px-4 py-1.5 text-[13px] font-medium uppercase tracking-[0.2em] text-white/90 backdrop-blur-sm sm:text-[14px]">
+              {t("badge")}
+            </span>
+            <h1 className="max-w-3xl text-[9vw] font-semibold leading-[1.02] tracking-tight text-white drop-shadow-[0_2px_18px_rgba(0,0,0,0.55)] sm:text-6xl md:text-7xl">
+              {t("title")}
+            </h1>
+          </div>
+        </div>
+
+        <p className="mt-8 max-w-xl text-center text-[16px] leading-relaxed text-white/70 sm:text-[18px]">
           {t("description")}
         </p>
       </main>
