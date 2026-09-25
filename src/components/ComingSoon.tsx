@@ -1,6 +1,16 @@
+import Image from "next/image";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import WovenCloth from "@/components/ui/woven-cloth";
+
+const heroImages = [
+  "/images/ceramica-hero-1.jpg",
+  "/images/ceramica-hero-2.jpg",
+  "/images/ceramica-hero-3.jpg",
+  "/images/ceramica-hero-4.jpg",
+];
+
+const CYCLE_SECONDS = 24;
 
 export async function ComingSoon() {
   const t = await getTranslations("ComingSoon");
@@ -8,7 +18,27 @@ export async function ComingSoon() {
 
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden bg-[#16090b] text-white">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1000px_circle_at_50%_0%,rgba(179,85,58,0.28),transparent_65%)]" />
+      <div className="absolute inset-0">
+        {heroImages.map((src, i) => (
+          <div
+            key={src}
+            className="hero-slide absolute inset-0"
+            style={{ animationDelay: `${i * -(CYCLE_SECONDS / heroImages.length)}s` }}
+          >
+            <Image
+              src={src}
+              alt=""
+              fill
+              priority={i === 0}
+              sizes="100vw"
+              className="object-cover"
+            />
+          </div>
+        ))}
+        {/* véu escuro terracota — segura as fotos dos prédios ao fundo pra bandeira e o texto ficarem em destaque */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#16090b]/55 via-[#16090b]/70 to-[#16090b]/95" />
+        <div className="absolute inset-0 bg-[radial-gradient(1000px_circle_at_50%_0%,rgba(179,85,58,0.28),transparent_65%)]" />
+      </div>
 
       <header className="relative z-10 flex items-center justify-between px-6 py-6 sm:px-10">
         <span className="flex items-center gap-2 text-[17px] font-semibold tracking-tight text-white">
@@ -24,18 +54,17 @@ export async function ComingSoon() {
       </header>
 
       <main className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 py-6 sm:px-10">
-        {/* a bandeira: tecido tramado tremulando, com a frase sobre ele */}
-        <div className="relative h-[420px] w-full max-w-5xl overflow-hidden rounded-2xl border border-white/10 bg-[#16090b] shadow-[0_40px_90px_-30px_rgba(179,85,58,0.55)] sm:h-[520px]">
-          <WovenCloth className="absolute inset-0 h-full w-full" />
-          <div className="absolute inset-0 bg-[radial-gradient(600px_circle_at_50%_50%,rgba(22,9,11,0.7),rgba(22,9,11,0.15)_75%)]" />
-          <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
-            <span className="mb-5 inline-flex items-center rounded-full border border-white/25 bg-black/25 px-4 py-1.5 text-[13px] font-medium uppercase tracking-[0.2em] text-white/90 backdrop-blur-sm sm:text-[14px]">
-              {t("badge")}
-            </span>
-            <h1 className="max-w-3xl text-[9vw] font-semibold leading-[1.02] tracking-tight text-white drop-shadow-[0_2px_18px_rgba(0,0,0,0.55)] sm:text-6xl md:text-7xl">
-              {t("title")}
-            </h1>
-          </div>
+        {/* a bandeira: pano simulado com a frase impressa, ondula junto com ele */}
+        <h1 className="sr-only">{t("title")}</h1>
+        <div className="relative aspect-[8/5] w-full max-w-4xl">
+          <WovenCloth
+            className="absolute inset-0 h-full w-full"
+            labels={{
+              badge: t("badge"),
+              lineOne: t("flagLine1"),
+              lineTwo: t("flagLine2"),
+            }}
+          />
         </div>
 
         <p className="mt-8 max-w-xl text-center text-[16px] leading-relaxed text-white/70 sm:text-[18px]">

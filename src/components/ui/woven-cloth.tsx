@@ -1,175 +1,323 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import * as THREE from "three";
 
-/* Tecido tramado (plain weave) tremulando como uma bandeira, desenhado num
-   fragment shader. Paleta do site: terracota (trama principal), grafite e
-   bege de apoio (contra-trama). Se WebGL não estiver disponível, o canvas
-   fica vazio e o gradiente de fundo do container aparece. */
+/* Bandeira de tecido simulada (Verlet) em Three.js -- a frase vai impressa na
+   própria textura, então ondula junto com o pano. Adaptado do componente
+   "woven-cloth" (lumina-weavers) pra rodar direto num canvas: o original
+   vinha num iframe que carregava three/gsap/tailwind de CDN, o que a CSP do
+   site (script-src 'self') bloquearia. */
 
-const VERTEX = `
-attribute vec2 aPos;
-void main() { gl_Position = vec4(aPos, 0.0, 1.0); }
-`;
+export type WovenClothLabels = {
+  badge: string;
+  monogram?: string;
+  lineOne: string;
+  lineTwo: string;
+  footer?: string;
+};
 
-const FRAGMENT = `
-precision highp float;
-uniform vec2 uRes;
-uniform float uTime;
+type WovenClothProps = {
+  labels: WovenClothLabels;
+  className?: string;
+};
 
-const vec3 TERRA = vec3(0.702, 0.333, 0.227);       // #b3553a
-const vec3 TERRA_LIGHT = vec3(0.776, 0.502, 0.420); // #c6806b
-const vec3 GRAPHITE = vec3(0.180, 0.180, 0.180);    // #2e2e2e
-const vec3 BEIGE = vec3(0.863, 0.812, 0.761);       // #dccfc2
+const BW = 4.4;
+const BH = 2.75;
+const GX = 40;
+const GY = 26;
+const GRAV = -3.1;
+const DAMP = 0.985;
+const DT = 0.016;
 
-float hash(vec2 p) {
-  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
-}
+// paleta do site: off-white de fundo, terracota no bordado
+const GROUND = ["#f8f4ed", "#f2ece4", "#eadfd2"];
+const TERRA = "#b3553a";
+const TERRA_DARK = "#8a3d29";
 
-void main() {
-  vec2 uv = gl_FragCoord.xy / uRes;
-  uv.y = 1.0 - uv.y;
-  float asp = uRes.x / uRes.y;
-  vec2 p = vec2(uv.x * asp, uv.y);
-  float t = uTime;
+function makeClothTexture(labels: WovenClothLabels) {
+  const W = 1280;
+  const H = 800;
+  const c = document.createElement("canvas");
+  c.width = W;
+  c.height = H;
+  const x = c.getContext("2d");
+  if (!x) return new THREE.CanvasTexture(c);
 
-  // ondas de bandeira: amplitude cresce para o lado solto (direita)
-  float amp = 0.07 + 0.09 * uv.x;
-  float a1 = p.x * 3.2 - t * 1.6 + p.y * 2.0;
-  float a2 = p.x * 5.7 - t * 1.1 - p.y * 3.1;
-  float h = sin(a1) * amp + sin(a2) * amp * 0.4;
-  float dhdx = cos(a1) * 3.2 * amp + cos(a2) * 5.7 * amp * 0.4;
-  float dhdy = cos(a1) * 2.0 * amp - cos(a2) * 3.1 * amp * 0.4;
+  const g = x.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, GROUND[0]);
+  g.addColorStop(0.5, GROUND[1]);
+  g.addColorStop(1, GROUND[2]);
+  x.fillStyle = g;
+  x.fillRect(0, 0, W, H);
 
-  // a trama acompanha a ondulação
-  vec2 q = p + vec2(0.0, h);
-  float density = 64.0;
-  vec2 g = q * density;
-  vec2 id = floor(g);
-  vec2 f = fract(g);
+  // bainha terracota
+  x.strokeStyle = TERRA;
+  x.lineWidth = 10;
+  x.strokeRect(46, 46, W - 92, H - 92);
+  x.lineWidth = 3;
+  x.strokeStyle = TERRA_DARK;
+  x.strokeRect(66, 66, W - 132, H - 132);
 
-  float warpProfile = sin(f.x * 3.14159);
-  float weftProfile = sin(f.y * 3.14159);
-  bool warpOnTop = mod(id.x + id.y, 2.0) < 0.5;
+  x.textAlign = "center";
+  x.textBaseline = "middle";
 
-  // fios: vertical em terracota (tom varia por fio), horizontal em grafite
-  // com um fio bege de vez em quando
-  vec3 warpCol = mix(TERRA, TERRA_LIGHT, hash(vec2(id.x, 3.0)) * 0.55);
-  vec3 weftCol = mix(GRAPHITE, BEIGE, step(0.93, hash(vec2(7.0, id.y))));
-  weftCol = mix(weftCol, TERRA, step(0.85, hash(vec2(id.y, 11.0))) * 0.6);
+  x.fillStyle = TERRA;
+  x.font = 'bold 74px Georgia, "Times New Roman", serif';
+  x.fillText(labels.badge.toUpperCase(), W / 2, 190);
 
-  float profile = warpOnTop ? warpProfile : weftProfile;
-  vec3 base = warpOnTop ? warpCol : weftCol;
+  x.font = 'normal 22px "Helvetica Neue", Arial, sans-serif';
+  x.fillStyle = TERRA_DARK;
+  x.fillText(labels.monogram ?? "· CERÂMICA HUB ·", W / 2, 246);
 
-  // relevo do fio + fibras finas
-  float fiber = hash(floor(g * vec2(1.0, 6.0)) + id) * 0.12;
-  float thread = 0.55 + 0.45 * pow(profile, 0.7) - fiber;
-  // sombra de contato onde um fio passa por baixo do outro
-  float edge = smoothstep(0.0, 0.18, warpOnTop ? f.x * (1.0 - f.x) : f.y * (1.0 - f.y));
-  vec3 col = base * thread * (0.55 + 0.45 * edge);
+  x.fillStyle = TERRA;
+  // encolhe a fonte até a linha caber dentro da bainha
+  const fitFont = (text: string, size: number) => {
+    x.font = `bold ${size}px Georgia, "Times New Roman", serif`;
+    while (size > 40 && x.measureText(text).width > 960) {
+      size -= 4;
+      x.font = `bold ${size}px Georgia, "Times New Roman", serif`;
+    }
+  };
+  fitFont(labels.lineOne, 96);
+  x.fillText(labels.lineOne, W / 2, 400);
+  fitFont(labels.lineTwo, 96);
+  x.fillText(labels.lineTwo, W / 2, 520);
 
-  // iluminação pela dobra do tecido
-  vec3 n = normalize(vec3(-dhdx * 0.9, -dhdy * 0.9, 1.0));
-  vec3 l = normalize(vec3(-0.45, -0.55, 0.75));
-  float diff = dot(n, l);
-  float shade = 0.42 + 0.85 * diff;
-  col *= shade;
-  col += pow(max(diff, 0.0), 12.0) * 0.10; // brilho suave nas cristas
+  x.fillStyle = TERRA_DARK;
+  x.font = '600 28px "Helvetica Neue", Arial, sans-serif';
+  x.fillText(labels.footer ?? "P A R K   ·   U N I O N   ·   W A Y   ·   G A T E", W / 2, 626);
 
-  // vinheta
-  float vig = smoothstep(1.15, 0.25, length(uv - 0.5) * 1.25);
-  col *= mix(0.55, 1.0, vig);
-
-  gl_FragColor = vec4(col, 1.0);
-}
-`;
-
-function compile(gl: WebGLRenderingContext, type: number, source: string) {
-  const shader = gl.createShader(type);
-  if (!shader) return null;
-  gl.shaderSource(shader, source);
-  gl.compileShader(shader);
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    gl.deleteShader(shader);
-    return null;
+  // trama fina + ruído de fibra
+  for (let yy = 0; yy < H; yy += 3) {
+    x.strokeStyle = "rgba(60,30,20,0.05)";
+    x.lineWidth = 1;
+    x.beginPath();
+    x.moveTo(0, yy + 0.5);
+    x.lineTo(W, yy + 0.5);
+    x.stroke();
   }
-  return shader;
+  for (let xx = 0; xx < W; xx += 3) {
+    x.strokeStyle = "rgba(255,250,235,0.06)";
+    x.lineWidth = 1;
+    x.beginPath();
+    x.moveTo(xx + 0.5, 0);
+    x.lineTo(xx + 0.5, H);
+    x.stroke();
+  }
+  const img = x.getImageData(0, 0, W, H);
+  const d = img.data;
+  for (let i = 0; i < d.length; i += 4) {
+    const n = (Math.random() * 2 - 1) * 10;
+    d[i] += n;
+    d[i + 1] += n;
+    d[i + 2] += n;
+  }
+  x.putImageData(img, 0, 0);
+
+  const tex = new THREE.CanvasTexture(c);
+  tex.anisotropy = 4;
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
 }
 
-export default function WovenCloth({ className }: { className?: string }) {
+export default function WovenCloth({ labels, className }: WovenClothProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const { badge, monogram, lineOne, lineTwo, footer } = labels;
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const gl = canvas.getContext("webgl", { antialias: true, alpha: false });
-    if (!gl) return;
 
-    const vs = compile(gl, gl.VERTEX_SHADER, VERTEX);
-    const fs = compile(gl, gl.FRAGMENT_SHADER, FRAGMENT);
-    const program = gl.createProgram();
-    if (!vs || !fs || !program) return;
-    gl.attachShader(program, vs);
-    gl.attachShader(program, fs);
-    gl.linkProgram(program);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
-    gl.useProgram(program);
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    } catch {
+      return; // sem WebGL: o fundo do container aparece
+    }
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    const buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]),
-      gl.STATIC_DRAW,
-    );
-    const aPos = gl.getAttribLocation(program, "aPos");
-    gl.enableVertexAttribArray(aPos);
-    gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+    const scene = new THREE.Scene();
+    const geo = new THREE.PlaneGeometry(BW, BH, GX, GY);
+    const map = makeClothTexture({ badge, monogram, lineOne, lineTwo, footer });
+    const mat = new THREE.MeshPhongMaterial({
+      map,
+      side: THREE.DoubleSide,
+      shininess: 6,
+      specular: 0x2a1410,
+      color: 0xffffff,
+    });
+    scene.add(new THREE.Mesh(geo, mat));
 
-    const uRes = gl.getUniformLocation(program, "uRes");
-    const uTime = gl.getUniformLocation(program, "uTime");
+    scene.add(new THREE.AmbientLight(0xffe9d0, 0.62));
+    const key = new THREE.DirectionalLight(0xfff0dc, 1.15);
+    key.position.set(-3, 3.5, 3.2);
+    scene.add(key);
+    const rim = new THREE.DirectionalLight(0xb3553a, 0.42);
+    rim.position.set(3, -1.5, 2.0);
+    scene.add(rim);
 
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let frame = 0;
-    let running = true;
+    // física Verlet: linha de cima presa, o resto pendurado ao vento
+    const pos = geo.attributes.position;
+    const N = (GX + 1) * (GY + 1);
+    const cur = new Float32Array(N * 3);
+    const prev = new Float32Array(N * 3);
+    const rest = new Float32Array(N * 3);
+    const pinned = new Uint8Array(N);
+    for (let i = 0; i < N; i++) {
+      const ax = pos.getX(i);
+      const ay = pos.getY(i);
+      cur[i * 3] = prev[i * 3] = rest[i * 3] = ax;
+      cur[i * 3 + 1] = prev[i * 3 + 1] = rest[i * 3 + 1] = ay;
+    }
+    for (let ix = 0; ix <= GX; ix++) pinned[ix] = 1;
+    const idx = (ix: number, iy: number) => ix + iy * (GX + 1);
+    const restH = BW / GX;
+    const restV = BH / GY;
 
-    const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      const w = Math.max(1, Math.floor(canvas.clientWidth * dpr));
-      const h = Math.max(1, Math.floor(canvas.clientHeight * dpr));
-      if (canvas.width !== w || canvas.height !== h) {
-        canvas.width = w;
-        canvas.height = h;
+    const wind = (ix: number, iy: number, t: number): [number, number, number] => {
+      const cx = ix / GX;
+      const cy = iy / GY;
+      const travel = t * 1.7 - cy * 4.2;
+      const gust = 0.6 + 0.42 * Math.sin(t * 0.6) + 0.18 * Math.sin(t * 1.9 + 1.3);
+      const amp = 4.3 * cy;
+      const fz =
+        (Math.sin(travel + cx * 3.3) + 0.5 * Math.sin(travel * 1.7 + cx * 6.0)) * amp * gust;
+      const fx = Math.sin(t * 0.9 + cy * 2.2) * 0.6 * cy;
+      const fy = -0.4 * cy;
+      return [fx, fy, fz];
+    };
+
+    const solve = (a: number, b: number, rl: number) => {
+      let dx = cur[b * 3] - cur[a * 3];
+      let dy = cur[b * 3 + 1] - cur[a * 3 + 1];
+      let dz = cur[b * 3 + 2] - cur[a * 3 + 2];
+      const dist = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1e-6;
+      const diff = ((dist - rl) / dist) * 0.5;
+      dx *= diff;
+      dy *= diff;
+      dz *= diff;
+      const pa = pinned[a];
+      const pb = pinned[b];
+      if (!pa && !pb) {
+        cur[a * 3] += dx;
+        cur[a * 3 + 1] += dy;
+        cur[a * 3 + 2] += dz;
+        cur[b * 3] -= dx;
+        cur[b * 3 + 1] -= dy;
+        cur[b * 3 + 2] -= dz;
+      } else if (pa && !pb) {
+        cur[b * 3] -= dx * 2;
+        cur[b * 3 + 1] -= dy * 2;
+        cur[b * 3 + 2] -= dz * 2;
+      } else if (!pa && pb) {
+        cur[a * 3] += dx * 2;
+        cur[a * 3 + 1] += dy * 2;
+        cur[a * 3 + 2] += dz * 2;
       }
-      gl.viewport(0, 0, canvas.width, canvas.height);
-      gl.uniform2f(uRes, canvas.width, canvas.height);
     };
 
-    const draw = (ms: number) => {
-      resize();
-      gl.uniform1f(uTime, ms / 1000);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    const step = (t: number) => {
+      for (let iy = 0; iy <= GY; iy++) {
+        for (let ix = 0; ix <= GX; ix++) {
+          const i = idx(ix, iy);
+          if (pinned[i]) continue;
+          const [fx, fy, fz] = wind(ix, iy, t);
+          const acc = [fx, fy + GRAV, fz];
+          for (let k = 0; k < 3; k++) {
+            const j = i * 3 + k;
+            const v = (cur[j] - prev[j]) * DAMP;
+            prev[j] = cur[j];
+            cur[j] = cur[j] + v + acc[k] * DT * DT;
+          }
+        }
+      }
+      for (let it = 0; it < 3; it++) {
+        for (let iy = 0; iy <= GY; iy++) {
+          for (let ix = 0; ix < GX; ix++) solve(idx(ix, iy), idx(ix + 1, iy), restH);
+        }
+        for (let iy = 0; iy < GY; iy++) {
+          for (let ix = 0; ix <= GX; ix++) solve(idx(ix, iy), idx(ix, iy + 1), restV);
+        }
+      }
+      for (let ix = 0; ix <= GX; ix++) {
+        for (let k = 0; k < 3; k++) {
+          cur[ix * 3 + k] = rest[ix * 3 + k];
+          prev[ix * 3 + k] = rest[ix * 3 + k];
+        }
+      }
     };
 
-    const loop = (ms: number) => {
+    const commit = () => {
+      for (let i = 0; i < N; i++) pos.setXYZ(i, cur[i * 3], cur[i * 3 + 1], cur[i * 3 + 2]);
+      pos.needsUpdate = true;
+      geo.computeVertexNormals();
+    };
+
+    let camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+    const fit = () => {
+      const w = Math.max(1, canvas.clientWidth);
+      const h = Math.max(1, canvas.clientHeight);
+      renderer.setSize(w, h, false);
+      const aspect = w / h;
+      camera = new THREE.PerspectiveCamera(42, aspect, 0.1, 100);
+      const vFit = BH / 2 / Math.tan((42 * Math.PI) / 360);
+      const hFit = BW / 2 / Math.tan((42 * Math.PI) / 360) / aspect;
+      camera.position.set(0, 0.05, Math.max(vFit, hFit) * 1.16 + 0.4);
+      camera.lookAt(0, 0, 0);
+    };
+    fit();
+    const observer = new ResizeObserver(() => {
+      fit();
+      renderer.render(scene, camera);
+    });
+    observer.observe(canvas);
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let running = false;
+    let raf = 0;
+    let t = 0;
+    const loop = () => {
       if (!running) return;
-      draw(ms);
-      frame = requestAnimationFrame(loop);
+      t += DT;
+      step(t);
+      commit();
+      renderer.render(scene, camera);
+      raf = requestAnimationFrame(loop);
     };
+    const start = () => {
+      if (running) return;
+      running = true;
+      raf = requestAnimationFrame(loop);
+    };
+    const stop = () => {
+      running = false;
+      cancelAnimationFrame(raf);
+    };
+    const onVisibility = () => (document.hidden ? stop() : start());
 
-    if (reduceMotion.matches) {
-      draw(2500); // quadro estático
-      window.addEventListener("resize", () => draw(2500));
+    if (reduce) {
+      for (let s = 0; s < 220; s++) step(s * DT);
+      commit();
+      renderer.render(scene, camera);
     } else {
-      frame = requestAnimationFrame(loop);
+      for (let s = 0; s < 40; s++) step(s * DT);
+      t = 40 * DT;
+      start();
+      document.addEventListener("visibilitychange", onVisibility);
     }
 
     return () => {
-      running = false;
-      cancelAnimationFrame(frame);
-      gl.getExtension("WEBGL_lose_context")?.loseContext();
+      stop();
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+      geo.dispose();
+      mat.dispose();
+      map.dispose();
+      renderer.dispose();
     };
-  }, []);
+  }, [badge, monogram, lineOne, lineTwo, footer]);
 
   return <canvas ref={canvasRef} className={className} aria-hidden="true" />;
 }
