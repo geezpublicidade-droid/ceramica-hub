@@ -4,6 +4,8 @@ import { Link } from "@/i18n/navigation";
 import { FadeUp } from "@/components/motion/FadeUp";
 import { getUpcomingEvents } from "@/lib/services/events";
 import { getActiveTowers } from "@/lib/services/towers";
+import { getRecentNews } from "@/lib/services/news";
+import { NewsCorner } from "@/components/landing/HomeNovidades";
 
 type Block = {
   key: string;
@@ -21,9 +23,9 @@ type Block = {
  * parceiros, torre). Sem dado fictício: quando não há evento futuro
  * cadastrado, o bloco de Eventos cai no texto vazio em vez de inventar um
  * evento. */
-export async function DestaqueBlocks() {
+export async function DestaqueBlocks({ locale }: { locale: string }) {
   const t = await getTranslations("DestaqueBlocks");
-  const [events, towers] = await Promise.all([getUpcomingEvents(), getActiveTowers()]);
+  const [events, towers, news] = await Promise.all([getUpcomingEvents(), getActiveTowers(), getRecentNews(4)]);
 
   const blocks: Block[] = [
     {
@@ -55,12 +57,17 @@ export async function DestaqueBlocks() {
 
   return (
     <section id="complexo" className="section-pad-y bg-surface">
-      <div className="container-page grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-3">
+      <div
+        className={`container-page grid grid-cols-1 gap-3 ${
+          news.length > 0 ? "lg:grid-cols-[minmax(0,2.5fr)_minmax(260px,1fr)]" : ""
+        }`}
+      >
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {blocks.map((block, index) => (
           <FadeUp key={block.key} delay={index * 0.1}>
             <Link
               href={block.href}
-              className={`group relative flex h-[280px] flex-col justify-end overflow-hidden p-8 shadow-none transition-shadow duration-300 hover:shadow-[0_24px_48px_-20px_rgba(0,0,0,0.35)] sm:h-[300px] ${
+              className={`group relative flex h-[280px] flex-col justify-end overflow-hidden p-6 shadow-none transition-shadow duration-300 hover:shadow-[0_24px_48px_-20px_rgba(0,0,0,0.35)] sm:h-[300px] ${
                 block.dark ? "bg-primary" : ""
               }`}
             >
@@ -103,6 +110,8 @@ export async function DestaqueBlocks() {
             </Link>
           </FadeUp>
         ))}
+        </div>
+        {news.length > 0 && <NewsCorner news={news} locale={locale} />}
       </div>
     </section>
   );

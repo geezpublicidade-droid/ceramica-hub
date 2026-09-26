@@ -7,7 +7,6 @@ import { FourUniverses } from "@/components/landing/FourUniverses";
 import { FeaturedBusinesses } from "@/components/landing/FeaturedBusinesses";
 import { Directory } from "@/components/Directory";
 import { DestaqueBlocks } from "@/components/landing/DestaqueBlocks";
-import { HomeNovidades } from "@/components/landing/HomeNovidades";
 import { OpportunityNetwork } from "@/components/landing/OpportunityNetwork";
 import { LocalBenefits } from "@/components/landing/LocalBenefits";
 import { FounderCTA } from "@/components/landing/FounderCTA";
@@ -77,15 +76,12 @@ export default async function Preview({ params }: { params: Promise<{ locale: st
           </Suspense>
           <AdBanner placementKey="hero_abaixo" />
 
-          {/* 4. Eventos / Âncoras institucionais / O Complexo */}
-          <DestaqueBlocks />
+          {/* 4. Eventos / Âncoras institucionais / O Complexo + coluna de notícias de São Caetano */}
+          <DestaqueBlocks locale={locale} />
 
           {/* 5. Prova de relevância + marcas participantes */}
           <ProofOfRelevance stats={proofStats} />
           <InstitutionalPartners />
-
-          {/* 6. Novidades (agregador de notícias reais) */}
-          <HomeNovidades locale={locale} />
 
           {/* 7. Oportunidades e benefícios da rede (funcionalidades existentes) */}
           <OpportunityNetwork opportunities={opportunities} />
