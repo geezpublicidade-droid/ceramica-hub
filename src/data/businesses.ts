@@ -32,12 +32,12 @@ export type Business = {
   /** = status === 'approved' no banco — selo de verificação real, não um flag arbitrário */
   verified: boolean;
   initials: string;
-  plan: "presenca" | "profissional" | "destaque" | "experiencia";
+  plan: "presenca" | "profissional" | "destaque" | "experiencia" | "premium";
   /** plano "de verdade" pra fins de exibição/gating: plan, ou trial.plan enquanto o trial estiver ativo e dentro do prazo */
-  effectivePlan: "presenca" | "profissional" | "destaque" | "experiencia";
+  effectivePlan: "presenca" | "profissional" | "destaque" | "experiencia" | "premium";
   trial: {
     status: "none" | "active" | "expired";
-    plan: "presenca" | "profissional" | "destaque" | "experiencia" | null;
+    plan: "presenca" | "profissional" | "destaque" | "experiencia" | "premium" | null;
     endsAt: string | null;
   };
   status: "pending" | "approved" | "rejected" | "suspended";
@@ -59,6 +59,7 @@ export const planLabels: Record<Business["plan"], string> = {
   profissional: "Profissional",
   destaque: "Destaque",
   experiencia: "Experiência",
+  premium: "Premium",
 };
 
 export type BusinessService = {

@@ -25,7 +25,7 @@ export async function PremiumSponsorsCarousel({ partners }: PremiumSponsorsCarou
       ? partners.map((partner) => ({
           id: partner.id,
           title: partner.name,
-          description: t("partnerBadge"),
+          description: partner.tier === "ancora_fundadora" ? t("founderBadge") : t("partnerBadge"),
           image: partner.logoUrl ?? "/images/ceramica-hub-corporativo.webp",
           imageAlt: partner.name,
           overlay: mark(partner.name),

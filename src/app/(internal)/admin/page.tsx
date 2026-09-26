@@ -29,7 +29,7 @@ type PendingBusiness = {
   status: "pending" | "approved" | "rejected" | "suspended";
   created_at: string;
   founder: boolean;
-  plan: "presenca" | "profissional" | "destaque" | "experiencia";
+  plan: "presenca" | "profissional" | "destaque" | "experiencia" | "premium";
   trial_status: "none" | "active" | "expired";
   rejection_reason: string | null;
   comprovante_path: string | null;

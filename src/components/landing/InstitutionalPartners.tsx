@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { FadeUp } from "@/components/motion/FadeUp";
 import { getActivePartners } from "@/lib/services/institutional-partners";
+import { HOME_TIERS } from "@/lib/partner-tiers";
 
 const MAX_LOGOS = 10;
 
@@ -12,7 +13,9 @@ const MAX_LOGOS = 10;
  * um, texto introdutório à esquerda e link "ver todas" à direita.
  */
 export async function InstitutionalPartners() {
-  const [t, partners] = await Promise.all([getTranslations("BrandsStrip"), getActivePartners()]);
+  const [t, allPartners] = await Promise.all([getTranslations("BrandsStrip"), getActivePartners()]);
+  // Parceiro do Ecossistema não entra na faixa da home (ver HOME_TIERS).
+  const partners = allPartners.filter((partner) => HOME_TIERS.includes(partner.tier));
   if (partners.length === 0) return null;
   // Faixa curta de propósito: mais que isso dilui o status de quem está nela.
   const visiblePartners = partners.slice(0, MAX_LOGOS);

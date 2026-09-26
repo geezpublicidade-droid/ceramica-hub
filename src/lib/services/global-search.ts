@@ -26,7 +26,7 @@ export const SEARCH_TYPE_LABEL: Record<SearchResult["type"], string> = {
   evento: "Evento",
 };
 
-const PLAN_RANK: Record<string, number> = { experiencia: 3, destaque: 2, profissional: 1, presenca: 0 };
+const PLAN_RANK: Record<string, number> = { premium: 4, experiencia: 3, destaque: 2, profissional: 1, presenca: 0 };
 
 function relevanceTier(term: string, text: string): number | null {
   const normalizedTerm = term.trim().toLowerCase();

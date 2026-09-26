@@ -34,7 +34,7 @@ export async function PricingSummary() {
           <p className="mt-3 text-[17px] text-muted">{t("subheading")}</p>
         </FadeUp>
 
-        <div className="mt-10 grid grid-cols-1 gap-[var(--card-gap)] sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid grid-cols-1 gap-[var(--card-gap)] sm:grid-cols-2 xl:grid-cols-5">
           {plans.map((plan, index) => (
             <FadeUp
               key={plan.key}

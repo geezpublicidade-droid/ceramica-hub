@@ -118,6 +118,7 @@
         "description": "Para quienes quieren aparecer primero y ser vistos por más gente.",
         "features": [
           "Todo del plan Profesional",
+          "Prioridad en tu categoría y en las búsquedas",
           "Hasta 6 servicios con fotos",
           "Galería con hasta 6 fotos",
           "Hasta cuatro promociones",
@@ -130,16 +131,30 @@
       },
       "experiencia": {
         "name": "Experiencia",
-        "description": "Página comercial al nivel de una landing page profesional.",
+        "description": "Página comercial completa, con presencia premium en el ecosistema.",
         "features": [
-          "Todo del plan Destacado",
-          "Landing page personalizada",
+          "Todo el plan Destacado",
+          "Página más completa y personalizada",
+          "Galería ampliada (hasta 30 fotos)",
           "Video destacado",
-          "Formulario propio directo al WhatsApp",
-          "Destaque rotativo en la página principal",
+          "Diferenciales de la empresa en evidencia",
+          "Destaque editorial eventual",
+          "Formulario propio directo a WhatsApp",
           "Métricas completas",
-          "Sala 3D (visita virtual)",
           "Condiciones premium en Geez Marketing (próximamente)"
+        ]
+      },
+      "premium": {
+        "name": "Premium",
+        "description": "Para empresas que quieren la mayor visibilidad dentro del ecosistema Cerâmica.",
+        "features": [
+          "Todo el plan Experiencia",
+          "Prioridad en Negocios Destacados",
+          "Participación prioritaria en encuentros empresariales",
+          "Desayuno o almuerzo de networking, según calendario",
+          "Contenido institucional especial",
+          "Presentación 3D de tu sala (1 producción por ciclo, alcance estándar)",
+          "Visibilidad reforzada en el ecosistema"
         ]
       },
       "patrocinador": {
@@ -447,7 +462,14 @@
     "metaDescription": "Instituciones y marcas socias de Cerâmica Hub, con autorización confirmada.",
     "heading": "Socios",
     "subtitle": "Instituciones y marcas que apoyan Espaço Cerâmica.",
-    "emptyState": "Ningún socio institucional activo por el momento."
+    "emptyState": "Ningún socio institucional activo por el momento.",
+    "tierTitles": {
+      "ancora_fundadora": "Anclas Fundadoras",
+      "parceiro_premium": "Socios Premium",
+      "presenca_institucional": "Marcas aliadas",
+      "parceiro_ecossistema": "Socios del Ecosistema"
+    },
+    "ecosystemNote": "Los Socios del Ecosistema son marcas que atienden a quienes viven, trabajan o circulan por Cerâmica -- no están instaladas en el complejo."
   },
   "PartnerLeadPage": {
     "metaTitle": "Sé un Socio — Cerâmica Hub",
@@ -653,7 +675,8 @@
     "presenca": "Presencia Gratuita",
     "profissional": "Profesional",
     "destaque": "Destacado",
-    "experiencia": "Experiencia"
+    "experiencia": "Experiencia",
+    "premium": "Premium"
   },
   "opportunityTypeLabels": {
     "procura": "Busca",
@@ -714,7 +737,8 @@
     "slide3Description": "Reunión de diagnóstico para encontrar lo que tiene sentido para tu marca.",
     "ctaAction": "Quiero ser patrocinador",
     "partnerBadge": "Socio",
-    "subhead": "Marcas que creen en el potencial del Complejo Cerâmica y ayudan a fortalecer este ecosistema."
+    "subhead": "Marcas que creen en el potencial del Complejo Cerâmica y ayudan a fortalecer este ecosistema.",
+    "founderBadge": "Socio Fundador de Cerâmica Hub"
   },
   "CityAndNews": {
     "cityEyebrow": "SÃO CAETANO DO SUL",

@@ -26,17 +26,17 @@ export async function Pricing() {
         className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[420px] -translate-x-1/2 rounded-full opacity-25 blur-[120px]"
         style={{ background: "radial-gradient(circle, var(--primary-light), transparent 70%)" }}
       />
-      <div className="relative mx-auto max-w-6xl px-6 py-28">
+      <div className="relative mx-auto max-w-7xl px-6 py-28">
         <h2 className="text-[clamp(1.75rem,3.5vw,2.75rem)] font-semibold leading-tight tracking-tight">
           {t("heading")}
         </h2>
         <p className="mt-3 max-w-xl text-[17px] text-muted">{t("subheading")}</p>
 
-        <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-5">
           {plans.map((plan) => (
             <div
               key={plan.key}
-              className={`relative flex flex-col rounded-3xl p-8 ${
+              className={`relative flex flex-col rounded-3xl p-7 ${
                 plan.highlight
                   ? "gradient-terracotta-animated text-white shadow-[0_30px_60px_-20px_rgba(227,83,54,0.45)]"
                   : "glass-light text-foreground"

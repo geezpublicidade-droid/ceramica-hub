@@ -3,6 +3,7 @@ import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { getActivePartners } from "@/lib/services/institutional-partners";
 import { buildSocialMetadata } from "@/lib/seo";
+import { PARTNER_TIERS } from "@/lib/partner-tiers";
 
 export const revalidate = 60;
 
@@ -36,33 +37,49 @@ export default async function PartnersPage() {
             {partners.length === 0 ? (
               <p className="mt-14 text-[17px] text-muted">{t("emptyState")}</p>
             ) : (
-              <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                {partners.map((partner) => (
-                  <div
-                    key={partner.id}
-                    className="glass-card-light flex items-center gap-4 rounded-2xl p-6"
-                  >
-                    {partner.logoUrl && (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={partner.logoUrl} alt={partner.name} className="h-12 w-auto object-contain" />
-                    )}
-                    <div className="min-w-0">
-                      {partner.link ? (
-                        <a
-                          href={partner.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[17px] font-semibold text-foreground hover:text-primary"
-                        >
-                          {partner.name}
-                        </a>
-                      ) : (
-                        <p className="text-[17px] font-semibold text-foreground">{partner.name}</p>
+              <div className="mt-12 flex flex-col gap-12">
+                {PARTNER_TIERS.map((tier) => {
+                  const group = partners.filter((partner) => partner.tier === tier);
+                  if (group.length === 0) return null;
+                  return (
+                    <section key={tier}>
+                      <h2 className="text-[13px] font-medium uppercase tracking-[0.2em] text-primary">
+                        {t(`tierTitles.${tier}`)}
+                      </h2>
+                      {tier === "parceiro_ecossistema" && (
+                        <p className="mt-2 max-w-xl text-[14px] text-muted">{t("ecosystemNote")}</p>
                       )}
-                      <p className="text-[14px] text-muted">{partner.partnershipType}</p>
-                    </div>
-                  </div>
-                ))}
+                      <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        {group.map((partner) => (
+                          <div
+                            key={partner.id}
+                            className="glass-card-light flex items-center gap-4 rounded-2xl p-6"
+                          >
+                            {partner.logoUrl && (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img src={partner.logoUrl} alt={partner.name} className="h-12 w-auto object-contain" />
+                            )}
+                            <div className="min-w-0">
+                              {partner.link ? (
+                                <a
+                                  href={partner.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-[17px] font-semibold text-foreground hover:text-primary"
+                                >
+                                  {partner.name}
+                                </a>
+                              ) : (
+                                <p className="text-[17px] font-semibold text-foreground">{partner.name}</p>
+                              )}
+                              <p className="text-[14px] text-muted">{partner.partnershipType}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  );
+                })}
               </div>
             )}
           </div>

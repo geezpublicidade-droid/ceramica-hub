@@ -118,6 +118,7 @@
         "description": "适合希望优先展示、被更多人看到的企业。",
         "features": [
           "包含专业版所有内容",
+          "分类与搜索中优先展示",
           "最多 6 项带图片的服务",
           "最多 6 张图片相册",
           "最多四项优惠活动",
@@ -130,16 +131,30 @@
       },
       "experiencia": {
         "name": "尊享版",
-        "description": "媲美专业落地页水准的商业主页。",
+        "description": "完整的企业页面,在生态中拥有高端展示。",
         "features": [
-          "包含精选版所有内容",
-          "定制落地页",
-          "精选视频展示",
-          "专属表单直连 WhatsApp",
-          "首页轮播重点展示",
-          "完整数据统计",
-          "3D 展示间(虚拟参观)",
-          "Geez Marketing 尊享优惠条件(即将推出)"
+          "包含精选版全部权益",
+          "更完整的个性化页面",
+          "扩展图库(最多 30 张照片)",
+          "精选视频",
+          "突出企业差异化优势",
+          "不定期编辑推荐",
+          "专属表单直达 WhatsApp",
+          "完整数据指标",
+          "Geez Marketing 尊享优惠(即将推出)"
+        ]
+      },
+      "premium": {
+        "name": "尊享版",
+        "description": "适合希望在 Cerâmica 生态中获得最大曝光的企业。",
+        "features": [
+          "包含体验版全部权益",
+          "精选企业中优先展示",
+          "优先参与商务交流活动",
+          "按日程安排的早餐或午餐商务社交",
+          "专属机构内容",
+          "房间 3D 展示(每个周期 1 次,标准范围)",
+          "生态内强化曝光"
         ]
       },
       "patrocinador": {
@@ -447,7 +462,14 @@
     "metaDescription": "与 Cerâmica Hub 合作、已确认授权的机构与品牌。",
     "heading": "合作伙伴",
     "subtitle": "支持 Espaço Cerâmica 的机构与品牌。",
-    "emptyState": "目前没有活跃的机构合作伙伴。"
+    "emptyState": "目前没有活跃的机构合作伙伴。",
+    "tierTitles": {
+      "ancora_fundadora": "创始锚点品牌",
+      "parceiro_premium": "尊享合作伙伴",
+      "presenca_institucional": "合作品牌",
+      "parceiro_ecossistema": "生态合作伙伴"
+    },
+    "ecosystemNote": "生态合作伙伴是服务在 Cerâmica 生活、工作或往来人群的品牌——并未入驻综合体。"
   },
   "PartnerLeadPage": {
     "metaTitle": "成为合作伙伴 — Cerâmica Hub",
@@ -653,7 +675,8 @@
     "presenca": "免费展示",
     "profissional": "专业版",
     "destaque": "精选版",
-    "experiencia": "尊享版"
+    "experiencia": "尊享版",
+    "premium": "尊享版"
   },
   "opportunityTypeLabels": {
     "procura": "寻求",
@@ -714,7 +737,8 @@
     "slide3Description": "一次诊断会议,找到适合您品牌的方式。",
     "ctaAction": "我想成为赞助商",
     "partnerBadge": "合作伙伴",
-    "subhead": "相信 Cerâmica 综合体潜力、并助力壮大这一生态的品牌。"
+    "subhead": "相信 Cerâmica 综合体潜力、并助力壮大这一生态的品牌。",
+    "founderBadge": "Cerâmica Hub 创始合作伙伴"
   },
   "CityAndNews": {
     "cityEyebrow": "圣卡埃塔诺-杜苏尔",

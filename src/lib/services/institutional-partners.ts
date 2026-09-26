@@ -1,4 +1,5 @@
 import { createServiceClient } from "@/lib/supabase/server";
+import { PARTNER_TIER_RANK, type PartnerTier } from "@/lib/partner-tiers";
 
 export type InstitutionalPartner = {
   id: string;
@@ -6,6 +7,7 @@ export type InstitutionalPartner = {
   logoUrl: string | null;
   link: string | null;
   partnershipType: string;
+  tier: PartnerTier;
   authorizationNote: string | null;
   status: "rascunho" | "aguardando_autorizacao" | "aprovado" | "ativo" | "inativo";
   startsAt: string | null;
@@ -20,6 +22,7 @@ function mapPartner(row: Record<string, unknown>): InstitutionalPartner {
     logoUrl: row.logo_url as string | null,
     link: row.link as string | null,
     partnershipType: row.partnership_type as string,
+    tier: row.tier as PartnerTier,
     authorizationNote: row.authorization_note as string | null,
     status: row.status as InstitutionalPartner["status"],
     startsAt: row.starts_at as string | null,
@@ -40,7 +43,9 @@ export async function getActivePartners(): Promise<InstitutionalPartner[]> {
     .or(`ends_at.is.null,ends_at.gte.${today}`)
     .order("sort_order", { ascending: true });
   if (error) throw error;
-  return (data ?? []).map(mapPartner);
+  return (data ?? [])
+    .map(mapPartner)
+    .sort((a, b) => PARTNER_TIER_RANK[a.tier] - PARTNER_TIER_RANK[b.tier] || a.sortOrder - b.sortOrder);
 }
 
 export async function getAllPartnersForAdmin(): Promise<InstitutionalPartner[]> {

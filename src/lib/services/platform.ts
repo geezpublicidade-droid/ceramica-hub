@@ -44,10 +44,10 @@ type BusinessRow = {
   address_verified: boolean;
   photographed: boolean;
   founder: boolean;
-  plan: "presenca" | "profissional" | "destaque" | "experiencia";
+  plan: "presenca" | "profissional" | "destaque" | "experiencia" | "premium";
   status: "pending" | "approved" | "rejected" | "suspended";
   trial_status: "none" | "active" | "expired";
-  trial_plan: "presenca" | "profissional" | "destaque" | "experiencia" | null;
+  trial_plan: "presenca" | "profissional" | "destaque" | "experiencia" | "premium" | null;
   trial_ends_at: string | null;
   updated_at: string;
   towers: TowerJoin;
@@ -531,7 +531,7 @@ export async function getOwnedPromotions(businessId: string): Promise<OwnedPromo
 
 export type OwnedInvoice = {
   id: string;
-  plan: "profissional" | "destaque" | "experiencia";
+  plan: "profissional" | "destaque" | "experiencia" | "premium";
   amountCents: number;
   status: "pending" | "paid" | "canceled";
   paymentLink: string | null;
@@ -562,7 +562,7 @@ export type PendingInvoice = {
   id: string;
   businessId: string;
   businessName: string;
-  plan: "profissional" | "destaque" | "experiencia";
+  plan: "profissional" | "destaque" | "experiencia" | "premium";
   amountCents: number;
   paymentLink: string | null;
   createdAt: string;

@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { createInstitutionalPartner } from "@/lib/actions/admin-institutional-partners";
+import { PARTNER_TIERS, PARTNER_TIER_LABEL, type PartnerTier } from "@/lib/partner-tiers";
 
 const inputClass = "mt-1.5 w-full rounded-xl border border-border bg-white px-4 py-2.5 text-[15px] text-foreground outline-none focus:border-primary";
 const labelClass = "text-[14px] font-medium text-foreground";
@@ -12,6 +13,7 @@ export function NewPartnerForm() {
   const [link, setLink] = useState("");
   const [partnershipType, setPartnershipType] = useState("");
   const [authorizationNote, setAuthorizationNote] = useState("");
+  const [tier, setTier] = useState<PartnerTier>("parceiro_premium");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -19,7 +21,7 @@ export function NewPartnerForm() {
     event.preventDefault();
     setError(null);
     startTransition(async () => {
-      const result = await createInstitutionalPartner({ name, logoUrl, link, partnershipType, authorizationNote });
+      const result = await createInstitutionalPartner({ name, logoUrl, link, partnershipType, tier, authorizationNote });
       if (!result.success) {
         setError(result.error);
         return;
@@ -56,6 +58,16 @@ export function NewPartnerForm() {
           <input className={inputClass} value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://..." />
         </label>
       </div>
+      <label>
+        <span className={labelClass}>Nível</span>
+        <select className={inputClass} value={tier} onChange={(e) => setTier(e.target.value as PartnerTier)}>
+          {PARTNER_TIERS.map((t) => (
+            <option key={t} value={t}>
+              {PARTNER_TIER_LABEL[t]}
+            </option>
+          ))}
+        </select>
+      </label>
       <label>
         <span className={labelClass}>Observação sobre a autorização (documento, e-mail, contato — pra você lembrar depois)</span>
         <textarea className={inputClass} rows={2} value={authorizationNote} onChange={(e) => setAuthorizationNote(e.target.value)} />

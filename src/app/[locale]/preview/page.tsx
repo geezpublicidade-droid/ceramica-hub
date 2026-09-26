@@ -42,7 +42,7 @@ export const revalidate = 60;
 const TEST_RECORD_RE = /\bteste\b/i;
 
 // Planos pagos aparecem primeiro em "Negócios em destaque".
-const PLAN_PRIORITY: Record<Business["plan"], number> = { experiencia: 3, destaque: 2, profissional: 1, presenca: 0 };
+const PLAN_PRIORITY: Record<Business["plan"], number> = { premium: 4, experiencia: 3, destaque: 2, profissional: 1, presenca: 0 };
 
 export default async function Preview({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -82,7 +82,9 @@ export default async function Preview({ params }: { params: Promise<{ locale: st
           </Suspense>
 
           {/* 4. Parceiros fundadores -- empresas que impulsionam o Hub */}
-          <PremiumSponsorsCarousel partners={partners} />
+          <PremiumSponsorsCarousel
+            partners={partners.filter((p) => p.tier === "ancora_fundadora" || p.tier === "parceiro_premium")}
+          />
 
           {/* 5. Faixa de logos (máx. 10) */}
           <InstitutionalPartners />

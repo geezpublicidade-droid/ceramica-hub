@@ -14,7 +14,9 @@ export const PLAN_LIMITS: Record<Business["plan"], PlanLimits> = {
   presenca: { maxServices: 0, maxPhotos: 0, maxPromotions: 0, couponsAllowed: false, videoAllowed: false, virtualTourAllowed: false, featuredAllowed: false },
   profissional: { maxServices: 3, maxPhotos: 3, maxPromotions: 1, couponsAllowed: false, videoAllowed: false, virtualTourAllowed: false, featuredAllowed: false },
   destaque: { maxServices: 6, maxPhotos: 6, maxPromotions: 4, couponsAllowed: true, videoAllowed: false, virtualTourAllowed: false, featuredAllowed: true },
-  experiencia: { maxServices: Infinity, maxPhotos: 30, maxPromotions: 4, couponsAllowed: true, videoAllowed: true, virtualTourAllowed: true, featuredAllowed: true },
+  // Sala 3D é exclusiva do Premium (1 produção por ciclo dentro do escopo padrão; extras cobradas à parte).
+  experiencia: { maxServices: Infinity, maxPhotos: 30, maxPromotions: 4, couponsAllowed: true, videoAllowed: true, virtualTourAllowed: false, featuredAllowed: true },
+  premium: { maxServices: Infinity, maxPhotos: 30, maxPromotions: 4, couponsAllowed: true, videoAllowed: true, virtualTourAllowed: true, featuredAllowed: true },
 };
 
 export function limitsFor(plan: Business["plan"]): PlanLimits {
@@ -22,7 +24,7 @@ export function limitsFor(plan: Business["plan"]): PlanLimits {
 }
 
 /** Ordem de autoatendimento (Patrocinador fica fora -- não é selecionável). */
-export const PLAN_ORDER: Business["plan"][] = ["presenca", "profissional", "destaque", "experiencia"];
+export const PLAN_ORDER: Business["plan"][] = ["presenca", "profissional", "destaque", "experiencia", "premium"];
 
 /** Primeiro plano acima do atual que desbloqueia mais desse recurso -- usado
  * pra linkar os avisos de "recurso do plano superior" direto pra página do
@@ -40,19 +42,21 @@ export function upgradeTargetPlan(currentPlan: Business["plan"], capability: key
 }
 
 /** Planos pagáveis (presença é gratuito, nunca gera fatura). Preço em centavos — mesmo valor hoje exibido em Pricing.tsx. */
-export type PayablePlan = "profissional" | "destaque" | "experiencia";
+export type PayablePlan = "profissional" | "destaque" | "experiencia" | "premium";
 
 export const PLAN_PRICES_CENTS: Record<PayablePlan, number> = {
-  profissional: 4700,
-  destaque: 9700,
-  experiencia: 19700,
+  profissional: 7900,
+  destaque: 14700,
+  experiencia: 29700,
+  premium: 49700,
 };
 
 /** Preço "de vitrine" (arredondado, sem centavos) -- usado em Pricing.tsx e
  * nas páginas /planos/[plano]. Cobrança de verdade usa PLAN_PRICES_CENTS. */
 export const PLAN_PRICE_DISPLAY: Record<Business["plan"], { price: string; hasPeriod: boolean }> = {
   presenca: { price: "R$ 0", hasPeriod: false },
-  profissional: { price: "R$ 47", hasPeriod: true },
-  destaque: { price: "R$ 97", hasPeriod: true },
-  experiencia: { price: "R$ 197", hasPeriod: true },
+  profissional: { price: "R$ 79", hasPeriod: true },
+  destaque: { price: "R$ 147", hasPeriod: true },
+  experiencia: { price: "R$ 297", hasPeriod: true },
+  premium: { price: "R$ 497", hasPeriod: true },
 };

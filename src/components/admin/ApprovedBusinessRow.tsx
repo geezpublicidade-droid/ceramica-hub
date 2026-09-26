@@ -18,7 +18,7 @@ type ApprovedBusiness = {
   floor: string;
   roomNumber: string;
   founder: boolean;
-  plan: "presenca" | "profissional" | "destaque" | "experiencia";
+  plan: "presenca" | "profissional" | "destaque" | "experiencia" | "premium";
   trialStatus: "none" | "active" | "expired";
   missingItems: string[];
   comprovantePath: string | null;

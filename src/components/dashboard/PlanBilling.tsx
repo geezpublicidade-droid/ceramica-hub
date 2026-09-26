@@ -8,7 +8,7 @@ import { PLAN_PRICES_CENTS, type PayablePlan } from "@/lib/plan-limits";
 import { formatCents } from "@/lib/utils";
 import type { OwnedInvoice } from "@/lib/services/platform";
 
-const PAYABLE_PLANS: PayablePlan[] = ["profissional", "destaque", "experiencia"];
+const PAYABLE_PLANS: PayablePlan[] = ["profissional", "destaque", "experiencia", "premium"];
 
 const INVOICE_STATUS_LABEL: Record<OwnedInvoice["status"], string> = {
   pending: "Aguardando pagamento",

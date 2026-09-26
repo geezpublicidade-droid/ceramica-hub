@@ -2,6 +2,7 @@ import { requireAdminPage } from "@/lib/auth-guards";
 import { getAllPartnersForAdmin } from "@/lib/services/institutional-partners";
 import { NewPartnerForm } from "@/components/admin/NewPartnerForm";
 import { PartnerRow } from "@/components/admin/PartnerRow";
+import { FOUNDER_QUOTA } from "@/lib/partner-tiers";
 import { BackLink } from "@/components/nav/BackLink";
 
 export const metadata = { title: "Parceiros institucionais — Cerâmica Hub" };
@@ -9,6 +10,7 @@ export const metadata = { title: "Parceiros institucionais — Cerâmica Hub" };
 export default async function AdminParceirosPage() {
   await requireAdminPage(["super_admin", "admin"]);
   const partners = await getAllPartnersForAdmin();
+  const founders = partners.filter((p) => p.tier === "ancora_fundadora" && p.status !== "inativo").length;
 
   return (
     <main className="min-h-screen bg-background px-6 py-16">
@@ -30,6 +32,9 @@ export default async function AdminParceirosPage() {
 
         <section className="mt-10 flex flex-col gap-3">
           <p className="text-[17px] font-semibold text-foreground">Parceiros ({partners.length})</p>
+          <p className="text-[14px] text-muted">
+            Cotas de Âncora Fundadora: {founders} de {FOUNDER_QUOTA} preenchidas.
+          </p>
           {partners.length === 0 && <p className="text-[15px] text-muted">Nenhum parceiro cadastrado ainda.</p>}
           {partners.map((partner) => (
             <PartnerRow key={partner.id} partner={partner} />

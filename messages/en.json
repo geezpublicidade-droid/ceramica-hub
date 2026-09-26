@@ -118,6 +118,7 @@
         "description": "For businesses that want to appear first and be seen by more people.",
         "features": [
           "Everything in the Professional plan",
+          "Priority in your category and in search",
           "Up to 6 services with photos",
           "Gallery with up to 6 photos",
           "Up to four promotions",
@@ -130,16 +131,30 @@
       },
       "experiencia": {
         "name": "Experience",
-        "description": "A business page on par with a professional landing page.",
+        "description": "A complete business page with a premium presence in the ecosystem.",
         "features": [
           "Everything in the Featured plan",
-          "Custom landing page",
+          "A fuller, customized page",
+          "Expanded gallery (up to 30 photos)",
           "Featured video",
-          "Your own form straight to WhatsApp",
-          "Rotating highlight on the homepage",
+          "Company differentiators highlighted",
+          "Occasional editorial highlight",
+          "Own form straight to WhatsApp",
           "Full metrics",
-          "3D room (virtual tour)",
-          "Premium rates at Geez Marketing (coming soon)"
+          "Premium terms at Geez Marketing (coming soon)"
+        ]
+      },
+      "premium": {
+        "name": "Premium",
+        "description": "For companies that want the highest visibility within the Cerâmica ecosystem.",
+        "features": [
+          "Everything in the Experience plan",
+          "Priority in Featured Businesses",
+          "Priority participation in business meetups",
+          "Networking breakfast or lunch, per calendar",
+          "Special institutional content",
+          "3D presentation of your room (1 production per cycle, standard scope)",
+          "Reinforced visibility in the ecosystem"
         ]
       },
       "patrocinador": {
@@ -447,7 +462,14 @@
     "metaDescription": "Institutions and brands partnered with Cerâmica Hub, with confirmed authorization.",
     "heading": "Partners",
     "subtitle": "Institutions and brands that support Espaço Cerâmica.",
-    "emptyState": "No active institutional partners at the moment."
+    "emptyState": "No active institutional partners at the moment.",
+    "tierTitles": {
+      "ancora_fundadora": "Founding Anchors",
+      "parceiro_premium": "Premium Partners",
+      "presenca_institucional": "Partner brands",
+      "parceiro_ecossistema": "Ecosystem Partners"
+    },
+    "ecosystemNote": "Ecosystem Partners are brands that serve people who live, work or pass through Cerâmica -- they are not located in the complex."
   },
   "PartnerLeadPage": {
     "metaTitle": "Become a Partner — Cerâmica Hub",
@@ -653,7 +675,8 @@
     "presenca": "Free Presence",
     "profissional": "Professional",
     "destaque": "Featured",
-    "experiencia": "Experience"
+    "experiencia": "Experience",
+    "premium": "Premium"
   },
   "opportunityTypeLabels": {
     "procura": "Looking for",
@@ -714,7 +737,8 @@
     "slide3Description": "A discovery call to find what fits your brand.",
     "ctaAction": "I want to sponsor",
     "partnerBadge": "Partner",
-    "subhead": "Brands that believe in the potential of the Cerâmica Complex and help strengthen this ecosystem."
+    "subhead": "Brands that believe in the potential of the Cerâmica Complex and help strengthen this ecosystem.",
+    "founderBadge": "Cerâmica Hub Founding Partner"
   },
   "CityAndNews": {
     "cityEyebrow": "SÃO CAETANO DO SUL",
