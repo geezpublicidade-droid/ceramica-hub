@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { AdLink } from "@/components/ads/AdLink";
-import { Link } from "@/i18n/navigation";
 import type { ActiveCampaign } from "@/lib/services/ads";
 
 /** Busca via /api/ads/slot (fora do cache ISR da página) pra sortear de
@@ -25,26 +24,8 @@ export function AdSlot({ placementKey }: { placementKey: string }) {
     };
   }, [placementKey]);
 
-  // Sem campanha paga pra essa posição -- em vez de deixar o espaço vazio,
-  // mostra o próprio anúncio "casa" do Cerâmica Hub vendendo esse espaço.
-  if (!campaign) {
-    return (
-      <div className="mx-auto max-w-6xl px-6">
-        <Link
-          href="/seja-um-parceiro"
-          className="block overflow-hidden border border-border"
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/images/ceramica-hub-anuncie-banner.webp"
-            alt="Anuncie aqui — sua marca no coração do Cerâmica"
-            className="w-full"
-            loading="lazy"
-          />
-        </Link>
-      </div>
-    );
-  }
+  // Sem anunciante ativo nessa posição, não mostra nada (sem banner "Anuncie aqui").
+  if (!campaign) return null;
 
   const desktopCreative = campaign.creatives.find((c) => c.device === "desktop");
   const mobileCreative = campaign.creatives.find((c) => c.device === "mobile");

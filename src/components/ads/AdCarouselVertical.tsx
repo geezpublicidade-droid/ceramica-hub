@@ -36,8 +36,8 @@ export function AdCarouselVertical({ placementKey }: { placementKey: string }) {
   }, [placementKey]);
 
   const fallbackSlides = [
-    { eyebrow: tAds("eyebrow"), headline: tAds("headline"), cta: tAds("cta"), bg: "bg-primary" },
-    { eyebrow: tSponsors("eyebrow"), headline: tSponsors("headline"), cta: tSponsors("ctaAction"), bg: "bg-graphite" },
+    { eyebrow: tAds("eyebrow"), headline: tAds("headline"), cta: tAds("cta"), bg: "bg-primary", href: "/seja-um-parceiro" },
+    { eyebrow: tSponsors("eyebrow"), headline: tSponsors("headline"), cta: tSponsors("ctaAction"), bg: "bg-graphite", href: "/seja-um-parceiro?tipo=patrocinador" },
   ];
   const count = campaigns.length > 0 ? campaigns.length : fallbackSlides.length;
 
@@ -52,7 +52,9 @@ export function AdCarouselVertical({ placementKey }: { placementKey: string }) {
   // transição em 3D (cubo girando no eixo Y via perspective + rotateY).
   if (campaigns.length === 0) {
     return (
-      <Link href="/seja-um-parceiro" className="absolute inset-0 block overflow-hidden [perspective:1200px]">
+      <Link
+        href={fallbackSlides[index % fallbackSlides.length].href}
+        className="absolute inset-0 block overflow-hidden [perspective:1200px]">
         {fallbackSlides.map((slide, i) => {
           const active = i === index % fallbackSlides.length;
           return (

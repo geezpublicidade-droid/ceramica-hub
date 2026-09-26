@@ -159,6 +159,12 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
       <div className="rounded-3xl border border-border bg-white/70 px-8 py-12 text-center">
         <h2 className="text-[1.4rem] font-semibold text-foreground">{t("doneTitle")}</h2>
         <p className="mt-3 text-[17px] text-muted">{t("doneDescription")}</p>
+        <Link
+          href="/preview"
+          className="neu-primary mt-8 inline-block rounded-full px-7 py-3 text-[16px] font-medium text-white"
+        >
+          {t("backToSite")}
+        </Link>
       </div>
     );
   }

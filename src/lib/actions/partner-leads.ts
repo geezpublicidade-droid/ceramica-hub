@@ -10,6 +10,7 @@ const submitPartnerLeadSchema = z.object({
   email: z.string().trim().min(1, "Informe o e-mail.").email("Informe um e-mail válido."),
   phone: z.string(),
   message: z.string(),
+  interest: z.enum(["anunciante", "patrocinador"]).default("anunciante"),
   turnstileToken: z.string().nullable().optional(),
 });
 
@@ -38,6 +39,7 @@ export async function submitPartnerLead(rawInput: SubmitPartnerLeadInput): Promi
     email: input.email.toLowerCase(),
     phone: input.phone.trim() || null,
     message: input.message.trim() || null,
+    interest: input.interest,
   });
   if (error) return { success: false, error: "Não foi possível enviar seu contato. Tente novamente." };
 

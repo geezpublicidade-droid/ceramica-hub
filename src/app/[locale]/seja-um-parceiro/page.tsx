@@ -17,8 +17,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   };
 }
 
-export default async function PartnerLeadPage() {
-  const t = await getTranslations("PartnerLeadPage");
+export default async function PartnerLeadPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tipo?: string }>;
+}) {
+  const [t, { tipo }] = await Promise.all([getTranslations("PartnerLeadPage"), searchParams]);
 
   return (
     <>
@@ -32,7 +36,7 @@ export default async function PartnerLeadPage() {
             <p className="mt-3 text-[17px] text-muted">{t("subtitle")}</p>
 
             <div className="mt-10">
-              <PartnerLeadForm />
+              <PartnerLeadForm defaultInterest={tipo === "patrocinador" ? "patrocinador" : "anunciante"} />
             </div>
           </div>
         </section>

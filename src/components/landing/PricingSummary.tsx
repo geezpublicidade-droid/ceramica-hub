@@ -89,7 +89,7 @@ export async function PricingSummary() {
           <div className="flex shrink-0 items-center gap-4">
             <span className="text-[15px] font-medium text-white/80">{t("priceOnRequest")}</span>
             <Link
-              href="/seja-um-parceiro"
+              href="/seja-um-parceiro?tipo=patrocinador"
               className="whitespace-nowrap rounded-full bg-white px-5 py-2.5 text-[14px] font-medium text-graphite"
             >
               {t("ctaTalkToUs")}

@@ -99,7 +99,7 @@ export default async function PlanoDetailPage({ params }: PageProps) {
               <span className="text-muted">{period}</span>
             </p>
             <Link
-              href={isSponsor ? "/seja-um-parceiro" : "/cadastro"}
+              href={isSponsor ? "/seja-um-parceiro?tipo=patrocinador" : "/cadastro"}
               className="neu-primary mt-6 inline-block rounded-full px-6 py-3 text-[16px] font-medium text-white"
             >
               {isSponsor ? t("ctaTalkToUs") : t("ctaChoosePlan")}

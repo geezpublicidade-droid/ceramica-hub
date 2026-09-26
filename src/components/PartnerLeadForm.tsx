@@ -4,18 +4,33 @@ import { useState } from "react";
 import { submitPartnerLead } from "@/lib/actions/partner-leads";
 import { TurnstileWidget } from "@/components/TurnstileWidget";
 
+type Interest = "anunciante" | "patrocinador";
+
+const INTEREST_OPTIONS: { value: Interest; label: string; hint: string }[] = [
+  { value: "anunciante", label: "Anunciante", hint: "Banners e campanhas na plataforma" },
+  { value: "patrocinador", label: "Patrocinador", hint: "Presença institucional exclusiva" },
+];
+
 type FormState = {
   businessName: string;
   contactName: string;
   email: string;
   phone: string;
   message: string;
+  interest: Interest;
 };
 
-const EMPTY_FORM: FormState = { businessName: "", contactName: "", email: "", phone: "", message: "" };
+const EMPTY_FORM: FormState = {
+  businessName: "",
+  contactName: "",
+  email: "",
+  phone: "",
+  message: "",
+  interest: "anunciante",
+};
 
-export function PartnerLeadForm() {
-  const [form, setForm] = useState<FormState>(EMPTY_FORM);
+export function PartnerLeadForm({ defaultInterest = "anunciante" }: { defaultInterest?: Interest }) {
+  const [form, setForm] = useState<FormState>({ ...EMPTY_FORM, interest: defaultInterest });
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +42,7 @@ export function PartnerLeadForm() {
     const result = await submitPartnerLead({ ...form, turnstileToken });
     if (result.success) {
       setStatus("success");
-      setForm(EMPTY_FORM);
+      setForm({ ...EMPTY_FORM, interest: defaultInterest });
     } else {
       setStatus("error");
       setError(result.error);
@@ -47,6 +62,33 @@ export function PartnerLeadForm() {
 
   return (
     <form onSubmit={handleSubmit} className="glass-light flex flex-col gap-4 rounded-3xl p-8">
+      <fieldset>
+        <legend className="text-[14px] font-medium text-muted">Quero ser</legend>
+        <div className="mt-2 grid grid-cols-2 gap-3">
+          {INTEREST_OPTIONS.map((option) => {
+            const selected = form.interest === option.value;
+            return (
+              <label
+                key={option.value}
+                className={`cursor-pointer rounded-2xl border-2 px-4 py-3 transition-colors ${
+                  selected ? "border-primary bg-primary/10" : "border-border bg-white hover:border-foreground/30"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="interest"
+                  value={option.value}
+                  checked={selected}
+                  onChange={() => setForm({ ...form, interest: option.value })}
+                  className="sr-only"
+                />
+                <span className="block text-[16px] font-semibold text-foreground">{option.label}</span>
+                <span className="mt-0.5 block text-[13px] leading-snug text-muted">{option.hint}</span>
+              </label>
+            );
+          })}
+        </div>
+      </fieldset>
       <div>
         <label className="text-[14px] font-medium text-muted">Nome da empresa</label>
         <input

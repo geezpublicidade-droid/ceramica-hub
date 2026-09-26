@@ -81,7 +81,7 @@
     "subheading": "See what each plan includes and pick what makes sense for your business right now.",
     "ctaChoosePlan": "I want this plan",
     "ctaSeeDetails": "See plan details",
-    "ctaTalkToUs": "Schedule a call",
+    "ctaTalkToUs": "Become a sponsor",
     "mostChosen": "Most popular",
     "perMonth": "/mo",
     "priceOnRequest": "By request",
@@ -229,7 +229,8 @@
       "submit": "Submit registration"
     },
     "doneTitle": "Registration received successfully.",
-    "doneDescription": "Our team will verify your details before publishing your page."
+    "doneDescription": "Our team will verify your details before publishing your page.",
+    "backToSite": "Back to the site"
   },
   "HeroMasthead": {
     "titlePrefix": "Cerâmica",
@@ -241,7 +242,7 @@
     "eyebrow": "Cerâmica Hub — the Bairro Cerâmica ecosystem",
     "headline": "Everything happening in Cerâmica, in one place.",
     "subhead": "Find businesses, services, benefits and opportunities across the Park, Union, Way and Gate towers.",
-    "searchPlaceholder": "What do you need to find?",
+    "searchPlaceholder": "Search by business name or category",
     "searchButton": "Search",
     "ctaRegister": "I have a business in Cerâmica",
     "ctaExplore": "Explore Cerâmica",
@@ -445,7 +446,7 @@
     "metaTitle": "Become a Partner — Cerâmica Hub",
     "metaDescription": "Want strategic placement on Cerâmica Hub? Tell us about your business.",
     "heading": "Become a Partner",
-    "subtitle": "Tell us a bit about your business — our team will reach out about the Strategic Partner plan."
+    "subtitle": "Choose how you want to take part — advertiser or sponsor — and tell us a bit about your company. Our team will get in touch."
   },
   "Blog": {
     "metaTitle": "Blog — Cerâmica Hub",
@@ -635,7 +636,11 @@
     "Moda & Beleza": "Fashion & Beauty",
     "Tecnologia & Marketing": "Technology & Marketing",
     "Educação": "Education",
-    "Design & Arquitetura": "Design & Architecture"
+    "Design & Arquitetura": "Design & Architecture",
+    "Investimentos": "Investments",
+    "Direito": "Law",
+    "Laboratório": "Laboratory",
+    "Outros": "Others"
   },
   "planLabels": {
     "presenca": "Free Presence",

@@ -80,6 +80,10 @@ export const categories = [
   "Tecnologia & Marketing",
   "Educação",
   "Design & Arquitetura",
+  "Investimentos",
+  "Direito",
+  "Laboratório",
+  "Outros",
 ] as const;
 
 /** provedores autorizados pro iframe da visita virtual — nunca aceitar domínio arbitrário */

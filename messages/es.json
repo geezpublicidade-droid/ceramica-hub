@@ -81,7 +81,7 @@
     "subheading": "Mira lo que incluye cada plan y elige el que tiene sentido ahora para tu negocio.",
     "ctaChoosePlan": "Quiero este plan",
     "ctaSeeDetails": "Ver detalles del plan",
-    "ctaTalkToUs": "Agendar una llamada",
+    "ctaTalkToUs": "Sé un patrocinador",
     "mostChosen": "El más elegido",
     "perMonth": "/mes",
     "priceOnRequest": "A consultar",
@@ -229,7 +229,8 @@
       "submit": "Enviar registro"
     },
     "doneTitle": "Registro recibido con éxito.",
-    "doneDescription": "Nuestro equipo verificará los datos antes de publicar tu página."
+    "doneDescription": "Nuestro equipo verificará los datos antes de publicar tu página.",
+    "backToSite": "Volver al sitio"
   },
   "HeroMasthead": {
     "titlePrefix": "Cerámica",
@@ -241,7 +242,7 @@
     "eyebrow": "Cerâmica Hub — el ecosistema del Bairro Cerâmica",
     "headline": "Todo lo que pasa en el Cerâmica, en un solo lugar.",
     "subhead": "Encuentra empresas, servicios, beneficios y oportunidades en las torres Park, Union, Way y Gate.",
-    "searchPlaceholder": "¿Qué necesitas encontrar?",
+    "searchPlaceholder": "Buscar por nombre de empresa o categoría",
     "searchButton": "Buscar",
     "ctaRegister": "Tengo una empresa en el Cerâmica",
     "ctaExplore": "Explorar el Cerâmica",
@@ -445,7 +446,7 @@
     "metaTitle": "Sé un Socio — Cerâmica Hub",
     "metaDescription": "¿Quieres destaque estratégico en Cerâmica Hub? Cuéntanos sobre tu empresa.",
     "heading": "Sé un Socio",
-    "subtitle": "Cuéntanos un poco sobre tu empresa — nuestro equipo se pondrá en contacto sobre el plan Socio Estratégico."
+    "subtitle": "Elige cómo quieres participar — anunciante o patrocinador — y cuéntanos sobre tu empresa. Nuestro equipo te contactará."
   },
   "Blog": {
     "metaTitle": "Blog — Cerâmica Hub",
@@ -635,7 +636,11 @@
     "Moda & Beleza": "Moda y Belleza",
     "Tecnologia & Marketing": "Tecnología y Marketing",
     "Educação": "Educación",
-    "Design & Arquitetura": "Diseño y Arquitectura"
+    "Design & Arquitetura": "Diseño y Arquitectura",
+    "Investimentos": "Inversiones",
+    "Direito": "Derecho",
+    "Laboratório": "Laboratorio",
+    "Outros": "Otros"
   },
   "planLabels": {
     "presenca": "Presencia Gratuita",

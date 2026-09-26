@@ -19,7 +19,11 @@ export function LeadRow({ lead }: { lead: PartnerLead }) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-border bg-white/70 p-6">
       <div>
-        <p className="text-[16px] font-semibold text-foreground">{lead.businessName}</p>
+        <p className="text-[16px] font-semibold text-foreground">{lead.businessName}{" "}
+          <span className="ml-1 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide text-primary">
+            {lead.interest === "patrocinador" ? "Patrocinador" : "Anunciante"}
+          </span>
+        </p>
         <p className="text-[13px] text-muted">
           {lead.contactName} · {lead.email}
           {lead.phone ? ` · ${lead.phone}` : ""}

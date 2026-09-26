@@ -41,7 +41,7 @@ export async function PremiumSponsorsCarousel({ partners }: PremiumSponsorsCarou
             image: "/images/ceramica-hub-hero.webp",
             overlay: mark(tPricing("plans.patrocinador.name")),
             action: t("ctaAction"),
-            href: "/seja-um-parceiro",
+            href: "/seja-um-parceiro?tipo=patrocinador",
           },
           {
             id: "ativacoes",
@@ -50,7 +50,7 @@ export async function PremiumSponsorsCarousel({ partners }: PremiumSponsorsCarou
             image: "/images/ceramica-hub-corporativo.webp",
             overlay: mark(tAds("eyebrow")),
             action: t("ctaAction"),
-            href: "/seja-um-parceiro",
+            href: "/seja-um-parceiro?tipo=patrocinador",
           },
           {
             id: "proposta",
@@ -59,7 +59,7 @@ export async function PremiumSponsorsCarousel({ partners }: PremiumSponsorsCarou
             image: "/images/ceramica-hub-eventos.webp",
             overlay: mark(tAds("eyebrow")),
             action: t("ctaAction"),
-            href: "/seja-um-parceiro",
+            href: "/seja-um-parceiro?tipo=patrocinador",
           },
         ];
 

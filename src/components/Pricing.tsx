@@ -104,7 +104,7 @@ export async function Pricing() {
           <div className="flex shrink-0 flex-col items-start gap-3 sm:items-end">
             <span className="text-[22px] font-semibold tracking-tight">{t("priceOnRequest")}</span>
             <Link
-              href="/seja-um-parceiro"
+              href="/seja-um-parceiro?tipo=patrocinador"
               className="rounded-full bg-white px-6 py-3 text-center text-[16px] font-medium text-graphite transition-transform active:scale-[0.98]"
             >
               {t("ctaTalkToUs")}

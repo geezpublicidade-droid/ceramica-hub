@@ -2,6 +2,8 @@ import { createServiceClient } from "@/lib/supabase/server";
 
 export type PartnerLeadStatus = "novo" | "em_contato" | "convertido" | "descartado";
 
+export type PartnerLeadInterest = "anunciante" | "patrocinador";
+
 export type PartnerLead = {
   id: string;
   businessName: string;
@@ -9,6 +11,7 @@ export type PartnerLead = {
   email: string;
   phone: string | null;
   message: string | null;
+  interest: PartnerLeadInterest;
   status: PartnerLeadStatus;
   createdAt: string;
 };
@@ -20,6 +23,7 @@ type PartnerLeadRow = {
   email: string;
   phone: string | null;
   message: string | null;
+  interest: PartnerLeadInterest;
   status: PartnerLeadStatus;
   created_at: string;
 };
@@ -32,6 +36,7 @@ function mapLead(row: PartnerLeadRow): PartnerLead {
     email: row.email,
     phone: row.phone,
     message: row.message,
+    interest: row.interest,
     status: row.status,
     createdAt: row.created_at,
   };

@@ -10,6 +10,10 @@ import {
   BedDouble,
   Building2,
   LayoutGrid,
+  TrendingUp,
+  Gavel,
+  FlaskConical,
+  Ellipsis,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { FadeUp } from "@/components/motion/FadeUp";
@@ -24,6 +28,10 @@ const CATEGORY_ICONS: Record<string, typeof Scale> = {
   "Tecnologia & Marketing": Megaphone,
   Educação: GraduationCap,
   "Design & Arquitetura": PenTool,
+  Investimentos: TrendingUp,
+  Direito: Gavel,
+  Laboratório: FlaskConical,
+  Outros: Ellipsis,
 };
 
 const realCategories = categories.filter((category) => category !== "Todas");
@@ -60,7 +68,7 @@ export async function FourUniverses() {
 
   return (
     <nav aria-label={tStrip("headline")} className="border-b border-border bg-white">
-      <div className="container-page grid grid-cols-3 gap-3 py-8 sm:grid-cols-5 sm:gap-4 sm:py-10 lg:grid-cols-10">
+      <div className="container-page grid grid-cols-3 gap-3 py-8 sm:grid-cols-5 sm:gap-4 sm:py-10 lg:grid-cols-7">
         {items.map(({ key, href, Icon, label }, index) => (
           <FadeUp
             key={key}

@@ -81,7 +81,7 @@
     "subheading": "查看每个方案包含的内容,选择现在最适合您企业的方案。",
     "ctaChoosePlan": "选择此套餐",
     "ctaSeeDetails": "查看套餐详情",
-    "ctaTalkToUs": "预约沟通",
+    "ctaTalkToUs": "成为赞助商",
     "mostChosen": "最受欢迎",
     "perMonth": "/月",
     "priceOnRequest": "面议",
@@ -229,7 +229,8 @@
       "submit": "提交登记"
     },
     "doneTitle": "登记已成功提交。",
-    "doneDescription": "我们的团队将在发布您的主页前核实相关信息。"
+    "doneDescription": "我们的团队将在发布您的主页前核实相关信息。",
+    "backToSite": "返回网站"
   },
   "HeroMasthead": {
     "titlePrefix": "Cerâmica",
@@ -241,7 +242,7 @@
     "eyebrow": "Cerâmica Hub — Bairro Cerâmica 生态系统",
     "headline": "Cerâmica 里发生的一切,尽在此处。",
     "subhead": "在 Park、Union、Way 和 Gate 四座大厦中,发现企业、服务、优惠与商机。",
-    "searchPlaceholder": "您想找什么?",
+    "searchPlaceholder": "按企业名称或行业搜索",
     "searchButton": "搜索",
     "ctaRegister": "我在 Cerâmica 有企业",
     "ctaExplore": "探索 Cerâmica",
@@ -445,7 +446,7 @@
     "metaTitle": "成为合作伙伴 — Cerâmica Hub",
     "metaDescription": "想在 Cerâmica Hub 获得战略展示位置？告诉我们您的企业信息。",
     "heading": "成为合作伙伴",
-    "subtitle": "简单介绍一下您的企业——我们的团队将与您联系，介绍战略合作伙伴方案。"
+    "subtitle": "选择您的参与方式——广告主或赞助商——并简单介绍贵公司。我们的团队会与您联系。"
   },
   "Blog": {
     "metaTitle": "博客 — Cerâmica Hub",
@@ -635,7 +636,11 @@
     "Moda & Beleza": "时尚与美妆",
     "Tecnologia & Marketing": "科技与营销",
     "Educação": "教育",
-    "Design & Arquitetura": "设计与建筑"
+    "Design & Arquitetura": "设计与建筑",
+    "Investimentos": "投资",
+    "Direito": "法律",
+    "Laboratório": "实验室",
+    "Outros": "其他"
   },
   "planLabels": {
     "presenca": "免费展示",
