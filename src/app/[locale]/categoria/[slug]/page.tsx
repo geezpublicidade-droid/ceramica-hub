@@ -86,7 +86,7 @@ export default async function CategoryPage({ params }: PageProps) {
               emptyDescription={tDirectory("emptyDescription")}
               ctaRegisterFree={tDirectory("ctaRegisterFree")}
               ctaBackLabel={t("backToAll")}
-              ctaBackHref="/#empresas"
+              ctaBackHref="/preview#empresas"
               verifiedLabel={tCommon("verified")}
               founderLabel={tCommon("founder")}
               whatsappLabel={tCommon("whatsapp")}

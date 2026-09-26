@@ -5,8 +5,8 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 export async function CinematicFooter() {
   const t = await getTranslations("CinematicFooter");
   const linkGroups: { label: string; href: string }[] = [
-    { label: t("links.empresas"), href: "/#empresas" },
-    { label: t("links.categorias"), href: "/#empresas" },
+    { label: t("links.empresas"), href: "/preview#empresas" },
+    { label: t("links.categorias"), href: "/preview#empresas" },
     { label: t("links.oportunidades"), href: "/#oportunidades" },
     { label: t("links.ofertas"), href: "/#beneficios" },
     { label: t("links.blog"), href: "/blog" },

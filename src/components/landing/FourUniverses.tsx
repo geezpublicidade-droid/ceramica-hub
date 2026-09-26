@@ -38,10 +38,10 @@ export async function FourUniverses() {
   const tStrip = await getTranslations("FourUniverses");
 
   const ITEM_CLASS =
-    "group flex h-[110px] w-[110px] shrink-0 flex-col items-center justify-center gap-3 bg-surface/60 px-3 text-center transition-colors duration-300 hover:-translate-y-1 hover:bg-primary hover:shadow-[0_16px_32px_-16px_rgba(179,85,58,0.45)]";
+    "group flex h-full min-h-[112px] w-full flex-col items-center justify-center gap-3 bg-surface/60 px-2 py-4 text-center sm:min-h-[128px] transition-colors duration-300 hover:-translate-y-1 hover:bg-primary hover:shadow-[0_16px_32px_-16px_rgba(179,85,58,0.45)]";
   const LABEL_CLASS =
     "w-full text-balance text-[13px] font-semibold uppercase leading-[1.15] tracking-wide text-foreground transition-colors group-hover:text-white";
-  const ICON_CLASS = "h-6 w-6 shrink-0 text-primary transition-colors group-hover:text-white";
+  const ICON_CLASS = "h-7 w-7 shrink-0 text-primary transition-colors group-hover:text-white";
 
   const items = [
     ...realCategories.map((category) => {
@@ -60,9 +60,13 @@ export async function FourUniverses() {
 
   return (
     <nav aria-label={tStrip("headline")} className="border-b border-border bg-white">
-      <div className="container-page flex flex-nowrap items-start gap-3 overflow-x-auto py-8 sm:flex-wrap sm:justify-center sm:overflow-visible [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="container-page grid grid-cols-3 gap-3 py-8 sm:grid-cols-5 sm:gap-4 sm:py-10 lg:grid-cols-10">
         {items.map(({ key, href, Icon, label }, index) => (
-          <FadeUp key={key} delay={index * 0.04} className="shrink-0">
+          <FadeUp
+            key={key}
+            delay={index * 0.04}
+            className={index === items.length - 1 ? "col-span-3 sm:col-span-1" : undefined}
+          >
             <Link href={href} className={ITEM_CLASS}>
               <Icon aria-hidden="true" className={ICON_CLASS} strokeWidth={1.5} />
               <span className={LABEL_CLASS}>{label}</span>

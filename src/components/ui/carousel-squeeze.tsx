@@ -304,6 +304,14 @@ export function SqueezeCarousel({
     step(by);
   };
 
+  /** Clicar na imagem do painel aberto leva pro mesmo destino do botão. */
+  const openSlide = (slide: SqueezeSlide) => {
+    slide.onAction?.();
+    if (!slide.href) return;
+    if (slide.target === "_blank") window.open(slide.href, "_blank", "noopener,noreferrer");
+    else window.location.assign(slide.href);
+  };
+
   if (!count) return null;
 
   /* --- render ----------------------------------------------------------- */
@@ -395,9 +403,10 @@ export function SqueezeCarousel({
                 aria-label={slide.title}
                 tabIndex={front ? 0 : -1}
                 onMouseMove={() => hoverGrow && setHover(col)}
-                onClick={() => col > 0 && step(col)}
+                onClick={() => (col > 0 ? step(col) : openSlide(slide))}
                 className={cn(
-                  "relative isolate h-full shrink-0 cursor-pointer overflow-hidden bg-muted p-0",
+                  "relative isolate h-full shrink-0 overflow-hidden bg-muted p-0",
+                  front && !slide.href ? "cursor-default" : "cursor-pointer",
                   "outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
                   "focus-visible:ring-[var(--sq-fill)] focus-visible:ring-offset-background",
                   panelClassName,
