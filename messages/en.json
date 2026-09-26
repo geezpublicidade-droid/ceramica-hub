@@ -249,7 +249,9 @@
     "sectionLabel": "The Cerâmica Hub business network",
     "towersPanelLabel": "Cerâmica Hub towers",
     "towersPanelDescription": "A network of businesses and connections driving Bairro Cerâmica forward in São Caetano do Sul.",
-    "towersPanelCta": "See the complex"
+    "towersPanelCta": "See the complex",
+    "coverPresentedBy": "Presented by",
+    "coverCta": "Learn more"
   },
   "ProofOfRelevance": {
     "empresasVerificadas": "Verified businesses",

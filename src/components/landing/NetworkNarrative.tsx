@@ -1,15 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { AdCarouselVertical } from "@/components/ads/AdCarouselVertical";
+import { AdLink } from "@/components/ads/AdLink";
 import { useSearch } from "@/components/landing/SearchContext";
 import { logSearchPerformed } from "@/lib/actions/log-search";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { Link } from "@/i18n/navigation";
 import type { Tower } from "@/lib/services/towers";
+import type { ActiveCampaign } from "@/lib/services/ads";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -21,6 +23,13 @@ const heroImages = [
 ];
 
 const CYCLE_SECONDS = 24;
+
+/** Slide 1 (institucional) sempre existe; slides 2 e 3 são Mídia de Capa
+ * vendida (placement "hero_capa"). Sem campanha ativa, o hero fica só com o
+ * slide institucional -- nunca cai num banner "anuncie aqui". */
+const MAX_COVER_SLIDES = 2;
+const INSTITUTIONAL_MS = 12000;
+const COVER_MS = 8000;
 
 type NetworkNarrativeProps = {
   towers: Tower[];
@@ -37,6 +46,34 @@ export function NetworkNarrative({ towers }: NetworkNarrativeProps) {
   const { setQuery } = useSearch();
   const [heroSearchValue, setHeroSearchValue] = useState("");
   const reducedMotion = useReducedMotion();
+  const [covers, setCovers] = useState<ActiveCampaign[]>([]);
+  // 0 = institucional; 1..n = Mídia de Capa
+  const [slide, setSlide] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const slideCount = covers.length + 1;
+  const activeCover = slide > 0 ? covers[slide - 1] : null;
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/ads/carousel?placement=hero_capa")
+      .then((res) => res.json())
+      .then((data) => {
+        if (!cancelled && Array.isArray(data)) setCovers(data.slice(0, MAX_COVER_SLIDES));
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (slideCount < 2 || paused || reducedMotion) return;
+    const timer = setTimeout(
+      () => setSlide((current) => (current + 1) % slideCount),
+      slide === 0 ? INSTITUTIONAL_MS : COVER_MS,
+    );
+    return () => clearTimeout(timer);
+  }, [slide, slideCount, paused, reducedMotion]);
 
   function submitHeroSearch(term: string) {
     const value = term.trim();
@@ -49,7 +86,11 @@ export function NetworkNarrative({ towers }: NetworkNarrativeProps) {
     <section id="top" aria-label={t("sectionLabel")} className="relative isolate overflow-hidden bg-graphite text-white">
       <div className="flex min-h-[640px] flex-col lg:h-[clamp(640px,66vw,760px)] lg:min-h-0 lg:flex-row">
         {/* Foto + texto principal -- ~78% da largura no desktop */}
-        <div className="relative flex flex-1 flex-col justify-end overflow-hidden px-5 pb-10 pt-24 sm:px-[var(--page-padding)] lg:w-[78%] lg:flex-none lg:pb-14 lg:pt-0">
+        <div
+          className="relative flex flex-1 flex-col justify-end overflow-hidden px-5 pb-10 pt-24 sm:px-[var(--page-padding)] lg:w-[78%] lg:flex-none lg:pb-14 lg:pt-0"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+        >
           <div className="absolute inset-0 -z-10 overflow-hidden">
             {heroImages.map((src, i) => (
               <div
@@ -70,6 +111,31 @@ export function NetworkNarrative({ towers }: NetworkNarrativeProps) {
             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10" />
           </div>
 
+          {/* Mídia de Capa -- imagem em tela cheia por cima das fotos, sob o texto */}
+          {covers.map((cover, i) => {
+            const desktop = cover.creatives.find((c) => c.device === "desktop") ?? cover.creatives[0];
+            const mobile = cover.creatives.find((c) => c.device === "mobile") ?? desktop;
+            const active = slide === i + 1;
+            return (
+              <div
+                key={cover.id}
+                aria-hidden={!active}
+                className={`absolute inset-0 -z-[9] transition-opacity duration-1000 ${active ? "opacity-100" : "opacity-0"}`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={mobile.imageUrl} alt={mobile.altText} className="h-full w-full object-cover sm:hidden" />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={desktop.imageUrl} alt={desktop.altText} className="hidden h-full w-full object-cover sm:block" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/5" />
+              </div>
+            );
+          })}
+
+          <div
+            inert={activeCover !== null}
+            aria-hidden={activeCover !== null}
+            className={`transition-opacity duration-700 ${activeCover ? "opacity-0" : "opacity-100"}`}
+          >
           <motion.div
             initial={reducedMotion ? undefined : { opacity: 0, y: 28, filter: "blur(6px)" }}
             animate={reducedMotion ? undefined : { opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -138,6 +204,47 @@ export function NetworkNarrative({ towers }: NetworkNarrativeProps) {
               </div>
             )}
           </motion.div>
+          </div>
+
+          {activeCover && (
+            <div key={activeCover.id} className="absolute inset-x-0 bottom-0 max-w-[640px] px-5 pb-14 sm:px-[var(--page-padding)] lg:pb-16">
+              <p className="text-[13px] font-medium uppercase tracking-[0.2em] text-white/80 sm:text-[14px]">
+                {t("coverPresentedBy")}
+              </p>
+              <h2 className="mt-3 text-[clamp(1.9rem,4.2vw,3.1rem)] font-semibold leading-[1.1] tracking-tight text-white">
+                {activeCover.title}
+              </h2>
+              {activeCover.description && (
+                <p className="mt-3 max-w-md text-[16px] leading-relaxed text-white/85 sm:text-[17px]">
+                  {activeCover.description}
+                </p>
+              )}
+              <AdLink
+                href={activeCover.targetUrl}
+                campaignId={activeCover.id}
+                className="liquid-dark mt-6 inline-block rounded-full px-6 py-3 text-[15px] font-medium text-white"
+              >
+                {t("coverCta")}
+              </AdLink>
+            </div>
+          )}
+
+          {slideCount > 1 && (
+            <div className="absolute bottom-5 right-5 flex items-center gap-2 sm:right-[var(--page-padding)]">
+              {Array.from({ length: slideCount }, (_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  aria-label={`${i + 1} / ${slideCount}`}
+                  aria-current={slide === i}
+                  onClick={() => setSlide(i)}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    slide === i ? "w-8 bg-white" : "w-4 bg-white/40 hover:bg-white/70"
+                  }`}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Painel lateral -- carrossel de anúncios (desktop) */}

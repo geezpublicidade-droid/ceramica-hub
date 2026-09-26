@@ -249,7 +249,9 @@
     "sectionLabel": "A rede de negócios do Cerâmica Hub",
     "towersPanelLabel": "Torres do Cerâmica Hub",
     "towersPanelDescription": "Um ecossistema de empresas e conexões que impulsiona o Bairro Cerâmica em São Caetano do Sul.",
-    "towersPanelCta": "Conheça o complexo"
+    "towersPanelCta": "Conheça o complexo",
+    "coverPresentedBy": "Apresentado por",
+    "coverCta": "Saiba mais"
   },
   "ProofOfRelevance": {
     "empresasVerificadas": "Empresas verificadas",
