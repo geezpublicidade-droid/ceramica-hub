@@ -5,10 +5,13 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 export async function CinematicFooter() {
   const t = await getTranslations("CinematicFooter");
   const linkGroups: { label: string; href: string }[] = [
-    { label: t("links.empresas"), href: "/preview#empresas" },
+    { label: t("links.negocios"), href: "/preview#empresas" },
+    { label: t("links.eventos"), href: "/forum-de-negocios" },
+    { label: t("links.complexo"), href: "/torres/torre-park" },
+    { label: t("links.ancoras"), href: "/parceiros" },
     { label: t("links.categorias"), href: "/preview#empresas" },
-    { label: t("links.oportunidades"), href: "/#oportunidades" },
-    { label: t("links.ofertas"), href: "/#beneficios" },
+    { label: t("links.oportunidades"), href: "/preview#oportunidades" },
+    { label: t("links.ofertas"), href: "/preview#beneficios" },
     { label: t("links.blog"), href: "/blog" },
     { label: t("links.noticias"), href: "/noticias" },
     { label: t("links.businessTravel"), href: "/business-travel" },

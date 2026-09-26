@@ -42,6 +42,7 @@ export async function FeaturedBusinesses({ businesses }: FeaturedBusinessesProps
           <h2 className="mt-3 text-[clamp(1.8rem,3.2vw,2.5rem)] font-semibold leading-tight tracking-tight">
             {t("headline")}
           </h2>
+          <p className="mt-3 max-w-sm text-[16px] leading-relaxed text-muted">{t("subhead")}</p>
         </FadeUp>
 
         <div className="grid grid-cols-1 gap-[var(--card-gap)] sm:grid-cols-2 lg:grid-cols-3">

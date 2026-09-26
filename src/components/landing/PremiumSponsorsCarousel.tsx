@@ -70,6 +70,7 @@ export async function PremiumSponsorsCarousel({ partners }: PremiumSponsorsCarou
         <h2 className="mt-3 text-[clamp(1.8rem,3.2vw,2.5rem)] font-semibold leading-tight tracking-tight text-foreground">
           {t("headline")}
         </h2>
+        <p className="mt-3 max-w-2xl text-[16px] leading-relaxed text-muted">{t("subhead")}</p>
         <div className="mt-8">
           <SqueezeCarousel
             slides={slides}

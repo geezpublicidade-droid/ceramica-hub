@@ -7,19 +7,20 @@ import { FourUniverses } from "@/components/landing/FourUniverses";
 import { FeaturedBusinesses } from "@/components/landing/FeaturedBusinesses";
 import { Directory } from "@/components/Directory";
 import { DestaqueBlocks } from "@/components/landing/DestaqueBlocks";
+import { CityAndNews } from "@/components/landing/HomeNovidades";
+import { InstitutionalStatement } from "@/components/landing/InstitutionalStatement";
 import { OpportunityNetwork } from "@/components/landing/OpportunityNetwork";
 import { LocalBenefits } from "@/components/landing/LocalBenefits";
 import { FounderCTA } from "@/components/landing/FounderCTA";
-import { PricingSummary } from "@/components/landing/PricingSummary";
-import { AdvertisersCTA } from "@/components/landing/AdvertisersCTA";
 import { UtilityStrip } from "@/components/landing/UtilityStrip";
 import { PremiumSponsorsCarousel } from "@/components/landing/PremiumSponsorsCarousel";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { SearchProvider } from "@/components/landing/SearchContext";
-import { AdBanner } from "@/components/ads/AdBanner";
-import { AdCarousel } from "@/components/ads/AdCarousel";
 import { getActiveTowers } from "@/lib/services/towers";
 import { getActivePartners } from "@/lib/services/institutional-partners";
+import { getRecentNews } from "@/lib/services/news";
+import { getUpcomingEvents } from "@/lib/services/events";
+import type { Business } from "@/data/businesses";
 import {
   getAllBusinesses,
   getFeaturedBusinesses,
@@ -40,19 +41,27 @@ export const revalidate = 60;
 // (getAllBusinesses), só a seção "Negócios em destaque".
 const TEST_RECORD_RE = /\bteste\b/i;
 
+// Planos pagos aparecem primeiro em "Negócios em destaque".
+const PLAN_PRIORITY: Record<Business["plan"], number> = { experiencia: 3, destaque: 2, profissional: 1, presenca: 0 };
+
 export default async function Preview({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const [allBusinesses, featuredBusinessesRaw, opportunities, benefits, proofStats, towers, partners] =
+  const [allBusinesses, featuredBusinessesRaw, opportunities, benefits, proofStats, towers, partners, news, events] =
     await Promise.all([
       getAllBusinesses(locale),
-      getFeaturedBusinesses(9, locale),
+      getFeaturedBusinesses(undefined, locale),
       getOpportunities(locale),
       getBenefits(locale),
       getHomeProofStats(),
       getActiveTowers(),
       getActivePartners(),
+      getRecentNews(3),
+      getUpcomingEvents(),
     ]);
-  const featuredBusinesses = featuredBusinessesRaw.filter((b) => !TEST_RECORD_RE.test(b.name)).slice(0, 6);
+  const featuredBusinesses = featuredBusinessesRaw
+    .filter((b) => !TEST_RECORD_RE.test(b.name))
+    .sort((a, b) => PLAN_PRIORITY[b.effectivePlan] - PLAN_PRIORITY[a.effectivePlan])
+    .slice(0, 6);
   const directoryBusinesses = allBusinesses.filter((b) => !TEST_RECORD_RE.test(b.name));
 
   return (
@@ -60,47 +69,43 @@ export default async function Preview({ params }: { params: Promise<{ locale: st
       <Header />
       <main className="flex-1">
         <SearchProvider>
-          {/* 1. Hero -- estático, painel das torres reais à direita (desktop) */}
+          {/* 1. Hero -- estático, painel lateral à direita (desktop) */}
           <NetworkNarrative towers={towers} />
 
-          {/* 2. Faixa de categorias -- direto abaixo do hero */}
+          {/* 2. Categorias -- direto abaixo do hero */}
           <FourUniverses />
 
-          {/* 2b. Patrocinadores premium -- seção própria, grande */}
-          <PremiumSponsorsCarousel partners={partners} />
-
-          {/* 3. Negócios em destaque + diretório completo (destino da busca do hero) */}
+          {/* 3. Negócios em destaque (planos pagos primeiro) + diretório completo (destino da busca do hero) */}
           <FeaturedBusinesses businesses={featuredBusinesses} />
           <Suspense fallback={null}>
             <Directory businesses={directoryBusinesses} />
           </Suspense>
-          <AdBanner placementKey="hero_abaixo" />
 
-          {/* 4. Eventos / Âncoras institucionais / O Complexo + coluna de notícias de São Caetano */}
-          <DestaqueBlocks locale={locale} />
+          {/* 4. Parceiros fundadores -- empresas que impulsionam o Hub */}
+          <PremiumSponsorsCarousel partners={partners} />
 
-          {/* 5. Prova de relevância + marcas participantes */}
-          <ProofOfRelevance stats={proofStats} />
+          {/* 5. Faixa de logos (máx. 10) */}
           <InstitutionalPartners />
 
-          {/* 7. Oportunidades e benefícios da rede (funcionalidades existentes) */}
+          {/* 6. Eventos / Âncoras institucionais / O Complexo */}
+          <DestaqueBlocks />
+
+          {/* 7. São Caetano do Sul (1/3) + Acontece no Cerâmica (2/3) */}
+          <CityAndNews news={news} events={events} locale={locale} />
+
+          {/* 8. Rede, benefícios e prova de relevância (seções existentes, mantidas) */}
           <OpportunityNetwork opportunities={opportunities} />
           <LocalBenefits benefits={benefits} />
-          <div className="py-10">
-            <AdCarousel placementKey="carrossel_home" />
-          </div>
+          <ProofOfRelevance stats={proofStats} />
 
-          {/* 8. Área para empresas */}
-          <FounderCTA />
+          {/* 9. Texto institucional */}
+          <InstitutionalStatement />
 
-          {/* 9. Planos (resumo -- comparação completa em /planos) */}
-          <PricingSummary />
-
-          {/* 10. Anunciantes */}
-          <AdvertisersCTA />
-
-          {/* 11. Bloco final de utilidade -- mapa, como chegar, fale conosco, cadastro */}
+          {/* 10. Mapa / como chegar / fale conosco */}
           <UtilityStrip towers={towers} />
+
+          {/* 11. Faça parte do Cerâmica Hub */}
+          <FounderCTA />
         </SearchProvider>
       </main>
       <CinematicFooter />

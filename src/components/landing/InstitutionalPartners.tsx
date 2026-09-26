@@ -3,6 +3,8 @@ import { Link } from "@/i18n/navigation";
 import { FadeUp } from "@/components/motion/FadeUp";
 import { getActivePartners } from "@/lib/services/institutional-partners";
 
+const MAX_LOGOS = 10;
+
 /**
  * Faixa de apoio institucional -- só mostra parceiro com status "ativo"
  * (autorização confirmada pelo admin). Logos monocromáticos e baixo
@@ -12,13 +14,15 @@ import { getActivePartners } from "@/lib/services/institutional-partners";
 export async function InstitutionalPartners() {
   const [t, partners] = await Promise.all([getTranslations("BrandsStrip"), getActivePartners()]);
   if (partners.length === 0) return null;
+  // Faixa curta de propósito: mais que isso dilui o status de quem está nela.
+  const visiblePartners = partners.slice(0, MAX_LOGOS);
 
   return (
     <div className="border-y border-border bg-white">
       <FadeUp className="container-page flex min-h-[104px] flex-col flex-wrap items-center justify-center gap-x-10 gap-y-4 py-6 sm:flex-row sm:justify-between sm:py-0">
         <p className="shrink-0 text-[13px] font-medium uppercase tracking-[0.12em] text-muted">{t("intro")}</p>
         <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
-          {partners.map((partner) =>
+          {visiblePartners.map((partner) =>
           partner.link ? (
             <a
               key={partner.id}

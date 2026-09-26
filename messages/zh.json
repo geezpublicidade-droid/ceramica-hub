@@ -288,8 +288,9 @@
   },
   "FeaturedBusinesses": {
     "eyebrow": "已入驻 Cerâmica 的企业",
-    "headline": "精选企业。",
-    "ctaKnowBusiness": "了解企业"
+    "headline": "精选企业",
+    "ctaKnowBusiness": "了解企业",
+    "subhead": "了解 Cerâmica 生态中的企业、服务与专业人士。"
   },
   "ScaleSequence": {
     "sectionLabel": "Cerâmica Hub 的规模",
@@ -360,11 +361,11 @@
     "cta": "我想投放广告"
   },
   "FounderCTA": {
-    "eyebrow": "致 Cerâmica 的企业",
-    "headline": "您的企业已经在 Cerâmica。现在,它也可以成为这张网络的一部分。",
-    "subhead": "免费登记,在每天往来、工作与决策都发生在这里的人群面前,获得真实的曝光。",
-    "ctaRegister": "免费登记我的企业",
-    "ctaKnowPlatform": "查看方案",
+    "eyebrow": "加入 Cerâmica Hub",
+    "headline": "您的企业也可以在这里。",
+    "subhead": "让您的品牌连接企业、专业人士与机遇的生态。",
+    "ctaRegister": "注册我的企业",
+    "ctaKnowPlatform": "了解套餐",
     "benefits": [
       "目录中的公开主页",
       "上线阶段专属的创始企业标识",
@@ -375,7 +376,7 @@
     ]
   },
   "CinematicFooter": {
-    "tagline": "近在咫尺的企业。真实的连接。全新的商机。",
+    "tagline": "本地企业,无限可能。",
     "disclaimer": "Cerâmica Hub 是由 Geez Marketing 独立开发的项目,旨在连接并推广位于 Espaço Cerâmica 的企业。本平台并不代表相关物业或其管理公司的官方立场。",
     "projectBy": "Geez Marketing 出品。",
     "copyright": "© {year} Cerâmica Hub。",
@@ -398,7 +399,11 @@
       "privacidade": "隐私政策",
       "politicaCadastro": "登记政策",
       "politicaCancelamento": "取消政策",
-      "solicitarRemocao": "数据删除申请"
+      "solicitarRemocao": "数据删除申请",
+      "negocios": "企业",
+      "eventos": "活动",
+      "complexo": "综合体",
+      "ancoras": "锚点品牌"
     },
     "location": "São Caetano do Sul - SP"
   },
@@ -671,18 +676,18 @@
     },
     "ancoras": {
       "eyebrow": "机构合作伙伴",
-      "headline": "推动 Cerâmica Hub 的品牌。",
-      "cta": "了解我们的合作伙伴"
+      "headline": "壮大 Cerâmica 生态的品牌。",
+      "cta": "了解我们的锚点品牌"
     },
     "complexo": {
       "eyebrow": "园区",
-      "headline": "四座大厦,一个属于您企业的地址。",
-      "cta": "了解大厦"
+      "headline": "四座塔楼,一个通往大机遇的地址。",
+      "cta": "了解综合体"
     }
   },
   "BrandsStrip": {
-    "intro": "参与其中的品牌",
-    "cta": "查看全部合作伙伴"
+    "intro": "推动生态的企业",
+    "cta": "了解我们的合作伙伴"
   },
   "HomeNovidades": {
     "eyebrow": "圣卡埃塔诺-杜苏尔",
@@ -699,13 +704,28 @@
     "faleConoscoCta": "解答您的疑问"
   },
   "PremiumSponsors": {
-    "eyebrow": "高级赞助商",
-    "headline": "支持 Cerâmica Hub 的品牌。",
+    "eyebrow": "创始合作伙伴",
+    "headline": "推动 Cerâmica Hub 的企业。",
     "slide2Title": "活动与机构形象展示。",
     "slide2Description": "与 Cerâmica Hub 团队量身定制的专属赞助位置。",
     "slide3Title": "与我们团队共同打造的方案。",
     "slide3Description": "一次诊断会议,找到适合您品牌的方式。",
     "ctaAction": "我想成为赞助商",
-    "partnerBadge": "合作伙伴"
+    "partnerBadge": "合作伙伴",
+    "subhead": "相信 Cerâmica 综合体潜力、并助力壮大这一生态的品牌。"
+  },
+  "CityAndNews": {
+    "cityEyebrow": "圣卡埃塔诺-杜苏尔",
+    "cityHeadline": "与发展相连的城市。",
+    "cityText": "优越的区位、良好的城市品质与活跃的本地经济:企业、专业人士和居民每天在这里往来。Cerâmica 是这一活力的一部分。",
+    "cityCta": "了解圣卡埃塔诺",
+    "newsEyebrow": "CERÂMICA 动态",
+    "newsHeadline": "新闻、活动与更新。",
+    "newsCta": "查看全部动态",
+    "eventBadge": "活动",
+    "newsBadge": "新闻"
+  },
+  "InstitutionalStatement": {
+    "text": "Cerâmica Hub 的存在,是为了重视人、企业与这片土地。我们携手打造一个更有活力、更具人情味、充满可能的圣卡埃塔诺-杜苏尔生态。"
   }
 }

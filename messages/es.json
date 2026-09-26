@@ -288,8 +288,9 @@
   },
   "FeaturedBusinesses": {
     "eyebrow": "Quién ya está en el Cerâmica",
-    "headline": "Empresas destacadas.",
-    "ctaKnowBusiness": "Conocer empresa"
+    "headline": "Negocios destacados",
+    "ctaKnowBusiness": "Conocer empresa",
+    "subhead": "Conoce empresas, servicios y profesionales que forman parte del ecosistema Cerâmica."
   },
   "ScaleSequence": {
     "sectionLabel": "La escala de Cerâmica Hub",
@@ -360,11 +361,11 @@
     "cta": "Quiero anunciar"
   },
   "FounderCTA": {
-    "eyebrow": "Para empresas del Cerâmica",
-    "headline": "Tu empresa ya está en el Cerâmica. Ahora también puede formar parte de la red.",
-    "subhead": "Regístrate gratis y gana visibilidad real ante quienes ya circulan, trabajan y deciden dentro del complejo.",
-    "ctaRegister": "Registrar mi empresa gratis",
-    "ctaKnowPlatform": "Ver planes",
+    "eyebrow": "Sé parte de Cerâmica Hub",
+    "headline": "Tu empresa también puede estar aquí.",
+    "subhead": "Conecta tu marca a un ecosistema de empresas, profesionales y oportunidades.",
+    "ctaRegister": "Registrar mi empresa",
+    "ctaKnowPlatform": "Conocer los planes",
     "benefits": [
       "Perfil público en el directorio",
       "Sello de Empresa Fundadora en la fase de lanzamiento",
@@ -375,7 +376,7 @@
     ]
   },
   "CinematicFooter": {
-    "tagline": "Empresas cercanas. Conexiones reales. Nuevas oportunidades.",
+    "tagline": "Negocios locales. Grandes posibilidades.",
     "disclaimer": "Cerâmica Hub es una iniciativa independiente desarrollada por Geez Marketing para conectar y promover empresas ubicadas en Espaço Cerâmica. No representa oficialmente a los condominios ni a sus administradoras.",
     "projectBy": "Un proyecto de Geez Marketing.",
     "copyright": "© {year} Cerâmica Hub.",
@@ -398,7 +399,11 @@
       "privacidade": "Privacidad",
       "politicaCadastro": "Política de Registro",
       "politicaCancelamento": "Cancelación",
-      "solicitarRemocao": "Solicitud de Eliminación de Datos"
+      "solicitarRemocao": "Solicitud de Eliminación de Datos",
+      "negocios": "Negocios",
+      "eventos": "Eventos",
+      "complexo": "El Complejo",
+      "ancoras": "Anclas"
     },
     "location": "São Caetano do Sul - SP"
   },
@@ -671,18 +676,18 @@
     },
     "ancoras": {
       "eyebrow": "ANCLAS INSTITUCIONALES",
-      "headline": "Marcas que impulsan Cerâmica Hub.",
-      "cta": "Conoce a nuestros socios"
+      "headline": "Marcas que fortalecen el ecosistema Cerâmica.",
+      "cta": "Conoce a nuestras anclas"
     },
     "complexo": {
       "eyebrow": "EL COMPLEJO",
-      "headline": "Cuatro torres, una sola dirección para tu empresa.",
-      "cta": "Conoce las torres"
+      "headline": "Cuatro torres. Una sola dirección para grandes oportunidades.",
+      "cta": "Conoce el complejo"
     }
   },
   "BrandsStrip": {
-    "intro": "Marcas que forman parte",
-    "cta": "Ver todas las anclas"
+    "intro": "EMPRESAS QUE IMPULSAN",
+    "cta": "Conoce a nuestros socios"
   },
   "HomeNovidades": {
     "eyebrow": "SÃO CAETANO DO SUL",
@@ -699,13 +704,28 @@
     "faleConoscoCta": "Resuelve tus dudas"
   },
   "PremiumSponsors": {
-    "eyebrow": "PATROCINADORES PREMIUM",
-    "headline": "Marcas que apoyan a Cerâmica Hub.",
+    "eyebrow": "SOCIOS FUNDADORES",
+    "headline": "Empresas que impulsan Cerâmica Hub.",
     "slide2Title": "Activaciones y presencia institucional.",
     "slide2Description": "Posiciones de patrocinio exclusivas, hechas a medida con el equipo Cerâmica Hub.",
     "slide3Title": "Una propuesta pensada junto a nuestro equipo.",
     "slide3Description": "Reunión de diagnóstico para encontrar lo que tiene sentido para tu marca.",
     "ctaAction": "Quiero ser patrocinador",
-    "partnerBadge": "Socio"
+    "partnerBadge": "Socio",
+    "subhead": "Marcas que creen en el potencial del Complejo Cerâmica y ayudan a fortalecer este ecosistema."
+  },
+  "CityAndNews": {
+    "cityEyebrow": "SÃO CAETANO DO SUL",
+    "cityHeadline": "Una ciudad conectada al desarrollo.",
+    "cityText": "Ubicación estratégica, buena calidad urbana y una economía local en movimiento: en este territorio circulan cada día empresas, profesionales y vecinos. Cerâmica es parte de esa dinámica.",
+    "cityCta": "Conoce São Caetano",
+    "newsEyebrow": "SUCEDE EN CERÂMICA",
+    "newsHeadline": "Noticias, eventos y novedades.",
+    "newsCta": "Ver todas las novedades",
+    "eventBadge": "Evento",
+    "newsBadge": "Noticia"
+  },
+  "InstitutionalStatement": {
+    "text": "Cerâmica Hub existe para valorar a las personas, los negocios y el territorio. Juntos creamos un ecosistema más dinámico, humano y lleno de posibilidades para São Caetano do Sul."
   }
 }

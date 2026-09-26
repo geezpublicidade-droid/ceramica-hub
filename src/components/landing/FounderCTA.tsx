@@ -4,7 +4,6 @@ import { Link } from "@/i18n/navigation";
 
 export async function FounderCTA() {
   const t = await getTranslations("FounderCTA");
-  const benefits = t.raw("benefits") as string[];
 
   return (
     <section id="cadastro" className="section-pad-y bg-surface text-foreground">
@@ -22,30 +21,16 @@ export async function FounderCTA() {
           {t("subhead")}
         </FadeUp>
 
-        <FadeUp
-          delay={0.15}
-          className="glass-light mx-auto mt-12 grid max-w-2xl grid-cols-1 gap-3 rounded-2xl p-6 text-left sm:grid-cols-2"
-        >
-          {benefits.map((benefit) => (
-            <div key={benefit} className="flex items-start gap-2.5 text-[16px] text-foreground/80">
-              <span aria-hidden="true" className="mt-0.5 text-primary">
-                ✓
-              </span>
-              {benefit}
-            </div>
-          ))}
-        </FadeUp>
-
-        <FadeUp delay={0.2} className="mt-10 flex flex-wrap justify-center gap-4">
+        <FadeUp delay={0.15} className="mt-10 flex flex-wrap justify-center gap-4">
           <Link
             href="/cadastro"
             className="neu-primary rounded-full px-8 py-4 text-[17px] font-medium text-white"
           >
             {t("ctaRegister")}
           </Link>
-          <a href="#planos" className="neu rounded-full px-8 py-4 text-[17px] font-medium text-foreground">
+          <Link href="/planos" className="neu rounded-full px-8 py-4 text-[17px] font-medium text-foreground">
             {t("ctaKnowPlatform")}
-          </a>
+          </Link>
         </FadeUp>
       </div>
     </section>
