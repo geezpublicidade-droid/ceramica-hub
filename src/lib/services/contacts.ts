@@ -7,6 +7,7 @@ export type Contact = {
   id: string;
   businessId: string;
   businessName: string | null;
+  businessCategory: string | null;
   name: string;
   jobTitle: string | null;
   phone: string | null;
@@ -30,17 +31,18 @@ type ContactRow = {
   notes: string | null;
   created_at: string;
   updated_at: string;
-  businesses: { name: string } | null;
+  businesses: { name: string; category: string | null } | null;
 };
 
 const CONTACT_SELECT =
-  "id, business_id, name, job_title, phone, whatsapp, email, is_primary, notes, created_at, updated_at, businesses(name)";
+  "id, business_id, name, job_title, phone, whatsapp, email, is_primary, notes, created_at, updated_at, businesses(name, category)";
 
 function mapContact(row: ContactRow): Contact {
   return {
     id: row.id,
     businessId: row.business_id,
     businessName: row.businesses?.name ?? null,
+    businessCategory: row.businesses?.category ?? null,
     name: row.name,
     jobTitle: row.job_title,
     phone: row.phone,

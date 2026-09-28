@@ -5,7 +5,7 @@ import { getAllLeads } from "@/lib/services/leads";
 import { getAssignableAdmins } from "@/lib/services/admins";
 import { getActiveTowers } from "@/lib/services/towers";
 import { LeadRow } from "@/components/admin/LeadRow";
-import { LeadBoard } from "@/components/admin/LeadBoard";
+import { LeadFilters } from "@/components/admin/LeadFilters";
 import { NewLeadForm } from "@/components/admin/NewLeadForm";
 import { AdminShell } from "@/components/admin/AdminShell";
 
@@ -46,7 +46,7 @@ export default async function AdminLeadsPage() {
 
       <section className="flex flex-col gap-3">
         <p className="text-[17px] font-semibold text-foreground">Funil ({leads.length})</p>
-        <LeadBoard leads={leads} admins={admins} businesses={businesses} />
+        <LeadFilters leads={leads} admins={admins} businesses={businesses} />
       </section>
 
       <section className="mt-4 flex flex-col gap-3">
