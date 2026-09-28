@@ -3,10 +3,12 @@ import { requireAdminPage } from "@/lib/auth-guards";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { AdminStatCard } from "@/components/admin/AdminStatCard";
 import { ResultsBusinessTable } from "@/components/admin/ResultsBusinessTable";
+import { ResultsTrendChart } from "@/components/admin/ResultsTrendChart";
 import {
   getAdOccupancy,
   getBusinessPerformance,
   getCampaignsPerformance,
+  getDailyTrend,
   groupPerformanceByCategory,
   groupPerformanceByTower,
 } from "@/lib/services/results";
@@ -33,10 +35,11 @@ export default async function AdminResultadosPage({
   const params = await searchParams;
   const days = parseDays(params.days);
 
-  const [businesses, campaigns, occupancy] = await Promise.all([
+  const [businesses, campaigns, occupancy, trend] = await Promise.all([
     getBusinessPerformance(days),
     getCampaignsPerformance(),
     getAdOccupancy(),
+    getDailyTrend(days),
   ]);
 
   const categories = groupPerformanceByCategory(businesses);
@@ -77,6 +80,11 @@ export default async function AdminResultadosPage({
         <AdminStatCard label={`Cliques WhatsApp (${days}d)`} value={totalWhatsapp} />
         <AdminStatCard label="Impressões de anúncio (total)" value={totalImpressions} />
         <AdminStatCard label="Ocupação publicitária" value={`${occupancy.occupied}/${occupancy.total}`} highlight={occupancy.percentage >= 80} />
+      </section>
+
+      <section className="flex flex-col gap-3">
+        <p className="text-[17px] font-semibold text-foreground">Evolução no período</p>
+        <ResultsTrendChart points={trend} />
       </section>
 
       <section className="flex flex-col gap-3">

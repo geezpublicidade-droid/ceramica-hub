@@ -157,6 +157,43 @@ export async function getCampaignsPerformance(): Promise<CampaignPerformance[]> 
     .sort((a, b) => b.impressions - a.impressions);
 }
 
+export type DailyTrendPoint = { day: string; pageViews: number; whatsappClicks: number };
+
+/** Série diária (visualizações + cliques WhatsApp, somados de todas as
+ * empresas) pro gráfico de tendência de `/admin/resultados` -- mesma fonte
+ * (`analytics_daily`) de `getBusinessPerformance`, só que sem agrupar por
+ * empresa. Dia sem nenhum evento entra com zero, pra não abrir buraco na
+ * linha (silêncio real vira zero, não vira lacuna). */
+export async function getDailyTrend(days: number): Promise<DailyTrendPoint[]> {
+  const supabase = createServiceClient();
+  const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+  const sinceStr = since.toISOString().slice(0, 10);
+
+  const { data, error } = await supabase
+    .from("analytics_daily")
+    .select("day, event_type, count")
+    .in("event_type", ["commercial_page_viewed", "whatsapp_clicked"])
+    .gte("day", sinceStr);
+  if (error) throw error;
+
+  const byDay = new Map<string, { pageViews: number; whatsappClicks: number }>();
+  for (const row of data ?? []) {
+    const current = byDay.get(row.day) ?? { pageViews: 0, whatsappClicks: 0 };
+    if (row.event_type === "commercial_page_viewed") current.pageViews += row.count;
+    else current.whatsappClicks += row.count;
+    byDay.set(row.day, current);
+  }
+
+  const points: DailyTrendPoint[] = [];
+  for (let i = days - 1; i >= 0; i--) {
+    const date = new Date(Date.now() - i * 24 * 60 * 60 * 1000);
+    const day = date.toISOString().slice(0, 10);
+    const entry = byDay.get(day) ?? { pageViews: 0, whatsappClicks: 0 };
+    points.push({ day, ...entry });
+  }
+  return points;
+}
+
 export type AdOccupancy = { total: number; occupied: number; vacant: number; percentage: number };
 
 /** % de espaços de publicidade ocupados agora (ativo ou reservado) vs. total
