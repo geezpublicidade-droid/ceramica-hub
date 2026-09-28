@@ -4,12 +4,12 @@ import { getAllCampaigns, getAllPlacements, getCampaignMetrics } from "@/lib/ser
 import { AdCampaignRow } from "@/components/admin/AdCampaignRow";
 import { NewCampaignForm } from "@/components/admin/NewCampaignForm";
 import { ExportCampaignsCsvButton } from "@/components/admin/ExportCampaignsCsvButton";
-import { BackLink } from "@/components/nav/BackLink";
+import { AdminShell } from "@/components/admin/AdminShell";
 
 export const metadata = { title: "Publicidade — Cerâmica Hub" };
 
 export default async function AdminPublicidadePage() {
-  await requireAdminPage(["super_admin", "admin", "comercial"]);
+  const { adminRole } = await requireAdminPage(["super_admin", "admin", "comercial"]);
 
   const [campaigns, placements] = await Promise.all([getAllCampaigns(), getAllPlacements()]);
   const rows = await Promise.all(
@@ -17,29 +17,24 @@ export default async function AdminPublicidadePage() {
   );
 
   return (
-    <main className="min-h-screen bg-background px-6 py-16">
-      <div className="mx-auto max-w-4xl">
+    <AdminShell currentPath="/admin/publicidade" adminRole={adminRole}>
+      <div className="flex items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold text-foreground">Publicidade</h1>
+          <p className="mt-2 text-[16px] text-muted">
+            Campanhas de anunciantes externos — nunca aparecem como membro do complexo, sempre
+            rotuladas &quot;Patrocinado&quot;.
+          </p>
+        </div>
+        <Link href="/admin/publicidade/espacos" className="neu shrink-0 rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
+          Espaços
+        </Link>
+      </div>
+
+      <NewCampaignForm placements={placements.filter((p) => p.active)} />
+
+      <div>
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold text-foreground">Publicidade</h1>
-            <p className="mt-2 text-[16px] text-muted">
-              Campanhas de anunciantes externos — nunca aparecem como membro do complexo, sempre
-              rotuladas &quot;Patrocinado&quot;.
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <Link href="/admin/publicidade/espacos" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
-              Espaços
-            </Link>
-            <BackLink href="/admin" />
-          </div>
-        </div>
-
-        <div className="mt-10">
-          <NewCampaignForm placements={placements.filter((p) => p.active)} />
-        </div>
-
-        <div className="mt-10 flex items-center justify-between">
           <p className="text-[17px] font-semibold text-foreground">Campanhas ({rows.length})</p>
           {rows.length > 0 && <ExportCampaignsCsvButton rows={rows} />}
         </div>
@@ -51,6 +46,6 @@ export default async function AdminPublicidadePage() {
           ))}
         </section>
       </div>
-    </main>
+    </AdminShell>
   );
 }
