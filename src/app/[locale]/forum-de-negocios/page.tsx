@@ -3,7 +3,7 @@ import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { EventInterestLink } from "@/components/EventInterestLink";
 import { getUpcomingEvents } from "@/lib/services/events";
-import { buildAlternates, buildSocialMetadata } from "@/lib/seo";
+import { buildAlternates, buildSocialMetadata, localizedUrl } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -27,8 +27,33 @@ export default async function ForumDeNegociosPage({ params }: { params: Promise<
 
   const dateFormatter = new Intl.DateTimeFormat(locale, { dateStyle: "long", timeStyle: "short" });
 
+  const pageUrl = localizedUrl(locale, "/forum-de-negocios");
+  const jsonLd = events.map((event) => ({
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: event.title,
+    description: event.description ?? undefined,
+    startDate: event.startsAt,
+    ...(event.endsAt ? { endDate: event.endsAt } : {}),
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    eventStatus: "https://schema.org/EventScheduled",
+    location: event.location
+      ? { "@type": "Place", name: event.location }
+      : { "@type": "VirtualLocation", url: pageUrl },
+    ...(event.coverPhotoUrl ? { image: [event.coverPhotoUrl] } : {}),
+    ...(event.registrationLink ? { url: event.registrationLink } : { url: pageUrl }),
+    organizer: { "@type": "Organization", name: "Cerâmica Hub", url: pageUrl },
+  }));
+
   return (
     <>
+      {jsonLd.map((event, i) => (
+        <script
+          key={events[i].id}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(event) }}
+        />
+      ))}
       <Header />
       <main className="flex-1 bg-surface px-6 py-32 text-foreground">
         <div className="mx-auto max-w-4xl">

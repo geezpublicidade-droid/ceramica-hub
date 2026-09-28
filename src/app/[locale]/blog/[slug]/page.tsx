@@ -4,7 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { getPublishedPostBySlug } from "@/lib/services/blog";
-import { buildAlternates, buildSocialMetadata } from "@/lib/seo";
+import { buildAlternates, buildSocialMetadata, localizedUrl } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -37,8 +37,21 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const post = await getPublishedPostBySlug(slug, locale);
   if (!post) notFound();
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt,
+    url: localizedUrl(locale, `/blog/${post.slug}`),
+    ...(post.coverImageUrl ? { image: [post.coverImageUrl] } : {}),
+    ...(post.publishedAt ? { datePublished: post.publishedAt } : {}),
+    author: { "@type": "Organization", name: post.authorName },
+    publisher: { "@type": "Organization", name: "Cerâmica Hub" },
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Header />
       <main className="flex-1 bg-surface px-6 pb-20 pt-32 text-foreground">
         <div className="mx-auto max-w-2xl">

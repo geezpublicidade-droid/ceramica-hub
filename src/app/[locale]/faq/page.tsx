@@ -20,8 +20,19 @@ export default async function FaqPage() {
   const t = await getTranslations("FaqPage");
   const items = t.raw("items") as { question: string; answer: string }[];
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Header />
       <main className="flex-1">
         <section className="px-6 pb-24 pt-32 sm:pt-36">
