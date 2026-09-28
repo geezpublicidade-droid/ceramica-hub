@@ -17,6 +17,19 @@ export function AdCampaignCard({ campaign, metrics, phase }: Props) {
 
   return (
     <div className="flex flex-col gap-3 rounded-2xl border border-border bg-white/80 p-4">
+      {campaign.previewImageUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element -- criativo é upload externo (URL arbitrária), sem domínio fixo pra configurar no next/image
+        <img
+          src={campaign.previewImageUrl}
+          alt={`Criativo de ${campaign.title}`}
+          className="h-24 w-full rounded-xl border border-border object-cover"
+        />
+      ) : (
+        <div className="flex h-24 w-full items-center justify-center rounded-xl border border-dashed border-border bg-muted/10 text-[12px] text-muted">
+          Sem criativo
+        </div>
+      )}
+
       <div>
         <div className="flex items-start justify-between gap-2">
           <p className="text-[15px] font-semibold leading-snug text-foreground">{campaign.title}</p>

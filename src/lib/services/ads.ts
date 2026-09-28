@@ -118,6 +118,10 @@ export type CampaignWithDetails = {
   rejectionReason: string | null;
   negotiatedValueCents: number | null;
   budgetCents: number | null;
+  /** Criativo desktop, pra miniatura no board do admin -- mesmo dado que já
+   * é buscado pro slot público (fetchEligibleCampaigns), só que aqui é só
+   * pra o admin se localizar visualmente entre campanhas, não pra veicular. */
+  previewImageUrl: string | null;
 };
 
 export async function getAllCampaigns(): Promise<CampaignWithDetails[]> {
@@ -125,7 +129,7 @@ export async function getAllCampaigns(): Promise<CampaignWithDetails[]> {
   const { data, error } = await supabase
     .from("ad_campaigns")
     .select(
-      "id, title, status, starts_at, ends_at, target_url, rejection_reason, negotiated_value_cents, budget_cents, ad_accounts(id, company_name, blocked), ad_placements(name)"
+      "id, title, status, starts_at, ends_at, target_url, rejection_reason, negotiated_value_cents, budget_cents, ad_accounts(id, company_name, blocked), ad_placements(name), ad_creatives(device, image_url)"
     )
     .order("created_at", { ascending: false });
   if (error) throw error;
@@ -133,6 +137,8 @@ export async function getAllCampaigns(): Promise<CampaignWithDetails[]> {
   return (data ?? []).map((row) => {
     const account = row.ad_accounts as unknown as { id: string; company_name: string; blocked: boolean } | null;
     const placement = row.ad_placements as unknown as { name: string } | null;
+    const creatives = (row.ad_creatives ?? []) as unknown as { device: "desktop" | "mobile"; image_url: string }[];
+    const preview = creatives.find((c) => c.device === "desktop") ?? creatives[0];
     return {
       id: row.id,
       title: row.title,
@@ -147,6 +153,7 @@ export async function getAllCampaigns(): Promise<CampaignWithDetails[]> {
       rejectionReason: row.rejection_reason,
       negotiatedValueCents: row.negotiated_value_cents,
       budgetCents: row.budget_cents,
+      previewImageUrl: preview?.image_url ?? null,
     };
   });
 }
