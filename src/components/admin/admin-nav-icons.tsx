@@ -116,3 +116,31 @@ export function IconUsers({ className = base }: IconProps) {
     </svg>
   );
 }
+
+export function IconCompanies({ className = base }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 17V4.3a.8.8 0 0 1 .8-.8h5.4a.8.8 0 0 1 .8.8V17" />
+      <path d="M10.6 17V8.6a.8.8 0 0 1 .8-.8h4.8a.8.8 0 0 1 .8.8V17" />
+      <path d="M5.2 6.6h1.8M5.2 9.6h1.8M5.2 12.6h1.8M13 10.6h1.6M13 13.4h1.6" />
+    </svg>
+  );
+}
+
+export function IconContacts({ className = base }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="10" cy="6.6" r="3" />
+      <path d="M3.6 17c.9-3.5 3.1-5.4 6.4-5.4s5.5 1.9 6.4 5.4" />
+    </svg>
+  );
+}
+
+export function IconTasks({ className = base }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3.5" width="14" height="13" rx="1.6" />
+      <path d="M6.2 8.2l1.6 1.6 2.8-2.8M6.2 13.2h7.6" />
+    </svg>
+  );
+}
