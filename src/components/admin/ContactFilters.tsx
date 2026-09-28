@@ -2,9 +2,20 @@
 
 import { useMemo, useState } from "react";
 import { ContactRow } from "@/components/admin/ContactRow";
+import { ContactTableRow } from "@/components/admin/ContactTableRow";
+import { SortableTh } from "@/components/admin/SortableTh";
+import { useSortableData } from "@/lib/hooks/useSortableData";
 import type { Contact } from "@/lib/services/contacts";
 
 const inputClass = "rounded-xl border border-border bg-white px-3 py-2 text-[13px] text-foreground";
+
+type SortKey = "name" | "business" | "category";
+
+const COMPARE: Record<SortKey, (a: Contact, b: Contact) => number> = {
+  name: (a, b) => a.name.localeCompare(b.name, "pt-BR"),
+  business: (a, b) => (a.businessName ?? "").localeCompare(b.businessName ?? "", "pt-BR"),
+  category: (a, b) => (a.businessCategory ?? "").localeCompare(b.businessCategory ?? "", "pt-BR"),
+};
 
 export function ContactFilters({ contacts }: { contacts: Contact[] }) {
   const [search, setSearch] = useState("");
@@ -29,6 +40,8 @@ export function ContactFilters({ contacts }: { contacts: Contact[] }) {
     [contacts, search, categoryFilter]
   );
 
+  const { sorted, sortKey, direction, toggleSort } = useSortableData(filtered, COMPARE);
+
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap gap-2">
@@ -49,12 +62,35 @@ export function ContactFilters({ contacts }: { contacts: Contact[] }) {
       </div>
 
       {(search.trim() || categoryFilter !== "todas") && (
-        <p className="text-[13px] text-muted">{filtered.length} de {contacts.length} contatos</p>
+        <p className="text-[13px] text-muted">{sorted.length} de {contacts.length} contatos</p>
       )}
 
-      <div className="flex flex-col gap-2">
-        {filtered.length === 0 && <p className="text-[15px] text-muted">Nenhum contato encontrado com esses filtros.</p>}
-        {filtered.map((contact) => (
+      {sorted.length === 0 && <p className="text-[15px] text-muted">Nenhum contato encontrado com esses filtros.</p>}
+
+      {sorted.length > 0 && (
+        <div className="hidden overflow-x-auto rounded-2xl border border-border bg-white/60 md:block">
+          <table className="w-full border-collapse text-[13px]">
+            <thead className="border-b border-border">
+              <tr>
+                <SortableTh label="Nome" sortKey="name" activeKey={sortKey} direction={direction} onSort={(k) => toggleSort(k as SortKey)} />
+                <SortableTh label="Empresa" sortKey="business" activeKey={sortKey} direction={direction} onSort={(k) => toggleSort(k as SortKey)} />
+                <SortableTh label="Categoria" sortKey="category" activeKey={sortKey} direction={direction} onSort={(k) => toggleSort(k as SortKey)} />
+                <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-muted">Cargo</th>
+                <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-muted">Contato</th>
+                <th className="px-3 py-2" />
+              </tr>
+            </thead>
+            <tbody>
+              {sorted.map((contact, i) => (
+                <ContactTableRow key={contact.id} contact={contact} zebra={i % 2 === 1} />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <div className="flex flex-col gap-2 md:hidden">
+        {sorted.map((contact) => (
           <ContactRow key={contact.id} contact={contact} showBusiness />
         ))}
       </div>
