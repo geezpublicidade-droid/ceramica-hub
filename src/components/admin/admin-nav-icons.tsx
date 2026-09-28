@@ -136,6 +136,14 @@ export function IconContacts({ className = base }: IconProps) {
   );
 }
 
+export function IconResults({ className = base }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 16.5h14M5.5 16.5v-5M10 16.5V6.2M14.5 16.5V9.8" />
+    </svg>
+  );
+}
+
 export function IconTasks({ className = base }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">

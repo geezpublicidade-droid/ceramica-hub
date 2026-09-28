@@ -19,6 +19,7 @@ import {
   IconCompanies,
   IconContacts,
   IconTasks,
+  IconResults,
 } from "@/components/admin/admin-nav-icons";
 
 type NavItem = { label: string; href: string; Icon: typeof IconOverview; roles: AdminRole[] };
@@ -26,9 +27,7 @@ type NavItem = { label: string; href: string; Icon: typeof IconOverview; roles: 
 /** As 8 áreas do painel administrativo (ver prompt mestre da reforma do
  * admin): cada item entra em uma única área, na ordem em que aparecem aqui.
  * Uma área sem nenhum item visível pro papel atual simplesmente não
- * renderiza (ver filtro em AdminNav) -- não existe ainda página própria de
- * "Resultados" (analytics/relatórios ficou pra fase 4), por isso essa área
- * não aparece na lista abaixo. */
+ * renderiza (ver filtro em AdminNav). */
 const NAV_SECTIONS: { section: string; items: NavItem[] }[] = [
   {
     section: "Visão geral",
@@ -89,6 +88,17 @@ const NAV_SECTIONS: { section: string; items: NavItem[] }[] = [
   {
     section: "Financeiro",
     items: [{ label: "Financeiro", href: "/admin/financeiro", Icon: IconFinance, roles: ["super_admin", "admin", "financeiro"] }],
+  },
+  {
+    section: "Resultados",
+    items: [
+      {
+        label: "Resultados",
+        href: "/admin/resultados",
+        Icon: IconResults,
+        roles: ["super_admin", "admin", "marketing", "analista"],
+      },
+    ],
   },
   {
     section: "Atendimento",
