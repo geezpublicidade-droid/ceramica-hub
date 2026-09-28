@@ -52,7 +52,7 @@ async function getBusinessesByStatus(status: "pending" | "approved" | "rejected"
 }
 
 export default async function AdminPage() {
-  const { adminRole } = await requireAdminPage(["super_admin", "admin", "moderador"]);
+  const { adminRole } = await requireAdminPage(["super_admin", "admin", "moderador", "analista"]);
 
   const [pending, approved, rejected, suspended, stats, completeness, openTickets] = await Promise.all([
     getBusinessesByStatus("pending"),

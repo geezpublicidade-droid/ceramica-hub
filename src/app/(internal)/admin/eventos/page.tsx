@@ -7,7 +7,7 @@ import { AdminShell } from "@/components/admin/AdminShell";
 export const metadata = { title: "Eventos — Cerâmica Hub" };
 
 export default async function AdminEventosPage() {
-  const { adminRole } = await requireAdminPage(["super_admin", "admin"]);
+  const { adminRole } = await requireAdminPage(["super_admin", "admin", "marketing", "conteudo"]);
   const events = await getAllEventsForAdmin();
 
   return (

@@ -7,7 +7,16 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { LOGIN_PATH_BY_AREA, type LoginArea } from "@/lib/login-paths";
 
 type Role = "business" | "business_staff" | "member" | "admin";
-export type AdminRole = "super_admin" | "admin" | "financeiro" | "comercial" | "moderador";
+export type AdminRole =
+  | "super_admin"
+  | "admin"
+  | "financeiro"
+  | "comercial"
+  | "moderador"
+  | "marketing"
+  | "conteudo"
+  | "atendimento"
+  | "analista";
 
 const TABLE_BY_ROLE: Record<Role, "businesses" | "business_staff" | "members" | "admins"> = {
   business: "businesses",

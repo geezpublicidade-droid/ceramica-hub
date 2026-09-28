@@ -11,6 +11,10 @@ const ROLE_OPTIONS: { value: AdminRole; label: string }[] = [
   { value: "admin", label: "Admin (geral)" },
   { value: "financeiro", label: "Financeiro" },
   { value: "comercial", label: "Comercial" },
+  { value: "marketing", label: "Marketing" },
+  { value: "conteudo", label: "Conteúdo" },
+  { value: "atendimento", label: "Atendimento" },
+  { value: "analista", label: "Analista (só leitura)" },
   { value: "moderador", label: "Moderador" },
   { value: "super_admin", label: "Super admin (acesso total)" },
 ];

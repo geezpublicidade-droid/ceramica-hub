@@ -19,24 +19,39 @@ import {
 } from "@/components/admin/admin-nav-icons";
 
 const NAV_ITEMS = [
-  { label: "Visão geral", href: "/admin", Icon: IconOverview, roles: ["super_admin", "admin", "moderador"] },
+  { label: "Visão geral", href: "/admin", Icon: IconOverview, roles: ["super_admin", "admin", "moderador", "analista"] },
   { label: "Financeiro", href: "/admin/financeiro", Icon: IconFinance, roles: ["super_admin", "admin", "financeiro"] },
-  { label: "Publicidade", href: "/admin/publicidade", Icon: IconAds, roles: ["super_admin", "admin", "comercial"] },
+  {
+    label: "Publicidade",
+    href: "/admin/publicidade",
+    Icon: IconAds,
+    roles: ["super_admin", "admin", "comercial", "marketing"],
+  },
   { label: "Leads", href: "/admin/leads", Icon: IconLeads, roles: ["super_admin", "admin", "comercial"] },
-  { label: "Avaliações", href: "/admin/avaliacoes", Icon: IconReviews, roles: ["super_admin", "admin", "moderador"] },
+  {
+    label: "Avaliações",
+    href: "/admin/avaliacoes",
+    Icon: IconReviews,
+    roles: ["super_admin", "admin", "moderador", "conteudo"],
+  },
   { label: "LGPD", href: "/admin/lgpd", Icon: IconLgpd, roles: ["super_admin", "admin"] },
-  { label: "Blog", href: "/admin/blog", Icon: IconBlog, roles: ["super_admin", "admin"] },
-  { label: "Parceiros", href: "/admin/parceiros", Icon: IconPartners, roles: ["super_admin", "admin"] },
+  { label: "Blog", href: "/admin/blog", Icon: IconBlog, roles: ["super_admin", "admin", "marketing", "conteudo"] },
+  { label: "Parceiros", href: "/admin/parceiros", Icon: IconPartners, roles: ["super_admin", "admin", "comercial"] },
   { label: "Hotéis", href: "/admin/hoteis", Icon: IconHotels, roles: ["super_admin", "admin"] },
   { label: "Auditórios", href: "/admin/auditorios", Icon: IconAuditoriums, roles: ["super_admin", "admin"] },
   { label: "Imobiliárias", href: "/admin/imobiliarias", Icon: IconRealEstate, roles: ["super_admin", "admin"] },
-  { label: "Eventos", href: "/admin/eventos", Icon: IconEvents, roles: ["super_admin", "admin"] },
+  {
+    label: "Eventos",
+    href: "/admin/eventos",
+    Icon: IconEvents,
+    roles: ["super_admin", "admin", "marketing", "conteudo"],
+  },
   { label: "Usuários", href: "/admin/usuarios", Icon: IconUsers, roles: ["super_admin"] },
   {
     label: "Suporte",
     href: "/admin/suporte",
     Icon: IconSupport,
-    roles: ["super_admin", "admin", "moderador", "financeiro", "comercial"],
+    roles: ["super_admin", "admin", "moderador", "financeiro", "comercial", "atendimento"],
   },
 ] as const satisfies { label: string; href: string; Icon: typeof IconOverview; roles: AdminRole[] }[];
 

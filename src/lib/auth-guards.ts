@@ -11,6 +11,10 @@ const DEFAULT_ADMIN_PATH_BY_ROLE: Record<AdminRole, string> = {
   moderador: "/admin",
   financeiro: "/admin/financeiro",
   comercial: "/admin/publicidade",
+  marketing: "/admin/publicidade",
+  conteudo: "/admin/blog",
+  atendimento: "/admin/suporte",
+  analista: "/admin",
 };
 
 /**

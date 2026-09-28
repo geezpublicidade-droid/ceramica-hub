@@ -12,7 +12,7 @@ import { AdminShell } from "@/components/admin/AdminShell";
 export const metadata = { title: "Publicidade — Cerâmica Hub" };
 
 export default async function AdminPublicidadePage() {
-  const { adminRole } = await requireAdminPage(["super_admin", "admin", "comercial"]);
+  const { adminRole } = await requireAdminPage(["super_admin", "admin", "comercial", "marketing"]);
 
   const [campaigns, placements, dashboardStats] = await Promise.all([
     getAllCampaigns(),

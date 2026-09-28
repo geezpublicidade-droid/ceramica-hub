@@ -10,7 +10,17 @@ import type { AdminRole } from "@/auth";
 
 type ActionResult = { success: true } | { success: false; error: string };
 
-const ADMIN_ROLES: AdminRole[] = ["super_admin", "admin", "financeiro", "comercial", "moderador"];
+const ADMIN_ROLES: AdminRole[] = [
+  "super_admin",
+  "admin",
+  "financeiro",
+  "comercial",
+  "moderador",
+  "marketing",
+  "conteudo",
+  "atendimento",
+  "analista",
+];
 
 const createAdminSchema = z.object({
   email: z.string().trim().toLowerCase().email(),

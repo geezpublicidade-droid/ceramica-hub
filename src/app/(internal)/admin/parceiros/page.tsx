@@ -8,7 +8,7 @@ import { AdminShell } from "@/components/admin/AdminShell";
 export const metadata = { title: "Parceiros institucionais — Cerâmica Hub" };
 
 export default async function AdminParceirosPage() {
-  const { adminRole } = await requireAdminPage(["super_admin", "admin"]);
+  const { adminRole } = await requireAdminPage(["super_admin", "admin", "comercial"]);
   const partners = await getAllPartnersForAdmin();
   const founders = partners.filter((p) => p.tier === "ancora_fundadora" && p.status !== "inativo").length;
 

@@ -8,7 +8,7 @@ import { BackLink } from "@/components/nav/BackLink";
 export const metadata = { title: "Espaços de anúncio — Cerâmica Hub" };
 
 export default async function AdminPublicidadeEspacosPage() {
-  const { adminRole } = await requireAdminPage(["super_admin", "admin", "comercial"]);
+  const { adminRole } = await requireAdminPage(["super_admin", "admin", "comercial", "marketing"]);
   const placements = await getPlacementsInventory();
 
   const soldCount = placements.filter((p) => p.status === "ativo" || p.status === "expirando" || p.status === "reservado").length;

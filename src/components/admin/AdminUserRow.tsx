@@ -10,6 +10,10 @@ const ROLE_LABEL: Record<AdminRole, string> = {
   financeiro: "Financeiro",
   comercial: "Comercial",
   moderador: "Moderador",
+  marketing: "Marketing",
+  conteudo: "Conteúdo",
+  atendimento: "Atendimento",
+  analista: "Analista (só leitura)",
 };
 
 const ROLE_OPTIONS = Object.keys(ROLE_LABEL) as AdminRole[];

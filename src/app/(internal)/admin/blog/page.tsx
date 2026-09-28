@@ -7,7 +7,7 @@ import { AdminShell } from "@/components/admin/AdminShell";
 export const metadata = { title: "Blog — Cerâmica Hub" };
 
 export default async function AdminBlogPage() {
-  const { adminRole } = await requireAdminPage(["super_admin", "admin"]);
+  const { adminRole } = await requireAdminPage(["super_admin", "admin", "marketing", "conteudo"]);
   const posts = await getAllPostsForAdmin();
 
   return (

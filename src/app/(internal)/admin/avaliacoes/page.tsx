@@ -6,7 +6,7 @@ import { AdminShell } from "@/components/admin/AdminShell";
 export const metadata = { title: "Avaliações — Cerâmica Hub" };
 
 export default async function AdminAvaliacoesPage() {
-  const { adminRole } = await requireAdminPage(["super_admin", "admin", "moderador"]);
+  const { adminRole } = await requireAdminPage(["super_admin", "admin", "moderador", "conteudo"]);
   const reviews = await getAllReviewsForAdmin();
   const pending = reviews.filter((r) => r.status === "pendente");
   const rest = reviews.filter((r) => r.status !== "pendente");

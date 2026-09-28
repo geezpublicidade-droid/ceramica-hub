@@ -1,7 +1,16 @@
 import type { DefaultSession } from "next-auth";
 
 type Role = "business" | "business_staff" | "member" | "admin";
-type AdminRole = "super_admin" | "admin" | "financeiro" | "comercial" | "moderador";
+type AdminRole =
+  | "super_admin"
+  | "admin"
+  | "financeiro"
+  | "comercial"
+  | "moderador"
+  | "marketing"
+  | "conteudo"
+  | "atendimento"
+  | "analista";
 
 declare module "next-auth" {
   interface Session {
