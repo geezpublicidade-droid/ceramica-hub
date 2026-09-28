@@ -18,6 +18,25 @@ export function localizedUrl(locale: string, path: string): string {
   return `${siteUrl}${prefix}${path}`;
 }
 
+/** Canonical + hreflang pra uma página traduzida (mesmo `path` nas 4
+ * localidades -- nenhuma rota do site tem slug localizado por idioma).
+ * Sem isso, o canonical de toda página não-home apontava pro path cru
+ * (ex: "/blog"), que o Next resolve contra `metadataBase` como a URL da
+ * localidade padrão (pt) -- ou seja, a versão em/es/zh dizia pro Google
+ * "sou duplicata da versão em pt, indexe ela no meu lugar" ao mesmo tempo
+ * que teria hreflang dizendo o contrário. `x-default` aponta pra pt (locale
+ * padrão do `routing`), convenção do Google pra quando nenhum hreflang bate
+ * com o idioma do usuário. */
+export function buildAlternates(locale: string, path: string) {
+  return {
+    canonical: localizedUrl(locale, path),
+    languages: {
+      ...Object.fromEntries(routing.locales.map((l) => [l, localizedUrl(l, path)])),
+      "x-default": localizedUrl(routing.defaultLocale, path),
+    },
+  };
+}
+
 type SocialMetadataInput = {
   title: string;
   description: string;

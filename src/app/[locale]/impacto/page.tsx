@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { getPublicImpactReport } from "@/lib/services/impact-report";
-import { buildSocialMetadata } from "@/lib/seo";
+import { buildAlternates, buildSocialMetadata } from "@/lib/seo";
 
 export const revalidate = 1800;
 
@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return {
     title,
     description,
-    alternates: { canonical: "/impacto" },
+    alternates: buildAlternates(locale, "/impacto"),
     ...buildSocialMetadata({ title, description, locale, path: "/impacto" }),
   };
 }

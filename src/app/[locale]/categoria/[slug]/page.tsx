@@ -6,7 +6,7 @@ import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { BusinessCardGrid } from "@/components/BusinessCardGrid";
 import { getAllBusinesses } from "@/lib/services/platform";
 import { categorySlugs, categoryFromSlug } from "@/lib/category-slug";
-import { localizedUrl, buildSocialMetadata } from "@/lib/seo";
+import { localizedUrl, buildAlternates, buildSocialMetadata } from "@/lib/seo";
 
 type PageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title,
     description,
-    alternates: { canonical: `/categoria/${slug}` },
+    alternates: buildAlternates(locale, `/categoria/${slug}`),
     ...buildSocialMetadata({ title, description, locale, path: `/categoria/${slug}`, type: "website" }),
   };
 }

@@ -6,7 +6,7 @@ import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { Link } from "@/i18n/navigation";
 import { PlanShowcaseCard } from "@/components/landing/PlanShowcaseCard";
 import { PLAN_ORDER, PLAN_PRICE_DISPLAY } from "@/lib/plan-limits";
-import { localizedUrl, buildSocialMetadata } from "@/lib/seo";
+import { localizedUrl, buildAlternates, buildSocialMetadata } from "@/lib/seo";
 import type { Business } from "@/data/businesses";
 
 type PlanoSlug = Business["plan"] | "patrocinador";
@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title,
     description,
-    alternates: { canonical: `/planos/${plano}` },
+    alternates: buildAlternates(locale, `/planos/${plano}`),
     ...buildSocialMetadata({ title, description, locale, path: `/planos/${plano}` }),
   };
 }

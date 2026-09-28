@@ -35,6 +35,15 @@ import {
 // empresa/[slug]/page.tsx.
 export const revalidate = 60;
 
+// Rascunho da futura home, ainda não promovido pra "/" -- já bloqueado no
+// robots.txt (disallow "/preview"/"/*/preview"), mas isso por si só não
+// impede indexação se alguém linkar a URL de fora (Google pode indexar uma
+// URL disallowed sem conseguir ler seu conteúdo). O noindex explícito é o
+// mecanismo que garante de verdade, mesmo padrão já usado em /busca.
+export async function generateMetadata() {
+  return { robots: { index: false, follow: false } };
+}
+
 // Heurística simples pra não vazar registro de teste ("Padaria Teste
 // Estrutura" etc.) pra vitrine da home -- não existe flag is_test no banco
 // ainda; até existir, filtra pelo nome. Não afeta o Diretório completo

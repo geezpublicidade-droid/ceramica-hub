@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { Link } from "@/i18n/navigation";
-import { buildSocialMetadata } from "@/lib/seo";
+import { buildAlternates, buildSocialMetadata } from "@/lib/seo";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return {
     title,
     description,
-    alternates: { canonical: "/politica-de-publicidade" },
+    alternates: buildAlternates(locale, "/politica-de-publicidade"),
     ...buildSocialMetadata({ title, description, locale, path: "/politica-de-publicidade" }),
   };
 }

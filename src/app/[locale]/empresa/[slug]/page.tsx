@@ -9,7 +9,7 @@ import { VirtualTourViewer } from "@/components/VirtualTourViewer";
 import { ReviewsSection } from "@/components/business/ReviewsSection";
 import { Link, redirect } from "@/i18n/navigation";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
-import { localizedUrl, buildSocialMetadata } from "@/lib/seo";
+import { localizedUrl, buildAlternates, buildSocialMetadata } from "@/lib/seo";
 import {
   getAllBusinesses,
   getBusinessById,
@@ -58,7 +58,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title,
     description,
-    alternates: { canonical: `/empresa/${business.slug}` },
+    alternates: buildAlternates(locale, `/empresa/${business.slug}`),
     ...buildSocialMetadata({
       title,
       description,

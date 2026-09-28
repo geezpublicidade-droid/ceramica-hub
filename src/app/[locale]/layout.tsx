@@ -5,7 +5,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Montserrat, Playfair_Display, Geist_Mono, Alexandria } from "next/font/google";
 import { routing } from "@/i18n/routing";
-import { siteUrl, buildSocialMetadata } from "@/lib/seo";
+import { siteUrl, buildSocialMetadata, buildAlternates } from "@/lib/seo";
 import { SupportWhatsAppButton } from "@/components/support/SupportWhatsAppButton";
 import "../globals.css";
 
@@ -54,7 +54,7 @@ export async function generateMetadata({
     metadataBase: new URL(siteUrl),
     title,
     description,
-    alternates: { canonical: locale === routing.defaultLocale ? "/" : `/${locale}` },
+    alternates: buildAlternates(locale, "/"),
     ...buildSocialMetadata({ title, description, locale, path: "/", type: "website" }),
   };
 }

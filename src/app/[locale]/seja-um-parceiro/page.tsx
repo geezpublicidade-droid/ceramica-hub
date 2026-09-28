@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { PartnerLeadForm } from "@/components/PartnerLeadForm";
-import { buildSocialMetadata } from "@/lib/seo";
+import { buildAlternates, buildSocialMetadata } from "@/lib/seo";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return {
     title,
     description,
-    alternates: { canonical: "/seja-um-parceiro" },
+    alternates: buildAlternates(locale, "/seja-um-parceiro"),
     ...buildSocialMetadata({ title, description, locale, path: "/seja-um-parceiro" }),
   };
 }

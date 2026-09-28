@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { getActivePartners } from "@/lib/services/institutional-partners";
-import { buildSocialMetadata } from "@/lib/seo";
+import { buildAlternates, buildSocialMetadata } from "@/lib/seo";
 import { PARTNER_TIERS } from "@/lib/partner-tiers";
 
 export const revalidate = 60;
@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return {
     title,
     description,
-    alternates: { canonical: "/parceiros" },
+    alternates: buildAlternates(locale, "/parceiros"),
     ...buildSocialMetadata({ title, description, locale, path: "/parceiros" }),
   };
 }

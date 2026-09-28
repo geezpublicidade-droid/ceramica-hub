@@ -3,7 +3,7 @@ import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { getPublishedPosts } from "@/lib/services/blog";
-import { buildSocialMetadata } from "@/lib/seo";
+import { buildAlternates, buildSocialMetadata } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return {
     title,
     description,
-    alternates: { canonical: "/blog" },
+    alternates: buildAlternates(locale, "/blog"),
     ...buildSocialMetadata({ title, description, locale, path: "/blog" }),
   };
 }

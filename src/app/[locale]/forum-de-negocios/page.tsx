@@ -3,7 +3,7 @@ import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { EventInterestLink } from "@/components/EventInterestLink";
 import { getUpcomingEvents } from "@/lib/services/events";
-import { buildSocialMetadata } from "@/lib/seo";
+import { buildAlternates, buildSocialMetadata } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return {
     title,
     description,
-    alternates: { canonical: "/forum-de-negocios" },
+    alternates: buildAlternates(locale, "/forum-de-negocios"),
     ...buildSocialMetadata({ title, description, locale, path: "/forum-de-negocios" }),
   };
 }

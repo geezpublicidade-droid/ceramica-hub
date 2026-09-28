@@ -6,7 +6,7 @@ import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { BusinessCardGrid } from "@/components/BusinessCardGrid";
 import { getAllBusinesses } from "@/lib/services/platform";
 import { getActiveTowers, getTowerBySlug } from "@/lib/services/towers";
-import { localizedUrl, buildSocialMetadata } from "@/lib/seo";
+import { localizedUrl, buildAlternates, buildSocialMetadata } from "@/lib/seo";
 
 type PageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title,
     description,
-    alternates: { canonical: `/torres/${slug}` },
+    alternates: buildAlternates(locale, `/torres/${slug}`),
     ...buildSocialMetadata({ title, description, locale, path: `/torres/${slug}`, type: "website" }),
   };
 }

@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { RegisterWizard } from "@/components/register/RegisterWizard";
-import { buildSocialMetadata } from "@/lib/seo";
+import { buildAlternates, buildSocialMetadata } from "@/lib/seo";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return {
     title,
     description,
-    alternates: { canonical: "/cadastro" },
+    alternates: buildAlternates(locale, "/cadastro"),
     ...buildSocialMetadata({ title, description, locale, path: "/cadastro" }),
   };
 }
