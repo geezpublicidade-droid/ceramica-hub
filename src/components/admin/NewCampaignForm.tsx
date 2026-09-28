@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { createAdCampaign } from "@/lib/actions/admin-ads";
-import { formatCents } from "@/lib/utils";
+import { formatCents, parseCentsInput } from "@/lib/utils";
 import type { AdPlacement } from "@/lib/services/ads";
 
 const inputClass = "mt-1.5 w-full rounded-xl border border-border bg-white px-4 py-2.5 text-[16px] text-foreground outline-none focus:border-primary";
@@ -52,11 +52,6 @@ export function NewCampaignForm({ placements }: { placements: AdPlacement[] }) {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
-  function toCents(value: string): number | null {
-    const n = Number(value.replace(",", "."));
-    return Number.isFinite(n) && n >= 0 ? Math.round(n * 100) : null;
-  }
-
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setError(null);
@@ -72,8 +67,8 @@ export function NewCampaignForm({ placements }: { placements: AdPlacement[] }) {
         targetUrl: form.targetUrl,
         startsAt: form.startsAt,
         endsAt: form.endsAt,
-        budgetCents: toCents(form.budgetCents),
-        negotiatedValueCents: toCents(form.negotiatedValueCents),
+        budgetCents: parseCentsInput(form.budgetCents),
+        negotiatedValueCents: parseCentsInput(form.negotiatedValueCents),
         desktopImageUrl: form.desktopImageUrl,
         mobileImageUrl: form.mobileImageUrl,
       });

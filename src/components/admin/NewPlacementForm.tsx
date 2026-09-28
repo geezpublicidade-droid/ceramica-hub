@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { createPlacement } from "@/lib/actions/admin-ads";
+import { parseCentsInput } from "@/lib/utils";
 
 const inputClass = "mt-1.5 w-full rounded-xl border border-border bg-white px-4 py-2.5 text-[16px] text-foreground outline-none focus:border-primary";
 const labelClass = "text-[15px] font-medium text-foreground";
@@ -20,12 +21,6 @@ export function NewPlacementForm() {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
-  function toCents(value: string): number | null {
-    if (!value.trim()) return null;
-    const n = Number(value.replace(",", "."));
-    return Number.isFinite(n) && n >= 0 ? Math.round(n * 100) : null;
-  }
-
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setError(null);
@@ -36,7 +31,7 @@ export function NewPlacementForm() {
         description: form.description,
         width: Number(form.width),
         height: Number(form.height),
-        monthlyPriceCents: toCents(form.monthlyPrice),
+        monthlyPriceCents: parseCentsInput(form.monthlyPrice),
       });
       if (!result.success) {
         setError(result.error);

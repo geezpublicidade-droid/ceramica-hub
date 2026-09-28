@@ -116,6 +116,8 @@ export type CampaignWithDetails = {
   advertiserBlocked: boolean;
   placementName: string;
   rejectionReason: string | null;
+  negotiatedValueCents: number | null;
+  budgetCents: number | null;
 };
 
 export async function getAllCampaigns(): Promise<CampaignWithDetails[]> {
@@ -123,7 +125,7 @@ export async function getAllCampaigns(): Promise<CampaignWithDetails[]> {
   const { data, error } = await supabase
     .from("ad_campaigns")
     .select(
-      "id, title, status, starts_at, ends_at, target_url, rejection_reason, ad_accounts(id, company_name, blocked), ad_placements(name)"
+      "id, title, status, starts_at, ends_at, target_url, rejection_reason, negotiated_value_cents, budget_cents, ad_accounts(id, company_name, blocked), ad_placements(name)"
     )
     .order("created_at", { ascending: false });
   if (error) throw error;
@@ -143,6 +145,8 @@ export async function getAllCampaigns(): Promise<CampaignWithDetails[]> {
       advertiserBlocked: account?.blocked ?? false,
       placementName: placement?.name ?? "—",
       rejectionReason: row.rejection_reason,
+      negotiatedValueCents: row.negotiated_value_cents,
+      budgetCents: row.budget_cents,
     };
   });
 }

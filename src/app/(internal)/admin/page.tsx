@@ -4,6 +4,7 @@ import { AdminBusinessRow } from "@/components/admin/AdminBusinessRow";
 import { ApprovedBusinessRow } from "@/components/admin/ApprovedBusinessRow";
 import { SuspendedBusinessRow } from "@/components/admin/SuspendedBusinessRow";
 import { AdminShell } from "@/components/admin/AdminShell";
+import { AdminStatCard } from "@/components/admin/AdminStatCard";
 import { getAdminDashboardStats, getProfileCompletenessMap } from "@/lib/services/admin-dashboard";
 import { countOpenTicketsForAdmin } from "@/lib/services/support";
 import { SignOutButton } from "@/components/nav/SignOutButton";
@@ -108,17 +109,7 @@ export default async function AdminPage() {
           <h2 className="text-[13px] font-semibold uppercase tracking-wide text-muted">{group.title}</h2>
           <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
             {group.cards.map((card) => (
-              <div
-                key={card.label}
-                className={`rounded-2xl border p-4 ${
-                  card.label === "Pendentes" && card.value > 0
-                    ? "border-primary/40 bg-primary/5"
-                    : "border-border bg-white/70"
-                }`}
-              >
-                <p className="text-[22px] font-semibold text-foreground">{card.value}</p>
-                <p className="mt-1 text-[13px] text-muted">{card.label}</p>
-              </div>
+              <AdminStatCard key={card.label} label={card.label} value={card.value} highlight={card.label === "Pendentes" && card.value > 0} />
             ))}
           </div>
         </section>

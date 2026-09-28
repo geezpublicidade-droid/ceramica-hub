@@ -1,7 +1,7 @@
 import { requireAdminPage } from "@/lib/auth-guards";
 import { getPlacementsInventory } from "@/lib/services/ads";
 import { NewPlacementForm } from "@/components/admin/NewPlacementForm";
-import { PlacementRow } from "@/components/admin/PlacementRow";
+import { PlacementCard } from "@/components/admin/PlacementCard";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { BackLink } from "@/components/nav/BackLink";
 
@@ -29,9 +29,11 @@ export default async function AdminPublicidadeEspacosPage() {
       <section className="flex flex-col gap-3">
         <p className="text-[17px] font-semibold text-foreground">Posições ({placements.length})</p>
         {placements.length === 0 && <p className="text-[15px] text-muted">Nenhuma posição cadastrada ainda.</p>}
-        {placements.map((placement) => (
-          <PlacementRow key={placement.id} placement={placement} />
-        ))}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {placements.map((placement) => (
+            <PlacementCard key={placement.id} placement={placement} />
+          ))}
+        </div>
       </section>
     </AdminShell>
   );
