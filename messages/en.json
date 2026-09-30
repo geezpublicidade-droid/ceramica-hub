@@ -221,7 +221,8 @@
       "terms": "I have read and accept the <termsLink>Terms of Use</termsLink>.",
       "privacy": "I have read and accept the <privacyLink>Privacy Policy</privacyLink>.",
       "registrationPolicy": "I have read and accept the <registrationLink>Registration and Verification Policy</registrationLink>.",
-      "imageUsage": "I authorize the public display of the information and images submitted."
+      "imageUsage": "I authorize the public display of the information and images submitted.",
+      "marketing": "I agree to receive news and announcements from Cerâmica Hub by email (optional). I can unsubscribe at any time."
     },
     "errors": {
       "name": "Enter the business name.",

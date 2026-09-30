@@ -33,6 +33,7 @@ const registerBusinessSchema = z
     registrationPolicyAccepted: z.boolean(),
     imageUsageAuthorized: z.boolean(),
     addressConfirmed: z.boolean(),
+    marketingOptIn: z.boolean().optional(),
     comprovantePath: z.string().min(1, "Envie o comprovante de instalação na torre."),
     turnstileToken: z.string().nullable().optional(),
   })
@@ -161,6 +162,18 @@ export async function registerBusiness(rawInput: RegisterBusinessInput): Promise
       ip,
     }))
   );
+
+  if (input.marketingOptIn) {
+    // Consentimento de marketing é opcional e independente dos termos; falha
+    // aqui não desfaz o cadastro (só significa que a empresa não entra em campanhas).
+    await supabase.from("email_consents").upsert({
+      email: input.email.toLowerCase(),
+      business_id: business.id,
+      source: "cadastro",
+      granted_at: new Date().toISOString(),
+      revoked_at: null,
+    });
+  }
 
   await translateAndStore("business", business.id, {
     description: input.shortDescription.trim(),

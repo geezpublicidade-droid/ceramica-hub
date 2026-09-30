@@ -161,6 +161,18 @@ const NAV_SECTIONS: { section: string; items: NavItem[] }[] = [
         roles: ["super_admin", "admin", "marketing", "conteudo"],
       },
       {
+        label: "Públicos",
+        href: "/admin/marketing/publicos",
+        Icon: IconContacts,
+        roles: ["super_admin", "admin", "marketing"],
+      },
+      {
+        label: "E-mail marketing",
+        href: "/admin/marketing/email",
+        Icon: IconLeads,
+        roles: ["super_admin", "admin", "marketing"],
+      },
+      {
         label: "Blog",
         href: "/admin/blog",
         Icon: IconBlog,

@@ -34,6 +34,7 @@ type FormState = {
   registrationPolicyAccepted: boolean;
   imageUsageAuthorized: boolean;
   addressConfirmed: boolean;
+  marketingOptIn: boolean;
 };
 
 const initialState: FormState = {
@@ -60,6 +61,7 @@ const initialState: FormState = {
   registrationPolicyAccepted: false,
   imageUsageAuthorized: false,
   addressConfirmed: false,
+  marketingOptIn: false,
 };
 
 const inputClass =
@@ -424,6 +426,15 @@ export function RegisterWizard({ towers }: { towers: TowerOption[] }) {
               onChange={(e) => update("imageUsageAuthorized", e.target.checked)}
             />
             {t("consent.imageUsage")}
+          </label>
+          <label className="flex items-start gap-3 text-[16px] text-foreground">
+            <input
+              type="checkbox"
+              className="mt-1"
+              checked={form.marketingOptIn}
+              onChange={(e) => update("marketingOptIn", e.target.checked)}
+            />
+            {t("consent.marketing")}
           </label>
           <TurnstileWidget onVerify={setTurnstileToken} />
         </div>

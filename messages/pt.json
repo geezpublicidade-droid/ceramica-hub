@@ -221,7 +221,8 @@
       "terms": "Li e aceito os <termsLink>Termos de Uso</termsLink>.",
       "privacy": "Li e aceito a <privacyLink>Política de Privacidade</privacyLink>.",
       "registrationPolicy": "Li e aceito a <registrationLink>Política de Cadastro e Verificação</registrationLink>.",
-      "imageUsage": "Autorizo a exibição pública das informações e imagens enviadas."
+      "imageUsage": "Autorizo a exibição pública das informações e imagens enviadas.",
+      "marketing": "Aceito receber novidades e comunicados do Cerâmica Hub por e-mail (opcional). Posso cancelar quando quiser."
     },
     "errors": {
       "name": "Informe o nome da empresa.",

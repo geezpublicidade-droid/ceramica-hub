@@ -221,7 +221,8 @@
       "terms": "我已阅读并接受<termsLink>使用条款</termsLink>。",
       "privacy": "我已阅读并接受<privacyLink>隐私政策</privacyLink>。",
       "registrationPolicy": "我已阅读并接受<registrationLink>登记与认证政策</registrationLink>。",
-      "imageUsage": "我授权公开展示所提交的信息与图片。"
+      "imageUsage": "我授权公开展示所提交的信息与图片。",
+      "marketing": "我同意通过电子邮件接收 Cerâmica Hub 的资讯与通知（可选），并可随时取消。"
     },
     "errors": {
       "name": "请填写企业名称。",
