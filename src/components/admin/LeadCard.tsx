@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useTransition } from "react";
 import {
   convertLeadToAdvertiserAction,
@@ -94,7 +95,7 @@ export function LeadCard({ lead, admins, businesses }: Props) {
       </div>
 
       {showLossReason && (
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <input
             className="flex-1 rounded-lg border border-border bg-white px-2.5 py-1.5 text-[12px]"
             placeholder="Motivo da perda (opcional)"
@@ -115,6 +116,12 @@ export function LeadCard({ lead, admins, businesses }: Props) {
         </div>
       )}
 
+      {lead.stage !== "perdido" && (
+        <Link href={`/admin/propostas/nova?leadId=${lead.id}`} className="text-[12px] font-medium text-primary hover:underline">
+          Criar proposta →
+        </Link>
+      )}
+
       {lead.stage !== "fechado" && lead.stage !== "perdido" && !lead.convertedBusinessId && (
         <div className="border-t border-border pt-2.5">
           {!showConvert ? (
@@ -127,7 +134,7 @@ export function LeadCard({ lead, admins, businesses }: Props) {
             </button>
           ) : (
             <div className="flex flex-col gap-2">
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <select
                   className={`${selectClass} flex-1`}
                   value={selectedBusinessId}

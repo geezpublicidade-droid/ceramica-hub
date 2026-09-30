@@ -90,6 +90,12 @@ const NAV_SECTIONS: { section: string; items: NavItem[] }[] = [
         ],
       },
       {
+        label: "Propostas",
+        href: "/admin/propostas",
+        Icon: IconLeads,
+        roles: ["super_admin", "admin", "comercial"],
+      },
+      {
         label: "Produtos",
         href: "/admin/produtos",
         Icon: IconAds,

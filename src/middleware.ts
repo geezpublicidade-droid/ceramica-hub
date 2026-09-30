@@ -33,7 +33,7 @@ export default auth((req) => {
     return; // autorizado, rota interna nunca passa pelo next-intl
   }
 
-  if (NO_LOCALE_PATHS.includes(pathname)) return;
+  if (NO_LOCALE_PATHS.includes(pathname) || pathname.startsWith("/proposta/")) return;
 
   return intlMiddleware(req);
 });
