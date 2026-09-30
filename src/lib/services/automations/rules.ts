@@ -1,4 +1,5 @@
 import { createServiceClient } from "@/lib/supabase/server";
+import { formatDateBR } from "@/lib/utils";
 import { getContractsExpiringSoon } from "@/lib/services/anchors";
 import { getMonthlyReport, previousMonthKey, formatMonthLabel } from "@/lib/services/business-results";
 import { absoluteUrl, escapeHtml, renderAutomationEmail } from "./email-layout";
@@ -157,7 +158,7 @@ async function anchorRenewalJobs(): Promise<AutomationJob[]> {
       subject: `Contrato de âncora vencendo: ${contract.partnerName}`,
       html: renderAutomationEmail({
         title: "Contrato de âncora perto do fim",
-        bodyHtml: `<p>O contrato de <strong>${escapeHtml(contract.partnerName)}</strong> termina em ${contract.endsOn.split("-").reverse().join("/")}. Hora de conversar sobre a renovação.</p>`,
+        bodyHtml: `<p>O contrato de <strong>${escapeHtml(contract.partnerName)}</strong> termina em ${formatDateBR(contract.endsOn)}. Hora de conversar sobre a renovação.</p>`,
         cta: { label: "Abrir parceiro", href: absoluteUrl(`/admin/parceiros/${contract.partnerId}`) },
       }),
     })
@@ -227,7 +228,7 @@ async function publicationReminderJobs(): Promise<AutomationJob[]> {
       subject: `Publicação marcada: ${item.title}`,
       html: renderAutomationEmail({
         title: "Lembrete de publicação",
-        bodyHtml: `<p><strong>${escapeHtml(item.title)}</strong> está marcado para ${item.scheduled_for.split("-").reverse().join("/")}.</p>`,
+        bodyHtml: `<p><strong>${escapeHtml(item.title)}</strong> está marcado para ${formatDateBR(item.scheduled_for)}.</p>`,
         cta: { label: "Abrir calendário", href: absoluteUrl("/admin/marketing/calendario") },
       }),
     });

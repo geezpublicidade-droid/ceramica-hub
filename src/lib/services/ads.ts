@@ -1,4 +1,5 @@
 import { createServiceClient } from "@/lib/supabase/server";
+import type { AdPlacementFormat } from "@/lib/ad-placement-formats";
 
 export type AdPlacement = {
   id: string;
@@ -9,6 +10,12 @@ export type AdPlacement = {
   height: number;
   monthlyPriceCents: number | null;
   active: boolean;
+  format: AdPlacementFormat | null;
+  mobileWidth: number | null;
+  mobileHeight: number | null;
+  productionPriceCents: number | null;
+  creativeSpecs: string | null;
+  creativeDeadlineDays: number | null;
 };
 
 function mapPlacement(row: {
@@ -20,6 +27,12 @@ function mapPlacement(row: {
   height: number;
   monthly_price_cents: number | null;
   active: boolean;
+  format: string | null;
+  mobile_width: number | null;
+  mobile_height: number | null;
+  production_price_cents: number | null;
+  creative_specs: string | null;
+  creative_deadline_days: number | null;
 }): AdPlacement {
   return {
     id: row.id,
@@ -30,6 +43,12 @@ function mapPlacement(row: {
     height: row.height,
     monthlyPriceCents: row.monthly_price_cents,
     active: row.active,
+    format: row.format as AdPlacementFormat | null,
+    mobileWidth: row.mobile_width,
+    mobileHeight: row.mobile_height,
+    productionPriceCents: row.production_price_cents,
+    creativeSpecs: row.creative_specs,
+    creativeDeadlineDays: row.creative_deadline_days,
   };
 }
 
@@ -179,7 +198,7 @@ export type PlacementInventoryStatus = "vago" | "reservado" | "ativo" | "expiran
 
 export type PlacementInventory = AdPlacement & {
   status: PlacementInventoryStatus;
-  occupant: { campaignId: string; title: string; advertiserName: string; startsAt: string; endsAt: string } | null;
+  occupant: { campaignId: string; title: string; advertiserName: string; startsAt: string; endsAt: string; hasCreative: boolean } | null;
   pendingCount: number;
 };
 
@@ -199,7 +218,7 @@ export async function getPlacementsInventory(): Promise<PlacementInventory[]> {
     supabase.from("ad_placements").select("*").order("name", { ascending: true }),
     supabase
       .from("ad_campaigns")
-      .select("id, placement_id, title, status, starts_at, ends_at, ad_accounts(company_name)")
+      .select("id, placement_id, title, status, starts_at, ends_at, ad_accounts(company_name), ad_creatives(id)")
       .in("status", ["pending_review", "approved"]),
   ]);
   if (placementsError) throw placementsError;
@@ -213,6 +232,7 @@ export async function getPlacementsInventory(): Promise<PlacementInventory[]> {
     starts_at: string;
     ends_at: string;
     ad_accounts: { company_name: string } | null;
+    ad_creatives: { id: string }[];
   };
 
   return (placements ?? []).map((placementRow) => {
@@ -237,6 +257,7 @@ export async function getPlacementsInventory(): Promise<PlacementInventory[]> {
           advertiserName: occupantRow.ad_accounts?.company_name ?? "Anunciante",
           startsAt: occupantRow.starts_at,
           endsAt: occupantRow.ends_at,
+          hasCreative: occupantRow.ad_creatives.length > 0,
         }
       : null;
 

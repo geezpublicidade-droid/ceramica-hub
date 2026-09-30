@@ -8,6 +8,7 @@ import { logAdminAction } from "@/lib/audit-log";
 
 import type { AdminRole } from "@/auth";
 import { findPlacementConflicts, type PlacementConflict } from "@/lib/services/ads";
+import { AD_PLACEMENT_FORMATS } from "@/lib/ad-placement-formats";
 import { formatDateBR } from "@/lib/utils";
 
 /** `conflict` marca a recusa por espaço já ocupado, pra UI oferecer "autorizar mesmo assim". */
@@ -172,7 +173,25 @@ const placementSchema = z.object({
   width: z.number().int().positive("Largura inválida."),
   height: z.number().int().positive("Altura inválida."),
   monthlyPriceCents: z.number().int().nonnegative().nullable(),
+  format: z.enum(AD_PLACEMENT_FORMATS).nullable().default(null),
+  mobileWidth: z.number().int().positive("Largura mobile inválida.").nullable().default(null),
+  mobileHeight: z.number().int().positive("Altura mobile inválida.").nullable().default(null),
+  productionPriceCents: z.number().int().nonnegative().nullable().default(null),
+  creativeSpecs: z.string().trim().max(500, "Especificações muito longas.").optional().or(z.literal("")),
+  creativeDeadlineDays: z.number().int().nonnegative().nullable().default(null),
 });
+
+/** Campos do inventário (Fase 3.8) no formato de coluna do banco -- compartilhado por create e update. */
+function inventoryColumns(input: Omit<z.output<typeof placementSchema>, "key">) {
+  return {
+    format: input.format,
+    mobile_width: input.mobileWidth,
+    mobile_height: input.mobileHeight,
+    production_price_cents: input.productionPriceCents,
+    creative_specs: input.creativeSpecs?.trim() || null,
+    creative_deadline_days: input.creativeDeadlineDays,
+  };
+}
 
 export type PlacementInput = z.input<typeof placementSchema>;
 
@@ -195,6 +214,7 @@ export async function createPlacement(rawInput: PlacementInput): Promise<ActionR
       width: input.width,
       height: input.height,
       monthly_price_cents: input.monthlyPriceCents,
+      ...inventoryColumns(input),
     })
     .select("id")
     .single();
@@ -227,6 +247,7 @@ export async function updatePlacement(
       width: input.width,
       height: input.height,
       monthly_price_cents: input.monthlyPriceCents,
+      ...inventoryColumns(input),
     })
     .eq("id", placementId);
   if (error) return { success: false, error: "Não foi possível salvar a posição." };

@@ -1,9 +1,7 @@
 import { siteUrl } from "@/lib/seo";
-import { unsubscribeUrl } from "@/lib/services/email-marketing";
+import { escapeHtml, unsubscribeUrl } from "@/lib/services/email-marketing";
 
-export function escapeHtml(value: string): string {
-  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-}
+export { escapeHtml };
 
 export const absoluteUrl = (path: string): string => `${siteUrl}${path}`;
 

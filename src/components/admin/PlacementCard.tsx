@@ -4,6 +4,8 @@ import { useState, useTransition } from "react";
 import { setPlacementActive, updatePlacement } from "@/lib/actions/admin-ads";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { formatCents, formatDateBR, parseCentsInput } from "@/lib/utils";
+import { AD_PLACEMENT_FORMAT_LABEL } from "@/lib/ad-placement-formats";
+import { PlacementExtraFields, extrasFromPlacement, extrasToInput } from "@/components/admin/PlacementExtraFields";
 import type { PlacementInventory } from "@/lib/services/ads";
 
 const STATUS_LABEL: Record<PlacementInventory["status"], string> = {
@@ -43,10 +45,29 @@ function SizePreview({ width, height }: { width: number; height: number }) {
   );
 }
 
+/** Ficha comercial do espaço: formato, dimensões (desktop e mobile), valores e especificações do criativo. */
+function PlacementSpecs({ placement }: { placement: PlacementInventory }) {
+  const lines = [
+    placement.format && `Formato: ${AD_PLACEMENT_FORMAT_LABEL[placement.format]}`,
+    `Desktop ${placement.width}×${placement.height}px${placement.mobileWidth && placement.mobileHeight ? ` · Mobile ${placement.mobileWidth}×${placement.mobileHeight}px` : ""}`,
+    placement.productionPriceCents != null && `Produção do criativo: ${formatCents(placement.productionPriceCents)}`,
+    placement.creativeDeadlineDays != null && `Criativo com ${placement.creativeDeadlineDays} dia(s) de antecedência`,
+    placement.creativeSpecs,
+  ].filter(Boolean);
+  return (
+    <ul className="mt-1 text-[12px] text-muted">
+      {lines.map((line) => (
+        <li key={String(line)}>{line}</li>
+      ))}
+    </ul>
+  );
+}
+
 export function PlacementCard({ placement }: { placement: PlacementInventory }) {
   const [editing, setEditing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [extras, setExtras] = useState(() => extrasFromPlacement(placement));
   const [form, setForm] = useState({
     name: placement.name,
     description: placement.description ?? "",
@@ -64,6 +85,7 @@ export function PlacementCard({ placement }: { placement: PlacementInventory }) 
         width: Number(form.width),
         height: Number(form.height),
         monthlyPriceCents: parseCentsInput(form.monthlyPrice),
+        ...extrasToInput(extras),
       });
       if (!result.success) {
         setError(result.error);
@@ -91,11 +113,15 @@ export function PlacementCard({ placement }: { placement: PlacementInventory }) 
         <p className="text-[13px] text-muted">
           {placement.monthlyPriceCents != null ? `${formatCents(placement.monthlyPriceCents)}/mês` : "sem preço definido"}
         </p>
+        <PlacementSpecs placement={placement} />
         {placement.occupant && (
           <p className="mt-1 text-[13px] text-muted">
             {placement.status === "reservado" ? "Reservado por" : "Ocupado por"} {placement.occupant.advertiserName} —{" "}
             {placement.occupant.title} · {formatDateBR(placement.occupant.startsAt)} a {formatDateBR(placement.occupant.endsAt)}
           </p>
+        )}
+        {placement.occupant && !placement.occupant.hasCreative && (
+          <p className="mt-1 text-[13px] font-medium text-orange-700">Criativo ainda não enviado pelo anunciante</p>
         )}
         {placement.pendingCount > 0 && (
           <p className="mt-1 text-[13px] text-purple-700">
@@ -156,6 +182,7 @@ export function PlacementCard({ placement }: { placement: PlacementInventory }) 
               onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
             />
           </label>
+          <PlacementExtraFields value={extras} onChange={setExtras} />
           {error && <p className="text-[14px] text-red-600">{error}</p>}
           <button
             type="button"

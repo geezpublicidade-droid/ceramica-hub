@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { createPlacement } from "@/lib/actions/admin-ads";
 import { parseCentsInput } from "@/lib/utils";
+import { EMPTY_EXTRAS, PlacementExtraFields, extrasToInput, type PlacementExtras } from "@/components/admin/PlacementExtraFields";
 
 const inputClass = "mt-1.5 w-full rounded-xl border border-border bg-white px-4 py-2.5 text-[16px] text-foreground outline-none focus:border-primary";
 const labelClass = "text-[15px] font-medium text-foreground";
@@ -13,6 +14,7 @@ const initialState: FormState = { key: "", name: "", description: "", width: "",
 
 export function NewPlacementForm() {
   const [form, setForm] = useState<FormState>(initialState);
+  const [extras, setExtras] = useState<PlacementExtras>(EMPTY_EXTRAS);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -32,6 +34,7 @@ export function NewPlacementForm() {
         width: Number(form.width),
         height: Number(form.height),
         monthlyPriceCents: parseCentsInput(form.monthlyPrice),
+        ...extrasToInput(extras),
       });
       if (!result.success) {
         setError(result.error);
@@ -39,6 +42,7 @@ export function NewPlacementForm() {
       }
       setDone(true);
       setForm(initialState);
+      setExtras(EMPTY_EXTRAS);
     });
   }
 
@@ -82,6 +86,8 @@ export function NewPlacementForm() {
           <input className={inputClass} value={form.monthlyPrice} onChange={(e) => update("monthlyPrice", e.target.value)} placeholder="Ex: 800,00" />
         </label>
       </div>
+
+      <PlacementExtraFields value={extras} onChange={setExtras} />
 
       {error && <p className="text-[15px] text-red-600">{error}</p>}
 
