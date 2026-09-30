@@ -10,7 +10,7 @@ export function AdminDeletionRequestRow({ request }: { request: PendingDeletionR
 
   return (
     <div className="rounded-3xl border border-border bg-white/70 p-6">
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <p className="text-[17px] font-semibold text-foreground">
           {request.requesterType === "member" ? request.memberName : request.businessName}
         </p>
@@ -31,7 +31,7 @@ export function AdminDeletionRequestRow({ request }: { request: PendingDeletionR
         className="mt-3 w-full rounded-xl border border-border bg-white px-3 py-2 text-[15px]"
       />
 
-      <div className="mt-3 flex gap-2">
+      <div className="mt-3 flex flex-wrap gap-2">
         <button
           type="button"
           disabled={isPending}

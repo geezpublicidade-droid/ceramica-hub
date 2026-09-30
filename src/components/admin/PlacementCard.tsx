@@ -137,7 +137,7 @@ export function PlacementCard({ placement }: { placement: PlacementInventory }) 
               placeholder="Ex: 800,00"
             />
           </label>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <label>
               <span className={labelClass}>Largura (px)</span>
               <input className={inputClass} value={form.width} onChange={(e) => setForm((f) => ({ ...f, width: e.target.value }))} />

@@ -60,7 +60,7 @@ export default async function AdminResultadosPage({
             período aparece zerada, não fica de fora.
           </p>
         </div>
-        <div className="flex gap-1.5 rounded-full border border-border bg-white/70 p-1">
+        <div className="flex flex-wrap gap-1.5 rounded-2xl border border-border bg-white/70 p-1 sm:rounded-full">
           {PERIODS.map((period) => (
             <Link
               key={period.days}

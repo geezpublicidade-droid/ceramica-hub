@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import type { AdminRole } from "@/auth";
 import { IconOverview, IconSupport } from "@/components/dashboard/nav-icons";
+import { AdminGlobalResults } from "@/components/admin/AdminGlobalResults";
 import {
   IconFinance,
   IconLgpd,
@@ -358,9 +359,11 @@ export function AdminNav({
           type="search"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Buscar no menu..."
+          placeholder="Buscar no menu, empresas, contatos..."
           className="w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-base text-foreground outline-none focus:border-primary lg:py-2 lg:text-[13px]"
         />
+
+        <AdminGlobalResults term={search.trim()} onNavigate={() => setMobileOpen(false)} />
 
         {sections.length === 0 && (
           <p className="px-1 text-[13px] text-muted">

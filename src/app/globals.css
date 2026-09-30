@@ -46,6 +46,10 @@
 }
 
 @theme inline {
+  --color-primary-soft: var(--primary-soft);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
@@ -426,4 +430,41 @@ body {
   .liquid-dark:hover {
     transform: none;
   }
+}
+
+/* ── Tema da Central de Gestão (/admin) ───────────────────────────────────
+   Isolado em .admin-theme pra não mexer no site público: só redefine os
+   tokens dentro do painel. Os utilitários do Tailwind leem --color-*, então
+   os dois conjuntos (base e --color-*) são redefinidos aqui. */
+.admin-theme {
+  --background: #f7f4ef;
+  --foreground: #242321;
+  --muted: #7a746c;
+  --border: rgba(36, 35, 33, 0.09);
+  --primary: #b76546;
+  --primary-light: #c98a72;
+  --primary-soft: #f6e9e3;
+  --success: #3f7d58;
+  --warning: #b7791f;
+  --danger: #b3423a;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-light: var(--primary-light);
+  --color-primary-soft: var(--primary-soft);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  font-family: var(--font-inter), var(--font-montserrat), system-ui, sans-serif;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+:root {
+  --primary-soft: #f4e6df;
+  --success: #3f7d58;
+  --warning: #b7791f;
+  --danger: #b3423a;
 }

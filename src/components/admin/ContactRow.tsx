@@ -52,7 +52,7 @@ export function ContactRow({ contact, showBusiness }: { contact: Contact; showBu
           <input className={inputClass} value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} placeholder="E-mail" />
         </div>
         {error && <p className="mt-2 text-[13px] text-red-600">{error}</p>}
-        <div className="mt-3 flex gap-2">
+        <div className="mt-3 flex flex-wrap gap-2">
           <button type="button" disabled={isPending} onClick={handleSave} className="neu-primary rounded-full px-4 py-1.5 text-[13px] font-medium text-white disabled:opacity-60">
             Salvar
           </button>
@@ -81,7 +81,7 @@ export function ContactRow({ contact, showBusiness }: { contact: Contact; showBu
             .join(" · ") || "Sem dados adicionais"}
         </p>
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <button type="button" onClick={() => setEditing(true)} className="text-[12px] font-medium text-primary underline">
           Editar
         </button>

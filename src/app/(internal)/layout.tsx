@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Montserrat, Playfair_Display, Geist_Mono } from "next/font/google";
+import { Montserrat, Playfair_Display, Geist_Mono, Inter } from "next/font/google";
 import "../globals.css";
 
 // Ver nota em src/app/[locale]/layout.tsx -- mesma tipografia oficial
@@ -11,6 +11,12 @@ const montserrat = Montserrat({
 
 const playfairDisplay = Playfair_Display({
   variable: "--font-playfair",
+  subsets: ["latin"],
+});
+
+// Inter é a fonte da Central de Gestão (/admin, ver .admin-theme em globals.css).
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -36,7 +42,7 @@ export default function InternalRootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${montserrat.variable} ${playfairDisplay.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${montserrat.variable} ${playfairDisplay.variable} ${geistMono.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

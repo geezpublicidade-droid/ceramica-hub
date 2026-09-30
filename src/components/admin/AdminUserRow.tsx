@@ -58,7 +58,7 @@ export function AdminUserRow({
         </p>
         {error && <p className="text-[14px] text-red-600">{error}</p>}
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <select
           className="rounded-xl border border-border bg-white px-3 py-2 text-[15px] text-foreground disabled:opacity-60"
           value={role}

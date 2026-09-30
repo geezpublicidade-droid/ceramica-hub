@@ -16,7 +16,7 @@ export function BlogPostRow({ post }: { post: BlogPost }) {
           {post.publishedAt && ` · ${new Date(post.publishedAt).toLocaleDateString("pt-BR")}`}
         </p>
       </div>
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {post.status === "draft" ? (
           <button
             type="button"

@@ -5,6 +5,8 @@ import { ApprovedBusinessRow } from "@/components/admin/ApprovedBusinessRow";
 import { SuspendedBusinessRow } from "@/components/admin/SuspendedBusinessRow";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { AdminStatCard } from "@/components/admin/AdminStatCard";
+import { AdminAlerts } from "@/components/admin/AdminAlerts";
+import { getAdminAlerts } from "@/lib/services/admin-alerts";
 import { getAdminDashboardStats, getProfileCompletenessMap } from "@/lib/services/admin-dashboard";
 import { countOpenTicketsForAdmin } from "@/lib/services/support";
 import { SignOutButton } from "@/components/nav/SignOutButton";
@@ -54,7 +56,7 @@ async function getBusinessesByStatus(status: "pending" | "approved" | "rejected"
 export default async function AdminPage() {
   const { adminRole } = await requireAdminPage(["super_admin", "admin", "moderador", "analista"]);
 
-  const [pending, approved, rejected, suspended, stats, completeness, openTickets] = await Promise.all([
+  const [pending, approved, rejected, suspended, stats, completeness, openTickets, alerts] = await Promise.all([
     getBusinessesByStatus("pending"),
     getBusinessesByStatus("approved"),
     getBusinessesByStatus("rejected"),
@@ -62,6 +64,7 @@ export default async function AdminPage() {
     getAdminDashboardStats(),
     getProfileCompletenessMap(),
     countOpenTicketsForAdmin(),
+    getAdminAlerts(adminRole),
   ]);
 
   const statGroups: { title: string; cards: { label: string; value: number }[] }[] = [
@@ -94,7 +97,7 @@ export default async function AdminPage() {
 
   return (
     <AdminShell currentPath="/admin" adminRole={adminRole}>
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
         <div>
           <h1 className="text-2xl font-semibold text-foreground">Painel administrativo</h1>
           <p className="mt-2 text-[16px] text-muted">
@@ -103,6 +106,8 @@ export default async function AdminPage() {
         </div>
         <SignOutButton action={logout} />
       </div>
+
+      <AdminAlerts alerts={alerts} />
 
       {statGroups.map((group) => (
         <section key={group.title} className="mt-4">

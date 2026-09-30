@@ -48,7 +48,7 @@ export function TaskRow({ task, entityLabel }: { task: Task; entityLabel?: strin
         </p>
         {task.description && <p className="mt-1 max-w-md text-[13px] text-muted">{task.description}</p>}
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <select
           className="rounded-xl border border-border bg-white px-3 py-2 text-[13px] text-foreground disabled:opacity-60"
           value={task.status}

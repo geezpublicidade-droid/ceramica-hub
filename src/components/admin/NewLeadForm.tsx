@@ -199,7 +199,7 @@ export function NewLeadForm({ admins, towers }: { admins: AssignableAdmin[]; tow
 
       {error && <p className="text-[14px] text-red-600">{error}</p>}
 
-      <div className="flex gap-3">
+      <div className="flex flex-wrap gap-3">
         <button
           type="submit"
           disabled={isPending}

@@ -39,7 +39,7 @@ export default async function AdminPublicidadePage() {
 
   return (
     <AdminShell currentPath="/admin/publicidade" adminRole={adminRole} wide>
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
         <div>
           <h1 className="text-2xl font-semibold text-foreground">Publicidade</h1>
           <p className="mt-2 text-[16px] text-muted">
@@ -60,7 +60,7 @@ export default async function AdminPublicidadePage() {
       />
 
       <div>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="text-[17px] font-semibold text-foreground">Campanhas ({rows.length})</p>
           {rows.length > 0 && <ExportCampaignsCsvButton rows={rows} />}
         </div>

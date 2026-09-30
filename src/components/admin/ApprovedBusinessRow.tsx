@@ -81,7 +81,7 @@ export function ApprovedBusinessRow({ business }: { business: ApprovedBusiness }
             </p>
           )}
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           {eligibleForTrial && (
             <button
               type="button"
@@ -146,7 +146,7 @@ export function ApprovedBusinessRow({ business }: { business: ApprovedBusiness }
       {comprovanteError && <p className="mt-2 text-[13px] text-red-600">{comprovanteError}</p>}
 
       {showSuspendReason && (
-        <div className="mt-3 flex gap-2">
+        <div className="mt-3 flex flex-wrap gap-2">
           <input
             className="flex-1 rounded-xl border border-border bg-white px-3 py-2 text-[14px]"
             placeholder="Motivo da suspensão (opcional)"

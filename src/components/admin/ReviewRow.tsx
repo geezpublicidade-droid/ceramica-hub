@@ -30,7 +30,7 @@ export function ReviewRow({ review }: { review: BusinessReviewAdminRow }) {
             ))}
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <select
             className="rounded-xl border border-border bg-white px-3 py-2 text-[13px] text-foreground disabled:opacity-60"
             value={review.status}
