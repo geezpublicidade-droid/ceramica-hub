@@ -473,7 +473,8 @@
       "presenca_institucional": "Marcas aliadas",
       "parceiro_ecossistema": "Socios del Ecosistema"
     },
-    "ecosystemNote": "Los Socios del Ecosistema son marcas que atienden a quienes viven, trabajan o circulan por Cerâmica -- no están instaladas en el complejo."
+    "ecosystemNote": "Los Socios del Ecosistema son marcas que atienden a quienes viven, trabajan o circulan por Cerâmica -- no están instaladas en el complejo.",
+    "viewPage": "Ver página"
   },
   "PartnerLeadPage": {
     "metaTitle": "Sé un Socio — Cerâmica Hub",
@@ -757,5 +758,13 @@
   },
   "InstitutionalStatement": {
     "text": "Cerâmica Hub existe para valorar a las personas, los negocios y el territorio. Juntos creamos un ecosistema más dinámico, humano y lleno de posibilidades para São Caetano do Sul."
+  },
+  "AnchorPage": {
+    "backToPartners": "Volver a los socios",
+    "storesHeading": "Tiendas y servicios",
+    "highlight": "Destacado",
+    "emptyStores": "Pronto aparecerán aquí las tiendas.",
+    "visitSite": "Sitio web",
+    "metaTitle": "{name} — Cerâmica Hub"
   }
 }

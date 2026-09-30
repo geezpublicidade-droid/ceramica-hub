@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useTransition } from "react";
 import { updatePartnerStatus, updatePartnerTier, deleteInstitutionalPartner } from "@/lib/actions/admin-institutional-partners";
 import { PARTNER_TIERS, PARTNER_TIER_LABEL, type PartnerTier } from "@/lib/partner-tiers";
@@ -60,6 +61,9 @@ export function PartnerRow({ partner }: { partner: InstitutionalPartner }) {
             </option>
           ))}
         </select>
+        <Link href={`/admin/parceiros/${partner.id}`} className="neu rounded-full px-4 py-2 text-[13px] font-medium text-foreground">
+          Gerenciar
+        </Link>
         <button
           type="button"
           disabled={isPending}

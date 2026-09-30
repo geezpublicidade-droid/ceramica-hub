@@ -473,7 +473,8 @@
       "presenca_institucional": "Partner brands",
       "parceiro_ecossistema": "Ecosystem Partners"
     },
-    "ecosystemNote": "Ecosystem Partners are brands that serve people who live, work or pass through Cerâmica -- they are not located in the complex."
+    "ecosystemNote": "Ecosystem Partners are brands that serve people who live, work or pass through Cerâmica -- they are not located in the complex.",
+    "viewPage": "View page"
   },
   "PartnerLeadPage": {
     "metaTitle": "Become a Partner — Cerâmica Hub",
@@ -757,5 +758,13 @@
   },
   "InstitutionalStatement": {
     "text": "Cerâmica Hub exists to value people, businesses and the territory. Together, we build a more dynamic, human ecosystem full of possibilities for São Caetano do Sul."
+  },
+  "AnchorPage": {
+    "backToPartners": "Back to partners",
+    "storesHeading": "Stores and services",
+    "highlight": "Featured",
+    "emptyStores": "Stores will appear here soon.",
+    "visitSite": "Website",
+    "metaTitle": "{name} — Cerâmica Hub"
   }
 }

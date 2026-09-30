@@ -4,6 +4,7 @@ import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { getActivePartners } from "@/lib/services/institutional-partners";
 import { buildAlternates, buildSocialMetadata } from "@/lib/seo";
 import { PARTNER_TIERS } from "@/lib/partner-tiers";
+import { Link } from "@/i18n/navigation";
 
 export const revalidate = 60;
 
@@ -73,6 +74,11 @@ export default async function PartnersPage() {
                                 <p className="text-[17px] font-semibold text-foreground">{partner.name}</p>
                               )}
                               <p className="text-[14px] text-muted">{partner.partnershipType}</p>
+                              {partner.pageSlug && (
+                                <Link href={`/parceiros/${partner.pageSlug}`} className="mt-1 inline-block text-[14px] font-medium text-primary hover:underline">
+                                  {t("viewPage")}
+                                </Link>
+                              )}
                             </div>
                           </div>
                         ))}

@@ -13,6 +13,8 @@ export type InstitutionalPartner = {
   startsAt: string | null;
   endsAt: string | null;
   sortOrder: number;
+  /** Só existe quando a página própria está habilitada no admin; /parceiros usa pra linkar. */
+  pageSlug: string | null;
 };
 
 function mapPartner(row: Record<string, unknown>): InstitutionalPartner {
@@ -28,6 +30,7 @@ function mapPartner(row: Record<string, unknown>): InstitutionalPartner {
     startsAt: row.starts_at as string | null,
     endsAt: row.ends_at as string | null,
     sortOrder: row.sort_order as number,
+    pageSlug: row.has_page ? (row.slug as string | null) : null,
   };
 }
 

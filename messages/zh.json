@@ -473,7 +473,8 @@
       "presenca_institucional": "合作品牌",
       "parceiro_ecossistema": "生态合作伙伴"
     },
-    "ecosystemNote": "生态合作伙伴是服务在 Cerâmica 生活、工作或往来人群的品牌——并未入驻综合体。"
+    "ecosystemNote": "生态合作伙伴是服务在 Cerâmica 生活、工作或往来人群的品牌——并未入驻综合体。",
+    "viewPage": "查看页面"
   },
   "PartnerLeadPage": {
     "metaTitle": "成为合作伙伴 — Cerâmica Hub",
@@ -757,5 +758,13 @@
   },
   "InstitutionalStatement": {
     "text": "Cerâmica Hub 的存在,是为了重视人、企业与这片土地。我们携手打造一个更有活力、更具人情味、充满可能的圣卡埃塔诺-杜苏尔生态。"
+  },
+  "AnchorPage": {
+    "backToPartners": "返回合作伙伴",
+    "storesHeading": "商店与服务",
+    "highlight": "精选",
+    "emptyStores": "商店即将在此展示。",
+    "visitSite": "网站",
+    "metaTitle": "{name} — Cerâmica Hub"
   }
 }
