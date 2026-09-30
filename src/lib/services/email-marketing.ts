@@ -300,14 +300,24 @@ export async function unsubscribeByToken(token: string): Promise<UnsubscribeOutc
     .eq("unsubscribe_token", token)
     .maybeSingle();
   if (error) throw error;
-  if (!send) return { found: false };
+
+  // Os e-mails automáticos (automation_log) têm token próprio, com o mesmo efeito.
+  const { data: automation, error: automationError } = send
+    ? { data: null, error: null }
+    : await supabase.from("automation_log").select("recipient_email").eq("unsubscribe_token", token).maybeSingle();
+  if (automationError) throw automationError;
+
+  const recipient = send?.email ?? automation?.recipient_email;
+  if (!recipient) return { found: false };
 
   const now = new Date().toISOString();
-  const email = send.email.toLowerCase();
+  const email = recipient.toLowerCase();
   const results = await Promise.all([
     supabase.from("email_unsubscribes").upsert({ email, reason: "link_no_email" }),
     supabase.from("email_consents").update({ revoked_at: now }).eq("email", email),
-    supabase.from("email_sends").update({ unsubscribed_at: now }).eq("id", send.id).is("unsubscribed_at", null),
+    send
+      ? supabase.from("email_sends").update({ unsubscribed_at: now }).eq("id", send.id).is("unsubscribed_at", null)
+      : Promise.resolve({ error: null }),
   ]);
   const failure = results.find((result) => result.error);
   if (failure?.error) throw failure.error;

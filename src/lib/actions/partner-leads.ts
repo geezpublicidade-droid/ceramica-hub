@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { createServiceClient } from "@/lib/supabase/server";
 import { verifyTurnstileToken } from "@/lib/services/turnstile";
+import { triggerNewLeadNotification } from "@/lib/services/automations/triggers";
 
 const submitPartnerLeadSchema = z.object({
   businessName: z.string().trim().min(1, "Informe o nome da empresa."),
@@ -43,5 +44,6 @@ export async function submitPartnerLead(rawInput: SubmitPartnerLeadInput): Promi
   });
   if (error) return { success: false, error: "Não foi possível enviar seu contato. Tente novamente." };
 
+  triggerNewLeadNotification();
   return { success: true };
 }

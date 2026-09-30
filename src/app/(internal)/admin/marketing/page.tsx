@@ -13,6 +13,7 @@ const QUICK_LINKS = [
   { href: "/admin/marketing/calendario", label: "Calendário" },
   { href: "/admin/marketing/publicos", label: "Públicos" },
   { href: "/admin/marketing/email", label: "E-mail marketing" },
+  { href: "/admin/marketing/automacoes", label: "Automações" },
   { href: "/admin/publicidade/espacos", label: "Espaços publicitários" },
 ];
 
