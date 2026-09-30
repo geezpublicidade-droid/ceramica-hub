@@ -155,6 +155,18 @@ const NAV_SECTIONS: { section: string; items: NavItem[] }[] = [
         roles: ["super_admin", "admin", "comercial", "marketing"],
       },
       {
+        label: "Central de Marketing",
+        href: "/admin/marketing",
+        Icon: IconResults,
+        roles: ["super_admin", "admin", "marketing", "conteudo"],
+      },
+      {
+        label: "Campanhas",
+        href: "/admin/marketing/campanhas",
+        Icon: IconAds,
+        roles: ["super_admin", "admin", "marketing", "conteudo"],
+      },
+      {
         label: "Calendário",
         href: "/admin/marketing/calendario",
         Icon: IconEvents,
@@ -240,7 +252,7 @@ const NAV_SECTIONS: { section: string; items: NavItem[] }[] = [
 ];
 
 function isItemActive(href: string, currentPath: string): boolean {
-  if (href === "/admin") return currentPath === "/admin";
+  if (href === "/admin" || href === "/admin/marketing") return currentPath === href;
   return currentPath === href || currentPath.startsWith(`${href}/`);
 }
 

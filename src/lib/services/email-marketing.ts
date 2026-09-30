@@ -125,7 +125,7 @@ type CampaignRow = {
   marketing_audiences: { name: string } | null;
 };
 
-type SendStatsRow = {
+export type SendStatsRow = {
   campaign_id: string;
   status: string;
   delivered_at: string | null;
@@ -134,7 +134,7 @@ type SendStatsRow = {
   unsubscribed_at: string | null;
 };
 
-function computeStats(sends: SendStatsRow[], leads: number): CampaignStats {
+export function computeStats(sends: SendStatsRow[], leads: number): CampaignStats {
   return {
     enviados: sends.filter((send) => send.status === "sent").length,
     entregues: sends.filter((send) => send.delivered_at).length,
