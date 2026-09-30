@@ -24,6 +24,8 @@ import {
   UUID_RE,
 } from "@/lib/services/platform";
 import { WhatsAppLink } from "@/components/WhatsAppLink";
+import { ContactLink } from "@/components/ContactLink";
+import { getActiveTowers } from "@/lib/services/towers";
 
 type PageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -100,6 +102,13 @@ export default async function BusinessProfilePage({ params }: PageProps) {
     getBusinessPhotos(business.id),
     getVirtualTourScenes(business.id, locale),
   ]);
+
+  const towers = await getActiveTowers();
+  const tower = towers.find((item) => business.floor.startsWith(item.name));
+  const directionsUrl = tower
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${tower.name}, ${tower.address}`)}`
+    : null;
+  const phoneDigits = business.phone.replace(/[^\d+]/g, "");
 
   const opportunities = allOpportunities.filter((o) => o.businessId === business.id);
   const benefits = allBenefits.filter((b) => b.businessId === business.id);
@@ -227,6 +236,21 @@ export default async function BusinessProfilePage({ params }: PageProps) {
                   >
                     {t("instagram")}
                   </a>
+                  {phoneDigits && (
+                    <ContactLink href={`tel:${phoneDigits}`} businessId={business.id} kind="phone" className="neu rounded-full px-6 py-3 text-[16px] font-medium text-foreground">
+                      {t("call")}
+                    </ContactLink>
+                  )}
+                  {business.websiteUrl && (
+                    <ContactLink href={business.websiteUrl} businessId={business.id} kind="website" className="neu rounded-full px-6 py-3 text-[16px] font-medium text-foreground">
+                      {t("website")}
+                    </ContactLink>
+                  )}
+                  {directionsUrl && (
+                    <ContactLink href={directionsUrl} businessId={business.id} kind="directions" className="neu rounded-full px-6 py-3 text-[16px] font-medium text-foreground">
+                      {t("directions")}
+                    </ContactLink>
+                  )}
                   <FavoriteButton businessId={business.id} />
                 </div>
               </div>

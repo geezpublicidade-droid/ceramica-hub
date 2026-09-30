@@ -435,7 +435,10 @@
     "sectionBenefits": "Beneficios",
     "alsoIn": "También en {category}",
     "photoAlt": "Foto de {name}",
-    "metaTitle": "{name} — Cerâmica Hub"
+    "metaTitle": "{name} — Cerâmica Hub",
+    "call": "Llamar",
+    "website": "Visitar sitio",
+    "directions": "Cómo llegar"
   },
   "CategoryPage": {
     "metaTitle": "Empresas de {category} — Cerâmica Hub",

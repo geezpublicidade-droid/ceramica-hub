@@ -662,6 +662,8 @@ export type MetricEventType =
   | "directions_clicked"
   | "appointment_clicked"
   | "whatsapp_clicked"
+  | "phone_clicked"
+  | "website_clicked"
   | "coupon_redeemed"
   | "geez_service_clicked"
   | "geez_quote_requested"

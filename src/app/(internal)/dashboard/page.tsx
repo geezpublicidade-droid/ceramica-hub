@@ -182,13 +182,13 @@ export default async function DashboardPage() {
               </div>
             </div>
 
-            {/* Resultados (resumo — versão completa com 7/30/90 dias vem numa fase futura) */}
+            {/* Resultados (detalhe por período em /dashboard/resultados) */}
             <div id={DASHBOARD_ANCHOR.resultados} className="glass-light scroll-mt-24 rounded-3xl p-6">
               <div className="flex items-baseline justify-between">
                 <p className="text-[15px] font-medium uppercase tracking-[0.15em] text-muted">
                   Resultados
                 </p>
-                <span className="text-[13px] text-muted">Em breve: 7, 30 e 90 dias</span>
+                <Link href="/dashboard/resultados" className="text-[14px] font-medium text-primary hover:underline">Ver detalhes: 7, 30 e 90 dias</Link>
               </div>
               <div className="mt-4 grid grid-cols-2 gap-4">
                 <StatTile label="Visualizações da página" value={totalViews} />

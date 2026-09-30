@@ -20,3 +20,18 @@ export async function logAdClick(campaignId: string) {
 export async function logEventInterest(eventId: string) {
   await logMetricEvent("event_interest_clicked", undefined, { eventId });
 }
+
+const CONTACT_CLICK_EVENT = {
+  phone: "phone_clicked",
+  website: "website_clicked",
+  directions: "directions_clicked",
+} as const;
+
+export type ContactClickKind = keyof typeof CONTACT_CLICK_EVENT;
+
+/** Clique em telefone, site ou rota da página da empresa (WhatsApp tem ação própria, logWhatsAppClick). */
+export async function logContactClick(businessId: string, kind: ContactClickKind) {
+  const eventType = CONTACT_CLICK_EVENT[kind];
+  if (!eventType) return;
+  await logMetricEvent(eventType, businessId);
+}

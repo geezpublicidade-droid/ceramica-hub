@@ -435,7 +435,10 @@
     "sectionBenefits": "Benefits",
     "alsoIn": "Also in {category}",
     "photoAlt": "Photo of {name}",
-    "metaTitle": "{name} — Cerâmica Hub"
+    "metaTitle": "{name} — Cerâmica Hub",
+    "call": "Call",
+    "website": "Visit website",
+    "directions": "Get directions"
   },
   "CategoryPage": {
     "metaTitle": "{category} businesses — Cerâmica Hub",

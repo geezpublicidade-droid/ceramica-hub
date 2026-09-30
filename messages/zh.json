@@ -435,7 +435,10 @@
     "sectionBenefits": "优惠",
     "alsoIn": "{category} 分类下的更多企业",
     "photoAlt": "{name} 的照片",
-    "metaTitle": "{name} — Cerâmica Hub"
+    "metaTitle": "{name} — Cerâmica Hub",
+    "call": "致电",
+    "website": "访问网站",
+    "directions": "路线"
   },
   "CategoryPage": {
     "metaTitle": "{category} 相关企业 — Cerâmica Hub",
