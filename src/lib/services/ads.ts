@@ -248,3 +248,39 @@ export async function getPlacementsInventory(): Promise<PlacementInventory[]> {
     return { ...placement, status, occupant, pendingCount };
   });
 }
+
+export type PlacementConflict = { campaignId: string; title: string; advertiserName: string; startsAt: string; endsAt: string };
+
+/** Campanhas já aprovadas que ocupam o mesmo espaço em algum dia do período
+ * desta campanha. Só há conflito se a capacidade do espaço (max_concurrent)
+ * já estiver esgotada; caso contrário devolve lista vazia. */
+export async function findPlacementConflicts(campaignId: string): Promise<PlacementConflict[]> {
+  const supabase = createServiceClient();
+  const { data: campaign, error } = await supabase
+    .from("ad_campaigns")
+    .select("placement_id, starts_at, ends_at, ad_placements(max_concurrent)")
+    .eq("id", campaignId)
+    .single();
+  if (error) throw error;
+
+  const { data: overlapping, error: overlapError } = await supabase
+    .from("ad_campaigns")
+    .select("id, title, starts_at, ends_at, ad_accounts(company_name)")
+    .eq("placement_id", campaign.placement_id)
+    .eq("status", "approved")
+    .neq("id", campaignId)
+    .lte("starts_at", campaign.ends_at)
+    .gte("ends_at", campaign.starts_at);
+  if (overlapError) throw overlapError;
+
+  const capacity = (campaign.ad_placements as unknown as { max_concurrent: number } | null)?.max_concurrent ?? 1;
+  if ((overlapping ?? []).length < capacity) return [];
+
+  return (overlapping ?? []).map((row) => ({
+    campaignId: row.id,
+    title: row.title,
+    advertiserName: (row.ad_accounts as unknown as { company_name: string } | null)?.company_name ?? "Anunciante",
+    startsAt: row.starts_at,
+    endsAt: row.ends_at,
+  }));
+}

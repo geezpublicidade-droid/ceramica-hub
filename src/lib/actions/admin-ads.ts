@@ -6,7 +6,12 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/auth-guards";
 import { logAdminAction } from "@/lib/audit-log";
 
-type ActionResult = { success: true } | { success: false; error: string };
+import type { AdminRole } from "@/auth";
+import { findPlacementConflicts, type PlacementConflict } from "@/lib/services/ads";
+import { formatDateBR } from "@/lib/utils";
+
+/** `conflict` marca a recusa por espaço já ocupado, pra UI oferecer "autorizar mesmo assim". */
+type ActionResult = { success: true } | { success: false; error: string; conflict?: boolean };
 
 const createCampaignSchema = z.object({
   companyName: z.string().trim().min(1, "Informe o nome do anunciante."),
@@ -102,8 +107,34 @@ async function updateCampaignStatus(campaignId: string, status: string, rejectio
   return { success: true };
 }
 
-export async function approveCampaign(campaignId: string): Promise<ActionResult> {
+const OVERLAP_AUTHORIZER_ROLES: AdminRole[] = ["super_admin", "admin"];
+
+function describeConflicts(conflicts: PlacementConflict[]): string {
+  const list = conflicts
+    .map((c) => `${c.advertiserName} (${formatDateBR(c.startsAt)} a ${formatDateBR(c.endsAt)})`)
+    .join("; ");
+  return `Este espaço já está ocupado no período por: ${list}.`;
+}
+
+/** Aprova/reativa uma campanha só se o espaço tiver vaga no período. Com
+ * `authorizeOverlap`, um admin pode aprovar mesmo assim -- a autorização fica
+ * registrada no log de auditoria. */
+async function approveWithCapacityCheck(campaignId: string, authorizeOverlap: boolean): Promise<ActionResult> {
+  const adminId = await requireAdmin(["super_admin", "admin", "comercial"]);
+  const conflicts = await findPlacementConflicts(campaignId);
+
+  if (conflicts.length > 0) {
+    if (!authorizeOverlap) return { success: false, conflict: true, error: describeConflicts(conflicts) };
+    await requireAdmin(OVERLAP_AUTHORIZER_ROLES);
+    await logAdminAction(adminId, "ad_campaign_overlap_authorized", "ad_campaign", campaignId, {
+      conflictingCampaignIds: conflicts.map((c) => c.campaignId),
+    });
+  }
   return updateCampaignStatus(campaignId, "approved");
+}
+
+export async function approveCampaign(campaignId: string, authorizeOverlap = false): Promise<ActionResult> {
+  return approveWithCapacityCheck(campaignId, authorizeOverlap);
 }
 
 export async function rejectCampaign(campaignId: string, reason: string): Promise<ActionResult> {
@@ -114,8 +145,8 @@ export async function pauseCampaign(campaignId: string): Promise<ActionResult> {
   return updateCampaignStatus(campaignId, "paused");
 }
 
-export async function resumeCampaign(campaignId: string): Promise<ActionResult> {
-  return updateCampaignStatus(campaignId, "approved");
+export async function resumeCampaign(campaignId: string, authorizeOverlap = false): Promise<ActionResult> {
+  return approveWithCapacityCheck(campaignId, authorizeOverlap);
 }
 
 /** Bloquear um anunciante tira TODAS as campanhas dele do ar imediatamente (checado em getActiveCampaignForPlacement), mesmo sem mexer no status de cada campanha individualmente. */

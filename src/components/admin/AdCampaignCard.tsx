@@ -13,7 +13,29 @@ export function AdCampaignCard({ campaign, metrics, phase }: Props) {
   const [isPending, startTransition] = useTransition();
   const [showRejectReason, setShowRejectReason] = useState(false);
   const [reason, setReason] = useState("");
+  const [conflict, setConflict] = useState<{ message: string } | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const isPaused = campaign.status === "paused";
+
+  function approve(authorizeOverlap: boolean) {
+    setError(null);
+    startTransition(async () => {
+      try {
+        const result = isPaused
+          ? await resumeCampaign(campaign.id, authorizeOverlap)
+          : await approveCampaign(campaign.id, authorizeOverlap);
+        if (result.success) {
+          setConflict(null);
+        } else if (result.conflict) {
+          setConflict({ message: result.error });
+        } else {
+          setError(result.error);
+        }
+      } catch {
+        setError("Sem permissão ou falha de conexão. Tente de novo.");
+      }
+    });
+  }
 
   return (
     <div className="flex flex-col gap-3 rounded-2xl border border-border bg-white/80 p-4">
@@ -59,7 +81,7 @@ export function AdCampaignCard({ campaign, metrics, phase }: Props) {
           <button
             type="button"
             disabled={isPending}
-            onClick={() => startTransition(() => void (isPaused ? resumeCampaign(campaign.id) : approveCampaign(campaign.id)))}
+            onClick={() => approve(false)}
             className="neu-primary rounded-full px-3.5 py-1.5 text-[13px] font-medium text-white disabled:opacity-60"
           >
             {isPaused ? "Reativar" : "Aprovar"}
@@ -94,6 +116,26 @@ export function AdCampaignCard({ campaign, metrics, phase }: Props) {
           {campaign.advertiserBlocked ? "Desbloquear anunciante" : "Bloquear anunciante"}
         </button>
       </div>
+
+      {conflict && (
+        <div className="flex flex-col gap-2 rounded-xl border border-warning/30 bg-warning/5 p-3">
+          <p className="text-[13px] text-warning">{conflict.message}</p>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              disabled={isPending}
+              onClick={() => approve(true)}
+              className="rounded-xl bg-warning px-3.5 py-2 text-[13px] font-medium text-white disabled:opacity-60"
+            >
+              Autorizar mesmo assim
+            </button>
+            <button type="button" onClick={() => setConflict(null)} className="neu rounded-xl px-3.5 py-2 text-[13px] font-medium text-foreground">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+      {error && <p className="text-[13px] text-danger">{error}</p>}
 
       {showRejectReason && (
         <div className="flex flex-wrap gap-2">
