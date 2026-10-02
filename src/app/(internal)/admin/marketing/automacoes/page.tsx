@@ -4,12 +4,14 @@ import { AdminShell } from "@/components/admin/AdminShell";
 import { AutomationRow } from "@/components/admin/AutomationRow";
 import { AUTOMATIONS, AUTOMATION_KEYS } from "@/lib/services/automations/registry";
 import { getAutomationStats, getEnabledAutomations } from "@/lib/services/automations/engine";
+import { OPERATIONAL_RULES, OPERATIONAL_RULE_META } from "@/lib/services/operations/catalog";
+import { getOpenAutoTaskCounts } from "@/lib/services/operations/runner";
 
 export const metadata = { title: "Automações — Cerâmica Hub" };
 
 export default async function AutomationsPage() {
   const { adminRole } = await requireAdminPage(["super_admin", "admin", "marketing"]);
-  const [enabled, stats] = await Promise.all([getEnabledAutomations(), getAutomationStats()]);
+  const [enabled, stats, openTasks] = await Promise.all([getEnabledAutomations(), getAutomationStats(), getOpenAutoTaskCounts()]);
 
   return (
     <AdminShell currentPath="/admin/marketing" adminRole={adminRole}>
@@ -27,6 +29,26 @@ export default async function AutomationsPage() {
           <AutomationRow key={key} automationKey={key} meta={AUTOMATIONS[key]} enabled={enabled[key]} stats={stats[key]} />
         ))}
       </div>
+
+      <section>
+        <h2 className="text-[17px] font-semibold text-foreground">Regras operacionais</h2>
+        <p className="mt-1 text-[14px] text-muted">
+          Rodam junto com os e-mails, todo dia. Criam tarefas em Tarefas ou ajustam o estado do sistema sozinhas.
+        </p>
+        <div className="mt-3 flex flex-col gap-3">
+          {OPERATIONAL_RULES.map((rule) => (
+            <div key={rule} className="rounded-2xl border border-border bg-white/70 p-4">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="text-[16px] font-semibold text-foreground">{OPERATIONAL_RULE_META[rule].label}</p>
+                <span className="text-[13px] text-muted">
+                  {OPERATIONAL_RULE_META[rule].effect === "task" ? `${openTasks[rule]} tarefa(s) em aberto` : "Ajuste automático"}
+                </span>
+              </div>
+              <p className="mt-1 text-[14px] text-muted">{OPERATIONAL_RULE_META[rule].description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
     </AdminShell>
   );
 }

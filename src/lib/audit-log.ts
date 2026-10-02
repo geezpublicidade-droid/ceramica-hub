@@ -17,3 +17,20 @@ export async function logAdminAction(
     metadata: metadata ?? null,
   });
 }
+
+/** Ação feita pelo próprio sistema (cron, regra automática), sem admin por trás. */
+export async function logSystemAction(
+  action: string,
+  entityType: string,
+  entityId: string,
+  metadata?: Record<string, unknown>
+): Promise<void> {
+  await createServiceClient().from("audit_logs").insert({
+    actor_type: "system",
+    actor_id: null,
+    action,
+    entity_type: entityType,
+    entity_id: entityId,
+    metadata: metadata ?? null,
+  });
+}
