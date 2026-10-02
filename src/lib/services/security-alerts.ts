@@ -1,4 +1,6 @@
 import { createServiceClient } from "@/lib/supabase/server";
+import { DELETE_ACTION_PATTERN, EXPORT_ACTION } from "@/lib/audit-actions";
+import { getAdminEmailMap } from "@/lib/services/admin-emails";
 
 /** Detecção de atividade suspeita (Fase 4.8). A lógica é pura; só o carregador acessa o banco. */
 
@@ -11,8 +13,6 @@ const FAILED_LOGINS_PER_ACCOUNT = 5;
 const FAILED_LOGINS_PER_IP = 10;
 const DELETES_PER_BURST = 5;
 const EXPORTS_PER_HOUR = 3;
-const DELETE_ACTION = /delete|remove|exclu/i;
-export const EXPORT_ACTION = "export_data";
 
 export type SuspiciousEvent = { key: string; severity: "danger" | "warning"; message: string };
 export type LoginAttempt = { identifier: string; ip: string | null; success: boolean; createdAt: string };
@@ -22,7 +22,10 @@ function groupBy<T>(items: T[], keyOf: (item: T) => string | null): Map<string, 
   const groups = new Map<string, T[]>();
   for (const item of items) {
     const key = keyOf(item);
-    if (key) groups.set(key, [...(groups.get(key) ?? []), item]);
+    if (!key) continue;
+    const group = groups.get(key);
+    if (group) group.push(item);
+    else groups.set(key, [item]);
   }
   return groups;
 }
@@ -77,7 +80,7 @@ function successAfterFailuresEvents(attempts: LoginAttempt[]): SuspiciousEvent[]
 
 function adminActionEvents(entries: AuditEntryLite[]): SuspiciousEvent[] {
   const events: SuspiciousEvent[] = [];
-  const deletes = entries.filter((e) => DELETE_ACTION.test(e.action));
+  const deletes = entries.filter((e) => DELETE_ACTION_PATTERN.test(e.action));
   for (const [actor, group] of groupBy(deletes, (e) => e.actorId)) {
     const count = maxInWindow(group.map((e) => at(e.createdAt)), TEN_MINUTES_MS);
     if (count >= DELETES_PER_BURST) {
@@ -104,18 +107,13 @@ export async function getSuspiciousActivity(now = new Date()): Promise<Suspiciou
   const supabase = createServiceClient();
   const since = new Date(now.getTime() - LOOKBACK_MS).toISOString();
   const [attempts, audits] = await Promise.all([
-    supabase.from("login_attempts").select("identifier, ip, success, created_at").gte("created_at", since).limit(MAX_ROWS),
-    supabase.from("audit_logs").select("action, actor_id, created_at").eq("actor_type", "admin").gte("created_at", since).limit(MAX_ROWS),
+    supabase.from("login_attempts").select("identifier, ip, success, created_at").gte("created_at", since).order("created_at", { ascending: false }).limit(MAX_ROWS),
+    supabase.from("audit_logs").select("action, actor_id, created_at").eq("actor_type", "admin").gte("created_at", since).order("created_at", { ascending: false }).limit(MAX_ROWS),
   ]);
   if (attempts.error) throw attempts.error;
   if (audits.error) throw audits.error;
 
-  const actorIds = [...new Set((audits.data ?? []).map((row) => row.actor_id).filter(Boolean))] as string[];
-  const { data: admins, error } = actorIds.length
-    ? await supabase.from("admins").select("id, email").in("id", actorIds)
-    : { data: [], error: null };
-  if (error) throw error;
-  const emailById = new Map((admins ?? []).map((admin) => [admin.id, admin.email]));
+  const emailById = await getAdminEmailMap((audits.data ?? []).map((row) => row.actor_id));
 
   return detectSuspiciousActivity(
     (attempts.data ?? []).map((row) => ({ identifier: row.identifier, ip: row.ip, success: row.success, createdAt: row.created_at })),

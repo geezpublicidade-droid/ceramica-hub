@@ -1,5 +1,6 @@
 import { createServiceClient } from "@/lib/supabase/server";
-import { EXPORT_ACTION } from "@/lib/services/security-alerts";
+import { DELETE_ACTION_SQL_FILTER, EXPORT_ACTION } from "@/lib/audit-actions";
+import { getAdminEmailMap } from "@/lib/services/admin-emails";
 
 /** Histórico de alterações, exclusões, exportações e acessos para a tela de auditoria (Fase 4.8). */
 
@@ -40,25 +41,18 @@ const summarize = (metadata: unknown): string => {
   return text.length > 140 ? `${text.slice(0, 140)}…` : text;
 };
 
-async function adminEmails(ids: string[]): Promise<Map<string, string>> {
-  if (ids.length === 0) return new Map();
-  const { data, error } = await createServiceClient().from("admins").select("id, email").in("id", ids);
-  if (error) throw error;
-  return new Map((data ?? []).map((admin) => [admin.id, admin.email]));
-}
-
 export async function getAuditTrail(view: Exclude<AuditView, "acessos">, page: number): Promise<Page<AuditEntry>> {
   let query = createServiceClient()
     .from("audit_logs")
     .select("id, actor_type, actor_id, action, entity_type, entity_id, metadata, created_at", { count: "exact" })
     .order("created_at", { ascending: false })
     .range(page * AUDIT_PAGE_SIZE, (page + 1) * AUDIT_PAGE_SIZE - 1);
-  if (view === "exclusoes") query = query.or("action.ilike.%delete%,action.ilike.%remove%,action.ilike.%exclu%");
+  if (view === "exclusoes") query = query.or(DELETE_ACTION_SQL_FILTER);
   if (view === "exportacoes") query = query.eq("action", EXPORT_ACTION);
 
   const { data, count, error } = await query;
   if (error) throw error;
-  const emails = await adminEmails([...new Set((data ?? []).map((row) => row.actor_id).filter(Boolean))] as string[]);
+  const emails = await getAdminEmailMap((data ?? []).map((row) => row.actor_id));
 
   const rows = (data ?? []).map((row) => ({
     id: row.id,

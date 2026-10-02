@@ -32,6 +32,8 @@ export const EXPORT_TABLE_LABEL: Record<ExportTable, string> = {
 
 const PAGE_SIZE = 1000;
 const MAX_PAGES = 100;
+/** Coluna usada pra ordenar; nem toda tabela tem `created_at`. */
+const ORDER_COLUMN: Partial<Record<ExportTable, string>> = { business_goals: "updated_at", email_consents: "granted_at" };
 /** Hash de senha, segredos de MFA, tokens e chaves nunca saem em exportação. */
 const SENSITIVE_COLUMN = /password|secret|token|hash|mfa|api_key/i;
 
@@ -56,13 +58,13 @@ export async function fetchTableRows(table: ExportTable): Promise<Row[]> {
     const { data, error } = await supabase
       .from(table)
       .select("*")
-      .order("created_at", { ascending: true })
+      .order(ORDER_COLUMN[table] ?? "created_at", { ascending: true })
       .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
     if (error) throw error;
     rows.push(...(data ?? []).map(stripSensitive));
-    if ((data?.length ?? 0) < PAGE_SIZE) break;
+    if ((data?.length ?? 0) < PAGE_SIZE) return rows;
   }
-  return rows;
+  throw new Error(`Exportação de ${table} passou do limite de ${MAX_PAGES * PAGE_SIZE} linhas.`);
 }
 
 /** Evita injeção de fórmula ao abrir no Excel/Sheets: células que começam com = + - @ ganham um apóstrofo. */
@@ -74,7 +76,9 @@ function csvCell(value: unknown): string {
 }
 
 export function toCsv(rows: Row[]): string {
-  const columns = [...new Set(rows.flatMap((row) => Object.keys(row)))];
+  const columnSet = new Set<string>();
+  for (const row of rows) for (const key of Object.keys(row)) columnSet.add(key);
+  const columns = [...columnSet];
   const lines = rows.map((row) => columns.map((column) => csvCell(row[column])).join(","));
   return [columns.join(","), ...lines].join("\r\n");
 }

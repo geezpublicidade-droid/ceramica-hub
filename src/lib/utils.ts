@@ -21,3 +21,8 @@ export function parseCentsInput(value: string): number | null {
   const n = Number(value.replace(",", "."));
   return Number.isFinite(n) && n >= 0 ? Math.round(n * 100) : null;
 }
+
+/** Data e hora no fuso de São Paulo, para telas administrativas. */
+export function formatDateTimeBR(iso: string): string {
+  return new Date(iso).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
+}

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth-guards";
 import { logAdminAction } from "@/lib/audit-log";
-import { EXPORT_ACTION } from "@/lib/services/security-alerts";
+import { EXPORT_ACTION } from "@/lib/audit-actions";
 import { fetchTableRows, isExportFormat, isExportTable, toCsv } from "@/lib/services/data-export";
 
 export const dynamic = "force-dynamic";

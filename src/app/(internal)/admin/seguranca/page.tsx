@@ -1,4 +1,6 @@
+import { Suspense, type ReactNode } from "react";
 import Link from "next/link";
+import { formatDateTimeBR } from "@/lib/utils";
 import { requireAdminPage } from "@/lib/auth-guards";
 import { AdminShell } from "@/components/admin/AdminShell";
 import {
@@ -18,57 +20,93 @@ export const dynamic = "force-dynamic";
 
 const th = "px-3 py-2 text-left text-[13px] font-medium text-muted";
 const td = "px-3 py-2 align-top text-[14px] text-foreground";
-const formatDate = (iso: string) => new Date(iso).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
 
 type SearchParams = { view?: string; pagina?: string };
 
-async function AuditTable({ view, page }: { view: AuditView; page: number }) {
-  const href = (target: number) => `/admin/seguranca?view=${view}&pagina=${target}`;
-  const result = view === "acessos" ? await getAccessLog(page) : await getAuditTrail(view, page);
-  const lastPage = Math.max(0, Math.ceil(result.total / AUDIT_PAGE_SIZE) - 1);
+function TableFrame({ head, empty, colSpan, children }: { head: string[]; empty: boolean; colSpan: number; children: ReactNode }) {
+  return (
+    <div className="overflow-x-auto rounded-2xl border border-border bg-white/70">
+      <table className="w-full">
+        <thead>
+          <tr>{head.map((label) => <th key={label} className={th}>{label}</th>)}</tr>
+        </thead>
+        <tbody>
+          {children}
+          {empty && <tr><td colSpan={colSpan} className={`${td} text-muted`}>Nada registrado ainda.</td></tr>}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
+function Pager({ view, page, total }: { view: AuditView; page: number; total: number }) {
+  const lastPage = Math.max(0, Math.ceil(total / AUDIT_PAGE_SIZE) - 1);
+  const href = (target: number) => `/admin/seguranca?view=${view}&pagina=${target}`;
+  return (
+    <div className="flex items-center gap-3 text-[14px]">
+      {page > 0 && <Link href={href(page - 1)} className="neu rounded-full px-3 py-1.5 text-foreground">← Mais recentes</Link>}
+      <span className="text-muted">Página {page + 1} de {lastPage + 1} · {total} registros</span>
+      {page < lastPage && <Link href={href(page + 1)} className="neu rounded-full px-3 py-1.5 text-foreground">Mais antigos →</Link>}
+    </div>
+  );
+}
+
+async function AccessTable({ page }: { page: number }) {
+  const { rows, total } = await getAccessLog(page);
   return (
     <div className="space-y-3">
-      <div className="overflow-x-auto rounded-2xl border border-border bg-white/70">
-        <table className="w-full">
-          <thead>
-            {view === "acessos" ? (
-              <tr><th className={th}>Quando</th><th className={th}>Conta</th><th className={th}>IP</th><th className={th}>Resultado</th></tr>
-            ) : (
-              <tr><th className={th}>Quando</th><th className={th}>Quem</th><th className={th}>Ação</th><th className={th}>Item</th><th className={th}>Detalhes</th></tr>
-            )}
-          </thead>
-          <tbody>
-            {view === "acessos"
-              ? (result.rows as Awaited<ReturnType<typeof getAccessLog>>["rows"]).map((row) => (
-                  <tr key={row.id} className="border-t border-border">
-                    <td className={td}>{formatDate(row.at)}</td>
-                    <td className={td}>{row.identifier}</td>
-                    <td className={td}>{row.ip ?? "—"}</td>
-                    <td className={td}>{row.success ? "Sucesso" : "Falha"}</td>
-                  </tr>
-                ))
-              : (result.rows as Awaited<ReturnType<typeof getAuditTrail>>["rows"]).map((row) => (
-                  <tr key={row.id} className="border-t border-border">
-                    <td className={td}>{formatDate(row.at)}</td>
-                    <td className={td}>{row.actorLabel}</td>
-                    <td className={td}>{row.action}</td>
-                    <td className={td}>{row.entityType}</td>
-                    <td className={`${td} break-all text-[13px] text-muted`}>{row.details || "—"}</td>
-                  </tr>
-                ))}
-            {result.rows.length === 0 && (
-              <tr><td colSpan={5} className={`${td} text-muted`}>Nada registrado ainda.</td></tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-      <div className="flex items-center gap-3 text-[14px]">
-        {page > 0 && <Link href={href(page - 1)} className="neu rounded-full px-3 py-1.5 text-foreground">← Mais recentes</Link>}
-        <span className="text-muted">Página {page + 1} de {lastPage + 1} · {result.total} registros</span>
-        {page < lastPage && <Link href={href(page + 1)} className="neu rounded-full px-3 py-1.5 text-foreground">Mais antigos →</Link>}
-      </div>
+      <TableFrame head={["Quando", "Conta", "IP", "Resultado"]} empty={rows.length === 0} colSpan={4}>
+        {rows.map((row) => (
+          <tr key={row.id} className="border-t border-border">
+            <td className={td}>{formatDateTimeBR(row.at)}</td>
+            <td className={td}>{row.identifier}</td>
+            <td className={td}>{row.ip ?? "—"}</td>
+            <td className={td}>{row.success ? "Sucesso" : "Falha"}</td>
+          </tr>
+        ))}
+      </TableFrame>
+      <Pager view="acessos" page={page} total={total} />
     </div>
+  );
+}
+
+async function TrailTable({ view, page }: { view: Exclude<AuditView, "acessos">; page: number }) {
+  const { rows, total } = await getAuditTrail(view, page);
+  return (
+    <div className="space-y-3">
+      <TableFrame head={["Quando", "Quem", "Ação", "Item", "Detalhes"]} empty={rows.length === 0} colSpan={5}>
+        {rows.map((row) => (
+          <tr key={row.id} className="border-t border-border">
+            <td className={td}>{formatDateTimeBR(row.at)}</td>
+            <td className={td}>{row.actorLabel}</td>
+            <td className={td}>{row.action}</td>
+            <td className={td}>{row.entityType}</td>
+            <td className={`${td} break-all text-[13px] text-muted`}>{row.details || "—"}</td>
+          </tr>
+        ))}
+      </TableFrame>
+      <Pager view={view} page={page} total={total} />
+    </div>
+  );
+}
+
+async function Alerts() {
+  const alerts = await getSuspiciousActivity();
+  return (
+    <section className="rounded-2xl border border-border bg-white/70 p-5">
+      <h2 className="text-[18px] font-semibold text-foreground">Alertas (24 h)</h2>
+      {alerts.length === 0 ? (
+        <p className="mt-2 text-[14px] text-muted">Nenhuma atividade suspeita detectada.</p>
+      ) : (
+        <ul className="mt-3 space-y-2">
+          {alerts.map((alert) => (
+            <li key={alert.key} className={`rounded-xl px-3 py-2 text-[14px] ${alert.severity === "danger" ? "bg-red-100 text-red-700" : "bg-yellow-100 text-yellow-700"}`}>
+              {alert.message}
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   );
 }
 
@@ -77,7 +115,6 @@ export default async function SecurityPage({ searchParams }: { searchParams: Pro
   const params = await searchParams;
   const view: AuditView = isAuditView(params.view) ? params.view : "historico";
   const page = Math.max(0, Number.parseInt(params.pagina ?? "0", 10) || 0);
-  const alerts = await getSuspiciousActivity();
 
   return (
     <AdminShell currentPath="/admin/seguranca" adminRole={adminRole} wide>
@@ -86,20 +123,9 @@ export default async function SecurityPage({ searchParams }: { searchParams: Pro
         <p className="mt-2 text-[16px] text-muted">Quem fez o quê, acessos, exportações e alertas das últimas 24 horas.</p>
       </div>
 
-      <section className="rounded-2xl border border-border bg-white/70 p-5">
-        <h2 className="text-[18px] font-semibold text-foreground">Alertas (24 h)</h2>
-        {alerts.length === 0 ? (
-          <p className="mt-2 text-[14px] text-muted">Nenhuma atividade suspeita detectada.</p>
-        ) : (
-          <ul className="mt-3 space-y-2">
-            {alerts.map((alert) => (
-              <li key={alert.key} className={`rounded-xl px-3 py-2 text-[14px] ${alert.severity === "danger" ? "bg-red-100 text-red-700" : "bg-yellow-100 text-yellow-700"}`}>
-                {alert.message}
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+      <Suspense fallback={<p className="text-[14px] text-muted">Verificando alertas…</p>}>
+        <Alerts />
+      </Suspense>
 
       <nav className="flex flex-wrap gap-2 text-[14px]">
         {AUDIT_VIEWS.map((item) => (
@@ -109,7 +135,7 @@ export default async function SecurityPage({ searchParams }: { searchParams: Pro
         ))}
       </nav>
 
-      <AuditTable view={view} page={page} />
+      {view === "acessos" ? <AccessTable page={page} /> : <TrailTable view={view} page={page} />}
 
       <section className="rounded-2xl border border-border bg-white/70 p-5">
         <h2 className="text-[18px] font-semibold text-foreground">Exportar dados (backup e LGPD)</h2>
