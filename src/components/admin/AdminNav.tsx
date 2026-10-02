@@ -57,6 +57,12 @@ const NAV_SECTIONS: { section: string; items: NavItem[] }[] = [
         Icon: IconOverview,
         roles: ["super_admin", "admin", "marketing", "analista"],
       },
+      {
+        label: "Pontuação",
+        href: "/admin/pontuacao",
+        Icon: IconOverview,
+        roles: ["super_admin", "admin", "comercial", "marketing", "analista"],
+      },
     ],
   },
   {
