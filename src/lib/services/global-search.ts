@@ -1,4 +1,4 @@
-import { getAllBusinesses } from "@/lib/services/platform";
+import { getAllBusinesses, logMetricEvent } from "@/lib/services/platform";
 import { getOpportunities, getBenefits } from "@/lib/services/platform";
 import { getActiveHotels } from "@/lib/services/hotels";
 import { getActiveMeetingSpaces } from "@/lib/services/meeting-spaces";
@@ -166,6 +166,11 @@ export async function searchGlobal(term: string, locale?: string): Promise<Searc
       tier,
       planRank: 0,
     });
+  }
+
+  if (scored.length === 0 && normalized.length >= 3) {
+    // Termo sem resultado alimenta o painel de analytics (demanda que o portal não atende).
+    await logMetricEvent("search_no_results", undefined, { term: normalized.slice(0, 80) }).catch(() => undefined);
   }
 
   return scored

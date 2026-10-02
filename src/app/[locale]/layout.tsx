@@ -7,6 +7,7 @@ import { Montserrat, Playfair_Display, Geist_Mono, Alexandria } from "next/font/
 import { routing } from "@/i18n/routing";
 import { siteUrl, buildSocialMetadata, buildAlternates } from "@/lib/seo";
 import { SupportWhatsAppButton } from "@/components/support/SupportWhatsAppButton";
+import { PortalPageViewTracker } from "@/components/PortalPageViewTracker";
 import "../globals.css";
 
 // Tipografia oficial do Manual de Identidade Visual v1.0 -- Montserrat é a
@@ -92,7 +93,10 @@ export default async function LocaleLayout({
         />
       </head>
       <body className="min-h-full flex flex-col">
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider>
+          {children}
+          <PortalPageViewTracker />
+        </NextIntlClientProvider>
         <SupportWhatsAppButton />
       </body>
     </html>

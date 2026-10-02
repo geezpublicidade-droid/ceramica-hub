@@ -1,5 +1,6 @@
 "use server";
 
+import { headers } from "next/headers";
 import { logMetricEvent } from "@/lib/services/platform";
 
 /** Loga só o termo (até 80 chars, sem dado sensível) e a origem do disparo. */
@@ -34,4 +35,32 @@ export async function logContactClick(businessId: string, kind: ContactClickKind
   const eventType = CONTACT_CLICK_EVENT[kind];
   if (!eventType) return;
   await logMetricEvent(eventType, businessId);
+}
+
+const LOCALE_PREFIX = /^\/(pt|en|es|zh)(?=\/|$)/;
+
+/** Host do referrer sem "www." (ex.: "google.com"); vazio quando o acesso é direto ou interno. */
+function referrerHost(referrer: string, ownHost: string | null): string | null {
+  try {
+    const host = new URL(referrer).hostname.replace(/^www\./, "");
+    return host && host !== ownHost ? host : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Visita ao portal. Só guarda caminho (sem locale nem query) e origem
+ * (utm_source > host do referrer > "direto"): nenhum IP ou identificador de pessoa.
+ */
+export async function logPortalPageView(path: string, referrer: string, utmSource: string) {
+  const cleanPath = path.split("?")[0].replace(LOCALE_PREFIX, "") || "/";
+  if (!cleanPath.startsWith("/") || cleanPath.length > 200) return;
+  const ownHost = (await headers()).get("host")?.replace(/^www\./, "") ?? null;
+  const source = utmSource.trim().toLowerCase().slice(0, 40) || referrerHost(referrer, ownHost) || "direto";
+  try {
+    await logMetricEvent("portal_page_viewed", undefined, { path: cleanPath, source });
+  } catch {
+    // métrica nunca pode quebrar a navegação
+  }
 }
