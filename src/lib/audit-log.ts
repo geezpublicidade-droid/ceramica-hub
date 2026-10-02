@@ -4,7 +4,7 @@ export async function logAdminAction(
   adminId: string,
   action: string,
   entityType: string,
-  entityId: string,
+  entityId: string | null,
   metadata?: Record<string, unknown>
 ): Promise<void> {
   const supabase = createServiceClient();
@@ -22,7 +22,7 @@ export async function logAdminAction(
 export async function logSystemAction(
   action: string,
   entityType: string,
-  entityId: string,
+  entityId: string | null,
   metadata?: Record<string, unknown>
 ): Promise<void> {
   await createServiceClient().from("audit_logs").insert({
