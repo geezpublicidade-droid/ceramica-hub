@@ -1,10 +1,12 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { getClaimableCoupons, getMemberCouponHistory } from "@/lib/services/platform";
+import { getIssuedCounts } from "@/lib/services/coupon-claims";
 import { BackLink } from "@/components/nav/BackLink";
 import { CouponCard } from "@/components/member/CouponCard";
 
 export const metadata = { title: "Cupons — Cerâmica Hub" };
+export const dynamic = "force-dynamic";
 
 export default async function MemberCouponsPage() {
   const session = await auth();
@@ -12,8 +14,11 @@ export default async function MemberCouponsPage() {
   if (!memberId) redirect("/membro/login");
 
   const [allCoupons, history] = await Promise.all([getClaimableCoupons(), getMemberCouponHistory(memberId)]);
+  const issued = await getIssuedCounts(allCoupons.filter((coupon) => coupon.maxTotalUses !== undefined).map((coupon) => coupon.id));
   const claimedIds = new Set(history.map((claim) => claim.id));
-  const coupons = allCoupons.filter((coupon) => !claimedIds.has(coupon.id));
+  const coupons = allCoupons.filter(
+    (coupon) => !claimedIds.has(coupon.id) && (coupon.maxTotalUses === undefined || (issued.get(coupon.id) ?? 0) < coupon.maxTotalUses)
+  );
 
   return (
     <main className="min-h-screen px-6 py-24">
@@ -24,7 +29,7 @@ export default async function MemberCouponsPage() {
         <div>
           <h1 className="text-2xl font-semibold text-foreground">Cupons e descontos</h1>
           <p className="mt-2 text-[16px] text-muted">
-            Benefícios exclusivos das empresas do Cerâmica Hub. Revele o cupom e mostre na hora de comprar.
+            Benefícios exclusivos das empresas do Cerâmica Hub. Revele o cupom e mostre o QR Code na hora de comprar.
           </p>
         </div>
 
@@ -40,7 +45,6 @@ export default async function MemberCouponsPage() {
                   kind={coupon.kind}
                   title={coupon.title}
                   description={coupon.description}
-                  couponCode={coupon.couponCode!}
                   validUntil={coupon.validUntil}
                   business={coupon.business}
                 />
@@ -60,10 +64,9 @@ export default async function MemberCouponsPage() {
                   kind={claim.kind}
                   title={claim.title}
                   description={claim.description}
-                  couponCode={claim.couponCode!}
                   validUntil={claim.validUntil}
                   business={claim.business}
-                  claimedAt={claim.claimedAt}
+                  claim={{ code: claim.couponCode ?? "", token: claim.token, status: claim.claimStatus, claimedAt: claim.claimedAt }}
                 />
               ))}
             </div>

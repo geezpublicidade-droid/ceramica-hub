@@ -14,6 +14,7 @@ const addPromotionSchema = z.object({
   title: z.string().trim().min(1, "Informe o título da promoção.").max(120, "Título muito longo."),
   description: z.string().max(1000, "Descrição muito longa."),
   couponCode: z.string().max(40, "Cupom muito longo."),
+  maxTotalUses: z.number().int("Informe um número inteiro.").positive("O limite precisa ser maior que zero.").max(100000, "Limite muito alto.").nullable().optional(),
   validUntil: z.string(),
 });
 
@@ -267,6 +268,7 @@ export async function addPromotion(rawInput: {
   description: string;
   couponCode: string;
   validUntil: string;
+  maxTotalUses?: number | null;
 }): Promise<ActionResult> {
   const parsed = addPromotionSchema.safeParse(rawInput);
   if (!parsed.success) {
@@ -309,6 +311,7 @@ export async function addPromotion(rawInput: {
       description: input.description.trim() || null,
       coupon_code: limits.couponsAllowed ? input.couponCode.trim() || null : null,
       valid_until: input.validUntil || null,
+      max_total_uses: limits.couponsAllowed && input.couponCode.trim() ? input.maxTotalUses ?? null : null,
       active: true,
     })
     .select("id")

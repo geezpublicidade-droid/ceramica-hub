@@ -76,7 +76,7 @@ export function EditPageManager({
   const [newPhotoUrl, setNewPhotoUrl] = useState("");
   const [photoError, setPhotoError] = useState<string | null>(null);
 
-  const [newPromotion, setNewPromotion] = useState({ title: "", description: "", couponCode: "", validUntil: "" });
+  const [newPromotion, setNewPromotion] = useState({ title: "", description: "", couponCode: "", validUntil: "", maxTotalUses: "" });
   const [promotionError, setPromotionError] = useState<string | null>(null);
 
   const [newSceneLabel, setNewSceneLabel] = useState("");
@@ -155,12 +155,13 @@ export function EditPageManager({
   function submitPromotion() {
     setPromotionError(null);
     startTransition(async () => {
-      const result = await addPromotion(newPromotion);
+      const maxTotalUses = newPromotion.maxTotalUses.trim() ? Number(newPromotion.maxTotalUses) : null;
+      const result = await addPromotion({ ...newPromotion, maxTotalUses });
       if (!result.success) {
         setPromotionError(result.error);
         return;
       }
-      setNewPromotion({ title: "", description: "", couponCode: "", validUntil: "" });
+      setNewPromotion({ title: "", description: "", couponCode: "", validUntil: "", maxTotalUses: "" });
       router.refresh();
     });
   }
@@ -475,6 +476,17 @@ export function EditPageManager({
               value={newPromotion.couponCode}
               onChange={(e) => setNewPromotion((p) => ({ ...p, couponCode: e.target.value }))}
             />
+            {limits.couponsAllowed && (
+              <input
+                className={inputClass}
+                type="number"
+                min={1}
+                inputMode="numeric"
+                placeholder="Limite de cupons emitidos (opcional)"
+                value={newPromotion.maxTotalUses}
+                onChange={(e) => setNewPromotion((p) => ({ ...p, maxTotalUses: e.target.value }))}
+              />
+            )}
             {promotionError && <p className="text-[15px] text-red-600">{promotionError}</p>}
             <button
               type="button"

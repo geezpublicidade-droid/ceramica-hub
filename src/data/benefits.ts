@@ -8,4 +8,6 @@ export type Benefit = {
   description: string;
   validUntil?: string;
   couponCode?: string;
+  /** Quantos cupons podem ser emitidos no total; ausente = ilimitado. */
+  maxTotalUses?: number;
 };
