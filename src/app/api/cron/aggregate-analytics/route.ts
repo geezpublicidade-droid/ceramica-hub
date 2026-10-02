@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
+import { isAuthorizedCron } from "@/lib/cron-auth";
 import { aggregateAnalyticsForDay } from "@/lib/services/analytics-aggregation";
 
 /** Disparado pelo Vercel Cron (ver vercel.json) uma vez por dia — agrega o dia anterior completo. */
 export async function GET(request: Request) {
-  const authHeader = request.headers.get("authorization");
-  if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (!isAuthorizedCron(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

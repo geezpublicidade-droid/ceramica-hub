@@ -7,6 +7,7 @@ import { BusinessCardGrid } from "@/components/BusinessCardGrid";
 import { getAllBusinesses } from "@/lib/services/platform";
 import { getActiveTowers, getTowerBySlug } from "@/lib/services/towers";
 import { localizedUrl, buildAlternates, buildSocialMetadata } from "@/lib/seo";
+import { jsonLdString } from "@/lib/json-ld";
 
 type PageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -64,7 +65,7 @@ export default async function TowerPage({ params }: PageProps) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(breadcrumbJsonLd) }}
       />
       <Header />
       <main className="flex-1">

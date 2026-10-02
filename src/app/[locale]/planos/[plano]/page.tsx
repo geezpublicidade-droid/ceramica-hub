@@ -8,6 +8,7 @@ import { PlanShowcaseCard } from "@/components/landing/PlanShowcaseCard";
 import { PLAN_ORDER, PLAN_PRICE_DISPLAY } from "@/lib/plan-limits";
 import { localizedUrl, buildAlternates, buildSocialMetadata } from "@/lib/seo";
 import type { Business } from "@/data/businesses";
+import { jsonLdString } from "@/lib/json-ld";
 
 type PlanoSlug = Business["plan"] | "patrocinador";
 
@@ -133,7 +134,7 @@ export default async function PlanoDetailPage({ params }: PageProps) {
         </section>
       </main>
       <CinematicFooter />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }} />
     </>
   );
 }

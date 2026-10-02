@@ -9,7 +9,7 @@ export function ReferralCapture() {
     const code = normalizeReferralCode(new URLSearchParams(window.location.search).get("ref"));
     if (!code) return;
     const maxAge = REFERRAL_COOKIE_DAYS * 24 * 60 * 60;
-    document.cookie = `${REFERRAL_COOKIE}=${code}; path=/; max-age=${maxAge}; SameSite=Lax`;
+    document.cookie = `${REFERRAL_COOKIE}=${code}; path=/; max-age=${maxAge}; SameSite=Lax${window.location.protocol === "https:" ? "; Secure" : ""}`;
   }, []);
   return null;
 }

@@ -4,6 +4,7 @@ import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { EventInterestLink } from "@/components/EventInterestLink";
 import { getUpcomingEvents } from "@/lib/services/events";
 import { buildAlternates, buildSocialMetadata, localizedUrl } from "@/lib/seo";
+import { jsonLdString } from "@/lib/json-ld";
 
 export const revalidate = 60;
 
@@ -51,7 +52,7 @@ export default async function ForumDeNegociosPage({ params }: { params: Promise<
         <script
           key={events[i].id}
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(event) }}
+          dangerouslySetInnerHTML={{ __html: jsonLdString(event) }}
         />
       ))}
       <Header />

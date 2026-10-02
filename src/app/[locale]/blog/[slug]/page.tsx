@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { getPublishedPostBySlug } from "@/lib/services/blog";
 import { buildAlternates, buildSocialMetadata, localizedUrl } from "@/lib/seo";
+import { jsonLdString } from "@/lib/json-ld";
 
 export const revalidate = 60;
 
@@ -51,7 +52,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }} />
       <Header />
       <main className="flex-1 bg-surface px-6 pb-20 pt-32 text-foreground">
         <div className="mx-auto max-w-2xl">

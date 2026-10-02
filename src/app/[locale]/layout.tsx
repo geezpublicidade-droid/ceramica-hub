@@ -11,6 +11,7 @@ import { PortalPageViewTracker } from "@/components/PortalPageViewTracker";
 import { PwaRegister } from "@/components/pwa/PwaRegister";
 import { ReferralCapture } from "@/components/referrals/ReferralCapture";
 import "../globals.css";
+import { jsonLdString } from "@/lib/json-ld";
 
 // Tipografia oficial do Manual de Identidade Visual v1.0 -- Montserrat é a
 // principal (títulos/textos), Playfair Display fica disponível via
@@ -96,7 +97,7 @@ export default async function LocaleLayout({
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }}
         />
       </head>
       <body className="min-h-full flex flex-col">

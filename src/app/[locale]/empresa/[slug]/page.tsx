@@ -10,6 +10,7 @@ import { ReviewsSection } from "@/components/business/ReviewsSection";
 import { Link, redirect } from "@/i18n/navigation";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { localizedUrl, buildAlternates, buildSocialMetadata } from "@/lib/seo";
+import { jsonLdString } from "@/lib/json-ld";
 import {
   getAllBusinesses,
   getBusinessById,
@@ -151,11 +152,11 @@ export default async function BusinessProfilePage({ params }: PageProps) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(businessJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(businessJsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(breadcrumbJsonLd) }}
       />
       <Header />
       <main className="flex-1">

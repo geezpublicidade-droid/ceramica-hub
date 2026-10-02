@@ -7,6 +7,7 @@ import { BusinessCardGrid } from "@/components/BusinessCardGrid";
 import { getAllBusinesses } from "@/lib/services/platform";
 import { categorySlugs, categoryFromSlug } from "@/lib/category-slug";
 import { localizedUrl, buildAlternates, buildSocialMetadata } from "@/lib/seo";
+import { jsonLdString } from "@/lib/json-ld";
 
 type PageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -69,7 +70,7 @@ export default async function CategoryPage({ params }: PageProps) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(breadcrumbJsonLd) }}
       />
       <Header />
       <main className="flex-1">
