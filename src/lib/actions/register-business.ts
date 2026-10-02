@@ -2,11 +2,13 @@
 
 import { z } from "zod";
 import bcrypt from "bcryptjs";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { createServiceClient } from "@/lib/supabase/server";
 import { slugify } from "@/lib/slug";
 import { translateAndStore } from "@/lib/services/translate";
 import { verifyTurnstileToken } from "@/lib/services/turnstile";
+import { recordReferral } from "@/lib/services/referrals";
+import { REFERRAL_COOKIE } from "@/lib/services/referral-code";
 
 const CONSENT_VERSION = "1.0";
 
@@ -173,6 +175,13 @@ export async function registerBusiness(rawInput: RegisterBusinessInput): Promise
       granted_at: new Date().toISOString(),
       revoked_at: null,
     });
+  }
+
+  // Indicação é bônus: se falhar, o cadastro já feito não pode ser desfeito.
+  try {
+    await recordReferral(business.id, (await cookies()).get(REFERRAL_COOKIE)?.value);
+  } catch (referralError) {
+    console.error("[referrals] falha ao registrar indicação:", referralError);
   }
 
   await translateAndStore("business", business.id, {

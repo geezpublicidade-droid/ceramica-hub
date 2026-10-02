@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createServiceClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/auth-guards";
 import { logAdminAction } from "@/lib/audit-log";
+import { markReferralConverted } from "@/lib/services/referrals";
 
 type ActionResult = { success: true } | { success: false; error: string };
 
@@ -48,6 +49,12 @@ export async function confirmInvoicePayment(invoiceId: string): Promise<ActionRe
     .eq("id", subscription.id);
 
   await supabase.from("businesses").update({ plan: subscription.plan }).eq("id", invoice.business_id);
+
+  try {
+    await markReferralConverted(invoice.business_id);
+  } catch (referralError) {
+    console.error("[referrals] falha ao converter indicação:", referralError);
+  }
 
   await logAdminAction(adminId, "confirm_invoice_payment", "invoice", invoiceId, {
     businessId: invoice.business_id,

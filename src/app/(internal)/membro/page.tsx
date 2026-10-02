@@ -39,6 +39,9 @@ export default async function MemberPage() {
           <Link href="/membro/carteirinha" className="neu rounded-full px-4 py-2 text-[14px] font-medium text-foreground">
             Minha carteirinha
           </Link>
+          <Link href="/membro/indicacoes" className="neu rounded-full px-4 py-2 text-[14px] font-medium text-foreground">
+            Indicar uma empresa
+          </Link>
           <PwaInstallButton />
         </div>
 

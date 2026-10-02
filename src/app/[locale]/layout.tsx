@@ -9,6 +9,7 @@ import { siteUrl, buildSocialMetadata, buildAlternates } from "@/lib/seo";
 import { SupportWhatsAppButton } from "@/components/support/SupportWhatsAppButton";
 import { PortalPageViewTracker } from "@/components/PortalPageViewTracker";
 import { PwaRegister } from "@/components/pwa/PwaRegister";
+import { ReferralCapture } from "@/components/referrals/ReferralCapture";
 import "../globals.css";
 
 // Tipografia oficial do Manual de Identidade Visual v1.0 -- Montserrat é a
@@ -103,6 +104,7 @@ export default async function LocaleLayout({
           {children}
           <PortalPageViewTracker />
           <PwaRegister />
+          <ReferralCapture />
         </NextIntlClientProvider>
         <SupportWhatsAppButton />
       </body>
