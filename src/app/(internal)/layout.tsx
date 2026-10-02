@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Montserrat, Playfair_Display, Geist_Mono, Inter } from "next/font/google";
+import { PwaRegister } from "@/components/pwa/PwaRegister";
 import "../globals.css";
 
 // Ver nota em src/app/[locale]/layout.tsx -- mesma tipografia oficial
@@ -31,8 +32,12 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "Cerâmica Hub — Painel",
+  icons: { apple: "/api/pwa-icon/180" },
+  appleWebApp: { capable: true, title: "Cerâmica Hub", statusBarStyle: "default" },
   robots: { index: false, follow: false },
 };
+
+export const viewport: Viewport = { themeColor: "#b3553a" };
 
 export default function InternalRootLayout({
   children,
@@ -44,7 +49,10 @@ export default function InternalRootLayout({
       lang="pt-BR"
       className={`${montserrat.variable} ${playfairDisplay.variable} ${geistMono.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <PwaRegister />
+      </body>
     </html>
   );
 }

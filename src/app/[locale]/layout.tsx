@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { NextIntlClientProvider } from "next-intl";
@@ -8,6 +8,7 @@ import { routing } from "@/i18n/routing";
 import { siteUrl, buildSocialMetadata, buildAlternates } from "@/lib/seo";
 import { SupportWhatsAppButton } from "@/components/support/SupportWhatsAppButton";
 import { PortalPageViewTracker } from "@/components/PortalPageViewTracker";
+import { PwaRegister } from "@/components/pwa/PwaRegister";
 import "../globals.css";
 
 // Tipografia oficial do Manual de Identidade Visual v1.0 -- Montserrat é a
@@ -37,6 +38,8 @@ const alexandria = Alexandria({
   subsets: ["latin"],
 });
 
+export const viewport: Viewport = { themeColor: "#b3553a" };
+
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
@@ -53,6 +56,9 @@ export async function generateMetadata({
 
   return {
     metadataBase: new URL(siteUrl),
+    applicationName: "Cerâmica Hub",
+    icons: { apple: "/api/pwa-icon/180" },
+    appleWebApp: { capable: true, title: "Cerâmica Hub", statusBarStyle: "default" },
     title,
     description,
     alternates: buildAlternates(locale, "/"),
@@ -96,6 +102,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider>
           {children}
           <PortalPageViewTracker />
+          <PwaRegister />
         </NextIntlClientProvider>
         <SupportWhatsAppButton />
       </body>

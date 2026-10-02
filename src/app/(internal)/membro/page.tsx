@@ -5,6 +5,7 @@ import { SignOutButton } from "@/components/nav/SignOutButton";
 import { IconCoupon } from "@/components/dashboard/nav-icons";
 import { FavoriteCard } from "@/components/member/FavoriteCard";
 import { MemberPrivacyControls } from "@/components/member/MemberPrivacyControls";
+import { PwaInstallButton } from "@/components/pwa/PwaInstallButton";
 
 export const metadata = { title: "Meus favoritos — Cerâmica Hub" };
 
@@ -32,6 +33,13 @@ export default async function MemberPage() {
             </h1>
           </div>
           <SignOutButton action={logout} />
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <Link href="/membro/carteirinha" className="neu rounded-full px-4 py-2 text-[14px] font-medium text-foreground">
+            Minha carteirinha
+          </Link>
+          <PwaInstallButton />
         </div>
 
         <Link
