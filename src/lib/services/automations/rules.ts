@@ -3,6 +3,8 @@ import { formatDateBR } from "@/lib/utils";
 import { getContractsExpiringSoon } from "@/lib/services/anchors";
 import { getMonthlyReport, previousMonthKey, formatMonthLabel } from "@/lib/services/business-results";
 import { absoluteUrl, escapeHtml, renderAutomationEmail } from "./email-layout";
+import { adminEmails, adminJobs } from "./helpers";
+import { executiveReportJobs, salesReportJobs } from "./reports";
 import type { AutomationKey } from "./registry";
 import type { AutomationJob } from "./types";
 
@@ -16,12 +18,6 @@ type Body = { subject: string; html: string };
 const MARKETING_ADMIN_ROLES = ["super_admin", "admin", "marketing"];
 const SALES_ADMIN_ROLES = ["super_admin", "admin", "comercial"];
 
-async function adminEmails(roles: string[]): Promise<string[]> {
-  const { data, error } = await createServiceClient().from("admins").select("email").in("role", roles);
-  if (error) throw error;
-  return (data ?? []).map((row) => row.email);
-}
-
 /** Um job por empresa: monta o e-mail com o nome dela e (opcional) um botão. */
 function businessJob(
   automation: AutomationKey,
@@ -30,11 +26,6 @@ function businessJob(
   compose: (token: string | null) => Promise<Body> | Body
 ): AutomationJob {
   return { automation, dedupeKey, to: business.email, businessId: business.id, build: async (token) => compose(token) };
-}
-
-/** Um job por admin destinatário, todos com o mesmo conteúdo. */
-function adminJobs(automation: AutomationKey, dedupeKey: string, recipients: string[], body: Body): AutomationJob[] {
-  return recipients.map((to) => ({ automation, dedupeKey, to, build: async () => body }));
 }
 
 async function selectBusinesses(configure: (query: ReturnType<typeof baseBusinessQuery>) => ReturnType<typeof baseBusinessQuery>): Promise<BusinessRow[]> {
@@ -307,6 +298,8 @@ const COLLECTORS: Record<AutomationKey, () => Promise<AutomationJob[]>> = {
   renewal: async () => (await Promise.all([renewalBusinessJobs(), anchorRenewalJobs()])).flat(),
   reactivation: reactivationJobs,
   new_lead: newLeadJobs,
+  executive_report: executiveReportJobs,
+  sales_report: salesReportJobs,
 };
 
 export function collectJobs(automation: AutomationKey): Promise<AutomationJob[]> {

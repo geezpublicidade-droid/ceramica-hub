@@ -10,6 +10,8 @@ export const AUTOMATION_KEYS = [
   "renewal",
   "reactivation",
   "new_lead",
+  "executive_report",
+  "sales_report",
 ] as const;
 export type AutomationKey = (typeof AUTOMATION_KEYS)[number];
 
@@ -74,6 +76,18 @@ export const AUTOMATIONS: Record<AutomationKey, AutomationMeta> = {
   new_lead: {
     label: "Novo lead",
     description: "A equipe comercial é avisada de cada lead novo (CRM e formulário de parceiros).",
+    audience: "admin",
+    requiresConsent: false,
+  },
+  executive_report: {
+    label: "Relatório executivo mensal",
+    description: "Nos primeiros dias do mês, a administração e o financeiro recebem receita, contratos, metas e audiência do mês anterior.",
+    audience: "admin",
+    requiresConsent: false,
+  },
+  sales_report: {
+    label: "Relatório semanal do comercial",
+    description: "Toda segunda, a equipe comercial recebe o funil, os leads quentes, os parados e as propostas da semana.",
     audience: "admin",
     requiresConsent: false,
   },
