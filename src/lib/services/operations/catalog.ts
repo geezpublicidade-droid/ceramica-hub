@@ -7,6 +7,8 @@ export const OPERATIONAL_RULES = [
   "overdue_payment",
   "inactive_business",
   "subscription_expired",
+  "placement_release",
+  "placement_expired",
 ] as const;
 export type OperationalRule = (typeof OPERATIONAL_RULES)[number];
 
@@ -47,6 +49,18 @@ export const OPERATIONAL_RULE_META: Record<OperationalRule, OperationalRuleMeta>
     label: "Contrato terminou: benefícios bloqueados",
     description:
       "Assinatura com prazo vencido passa a Expirada e a empresa volta ao plano Presença, desde que não tenha outra assinatura ativa. Campanhas de publicidade já encerram sozinhas pela data.",
+    effect: "state",
+  },
+  placement_release: {
+    label: "Posição paga liberada",
+    description:
+      "Posição de categoria reservada, com pagamento confirmado (ou isenta) e dentro do período, passa sozinha para Ativa e entra no ar.",
+    effect: "state",
+  },
+  placement_expired: {
+    label: "Posição de categoria vencida",
+    description:
+      "Posição com o término ultrapassado passa para Encerrada e a empresa volta para a listagem orgânica da categoria.",
     effect: "state",
   },
 };

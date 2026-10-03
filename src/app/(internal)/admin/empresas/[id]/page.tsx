@@ -3,6 +3,9 @@ import Link from "next/link";
 import { requireAdminPage } from "@/lib/auth-guards";
 import type { AdminRole } from "@/auth";
 import { getCompany360, type Company360 } from "@/lib/services/company-360";
+import { getBusinessCategoryIds, getCategoryGroups } from "@/lib/services/business-categories";
+import { setBusinessCategoriesAction } from "@/lib/actions/admin-category-placements";
+import { BusinessCategoriesForm } from "@/components/admin/BusinessCategoriesForm";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { CompanyTabs } from "@/components/admin/CompanyTabs";
 import { ContactRow } from "@/components/admin/ContactRow";
@@ -51,7 +54,7 @@ function Field({ label, value }: { label: string; value: string }) {
   );
 }
 
-function renderOverview(data: Company360) {
+function renderOverview(data: Company360, categories: React.ReactNode) {
   const { profile, contacts, supportTickets, tasks } = data;
   const openTickets = supportTickets.filter((t) => t.status !== "fechado").length;
   const openTasks = tasks.filter((t) => t.status !== "concluida" && t.status !== "cancelada").length;
@@ -85,6 +88,7 @@ function renderOverview(data: Company360) {
         <Field label="Cadastrada em" value={formatDate(profile.createdAt)} />
         {profile.rejectionReason && <Field label="Motivo de rejeição/suspensão" value={profile.rejectionReason} />}
       </div>
+      {categories}
     </div>
   );
 }
@@ -341,6 +345,18 @@ function renderHistory(data: Company360) {
   );
 }
 
+async function renderCategoriesForm(businessId: string) {
+  const [groups, linked] = await Promise.all([getCategoryGroups(), getBusinessCategoryIds(businessId)]);
+  return (
+    <BusinessCategoriesForm
+      groups={groups}
+      primaryId={linked.primaryId}
+      selectedIds={linked.extraIds}
+      onSave={setBusinessCategoriesAction.bind(null, businessId)}
+    />
+  );
+}
+
 export default async function Company360Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const { adminRole } = await requireAdminPage([
@@ -359,6 +375,9 @@ export default async function Company360Page({ params }: { params: Promise<{ id:
 
   const financeAllowed = FINANCE_ROLES.includes(adminRole);
 
+  const canEditCategories = ["super_admin", "admin", "comercial", "marketing"].includes(adminRole);
+  const categoriesForm = canEditCategories ? await renderCategoriesForm(id) : null;
+
   return (
     <AdminShell currentPath="/admin/empresas" adminRole={adminRole} wide>
       <div>
@@ -376,7 +395,7 @@ export default async function Company360Page({ params }: { params: Promise<{ id:
 
       <CompanyTabs
         tabs={[
-          { id: "geral", label: "Visão geral", content: renderOverview(data) },
+          { id: "geral", label: "Visão geral", content: renderOverview(data, categoriesForm) },
           { id: "contatos", label: "Contatos", content: renderContacts(data) },
           { id: "perfil", label: "Perfil público", content: renderPublicProfile(data) },
           { id: "plano", label: "Plano e contrato", content: renderPlan(data) },

@@ -168,3 +168,32 @@ export async function subscriptionExpiredRule(supabase: Supabase): Promise<numbe
   for (const sub of expired) await downgradeIfNoActiveSubscription(supabase, sub.business_id, sub.plan);
   return expired.length;
 }
+
+const saoPauloToday = () => new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo" }).format(new Date());
+
+export async function placementReleaseRule(supabase: Supabase): Promise<number> {
+  const today = saoPauloToday();
+  const { data, error } = await supabase
+    .from("category_placements")
+    .update({ status: "active" })
+    .eq("status", "reserved")
+    .in("payment_status", ["paid", "waived"])
+    .lte("starts_at", today)
+    .gte("ends_at", today)
+    .select("id");
+  if (error) throw error;
+  for (const row of data ?? []) await logSystemAction("placement_released", "category_placement", row.id);
+  return data?.length ?? 0;
+}
+
+export async function placementExpiredRule(supabase: Supabase): Promise<number> {
+  const { data, error } = await supabase
+    .from("category_placements")
+    .update({ status: "expired" })
+    .in("status", ["reserved", "active", "paused"])
+    .lt("ends_at", saoPauloToday())
+    .select("id");
+  if (error) throw error;
+  for (const row of data ?? []) await logSystemAction("placement_expired", "category_placement", row.id);
+  return data?.length ?? 0;
+}

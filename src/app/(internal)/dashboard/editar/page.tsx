@@ -8,6 +8,10 @@ import {
   getVirtualTourScenes,
 } from "@/lib/services/platform";
 import { limitsFor } from "@/lib/plan-limits";
+import { createServiceClient } from "@/lib/supabase/server";
+import { getBusinessCategoryIds, getCategoryGroups } from "@/lib/services/business-categories";
+import { updateOwnCategorizationAction } from "@/lib/actions/business-categorization";
+import { BusinessCategoriesForm } from "@/components/admin/BusinessCategoriesForm";
 import { EditPageManager } from "@/components/dashboard/EditPageManager";
 import { BackLink } from "@/components/nav/BackLink";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
@@ -21,6 +25,12 @@ export default async function EditarPaginaPage() {
 
   const business = await getBusinessById(businessId);
   if (!business) redirect("/login");
+
+  const [categoryGroups, linkedCategories, modes] = await Promise.all([
+    getCategoryGroups(),
+    getBusinessCategoryIds(businessId),
+    createServiceClient().from("businesses").select("serves_in_person, serves_online").eq("id", businessId).single(),
+  ]);
 
   const [services, photos, promotions, virtualTourScenes] = await Promise.all([
     getBusinessServices(businessId),
@@ -45,6 +55,16 @@ export default async function EditarPaginaPage() {
             Plano atual: <strong>{business.effectivePlan}</strong>
             {business.trial.status === "active" && " (em teste)"}
           </p>
+
+          <div className="mt-6">
+            <BusinessCategoriesForm
+              groups={categoryGroups}
+              primaryId={linkedCategories.primaryId}
+              selectedIds={linkedCategories.extraIds}
+              serviceModes={{ inPerson: modes.data?.serves_in_person ?? true, online: modes.data?.serves_online ?? false }}
+              onSave={updateOwnCategorizationAction}
+            />
+          </div>
 
           <EditPageManager
             business={business}

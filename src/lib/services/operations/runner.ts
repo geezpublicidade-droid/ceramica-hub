@@ -4,6 +4,8 @@ import {
   inactiveBusinessRule,
   leadFollowupRule,
   overduePaymentRule,
+  placementExpiredRule,
+  placementReleaseRule,
   proposalExpiredRule,
   proposalExpiringRule,
   subscriptionExpiredRule,
@@ -18,6 +20,8 @@ const RULES: Record<OperationalRule, (supabase: Supabase) => Promise<number>> = 
   overdue_payment: overduePaymentRule,
   inactive_business: inactiveBusinessRule,
   subscription_expired: subscriptionExpiredRule,
+  placement_release: placementReleaseRule,
+  placement_expired: placementExpiredRule,
 };
 
 export type OperationalRunResult = { rule: OperationalRule; affected: number; failed: boolean };

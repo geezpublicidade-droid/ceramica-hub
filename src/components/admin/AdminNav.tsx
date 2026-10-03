@@ -197,6 +197,12 @@ const NAV_SECTIONS: { section: string; items: NavItem[] }[] = [
         roles: ["super_admin", "admin", "comercial", "marketing"],
       },
       {
+        label: "Publicidade por categoria",
+        href: "/admin/publicidade/categorias",
+        Icon: IconAds,
+        roles: ["super_admin", "admin", "comercial", "marketing"],
+      },
+      {
         label: "Central de Marketing",
         href: "/admin/marketing",
         Icon: IconResults,
@@ -295,6 +301,8 @@ const NAV_SECTIONS: { section: string; items: NavItem[] }[] = [
 
 function isItemActive(href: string, currentPath: string): boolean {
   if (href === "/admin" || href === "/admin/marketing") return currentPath === href;
+  // "Publicidade por categoria" é item próprio: não acende também o pai "Publicidade"
+  if (href === "/admin/publicidade" && currentPath.startsWith("/admin/publicidade/categorias")) return false;
   return currentPath === href || currentPath.startsWith(`${href}/`);
 }
 
