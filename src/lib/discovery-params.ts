@@ -1,4 +1,7 @@
-import { DISCOVERY_SORTS, type DiscoveryFilters, type DiscoverySort } from "@/lib/services/company-discovery";
+import type { DiscoveryFilters } from "@/lib/services/company-discovery";
+
+export const DISCOVERY_SORTS = ["relevance", "views", "rating", "alpha", "recent"] as const;
+export type DiscoverySort = (typeof DISCOVERY_SORTS)[number];
 
 export type RawSearchParams = Record<string, string | string[] | undefined>;
 

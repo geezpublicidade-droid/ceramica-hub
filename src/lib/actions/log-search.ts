@@ -85,6 +85,12 @@ export async function logPlacementClick(placementId: string, businessId: string,
   await logMetricEvent("placement_click", businessId, { placementId, kind });
 }
 
+/** Visita ao perfil comercial da empresa (chamada pelo navegador, uma vez por sessão). */
+export async function logCommercialPageView(businessId: string) {
+  if (!UUID_RE.test(businessId)) return;
+  await logMetricEvent("commercial_page_viewed", businessId);
+}
+
 export async function logPlacementProfileView(placementId: string, businessId: string) {
   if (!UUID_RE.test(placementId) || !UUID_RE.test(businessId)) return;
   await logMetricEvent("placement_profile_view", businessId, { placementId });

@@ -1,7 +1,12 @@
 import type { MetadataRoute } from "next";
 import { getAllBusinesses } from "@/lib/services/platform";
 import { getPublishedPosts } from "@/lib/services/blog";
-import { categorySlugs } from "@/lib/category-slug";
+import {
+  categoriesWithCompanies,
+  categoryPath,
+  getBusinessCategoryLinks,
+  getCategoryTree,
+} from "@/lib/services/categories";
 import { getActiveTowers } from "@/lib/services/towers";
 import { PLAN_ORDER } from "@/lib/plan-limits";
 import { routing } from "@/i18n/routing";
@@ -32,11 +37,19 @@ function entry(
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [businesses, posts, towers] = await Promise.all([
+  const [businesses, posts, towers, tree, links] = await Promise.all([
     getAllBusinesses(),
     getPublishedPosts(),
     getActiveTowers(),
+    getCategoryTree(),
+    getBusinessCategoryLinks(),
   ]);
+
+  // só categorias com empresas entram no sitemap (página vazia fica noindex, ver categoria/[...path])
+  const withCompanies = categoriesWithCompanies(tree, new Set(businesses.map((business) => business.id)), links);
+  const categoryPaths = [...tree.byId.values()]
+    .filter((category) => withCompanies.has(category.id))
+    .map((category) => categoryPath(tree, category));
 
   return [
     entry("", "daily", 1),
@@ -58,7 +71,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entry("/seja-um-parceiro", "monthly", 0.4),
     entry("/planos", "monthly", 0.6),
     ...PLANO_SLUGS.map((plano) => entry(`/planos/${plano}`, "monthly", 0.5)),
-    ...categorySlugs.map((slug) => entry(`/categoria/${slug}`, "weekly", 0.6)),
+    entry("/empresas", "daily", 0.8),
+    ...categoryPaths.map((path) => entry(`/categoria/${path}`, "weekly", 0.6)),
     ...towers.map((tower) => entry(`/torres/${tower.slug}`, "weekly", 0.5)),
     ...businesses.map((business) => entry(`/empresa/${business.slug}`, "weekly", 0.6)),
     ...posts.map((post) => entry(`/blog/${post.slug}`, "monthly", 0.5)),

@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createServiceClient } from "@/lib/supabase/server";
 
 export type Category = {
@@ -30,8 +31,8 @@ export type CategoryTree = {
   byId: Map<string, Category>;
 };
 
-/** Árvore de categorias ativas, com nome/descrição no idioma pedido (fallback: português). */
-export async function getCategoryTree(locale?: string): Promise<CategoryTree> {
+/** Árvore de categorias ativas, com nome/descrição no idioma pedido (fallback: português). Memoizada por requisição (metadata e página compartilham a consulta). */
+export const getCategoryTree = cache(async (locale?: string): Promise<CategoryTree> => {
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("categories")
@@ -63,7 +64,7 @@ export async function getCategoryTree(locale?: string): Promise<CategoryTree> {
     else if (category.level === 1) roots.push(category);
   }
   return { roots, byId };
-}
+});
 
 /** Resolve `/categoria/a/b/c` descendo a árvore pelos slugs; null se algum não existir. */
 export function findCategoryByPath(tree: CategoryTree, slugs: string[]): Category[] | null {
@@ -87,8 +88,8 @@ export function categoryAndDescendantIds(category: Category): Set<string> {
   return ids;
 }
 
-/** Vínculos empresa → categorias (qualquer nível). */
-export async function getBusinessCategoryLinks(): Promise<Map<string, Set<string>>> {
+/** Vínculos empresa → categorias (qualquer nível). Memoizada por requisição. */
+export const getBusinessCategoryLinks = cache(async (): Promise<Map<string, Set<string>>> => {
   const supabase = createServiceClient();
   const { data, error } = await supabase.from("business_categories").select("business_id, category_id");
   if (error) throw error;
@@ -100,6 +101,39 @@ export async function getBusinessCategoryLinks(): Promise<Map<string, Set<string
     links.set(row.business_id as string, set);
   }
   return links;
+});
+
+/** Há ao menos uma empresa aprovada na categoria (ou em alguma descendente)? Consulta de 1 linha, para o metadata. */
+export async function hasApprovedBusinesses(category: Category): Promise<boolean> {
+  const { data, error } = await createServiceClient()
+    .from("business_categories")
+    .select("business_id, businesses!inner(status)")
+    .in("category_id", [...categoryAndDescendantIds(category)])
+    .eq("businesses.status", "approved")
+    .limit(1);
+  if (error) throw error;
+  return (data ?? []).length > 0;
+}
+
+/**
+ * Ids das categorias que têm empresa aprovada, contando as ancestrais (quem tem empresa em
+ * Dentistas também tem em Saúde). Uma passada pelos vínculos, sem laço por categoria.
+ */
+export function categoriesWithCompanies(
+  tree: CategoryTree,
+  approvedBusinessIds: ReadonlySet<string>,
+  links: Map<string, Set<string>>,
+): Set<string> {
+  const withCompanies = new Set<string>();
+  for (const [businessId, categoryIds] of links) {
+    if (!approvedBusinessIds.has(businessId)) continue;
+    for (const categoryId of categoryIds) {
+      for (let node = tree.byId.get(categoryId); node && !withCompanies.has(node.id); node = node.parentId ? tree.byId.get(node.parentId) : undefined) {
+        withCompanies.add(node.id);
+      }
+    }
+  }
+  return withCompanies;
 }
 
 /** Caminho slug da categoria (`saude-e-estetica/dentistas`) para montar links. */

@@ -16,6 +16,7 @@ import {
 } from "@/components/empresas/DiscoveryFilters";
 import {
   buildDiscoveryQuery,
+  DISCOVERY_SORTS,
   localizedPath,
   parseDiscoveryParams,
   type RawSearchParams,
@@ -24,15 +25,13 @@ import { jsonLdString } from "@/lib/json-ld";
 import { localizedUrl, buildAlternates, buildSocialMetadata } from "@/lib/seo";
 import {
   categoryPath,
+  hasApprovedBusinesses,
   findCategoryByPath,
   getBusinessCategoryLinks,
   getCategoryTree,
   type Category,
 } from "@/lib/services/categories";
-import {
-  discoverCompanies,
-  DISCOVERY_SORTS,
-} from "@/lib/services/company-discovery";
+import { discoverCompanies } from "@/lib/services/company-discovery";
 import { getAllBusinesses } from "@/lib/services/platform";
 import {
   getVisiblePlacements,
@@ -64,27 +63,21 @@ export async function generateMetadata({
   if (!trail) return {};
 
   const category = trail[trail.length - 1];
-  const t = await getTranslations({ locale, namespace: "CategoryPage" });
+  const [t, hasCompanies] = await Promise.all([
+    getTranslations({ locale, namespace: "CategoryPage" }),
+    hasApprovedBusinesses(category),
+  ]);
   const title = t("metaTitle", { category: category.name });
   const description =
     category.description ?? t("metaDescription", { category: category.name });
   const canonicalPath = `/categoria/${path.join("/")}`;
-  const { total } = await discoverCompanies(
-    {
-      ...parseDiscoveryParams({}).filters,
-      cat: path[0],
-      sub: path[1],
-      spec: path[2],
-    },
-    locale,
-  );
 
   return {
     title,
     description,
     // Só indexa categoria com conteúdo e sem filtros/busca/paginação aplicados.
     robots:
-      total === 0 || Object.keys(raw).length > 0
+      !hasCompanies || Object.keys(raw).length > 0
         ? { index: false, follow: true }
         : undefined,
     alternates: buildAlternates(locale, canonicalPath),
@@ -250,6 +243,31 @@ export default async function CategoryPage({
     })),
   };
 
+  // Lista de empresas da página para buscadores: patrocinadas e orgânicas entram do mesmo jeito,
+  // sem marcar anúncio no dado estruturado (a identificação "Patrocinado" é do visitante, no card).
+  const listedBusinesses = [
+    ...[...placements.leader, ...placements.premium, ...placements.featured].map(
+      (placement) => placement.business,
+    ),
+    ...result.items.map((item) => item.business),
+  ];
+  const collectionJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: t("h1", { category: category.name }),
+    url: localizedUrl(locale, basePath),
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: listedBusinesses.length,
+      itemListElement: listedBusinesses.map((business, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: localizedUrl(locale, `/empresa/${business.slug}`),
+        name: business.name,
+      })),
+    },
+  };
+
   const listing = (
     <>
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -365,6 +383,10 @@ export default async function CategoryPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdString(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdString(collectionJsonLd) }}
       />
       <Header />
       <main className="flex-1">

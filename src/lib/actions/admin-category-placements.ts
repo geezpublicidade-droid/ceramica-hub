@@ -4,17 +4,14 @@ import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/auth-guards";
 import type { AdminRole } from "@/auth";
 import { logAdminAction } from "@/lib/audit-log";
+import { PAYMENT_STATUSES, PLACEMENT_STATUSES, type PaymentStatus, type PlacementStatus } from "@/lib/placement-rules";
 import {
-  PAYMENT_STATUSES,
-  PLACEMENT_STATUSES,
   PlacementError,
   createPlacement,
   renewPlacement,
   updatePlacement,
-  type PaymentStatus,
   type PlacementInput,
   type PlacementPatch,
-  type PlacementStatus,
 } from "@/lib/services/category-placements-admin";
 import { linkBusinessCategories } from "@/lib/services/business-categories";
 

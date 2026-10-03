@@ -1,5 +1,12 @@
 import { createServiceClient } from "@/lib/supabase/server";
 import {
+  computeLiveState,
+  todaySaoPaulo,
+  type PaymentStatus,
+  type PlacementLiveState,
+  type PlacementStatus,
+} from "@/lib/placement-rules";
+import {
   categoryAndDescendantIds,
   getBusinessCategoryLinks,
   getCategoryTree,
@@ -17,36 +24,6 @@ export function categoryBreadcrumb(tree: CategoryTree, category: Category): stri
   }
   return names.join(" › ");
 }
-
-export const PLACEMENT_STATUSES = ["reserved", "active", "paused", "expired", "cancelled"] as const;
-export type PlacementStatus = (typeof PLACEMENT_STATUSES)[number];
-export const PAYMENT_STATUSES = ["pending", "paid", "overdue", "waived"] as const;
-export type PaymentStatus = (typeof PAYMENT_STATUSES)[number];
-
-export const PLACEMENT_STATUS_LABEL: Record<PlacementStatus, string> = {
-  reserved: "Reservada",
-  active: "Ativa",
-  paused: "Suspensa",
-  expired: "Encerrada",
-  cancelled: "Cancelada",
-};
-export const PAYMENT_STATUS_LABEL: Record<PaymentStatus, string> = {
-  pending: "Aguardando pagamento",
-  paid: "Pago",
-  overdue: "Em atraso",
-  waived: "Isento",
-};
-
-/** Situação real hoje, combinando status, pagamento e datas (o que o visitante de fato vê). */
-export type PlacementLiveState = "no_ar" | "agendada" | "vencendo" | "aguardando" | "suspensa" | "encerrada";
-export const PLACEMENT_LIVE_LABEL: Record<PlacementLiveState, string> = {
-  no_ar: "No ar",
-  agendada: "Agendada",
-  vencendo: "Vence em breve",
-  aguardando: "Aguardando liberação",
-  suspensa: "Suspensa",
-  encerrada: "Encerrada",
-};
 
 export type PlacementType = {
   id: string;
@@ -98,30 +75,6 @@ export type PlacementInput = {
   notes: string | null;
   paymentStatus: PaymentStatus;
 };
-
-const EXPIRING_DAYS = 7;
-const DAY_MS = 24 * 60 * 60 * 1000;
-
-/** Data de hoje em São Paulo (YYYY-MM-DD). */
-export function todaySaoPaulo(): string {
-  return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo" }).format(new Date());
-}
-
-function daysBetween(from: string, to: string): number {
-  return Math.round((Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / DAY_MS);
-}
-
-export function computeLiveState(
-  row: { status: PlacementStatus; payment_status: PaymentStatus; starts_at: string; ends_at: string },
-  today: string,
-): PlacementLiveState {
-  if (row.status === "cancelled" || row.status === "expired" || row.ends_at < today) return "encerrada";
-  if (row.status === "paused") return "suspensa";
-  if (row.status === "reserved") return "aguardando";
-  if (row.payment_status === "pending" || row.payment_status === "overdue") return "aguardando";
-  if (row.starts_at > today) return "agendada";
-  return daysBetween(today, row.ends_at) <= EXPIRING_DAYS ? "vencendo" : "no_ar";
-}
 
 export async function getPlacementTypes(): Promise<PlacementType[]> {
   const { data, error } = await createServiceClient()

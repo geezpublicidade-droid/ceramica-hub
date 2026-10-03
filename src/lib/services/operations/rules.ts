@@ -1,4 +1,5 @@
 import { createServiceClient } from "@/lib/supabase/server";
+import { PAYMENT_STATUSES_THAT_RELEASE, todaySaoPaulo } from "@/lib/placement-rules";
 import { logSystemAction } from "@/lib/audit-log";
 import { formatDateBR } from "@/lib/utils";
 import type { TaskPriority } from "@/lib/services/tasks";
@@ -169,15 +170,13 @@ export async function subscriptionExpiredRule(supabase: Supabase): Promise<numbe
   return expired.length;
 }
 
-const saoPauloToday = () => new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo" }).format(new Date());
-
 export async function placementReleaseRule(supabase: Supabase): Promise<number> {
-  const today = saoPauloToday();
+  const today = todaySaoPaulo();
   const { data, error } = await supabase
     .from("category_placements")
     .update({ status: "active" })
     .eq("status", "reserved")
-    .in("payment_status", ["paid", "waived"])
+    .in("payment_status", [...PAYMENT_STATUSES_THAT_RELEASE])
     .lte("starts_at", today)
     .gte("ends_at", today)
     .select("id");
@@ -191,7 +190,7 @@ export async function placementExpiredRule(supabase: Supabase): Promise<number> 
     .from("category_placements")
     .update({ status: "expired" })
     .in("status", ["reserved", "active", "paused"])
-    .lt("ends_at", saoPauloToday())
+    .lt("ends_at", todaySaoPaulo())
     .select("id");
   if (error) throw error;
   for (const row of data ?? []) await logSystemAction("placement_expired", "category_placement", row.id);

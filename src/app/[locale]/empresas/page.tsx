@@ -7,8 +7,9 @@ import { CompanyCard } from "@/components/business/CompanyCard";
 import { CategoryIcon } from "@/components/empresas/CategoryIcon";
 import { CompanySearchBox } from "@/components/empresas/CompanySearchBox";
 import { DiscoveryFilters, type DiscoveryFilterLabels } from "@/components/empresas/DiscoveryFilters";
-import { buildDiscoveryQuery, localizedPath, parseDiscoveryParams, type RawSearchParams } from "@/lib/discovery-params";
-import { discoverCompanies, DISCOVERY_SORTS } from "@/lib/services/company-discovery";
+import { buildDiscoveryQuery, DISCOVERY_SORTS, localizedPath, parseDiscoveryParams, type RawSearchParams } from "@/lib/discovery-params";
+import { discoverCompanies } from "@/lib/services/company-discovery";
+import { jsonLdString } from "@/lib/json-ld";
 import { localizedUrl, buildAlternates, buildSocialMetadata } from "@/lib/seo";
 
 type PageProps = {
@@ -119,7 +120,7 @@ export default async function EmpresasPage({ params, searchParams }: PageProps) 
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(listJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(listJsonLd) }} />
       <Header />
       <main className="flex-1">
         <section className="px-6 pb-20 pt-32 sm:pt-36">

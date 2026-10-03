@@ -8,13 +8,13 @@ import {
   setPlacementPaymentAction,
   setPlacementStatusAction,
 } from "@/lib/actions/admin-category-placements";
+import type { AdminPlacement } from "@/lib/services/category-placements-admin";
 import {
   PAYMENT_STATUS_LABEL,
   PLACEMENT_LIVE_LABEL,
-  type AdminPlacement,
   type PaymentStatus,
   type PlacementStatus,
-} from "@/lib/services/category-placements-admin";
+} from "@/lib/placement-rules";
 import { placementCtr, type PlacementMetrics } from "@/lib/services/placement-metrics";
 import { formatCents, formatDateBR } from "@/lib/utils";
 

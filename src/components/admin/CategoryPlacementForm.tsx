@@ -3,8 +3,8 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { createCategoryPlacementAction } from "@/lib/actions/admin-category-placements";
-import type { PaymentStatus, PlacementFormOptions } from "@/lib/services/category-placements-admin";
-import { PAYMENT_STATUS_LABEL } from "@/lib/services/category-placements-admin";
+import type { PlacementFormOptions } from "@/lib/services/category-placements-admin";
+import { PAYMENT_STATUS_LABEL, type PaymentStatus } from "@/lib/placement-rules";
 import { parseCentsInput } from "@/lib/utils";
 
 const inputClass =

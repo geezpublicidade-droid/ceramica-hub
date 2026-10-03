@@ -1,6 +1,7 @@
 import { createServiceClient } from "@/lib/supabase/server";
 import type { Business } from "@/data/businesses";
 import { categoryAndDescendantIds, type Category } from "@/lib/services/categories";
+import { PAYMENT_STATUSES_THAT_RELEASE, pickWeighted, todaySaoPaulo } from "@/lib/placement-rules";
 
 export type PlacementTypeKey = "leader" | "premium" | "featured";
 
@@ -26,29 +27,6 @@ export type VisiblePlacements = Record<PlacementTypeKey, CategoryPlacement[]>;
 
 const TYPE_KEYS: PlacementTypeKey[] = ["leader", "premium", "featured"];
 
-/** Data de hoje em São Paulo (YYYY-MM-DD): contrato vence no fim do dia local, não em UTC. */
-function todaySaoPaulo(): string {
-  return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo" }).format(new Date());
-}
-
-/**
- * Sorteio ponderado sem reposição: quem tem `rotation_weight` maior tende a aparecer
- * mais, mas ninguém fica sempre fora. A ordem manual (`position`) vale como desempate
- * entre pesos iguais só quando não há excesso de anunciantes (nesse caso todos aparecem).
- */
-export function pickWeighted<T extends { rotation_weight: number; position: number }>(items: T[], limit: number): T[] {
-  if (items.length <= limit) return [...items].sort((a, b) => a.position - b.position);
-  const pool = [...items];
-  const chosen: T[] = [];
-  while (chosen.length < limit && pool.length > 0) {
-    const total = pool.reduce((sum, item) => sum + item.rotation_weight, 0);
-    let ticket = Math.random() * total;
-    const index = pool.findIndex((item) => (ticket -= item.rotation_weight) < 0);
-    chosen.push(...pool.splice(index === -1 ? pool.length - 1 : index, 1));
-  }
-  return chosen;
-}
-
 /**
  * Posições comerciais visíveis agora numa categoria. Só entram contratos ativos,
  * com pagamento regular (pago ou isento), dentro do período, de empresa aprovada
@@ -71,7 +49,7 @@ export async function getVisiblePlacements(
     )
     .eq("category_id", category.id)
     .eq("status", "active")
-    .in("payment_status", ["paid", "waived"])
+    .in("payment_status", [...PAYMENT_STATUSES_THAT_RELEASE])
     .lte("starts_at", today)
     .gte("ends_at", today);
   if (error) throw error;

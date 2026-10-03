@@ -21,12 +21,11 @@ import {
   getBusinessServices,
   getBusinessPhotos,
   getVirtualTourScenes,
-  logMetricEvent,
   UUID_RE,
 } from "@/lib/services/platform";
 import { WhatsAppLink } from "@/components/WhatsAppLink";
 import { ContactLink } from "@/components/ContactLink";
-import { PlacementAttribution } from "@/components/business/PlacementAttribution";
+import { ProfileVisitTracker } from "@/components/business/ProfileVisitTracker";
 import { getActiveTowers } from "@/lib/services/towers";
 
 type PageProps = {
@@ -115,8 +114,6 @@ export default async function BusinessProfilePage({ params }: PageProps) {
   const opportunities = allOpportunities.filter((o) => o.businessId === business.id);
   const benefits = allBenefits.filter((b) => b.businessId === business.id);
 
-  await logMetricEvent("commercial_page_viewed", business.id);
-
   const canonicalUrl = localizedUrl(locale, `/empresa/${business.slug}`);
   const categoryLabel = tCategories(business.category);
 
@@ -160,7 +157,7 @@ export default async function BusinessProfilePage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: jsonLdString(breadcrumbJsonLd) }}
       />
       <Header />
-      <PlacementAttribution businessId={business.id} />
+      <ProfileVisitTracker businessId={business.id} />
       <main className="flex-1">
         {/* Banner de ponta a ponta: sem max-width, a foto de capa (ou o
             degradê de fallback) vai até a borda da viewport. Avatar/nome

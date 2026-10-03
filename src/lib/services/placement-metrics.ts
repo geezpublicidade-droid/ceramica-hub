@@ -1,14 +1,15 @@
 import { createServiceClient } from "@/lib/supabase/server";
 import { getCategoryTree } from "@/lib/services/categories";
+import { categoryBreadcrumb } from "@/lib/services/category-placements-admin";
 import {
   PLACEMENT_LIVE_LABEL,
-  categoryBreadcrumb,
   computeLiveState,
+  daysBetween,
   todaySaoPaulo,
   type PaymentStatus,
   type PlacementLiveState,
   type PlacementStatus,
-} from "@/lib/services/category-placements-admin";
+} from "@/lib/placement-rules";
 
 /** Resultados atribuídos a UMA posição paga (nunca ao perfil inteiro): sem evento, 0. */
 export type PlacementMetrics = {
@@ -153,7 +154,7 @@ export async function getBusinessPlacementResults(businessId: string, from: Date
       today,
     );
     const category = tree.byId.get(row.category_id);
-    const daysLeft = row.ends_at >= today ? Math.round((Date.parse(`${row.ends_at}T00:00:00Z`) - Date.parse(`${today}T00:00:00Z`)) / 86400000) : null;
+    const daysLeft = row.ends_at >= today ? daysBetween(today, row.ends_at) : null;
     return {
       id: row.id,
       typeName: (row.placement_types as unknown as { name: string } | null)?.name ?? "Posição",

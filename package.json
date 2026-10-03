@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "node --test \"src/lib/__tests__/*.test.ts\""
   },
   "dependencies": {
     "@photo-sphere-viewer/core": "^5.14.3",

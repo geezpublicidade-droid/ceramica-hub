@@ -27,9 +27,9 @@ export function recallPlacement(businessId: string): string | undefined {
   }
 }
 
-/** Marca a visita ao perfil como já contada nesta sessão; devolve false se já tinha sido (evita contar 2x em recarga ou efeito duplicado). */
-export function markProfileViewCounted(placementId: string): boolean {
-  const key = `${KEY_PREFIX}view:${placementId}`;
+/** Marca `countKey` como já contado nesta sessão; devolve false se já tinha sido (evita contar 2x em recarga ou efeito duplicado). */
+export function markCountedThisSession(countKey: string): boolean {
+  const key = `${KEY_PREFIX}counted:${countKey}`;
   try {
     if (sessionStorage.getItem(key)) return false;
     sessionStorage.setItem(key, "1");

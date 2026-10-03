@@ -1,5 +1,6 @@
 import type { Category } from "@/lib/services/categories";
-import { DISCOVERY_SORTS, type DiscoveryFilters as Filters } from "@/lib/services/company-discovery";
+import { DISCOVERY_SORTS } from "@/lib/discovery-params";
+import type { DiscoveryFilters as Filters } from "@/lib/services/company-discovery";
 
 export type DiscoveryFilterLabels = {
   category: string;

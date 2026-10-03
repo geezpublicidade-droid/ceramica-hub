@@ -1,6 +1,7 @@
 import { createServiceClient } from "@/lib/supabase/server";
 import type { Business } from "@/data/businesses";
 import { getAllBusinesses } from "@/lib/services/platform";
+import type { DiscoverySort } from "@/lib/discovery-params";
 import {
   categoryAndDescendantIds,
   getBusinessCategoryLinks,
@@ -9,8 +10,6 @@ import {
   type CategoryTree,
 } from "@/lib/services/categories";
 
-export const DISCOVERY_SORTS = ["relevance", "views", "rating", "alpha", "recent"] as const;
-export type DiscoverySort = (typeof DISCOVERY_SORTS)[number];
 
 export type DiscoveryFilters = {
   q: string;
@@ -112,6 +111,7 @@ async function loadFacets(): Promise<{ facets: Map<string, Facet>; towers: { id:
   };
 }
 
+/** Visitas dos últimos 90 dias por empresa. Pesado: só chamar quando a ordenação é por acessos. */
 async function loadViewCounts(): Promise<Map<string, number>> {
   const supabase = createServiceClient();
   const since = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString();
@@ -130,10 +130,13 @@ async function loadViewCounts(): Promise<Map<string, number>> {
   return counts;
 }
 
-/** Só avaliações aprovadas (reais); empresa sem avaliação fica fora do ranking por nota. */
-async function loadRatings(): Promise<Map<string, { average: number; count: number }>> {
+/** Só avaliações aprovadas (reais); empresa sem avaliação fica fora do ranking por nota. `businessIds` limita a consulta (cards da página). */
+async function loadRatings(businessIds?: string[]): Promise<Map<string, { average: number; count: number }>> {
+  if (businessIds && businessIds.length === 0) return new Map();
   const supabase = createServiceClient();
-  const { data, error } = await supabase.from("business_reviews").select("business_id, rating").eq("status", "aprovado");
+  let query = supabase.from("business_reviews").select("business_id, rating").eq("status", "aprovado");
+  if (businessIds) query = query.in("business_id", businessIds);
+  const { data, error } = await query;
   if (error) throw error;
   const sums = new Map<string, { total: number; count: number }>();
   for (const row of data ?? []) {
@@ -186,13 +189,14 @@ export async function discoverCompanies(
   locale: string,
   preloaded: { businesses?: Business[]; tree?: CategoryTree } = {},
 ): Promise<DiscoveryResult> {
-  const [businesses, tree, links, { facets, towers }, views, ratings] = await Promise.all([
+  // visitas e notas só entram na consulta quando a ordenação escolhida precisa delas
+  const [businesses, tree, links, { facets, towers }, views, sortRatings] = await Promise.all([
     preloaded.businesses ?? getAllBusinesses(locale),
     preloaded.tree ?? getCategoryTree(locale),
     getBusinessCategoryLinks(),
     loadFacets(),
-    loadViewCounts(),
-    loadRatings(),
+    filters.sort === "views" ? loadViewCounts() : Promise.resolve(new Map<string, number>()),
+    filters.sort === "rating" ? loadRatings() : Promise.resolve(new Map<string, { average: number; count: number }>()),
   ]);
 
   const macro = tree.roots.find((root) => root.slug === filters.cat) ?? null;
@@ -234,8 +238,8 @@ export async function discoverCompanies(
     scored.push({ business, tier });
   }
 
-  const byChosenSort = compareBy(filters.sort, views, ratings, facets);
-  const byRelevance = compareBy("relevance", views, ratings, facets);
+  const byChosenSort = compareBy(filters.sort, views, sortRatings, facets);
+  const byRelevance = compareBy("relevance", views, sortRatings, facets);
   scored.sort((a, b) => {
     // com busca por texto, a relevância textual vem sempre antes do critério escolhido
     if (term && filters.sort === "relevance" && a.tier !== b.tier) return a.tier - b.tier;
@@ -243,7 +247,11 @@ export async function discoverCompanies(
   });
 
   const start = (filters.page - 1) * DISCOVERY_PAGE_SIZE;
-  const items: DiscoveryItem[] = scored.slice(start, start + DISCOVERY_PAGE_SIZE).map(({ business }) => ({
+  const pageBusinesses = scored.slice(start, start + DISCOVERY_PAGE_SIZE);
+  // na ordenação por nota o mapa completo já está carregado; senão busca só as notas dos cards da página
+  const ratings =
+    filters.sort === "rating" ? sortRatings : await loadRatings(pageBusinesses.map(({ business }) => business.id));
+  const items: DiscoveryItem[] = pageBusinesses.map(({ business }) => ({
     business,
     categoryLabel: mostSpecificCategory(tree, links.get(business.id))?.name ?? business.category,
     rating: ratings.get(business.id) ?? null,
