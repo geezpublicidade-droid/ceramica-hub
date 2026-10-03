@@ -468,3 +468,10 @@ body {
   --warning: #b7791f;
   --danger: #b3423a;
 }
+
+/* Pesquisa inteligente: cursor do placeholder animado e barra de carregamento */
+.smart-caret { animation: smart-caret-blink 1s steps(1) infinite; }
+@keyframes smart-caret-blink { 50% { opacity: 0; } }
+.smart-loading { animation: smart-loading-slide 0.9s ease-in-out infinite; }
+@keyframes smart-loading-slide { 0% { transform: translateX(-100%); } 100% { transform: translateX(300%); } }
+@media (prefers-reduced-motion: reduce) { .smart-caret, .smart-loading { animation: none; } }

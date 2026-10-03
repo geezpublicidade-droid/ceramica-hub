@@ -6,8 +6,7 @@ import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { AdCarouselVertical } from "@/components/ads/AdCarouselVertical";
 import { AdLink } from "@/components/ads/AdLink";
-import { useSearch } from "@/components/landing/SearchContext";
-import { logSearchPerformed } from "@/lib/actions/log-search";
+import { SmartSearch } from "@/components/search/SmartSearch";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { Link } from "@/i18n/navigation";
 import type { Tower } from "@/lib/services/towers";
@@ -43,8 +42,6 @@ type NetworkNarrativeProps = {
  * verdade. */
 export function NetworkNarrative({ towers }: NetworkNarrativeProps) {
   const t = useTranslations("NetworkNarrative");
-  const { setQuery } = useSearch();
-  const [heroSearchValue, setHeroSearchValue] = useState("");
   const reducedMotion = useReducedMotion();
   const [covers, setCovers] = useState<ActiveCampaign[]>([]);
   // 0 = institucional; 1..n = Mídia de Capa
@@ -74,13 +71,6 @@ export function NetworkNarrative({ towers }: NetworkNarrativeProps) {
     );
     return () => clearTimeout(timer);
   }, [slide, slideCount, paused, reducedMotion]);
-
-  function submitHeroSearch(term: string) {
-    const value = term.trim();
-    setQuery(value);
-    void logSearchPerformed(value, "hero");
-    document.getElementById("empresas")?.scrollIntoView({ block: "start" });
-  }
 
   return (
     <section id="top" aria-label={t("sectionLabel")} className="relative isolate overflow-hidden bg-graphite text-white">
@@ -152,27 +142,9 @@ export function NetworkNarrative({ towers }: NetworkNarrativeProps) {
               {t("subhead")}
             </p>
 
-            <form
-              onSubmit={(event) => {
-                event.preventDefault();
-                submitHeroSearch(heroSearchValue);
-              }}
-              className="mt-[28px] flex items-center gap-2 rounded-full border border-white/25 bg-white/10 p-1 pl-4 backdrop-blur-md sm:p-1.5 sm:pl-5"
-            >
-              <input
-                type="text"
-                value={heroSearchValue}
-                onChange={(event) => setHeroSearchValue(event.target.value)}
-                placeholder={t("searchPlaceholder")}
-                className="min-w-0 flex-1 bg-transparent py-2 text-[15px] text-white placeholder:text-white/60 focus:outline-none sm:py-2.5 sm:text-[16px]"
-              />
-              <button
-                type="submit"
-                className="shrink-0 neu-primary rounded-full px-4 py-2 text-[14px] font-medium text-white sm:px-5 sm:py-2.5 sm:text-[15px]"
-              >
-                {t("searchButton")}
-              </button>
-            </form>
+            <div className="mt-[28px]">
+              <SmartSearch variant="hero" source="hero" />
+            </div>
 
             <div className="mt-[20px] flex flex-wrap items-center gap-4">
               <a

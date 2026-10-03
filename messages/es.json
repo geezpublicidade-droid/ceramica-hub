@@ -325,36 +325,28 @@
     "searchPlaceholder": "Busca por empresa, servicio, categoría o especialidad"
   },
   "SmartSearch": {
-    "heading": "¿Qué necesitas encontrar hoy?",
-    "searchPlaceholder": "Busca por empresa, servicio, categoría o especialidad",
-    "searchButton": "Buscar",
-    "viewAllInDirectory": "Ver todas en el directorio →",
-    "suggestions": [
-      {
-        "label": "Necesito una agencia de marketing.",
-        "term": "marketing"
-      },
-      {
-        "label": "Estoy buscando un contador.",
-        "term": "contabilidade"
-      },
-      {
-        "label": "Quiero encontrar una clínica.",
-        "term": "estética"
-      },
-      {
-        "label": "Necesito un abogado.",
-        "term": "advocacia"
-      },
-      {
-        "label": "Busco un restaurante.",
-        "term": "alimentação"
-      },
-      {
-        "label": "Quiero hacer una alianza.",
-        "term": "__oportunidades__"
-      }
-    ]
+    "ariaLabel": "Buscar empresas, categorías y servicios",
+    "button": "Buscar",
+    "examples": "dentista de implantes en la Torre Park|contador para mi pyme|restaurante para almorzar|abogado laboral|armonización facial|peluquería|sala comercial en alquiler",
+    "searchFor": "Buscar",
+    "categoriesTitle": "Categorías",
+    "companiesTitle": "Empresas",
+    "shortcutsTitle": "Atajos",
+    "understood": "Entendí:",
+    "enterHint": "Enter para ver todos los resultados",
+    "viewAll": "Ver todas las empresas",
+    "noResults": "No encontramos nada con ese término.",
+    "didYouMean": "¿Quisiste decir “{suggestion}”?",
+    "popularTitle": "Búsquedas populares",
+    "popularCategoriesTitle": "Categorías con más empresas",
+    "verified": "Empresa verificada",
+    "shortcuts": {
+      "hotels": "Hoteles y alojamiento",
+      "realEstate": "Inmuebles para comprar o alquilar",
+      "rooms": "Auditorios y salas de reunión",
+      "forum": "Foro de Negocios",
+      "advertise": "Anunciar y promocionar mi empresa"
+    }
   },
   "OpportunityNetwork": {
     "eyebrow": "Red en movimiento",
@@ -863,7 +855,9 @@
     "pagination": "Paginación",
     "prev": "Anterior",
     "next": "Siguiente",
-    "pageOf": "Página {page} de {total}"
+    "pageOf": "Página {page} de {total}",
+    "understood": "Entendimos tu búsqueda como:",
+    "textOnly": "Buscar solo por el texto"
   },
   "CategoryOffers": {
     "title": "Destaca en tu categoría",

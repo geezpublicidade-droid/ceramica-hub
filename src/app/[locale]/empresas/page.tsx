@@ -5,10 +5,13 @@ import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { Link } from "@/i18n/navigation";
 import { CompanyCard } from "@/components/business/CompanyCard";
 import { CategoryIcon } from "@/components/empresas/CategoryIcon";
-import { CompanySearchBox } from "@/components/empresas/CompanySearchBox";
+import { SmartSearch } from "@/components/search/SmartSearch";
 import { DiscoveryFilters, type DiscoveryFilterLabels } from "@/components/empresas/DiscoveryFilters";
 import { buildDiscoveryQuery, DISCOVERY_SORTS, localizedPath, parseDiscoveryParams, type RawSearchParams } from "@/lib/discovery-params";
+import { parseIntent, type IntentChip } from "@/lib/search-intent";
 import { discoverCompanies } from "@/lib/services/company-discovery";
+import { getSearchCorpus } from "@/lib/services/search-corpus";
+import { logMetricEvent } from "@/lib/services/platform";
 import { jsonLdString } from "@/lib/json-ld";
 import { localizedUrl, buildAlternates, buildSocialMetadata } from "@/lib/seo";
 
@@ -39,7 +42,34 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
 
 export default async function EmpresasPage({ params, searchParams }: PageProps) {
   const { locale } = await params;
-  const { filters, view } = parseDiscoveryParams(await searchParams);
+  const rawParams = await searchParams;
+  const parsed = parseDiscoveryParams(rawParams);
+  const { view } = parsed;
+  let filters = parsed.filters;
+
+  // Frase solta na URL ("?q=dentista torre park"): interpreta categoria, torre, andar e filtros, a não ser
+  // que a pessoa tenha escolhido "buscar só pelo texto" (?texto=1) ou já tenha filtrado por categoria.
+  const textOnly = rawParams.texto === "1";
+  let understood: IntentChip[] = [];
+  if (filters.q && !filters.cat && !textOnly) {
+    const corpus = await getSearchCorpus(locale);
+    const intent = parseIntent(filters.q, { categories: corpus.categories, towers: corpus.towers, floors: corpus.floors });
+    if (intent.chips.length > 0) {
+      understood = intent.chips;
+      filters = {
+        ...filters,
+        cat: intent.filters.cat,
+        sub: intent.filters.sub,
+        spec: intent.filters.spec,
+        towerId: filters.towerId ?? intent.filters.towerId,
+        floor: filters.floor ?? intent.filters.floor,
+        verified: filters.verified || Boolean(intent.filters.verified),
+        inPerson: filters.inPerson || Boolean(intent.filters.inPerson),
+        online: filters.online || Boolean(intent.filters.online),
+        q: intent.rest,
+      };
+    }
+  }
 
   const [t, tCommon, result] = await Promise.all([
     getTranslations("EmpresasPage"),
@@ -48,6 +78,10 @@ export default async function EmpresasPage({ params, searchParams }: PageProps) 
   ]);
 
   const { selected, tree } = result;
+  if (result.total === 0 && filters.q) {
+    // demanda que o portal não atende: alimenta o painel de analytics (o que recrutar)
+    await logMetricEvent("search_no_results", undefined, { term: filters.q.slice(0, 80) }).catch(() => undefined);
+  }
   const action = localizedPath(locale, "/empresas");
   const totalPages = Math.max(1, Math.ceil(result.total / result.pageSize));
   const page = Math.min(filters.page, totalPages);
@@ -95,18 +129,6 @@ export default async function EmpresasPage({ params, searchParams }: PageProps) 
     filters.online && { label: t("filterOnline"), removeQuery: buildDiscoveryQuery(filters, view, { online: undefined, page: undefined }) },
   ].filter((chip): chip is { label: string; removeQuery: string } => Boolean(chip));
 
-  const hiddenParams: Record<string, string> = {};
-  if (filters.cat) hiddenParams.cat = filters.cat;
-  if (filters.sub) hiddenParams.sub = filters.sub;
-  if (filters.spec) hiddenParams.spec = filters.spec;
-  if (filters.towerId) hiddenParams.tower = filters.towerId;
-  if (filters.floor) hiddenParams.floor = filters.floor;
-  if (filters.verified) hiddenParams.verified = "1";
-  if (filters.inPerson) hiddenParams.presencial = "1";
-  if (filters.online) hiddenParams.online = "1";
-  if (filters.sort !== "relevance") hiddenParams.sort = filters.sort;
-  if (view === "list") hiddenParams.view = "list";
-
   const examples = t("examples").split("|");
   const viewLink = (target: "grid" | "list") =>
     `${action}${buildDiscoveryQuery(filters, view, { view: target === "list" ? "list" : undefined })}`;
@@ -129,13 +151,20 @@ export default async function EmpresasPage({ params, searchParams }: PageProps) 
             <p className="mt-3 max-w-xl text-[17px] text-muted">{t("subtitle")}</p>
 
             <div className="mt-8 max-w-3xl">
-              <CompanySearchBox
-                defaultValue={filters.q}
-                placeholder={t("searchPlaceholder")}
-                buttonLabel={t("searchButton")}
-                hiddenParams={hiddenParams}
-                action={action}
-              />
+              <SmartSearch variant="page" source="smart_search" defaultValue={filters.q} />
+              {understood.length > 0 && (
+                <p className="mt-3 flex flex-wrap items-center gap-2 text-[14px] text-muted">
+                  <span>{t("understood")}</span>
+                  {understood.map((chip) => (
+                    <span key={`${chip.kind}-${chip.label}`} className="rounded-full bg-primary/10 px-3 py-1 text-[13px] font-medium text-primary">
+                      {chip.label}
+                    </span>
+                  ))}
+                  <Link href={`/empresas?q=${encodeURIComponent(String(rawParams.q ?? ""))}&texto=1`} className="underline underline-offset-4 hover:text-primary">
+                    {t("textOnly")}
+                  </Link>
+                </p>
+              )}
               <p className="mt-3 text-[14px] text-muted">
                 {t("examplesLabel")}{" "}
                 {examples.map((example, index) => (

@@ -1,3 +1,4 @@
+import type { IntentFilters } from "@/lib/search-intent";
 import type { DiscoveryFilters } from "@/lib/services/company-discovery";
 
 export const DISCOVERY_SORTS = ["relevance", "views", "rating", "alpha", "recent"] as const;
@@ -64,4 +65,20 @@ export function buildDiscoveryQuery(
 /** Prefixo de idioma para `<form action>` nativo (next-intl usa "as-needed": português sem prefixo). */
 export function localizedPath(locale: string, path: string): string {
   return locale === "pt" ? path : `/${locale}${path}`;
+}
+
+/** `?cat=...&sub=...&q=...` a partir do que a pesquisa inteligente entendeu da frase. */
+export function intentToDiscoveryQuery(filters: IntentFilters, rest: string): string {
+  const params = new URLSearchParams();
+  if (filters.cat) params.set("cat", filters.cat);
+  if (filters.sub) params.set("sub", filters.sub);
+  if (filters.spec) params.set("spec", filters.spec);
+  if (filters.towerId) params.set("tower", filters.towerId);
+  if (filters.floor) params.set("floor", filters.floor);
+  if (filters.verified) params.set("verified", "1");
+  if (filters.inPerson) params.set("presencial", "1");
+  if (filters.online) params.set("online", "1");
+  if (rest) params.set("q", rest);
+  const query = params.toString();
+  return query ? `?${query}` : "";
 }

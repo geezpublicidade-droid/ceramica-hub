@@ -325,36 +325,28 @@
     "searchPlaceholder": "Search by business, service, category or specialty"
   },
   "SmartSearch": {
-    "heading": "What do you need to find today?",
-    "searchPlaceholder": "Search by business, service, category or specialty",
-    "searchButton": "Search",
-    "viewAllInDirectory": "View all in the directory →",
-    "suggestions": [
-      {
-        "label": "I need a marketing agency.",
-        "term": "marketing"
-      },
-      {
-        "label": "I'm looking for an accountant.",
-        "term": "contabilidade"
-      },
-      {
-        "label": "I want to find a clinic.",
-        "term": "estética"
-      },
-      {
-        "label": "I need a lawyer.",
-        "term": "advocacia"
-      },
-      {
-        "label": "I'm looking for a restaurant.",
-        "term": "alimentação"
-      },
-      {
-        "label": "I want to form a partnership.",
-        "term": "__oportunidades__"
-      }
-    ]
+    "ariaLabel": "Search businesses, categories and services",
+    "button": "Search",
+    "examples": "implant dentist at Park Tower|accountant for my small business|restaurant for lunch|labor lawyer|facial harmonization|hair salon|office room to rent",
+    "searchFor": "Search for",
+    "categoriesTitle": "Categories",
+    "companiesTitle": "Businesses",
+    "shortcutsTitle": "Shortcuts",
+    "understood": "Understood:",
+    "enterHint": "Enter to see all results",
+    "viewAll": "See all businesses",
+    "noResults": "We found nothing for that term.",
+    "didYouMean": "Did you mean “{suggestion}”?",
+    "popularTitle": "Trending searches",
+    "popularCategoriesTitle": "Categories with most businesses",
+    "verified": "Verified business",
+    "shortcuts": {
+      "hotels": "Hotels and lodging",
+      "realEstate": "Real estate to buy or rent",
+      "rooms": "Auditoriums and meeting rooms",
+      "forum": "Business Forum",
+      "advertise": "Advertise and promote my business"
+    }
   },
   "OpportunityNetwork": {
     "eyebrow": "Network in motion",
@@ -863,7 +855,9 @@
     "pagination": "Pagination",
     "prev": "Previous",
     "next": "Next",
-    "pageOf": "Page {page} of {total}"
+    "pageOf": "Page {page} of {total}",
+    "understood": "We understood your search as:",
+    "textOnly": "Search by text only"
   },
   "CategoryOffers": {
     "title": "Stand out in your category",

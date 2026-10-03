@@ -325,36 +325,28 @@
     "searchPlaceholder": "按企业、服务、行业或专长搜索"
   },
   "SmartSearch": {
-    "heading": "今天您想找到什么?",
-    "searchPlaceholder": "按企业、服务、行业或专长搜索",
-    "searchButton": "搜索",
-    "viewAllInDirectory": "查看目录中的全部企业 →",
-    "suggestions": [
-      {
-        "label": "我需要一家营销代理公司。",
-        "term": "marketing"
-      },
-      {
-        "label": "我在寻找会计师。",
-        "term": "contabilidade"
-      },
-      {
-        "label": "我想找一家诊所。",
-        "term": "estética"
-      },
-      {
-        "label": "我需要一位律师。",
-        "term": "advocacia"
-      },
-      {
-        "label": "我在找一家餐厅。",
-        "term": "alimentação"
-      },
-      {
-        "label": "我想寻求合作。",
-        "term": "__oportunidades__"
-      }
-    ]
+    "ariaLabel": "搜索企业、类别和服务",
+    "button": "搜索",
+    "examples": "Park 塔楼的种植牙医|小微企业会计|午餐餐厅|劳动律师|面部和谐|美发沙龙|出租商务办公室",
+    "searchFor": "搜索",
+    "categoriesTitle": "类别",
+    "companiesTitle": "企业",
+    "shortcutsTitle": "快捷入口",
+    "understood": "已理解：",
+    "enterHint": "按 Enter 查看全部结果",
+    "viewAll": "查看全部企业",
+    "noResults": "没有找到相关内容。",
+    "didYouMean": "您是想搜索“{suggestion}”吗？",
+    "popularTitle": "热门搜索",
+    "popularCategoriesTitle": "企业最多的类别",
+    "verified": "已认证企业",
+    "shortcuts": {
+      "hotels": "酒店与住宿",
+      "realEstate": "房产买卖与租赁",
+      "rooms": "礼堂与会议室",
+      "forum": "商务论坛",
+      "advertise": "宣传我的企业"
+    }
   },
   "OpportunityNetwork": {
     "eyebrow": "活跃的商机网络",
@@ -863,7 +855,9 @@
     "pagination": "分页",
     "prev": "上一页",
     "next": "下一页",
-    "pageOf": "第 {page} 页，共 {total} 页"
+    "pageOf": "第 {page} 页，共 {total} 页",
+    "understood": "我们理解您的搜索为：",
+    "textOnly": "仅按文字搜索"
   },
   "CategoryOffers": {
     "title": "在您的类别中脱颖而出",

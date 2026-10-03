@@ -325,36 +325,28 @@
     "searchPlaceholder": "Busque por empresa, serviço, categoria ou especialidade"
   },
   "SmartSearch": {
-    "heading": "O que você precisa encontrar hoje?",
-    "searchPlaceholder": "Busque por empresa, serviço, categoria ou especialidade",
-    "searchButton": "Buscar",
-    "viewAllInDirectory": "Ver todos no diretório →",
-    "suggestions": [
-      {
-        "label": "Preciso de uma agência de marketing.",
-        "term": "marketing"
-      },
-      {
-        "label": "Estou procurando um contador.",
-        "term": "contabilidade"
-      },
-      {
-        "label": "Quero encontrar uma clínica.",
-        "term": "estética"
-      },
-      {
-        "label": "Preciso de um advogado.",
-        "term": "advocacia"
-      },
-      {
-        "label": "Procuro um restaurante.",
-        "term": "alimentação"
-      },
-      {
-        "label": "Quero fazer uma parceria.",
-        "term": "__oportunidades__"
-      }
-    ]
+    "ariaLabel": "Buscar empresas, categorias e serviços",
+    "button": "Buscar",
+    "examples": "dentista de implante na Torre Park|contador para o meu MEI|restaurante para almoço|advogado trabalhista|harmonização facial|salão de beleza|sala comercial para alugar",
+    "searchFor": "Buscar por",
+    "categoriesTitle": "Categorias",
+    "companiesTitle": "Empresas",
+    "shortcutsTitle": "Atalhos",
+    "understood": "Entendi:",
+    "enterHint": "Enter para ver todos os resultados",
+    "viewAll": "Ver todas as empresas",
+    "noResults": "Não encontramos nada com esse termo.",
+    "didYouMean": "Você quis dizer “{suggestion}”?",
+    "popularTitle": "Buscas em alta",
+    "popularCategoriesTitle": "Categorias com mais empresas",
+    "verified": "Empresa verificada",
+    "shortcuts": {
+      "hotels": "Hotéis e hospedagem",
+      "realEstate": "Imóveis para comprar ou alugar",
+      "rooms": "Auditórios e salas de reunião",
+      "forum": "Fórum de Negócios",
+      "advertise": "Anunciar e divulgar minha empresa"
+    }
   },
   "OpportunityNetwork": {
     "eyebrow": "Rede em movimento",
@@ -863,7 +855,9 @@
     "pagination": "Paginação",
     "prev": "Anterior",
     "next": "Próxima",
-    "pageOf": "Página {page} de {total}"
+    "pageOf": "Página {page} de {total}",
+    "understood": "Entendemos sua busca como:",
+    "textOnly": "Buscar só pelo texto"
   },
   "CategoryOffers": {
     "title": "Destaque na sua categoria",

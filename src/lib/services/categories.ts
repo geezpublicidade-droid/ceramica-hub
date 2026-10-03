@@ -9,6 +9,8 @@ export type Category = {
   name: string;
   description: string | null;
   icon: string | null;
+  /** sinônimos e termos que as pessoas digitam (pesquisa inteligente) */
+  keywords: string[];
   sortOrder: number;
   children: Category[];
 };
@@ -21,6 +23,7 @@ type CategoryRow = {
   name: string;
   description: string | null;
   icon: string | null;
+  keywords: string[] | null;
   sort_order: number;
   translations: Record<string, { name?: string; description?: string }> | null;
 };
@@ -36,7 +39,7 @@ export const getCategoryTree = cache(async (locale?: string): Promise<CategoryTr
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("categories")
-    .select("id, parent_id, level, slug, name, description, icon, sort_order, translations")
+    .select("id, parent_id, level, slug, name, description, icon, keywords, sort_order, translations")
     .eq("active", true)
     .order("sort_order");
   if (error) throw error;
@@ -52,6 +55,7 @@ export const getCategoryTree = cache(async (locale?: string): Promise<CategoryTr
       name: translated?.name ?? row.name,
       description: translated?.description ?? row.description,
       icon: row.icon,
+      keywords: row.keywords ?? [],
       sortOrder: row.sort_order,
       children: [],
     });

@@ -2,6 +2,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 import type { Business } from "@/data/businesses";
 import { getAllBusinesses } from "@/lib/services/platform";
 import type { DiscoverySort } from "@/lib/discovery-params";
+import { companyTier, meaningfulTokens, tokenize } from "@/lib/search-intent";
 import {
   categoryAndDescendantIds,
   getBusinessCategoryLinks,
@@ -52,7 +53,7 @@ export type DiscoveryResult = {
 
 export const DISCOVERY_PAGE_SIZE = 12;
 
-type Facet = {
+export type Facet = {
   id: string;
   tower_id: string;
   floor: string;
@@ -62,27 +63,8 @@ type Facet = {
   tags: string[] | null;
 };
 
-function normalize(value: string): string {
-  return value
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .toLowerCase();
-}
-
-/** 0 = nome exato … 5 = descrição/tags; null = sem correspondência. */
-function textTier(term: string, business: Business, categoryNames: string[], tags: string[]): number | null {
-  const name = normalize(business.name);
-  if (name === term) return 0;
-  if (name.startsWith(term)) return 1;
-  if (name.includes(term)) return 2;
-  if (categoryNames.some((categoryName) => normalize(categoryName).includes(term))) return 3;
-  if (tags.some((tag) => normalize(tag).includes(term))) return 4;
-  if (normalize(business.description).includes(term)) return 5;
-  return null;
-}
-
 /** Completude do perfil: sinal orgânico de relevância (plano pago NÃO entra aqui). */
-function completeness(business: Business): number {
+export function profileCompleteness(business: Business): number {
   return (
     (business.logo ? 2 : 0) +
     (business.coverPhoto ? 2 : 0) +
@@ -94,7 +76,8 @@ function completeness(business: Business): number {
   );
 }
 
-async function loadFacets(): Promise<{ facets: Map<string, Facet>; towers: { id: string; name: string }[] }> {
+/** Dados por empresa aprovada que o `Business` não carrega (torre, andar, atendimento, tags) + torres ativas. */
+export async function loadFacets(): Promise<{ facets: Map<string, Facet>; towers: { id: string; name: string }[] }> {
   const supabase = createServiceClient();
   const [facetRows, towerRows] = await Promise.all([
     supabase
@@ -174,7 +157,7 @@ function compareBy(
       case "alpha":
         return a.name.localeCompare(b.name, "pt-BR");
       default:
-        return completeness(b) - completeness(a);
+        return profileCompleteness(b) - profileCompleteness(a);
     }
   };
 }
@@ -214,7 +197,9 @@ export async function discoverCompanies(
     );
   }
 
-  const term = normalize(filters.q.trim());
+  // palavras úteis da busca; se só sobraram palavras de ligação ("de", "para"), usa a frase inteira
+  const queryTokens = meaningfulTokens(filters.q).length > 0 ? meaningfulTokens(filters.q) : tokenize(filters.q);
+  const term = queryTokens.length > 0;
   const scored: { business: Business; tier: number }[] = [];
 
   for (const business of businesses) {
@@ -230,8 +215,17 @@ export async function discoverCompanies(
 
     let tier = 0;
     if (term) {
-      const names = [...(businessLinks ?? [])].map((id) => tree.byId.get(id)?.name ?? "");
-      const matched = textTier(term, business, names, facet?.tags ?? []);
+      // nome + sinônimos das categorias da empresa: "odontologia" acha quem está em Dentistas
+      const categoryForms = [...(businessLinks ?? [])].flatMap((id) => {
+        const category = tree.byId.get(id);
+        return category ? [category.name, ...category.keywords] : [];
+      });
+      const matched = companyTier(queryTokens, {
+        name: business.name,
+        description: business.description,
+        tags: facet?.tags ?? [],
+        categoryForms,
+      });
       if (matched === null) continue;
       tier = matched;
     }
