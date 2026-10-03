@@ -50,7 +50,8 @@ export default async function AnchorReportPage({ params }: { params: Promise<{ i
               {progress.done} de {progress.total} entregas realizadas ({progress.percentage}%)
               {progress.overdue > 0 && ` · ${progress.overdue} atrasada(s)`}
             </p>
-            <table className="mt-4 w-full border-collapse text-left text-[14px]">
+            <div className="overflow-x-auto">
+              <table className="mt-4 w-full border-collapse text-left text-[14px]">
               <thead>
                 <tr className="border-b border-border text-muted">
                   <th className="py-2 font-medium">Entrega</th>
@@ -73,6 +74,7 @@ export default async function AnchorReportPage({ params }: { params: Promise<{ i
                 ))}
               </tbody>
             </table>
+            </div>
           </section>
         );
       })}

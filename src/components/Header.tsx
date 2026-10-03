@@ -189,7 +189,7 @@ export function Header() {
           <Link
             href="/#top"
             onClick={() => setMenuOpen(false)}
-            className="flex items-center gap-2 text-[17px] font-semibold tracking-tight text-foreground"
+            className="flex items-center gap-2 py-1.5 text-[17px] font-semibold tracking-tight text-foreground"
           >
             <img src="/images/logo-ceramica-hub.png" alt="" className="h-7 w-7" />
             Cerâmica <span className="text-primary">Hub</span>

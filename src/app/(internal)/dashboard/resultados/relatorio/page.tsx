@@ -53,7 +53,8 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
         <p className="mt-1 text-[17px] text-muted">{business.name}</p>
       </header>
 
-      <table className="mt-8 w-full border-collapse text-left">
+      <div className="overflow-x-auto">
+        <table className="mt-8 w-full border-collapse text-left">
         <tbody>
           {rows.map((row) => (
             <tr key={row.label} className="border-b border-border">
@@ -66,6 +67,7 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
           ))}
         </tbody>
       </table>
+      </div>
 
       {totals.views > 0 && (
         <section className="mt-10">

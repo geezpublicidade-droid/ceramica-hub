@@ -165,17 +165,18 @@ export default async function EmpresasPage({ params, searchParams }: PageProps) 
                   </Link>
                 </p>
               )}
-              <p className="mt-3 text-[14px] text-muted">
-                {t("examplesLabel")}{" "}
-                {examples.map((example, index) => (
-                  <span key={example}>
-                    <Link href={`/empresas?q=${encodeURIComponent(example)}`} className="underline-offset-2 hover:text-primary hover:underline">
-                      {example}
-                    </Link>
-                    {index < examples.length - 1 ? " · " : ""}
-                  </span>
+              <div className="mt-3 flex flex-wrap items-center gap-2 text-[14px] text-muted">
+                <span>{t("examplesLabel")}</span>
+                {examples.map((example) => (
+                  <Link
+                    key={example}
+                    href={`/empresas?q=${encodeURIComponent(example)}`}
+                    className="inline-flex min-h-9 items-center rounded-full border border-border bg-white px-3.5 text-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                  >
+                    {example}
+                  </Link>
                 ))}
-              </p>
+              </div>
             </div>
 
             <h2 className="mt-14 text-[15px] font-medium uppercase tracking-[0.18em] text-primary">{t("categoriesTitle")}</h2>

@@ -403,7 +403,7 @@ export default async function CategoryPage({
                 {breadcrumb.slice(1).map((item, index, items) => (
                   <li key={item.href} className="flex items-center gap-2">
                     {index < items.length - 1 ? (
-                      <Link href={item.href} className="hover:text-primary">
+                      <Link href={item.href} className="inline-block py-2 hover:text-primary">
                         {item.name}
                       </Link>
                     ) : (

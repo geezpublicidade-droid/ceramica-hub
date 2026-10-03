@@ -32,7 +32,8 @@ export function ProposalDocument({ proposal }: { proposal: Proposal }) {
         {proposal.clientEmail && <p className="text-[14px] text-muted">{proposal.clientEmail}</p>}
       </section>
 
-      <table className="w-full text-[15px]">
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[480px] text-[15px]">
         <thead>
           <tr className="border-b border-border text-left text-[12px] uppercase tracking-wide text-muted">
             <th className="py-2 font-semibold">Item</th>
@@ -55,6 +56,7 @@ export function ProposalDocument({ proposal }: { proposal: Proposal }) {
           ))}
         </tbody>
       </table>
+      </div>
 
       <div className="mt-4 flex flex-col items-end gap-1 text-[15px]">
         <p className="text-muted">Subtotal: {formatCents(totals.subtotalCents)}</p>
