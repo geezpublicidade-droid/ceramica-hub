@@ -117,7 +117,7 @@ export function LeadCard({ lead, admins, businesses }: Props) {
       )}
 
       {lead.stage !== "perdido" && (
-        <Link href={`/admin/propostas/nova?leadId=${lead.id}`} className="text-[12px] font-medium text-primary hover:underline">
+        <Link href={`/admin/propostas/nova?leadId=${lead.id}`} className="tap text-[12px] font-medium text-primary hover:underline">
           Criar proposta →
         </Link>
       )}

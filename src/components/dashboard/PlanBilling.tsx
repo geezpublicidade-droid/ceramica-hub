@@ -61,7 +61,7 @@ export function PlanBilling({
                 Plano {planLabels[invoice.plan]} — {formatCents(invoice.amountCents)} — {INVOICE_STATUS_LABEL[invoice.status]}
               </span>
               {invoice.paymentLink && (
-                <a href={invoice.paymentLink} target="_blank" rel="noopener noreferrer" className="font-medium text-primary underline">
+                <a href={invoice.paymentLink} target="_blank" rel="noopener noreferrer" className="tap font-medium text-primary underline">
                   Pagar
                 </a>
               )}

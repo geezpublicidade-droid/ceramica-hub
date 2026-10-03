@@ -91,7 +91,7 @@ export async function PromotionKit({ profileUrl, siteUrl, slug, name }: Promotio
       <section className="glass-light flex flex-wrap items-center gap-6 rounded-3xl p-6">
         {/* eslint-disable-next-line @next/next/no-img-element -- QR Code em data URI */}
         <img src={qrDataUrl} alt={`QR Code para a página de ${name}`} width={180} height={180} className="rounded-2xl border border-border bg-white p-2" />
-        <div className="min-w-0 flex-1">
+        <div className="min-w-[200px] flex-1">
           <h2 className="text-lg font-semibold text-foreground">QR Code para impressos</h2>
           <p className="mt-1 text-[15px] text-muted">Leva direto à sua página e conta como visita de “impresso”. Imprima em cartões, balcão ou folhetos.</p>
           <a href={qrDataUrl} download={`${slug}-qrcode.png`} className="neu mt-3 inline-flex min-h-10 items-center rounded-full px-4 text-[14px] font-medium text-foreground">

@@ -31,7 +31,7 @@ export default async function IntelligencePage() {
                 {section.items.map((item) => (
                   <li key={`${item.title}-${item.detail}`} className="text-[14px]">
                     {item.href ? (
-                      <Link href={item.href} className="font-medium text-primary underline">
+                      <Link href={item.href} className="tap font-medium text-primary underline">
                         {item.title}
                       </Link>
                     ) : (

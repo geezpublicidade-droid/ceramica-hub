@@ -55,7 +55,7 @@ export function AdminBusinessRow({ business }: { business: Business }) {
           {business.document && <p className="text-[15px] text-muted">Documento: {business.document}</p>}
           <div className="mt-2 flex flex-wrap items-center gap-3">
             {business.comprovante_path ? (
-              <button type="button" onClick={handleViewComprovante} className="text-[13px] font-medium text-primary underline">
+              <button type="button" onClick={handleViewComprovante} className="tap text-[13px] font-medium text-primary underline">
                 Ver comprovante
               </button>
             ) : (

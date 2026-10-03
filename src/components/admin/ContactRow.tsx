@@ -82,7 +82,7 @@ export function ContactRow({ contact, showBusiness }: { contact: Contact; showBu
         </p>
       </div>
       <div className="flex flex-wrap items-center gap-3">
-        <button type="button" onClick={() => setEditing(true)} className="text-[12px] font-medium text-primary underline">
+        <button type="button" onClick={() => setEditing(true)} className="tap text-[12px] font-medium text-primary underline">
           Editar
         </button>
         <button type="button" disabled={isPending} onClick={handleDelete} className="text-[12px] font-medium text-red-600 underline disabled:opacity-60">

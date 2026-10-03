@@ -85,7 +85,7 @@ export function NewCampaignForm({ placements }: { placements: AdPlacement[] }) {
     return (
       <div className="rounded-2xl border border-border bg-white/70 p-6 text-center">
         <p className="text-[17px] font-semibold text-foreground">Campanha criada como pendente de revisão.</p>
-        <button type="button" onClick={() => setDone(false)} className="mt-4 text-[15px] font-medium text-primary underline">
+        <button type="button" onClick={() => setDone(false)} className="tap mt-4 text-[15px] font-medium text-primary underline">
           Cadastrar outra campanha
         </button>
       </div>

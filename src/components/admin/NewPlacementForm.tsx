@@ -50,7 +50,7 @@ export function NewPlacementForm() {
     return (
       <div className="rounded-2xl border border-border bg-white/70 p-6 text-center">
         <p className="text-[17px] font-semibold text-foreground">Espaço criado — já aparece na lista abaixo e no formulário de campanha.</p>
-        <button type="button" onClick={() => setDone(false)} className="mt-4 text-[15px] font-medium text-primary underline">
+        <button type="button" onClick={() => setDone(false)} className="tap mt-4 text-[15px] font-medium text-primary underline">
           Cadastrar outro espaço
         </button>
       </div>

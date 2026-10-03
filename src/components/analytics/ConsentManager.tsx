@@ -89,7 +89,7 @@ export function ConsentManager() {
         >
           <p className="flex-1 text-[14px] leading-relaxed text-foreground">
             {t("text")}{" "}
-            <Link href="/privacidade" className="font-medium text-primary underline underline-offset-4">
+            <Link href="/privacidade" className="tap font-medium text-primary underline underline-offset-4">
               {t("policy")}
             </Link>
           </p>

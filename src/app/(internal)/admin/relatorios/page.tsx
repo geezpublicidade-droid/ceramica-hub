@@ -52,13 +52,13 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
         <h2 className="text-[18px] font-semibold text-foreground">Outros relatórios</h2>
         <ul className="mt-3 space-y-2 text-[14px]">
           <li>
-            <Link href="/admin/resultados" className="font-medium text-primary underline">
+            <Link href="/admin/resultados" className="tap font-medium text-primary underline">
               Empresas anunciantes
             </Link>{" "}
             <span className="text-muted">— desempenho por empresa, categoria, torre e campanha. Cada empresa recebe o próprio resumo mensal e vê o relatório em Resultados.</span>
           </li>
           <li>
-            <Link href="/admin/analytics" className="font-medium text-primary underline">
+            <Link href="/admin/analytics" className="tap font-medium text-primary underline">
               Audiência do portal
             </Link>{" "}
             <span className="text-muted">— visitas, origem, buscas e cliques.</span>
@@ -71,7 +71,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
           <ul className="mt-2 space-y-1.5 text-[14px]">
             {partners.map((partner) => (
               <li key={partner.id}>
-                <Link href={`/admin/parceiros/${partner.id}/relatorio`} className="font-medium text-primary underline">
+                <Link href={`/admin/parceiros/${partner.id}/relatorio`} className="tap font-medium text-primary underline">
                   {partner.name}
                 </Link>
               </li>

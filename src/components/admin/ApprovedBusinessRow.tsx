@@ -101,15 +101,15 @@ export function ApprovedBusinessRow({ business }: { business: ApprovedBusiness }
           <button
             type="button"
             onClick={handleToggleHistory}
-            className="text-[12px] font-medium text-primary underline"
+            className="tap text-[12px] font-medium text-primary underline"
           >
             {history !== null ? "Ocultar histórico" : "Ver histórico"}
           </button>
-          <a href={`/api/business/${business.id}/qrcode`} className="text-[12px] font-medium text-primary underline">
+          <a href={`/api/business/${business.id}/qrcode`} className="tap text-[12px] font-medium text-primary underline">
             QR Code
           </a>
           {business.comprovantePath && (
-            <button type="button" onClick={handleViewComprovante} className="text-[12px] font-medium text-primary underline">
+            <button type="button" onClick={handleViewComprovante} className="tap text-[12px] font-medium text-primary underline">
               Ver comprovante
             </button>
           )}

@@ -84,7 +84,7 @@ export function ContactTableRow({ contact, zebra }: { contact: Contact; zebra?: 
       <td className="px-3 py-2.5 text-muted">{contact.jobTitle ?? "—"}</td>
       <td className="px-3 py-2.5 text-muted">{[contact.phone, contact.whatsapp, contact.email].filter(Boolean).join(" · ") || "—"}</td>
       <td className="px-3 py-2.5 text-right">
-        <button type="button" onClick={() => setEditing(true)} className="text-[12px] font-medium text-primary underline">
+        <button type="button" onClick={() => setEditing(true)} className="tap text-[12px] font-medium text-primary underline">
           Editar
         </button>
         <button type="button" disabled={isPending} onClick={handleDelete} className="ml-3 text-[12px] font-medium text-red-600 underline disabled:opacity-60">

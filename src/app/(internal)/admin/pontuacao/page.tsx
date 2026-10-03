@@ -79,7 +79,7 @@ export default async function ScoringPage() {
               {leads.map(({ lead, score }) => (
                 <tr key={lead.id} className="border-t border-border">
                   <td className={td}>
-                    <Link href="/admin/leads" className="font-medium text-primary underline">
+                    <Link href="/admin/leads" className="tap font-medium text-primary underline">
                       {lead.contactName}
                     </Link>
                     {lead.companyName && <span className="block text-[13px] text-muted">{lead.companyName}</span>}
@@ -127,7 +127,7 @@ export default async function ScoringPage() {
               {customers.map((customer) => (
                 <tr key={customer.businessId} className="border-t border-border">
                   <td className={td}>
-                    <Link href={`/admin/empresas/${customer.businessId}`} className="font-medium text-primary underline">
+                    <Link href={`/admin/empresas/${customer.businessId}`} className="tap font-medium text-primary underline">
                       {customer.name}
                     </Link>
                     <span className="block text-[13px] text-muted">{customer.category}</span>

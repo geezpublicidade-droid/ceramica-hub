@@ -145,8 +145,8 @@ export default async function SecurityPage({ searchParams }: { searchParams: Pro
             <li key={table} className="flex items-center justify-between gap-3 text-[14px]">
               <span className="text-foreground">{EXPORT_TABLE_LABEL[table]}</span>
               <span className="flex gap-3">
-                <a href={`/api/admin/export/${table}?format=csv`} className="font-medium text-primary underline">CSV</a>
-                <a href={`/api/admin/export/${table}?format=json`} className="font-medium text-primary underline">JSON</a>
+                <a href={`/api/admin/export/${table}?format=csv`} className="tap font-medium text-primary underline">CSV</a>
+                <a href={`/api/admin/export/${table}?format=json`} className="tap font-medium text-primary underline">JSON</a>
               </span>
             </li>
           ))}

@@ -51,7 +51,7 @@ export default async function CategoryPlacementsPage() {
   return (
     <AdminShell currentPath="/admin/publicidade/categorias" adminRole={adminRole} wide>
       <div>
-        <Link href="/admin/publicidade" className="text-[14px] text-muted hover:text-primary">
+        <Link href="/admin/publicidade" className="tap text-[14px] text-muted hover:text-primary">
           ← Publicidade
         </Link>
         <h1 className="mt-2 text-2xl font-semibold text-foreground">Publicidade por categoria</h1>

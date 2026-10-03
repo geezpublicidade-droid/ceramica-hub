@@ -4,8 +4,8 @@ import type { RankedItem } from "@/lib/services/portal-analytics";
 export function RankedList({ title, items, empty }: { title: string; items: RankedItem[]; empty: string }) {
   const max = Math.max(1, ...items.map((item) => item.total));
   return (
-    <section className="rounded-2xl border border-border bg-white/70 p-4">
-      <h3 className="text-[15px] font-semibold text-foreground">{title}</h3>
+    <section className="min-w-0 rounded-2xl border border-border bg-white/70 p-4">
+      <h3 className="break-words text-[15px] font-semibold text-foreground">{title}</h3>
       {items.length === 0 ? (
         <p className="mt-3 text-[14px] text-muted">{empty}</p>
       ) : (
@@ -13,8 +13,8 @@ export function RankedList({ title, items, empty }: { title: string; items: Rank
           {items.map((item) => (
             <li key={item.label} className="text-[14px]">
               <div className="flex justify-between gap-3">
-                <span className="truncate text-foreground">{item.label}</span>
-                <span className="font-medium text-foreground">{item.total}</span>
+                <span className="min-w-0 truncate text-foreground" title={item.label}>{item.label}</span>
+                <span className="shrink-0 font-medium text-foreground">{item.total}</span>
               </div>
               <div className="mt-1 h-1.5 rounded-full bg-primary/10">
                 <div className="h-1.5 rounded-full bg-primary" style={{ width: `${(item.total / max) * 100}%` }} />

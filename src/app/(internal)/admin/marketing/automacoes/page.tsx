@@ -16,7 +16,7 @@ export default async function AutomationsPage() {
   return (
     <AdminShell currentPath="/admin/marketing" adminRole={adminRole}>
       <div>
-        <Link href="/admin/marketing" className="text-[14px] text-muted hover:text-foreground">
+        <Link href="/admin/marketing" className="tap text-[14px] text-muted hover:text-foreground">
           ← Central de Marketing
         </Link>
         <h1 className="mt-2 text-2xl font-semibold text-foreground">Automações</h1>

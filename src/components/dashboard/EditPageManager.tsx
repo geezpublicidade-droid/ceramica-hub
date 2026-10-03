@@ -32,7 +32,7 @@ function UpgradeNotice({ message, targetPlan }: { message: string; targetPlan: B
       <p className="mt-1 text-muted">{message}</p>
       <Link
         href={targetPlan ? `/planos/${targetPlan}` : "/planos"}
-        className="mt-2 inline-block font-medium text-primary hover:underline"
+        className="tap mt-2 inline-block font-medium text-primary hover:underline"
       >
         {targetPlan ? `Conhecer o plano ${planLabels[targetPlan]} →` : "Conhecer os planos →"}
       </Link>
@@ -267,7 +267,7 @@ export function EditPageManager({
                 type="button"
                 disabled={isPending}
                 onClick={() => startTransition(async () => { await deleteService(service.id); router.refresh(); })}
-                className="text-[14px] text-red-600"
+                className="tap text-[14px] text-red-600"
               >
                 Remover
               </button>
@@ -325,7 +325,7 @@ export function EditPageManager({
                 type="button"
                 disabled={isPending}
                 onClick={() => startTransition(async () => { await deletePhoto(photo.id); router.refresh(); })}
-                className="absolute right-1 top-1 rounded-full bg-black/60 px-2 py-0.5 text-[13px] text-white"
+                className="tap absolute right-1 top-1 rounded-full bg-black/60 px-2 py-0.5 text-[13px] text-white"
               >
                 Remover
               </button>
@@ -378,7 +378,7 @@ export function EditPageManager({
                   type="button"
                   disabled={isPending}
                   onClick={() => startTransition(async () => { await deleteVirtualTourScene(scene.id); router.refresh(); })}
-                  className="text-[14px] text-red-600"
+                  className="tap text-[14px] text-red-600"
                 >
                   Remover
                 </button>

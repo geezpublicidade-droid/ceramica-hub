@@ -20,7 +20,7 @@ export function PresenceScoreCard({ score }: { score: PresenceScore }) {
           {score.missing.map((criterion) => (
             <li key={criterion.key} className="flex items-center justify-between gap-3 text-[14px]">
               <span className="text-muted">{criterion.actionLabel}</span>
-              <Link href={criterion.actionHref} className="shrink-0 font-medium text-primary hover:underline">
+              <Link href={criterion.actionHref} className="tap shrink-0 font-medium text-primary hover:underline">
                 Resolver →
               </Link>
             </li>

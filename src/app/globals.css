@@ -475,3 +475,7 @@ body {
 .smart-loading { animation: smart-loading-slide 0.9s ease-in-out infinite; }
 @keyframes smart-loading-slide { 0% { transform: translateX(-100%); } 100% { transform: translateX(300%); } }
 @media (prefers-reduced-motion: reduce) { .smart-caret, .smart-loading { animation: none; } }
+
+/* Área de toque ampliada (≈ 40 px) para links e botões pequenos, sem alterar o visual nem empurrar vizinhos */
+.tap:not(.absolute):not(.fixed):not(.sticky) { position: relative; }
+.tap::after { content: ""; position: absolute; inset: -9px 0; }

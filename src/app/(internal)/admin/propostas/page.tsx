@@ -37,14 +37,14 @@ export default async function AdminProposalsPage({ searchParams }: { searchParam
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <Link href="/admin/propostas" className={`rounded-full px-3 py-1 text-[13px] ${filter ? "neu text-foreground" : "neu-primary text-white"}`}>
+        <Link href="/admin/propostas" className={`tap rounded-full px-3 py-1 text-[13px] ${filter ? "neu text-foreground" : "neu-primary text-white"}`}>
           Todas ({proposals.length})
         </Link>
         {PROPOSAL_STATUS_ORDER.map((option) => (
           <Link
             key={option}
             href={`/admin/propostas?status=${option}`}
-            className={`rounded-full px-3 py-1 text-[13px] ${filter === option ? "neu-primary text-white" : "neu text-foreground"}`}
+            className={`tap rounded-full px-3 py-1 text-[13px] ${filter === option ? "neu-primary text-white" : "neu text-foreground"}`}
           >
             {PROPOSAL_STATUS_LABEL[option]} ({proposals.filter((proposal) => proposal.status === option).length})
           </Link>

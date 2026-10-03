@@ -408,7 +408,7 @@ export function SmartSearch({ variant, source, defaultValue = "" }: SmartSearchP
                       <button
                         type="button"
                         onClick={() => setValue(response.didYouMean ?? "")}
-                        className="mt-1 text-[15px] font-medium text-primary underline underline-offset-4"
+                        className="tap mt-1 text-[15px] font-medium text-primary underline underline-offset-4"
                       >
                         {t("didYouMean", { suggestion: response.didYouMean })}
                       </button>

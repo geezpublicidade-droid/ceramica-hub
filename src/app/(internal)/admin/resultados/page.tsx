@@ -65,7 +65,7 @@ export default async function AdminResultadosPage({
             <Link
               key={period.days}
               href={`/admin/resultados?days=${period.days}`}
-              className={`rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
+              className={`tap rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
                 days === period.days ? "bg-primary text-white" : "text-muted hover:text-foreground"
               }`}
             >
