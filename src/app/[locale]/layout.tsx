@@ -10,6 +10,7 @@ import { SupportWhatsAppButton } from "@/components/support/SupportWhatsAppButto
 import { PortalPageViewTracker } from "@/components/PortalPageViewTracker";
 import { PwaRegister } from "@/components/pwa/PwaRegister";
 import { ReferralCapture } from "@/components/referrals/ReferralCapture";
+import { ConsentManager } from "@/components/analytics/ConsentManager";
 import "../globals.css";
 import { jsonLdString } from "@/lib/json-ld";
 
@@ -106,6 +107,7 @@ export default async function LocaleLayout({
           <PortalPageViewTracker />
           <PwaRegister />
           <ReferralCapture />
+          <ConsentManager />
         </NextIntlClientProvider>
         <SupportWhatsAppButton />
       </body>

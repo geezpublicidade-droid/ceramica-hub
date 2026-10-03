@@ -14,11 +14,11 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const CSP = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
+  "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://www.googletagmanager.com https://connect.facebook.net",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' https: data: blob:",
   "font-src 'self' data:",
-  `connect-src 'self' https://challenges.cloudflare.com${supabaseUrl ? ` ${supabaseUrl}` : ""}`,
+  `connect-src 'self' https://challenges.cloudflare.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://www.facebook.com https://connect.facebook.net${supabaseUrl ? ` ${supabaseUrl}` : ""}`,
   "frame-src https://challenges.cloudflare.com",
   "frame-ancestors 'self'",
   "base-uri 'self'",

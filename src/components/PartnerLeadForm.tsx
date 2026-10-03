@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { submitPartnerLead } from "@/lib/actions/partner-leads";
 import { TurnstileWidget } from "@/components/TurnstileWidget";
+import { track } from "@/lib/analytics";
 
 type Interest = "anunciante" | "patrocinador";
 
@@ -48,6 +49,7 @@ export function PartnerLeadForm({
     setError(null);
     const result = await submitPartnerLead({ ...form, turnstileToken });
     if (result.success) {
+      track({ name: "lead_form", form: "parceiro" });
       setStatus("success");
       setForm({ ...EMPTY_FORM, interest: defaultInterest, message: defaultMessage });
     } else {

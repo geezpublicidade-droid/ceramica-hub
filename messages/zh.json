@@ -890,5 +890,19 @@
         "description": "显示在普通列表之前，含标志、描述和 WhatsApp 按钮。"
       }
     }
+  },
+  "Share": {
+    "title": "分享",
+    "copy": "复制链接",
+    "copied": "链接已复制！",
+    "text": "在 Cerâmica Hub 认识 {name}",
+    "categoryText": "Espaço Cerâmica 的{category}：在 Cerâmica Hub 查看企业"
+  },
+  "Consent": {
+    "title": "Cookie 与隐私",
+    "text": "我们使用测量和广告 Cookie（Google 和 Meta）来了解网站使用情况，并更好地推广 Cerâmica 的企业。由您选择。",
+    "policy": "隐私政策",
+    "accept": "接受",
+    "decline": "拒绝"
   }
 }

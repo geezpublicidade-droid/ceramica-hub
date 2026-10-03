@@ -181,3 +181,32 @@ export function deltaPercent(current: number, previous: number): number | null {
   if (previous === 0) return null;
   return Math.round(((current - previous) / previous) * 100);
 }
+
+export type VisitSource = { source: string; visits: number };
+
+/**
+ * De onde vieram as visitas à página no período, pelo `utm_source` dos links rastreados (Instagram, Facebook,
+ * Google...). Visita sem link rastreado entra como `direto` (busca no site, indicação, endereço digitado).
+ */
+export async function getVisitSources(businessId: string, from: Date, to: Date): Promise<VisitSource[]> {
+  const supabase = createServiceClient();
+  const counts = new Map<string, number>();
+  for (let offset = 0; ; offset += PAGE_SIZE) {
+    const { data, error } = await supabase
+      .from("metrics_events")
+      .select("metadata")
+      .eq("business_id", businessId)
+      .eq("event_type", "commercial_page_viewed")
+      .gte("created_at", from.toISOString())
+      .lt("created_at", to.toISOString())
+      .order("created_at", { ascending: true })
+      .range(offset, offset + PAGE_SIZE - 1);
+    if (error) throw error;
+    for (const row of data ?? []) {
+      const source = (row.metadata as { source?: string } | null)?.source || "direto";
+      counts.set(source, (counts.get(source) ?? 0) + 1);
+    }
+    if ((data?.length ?? 0) < PAGE_SIZE) break;
+  }
+  return [...counts.entries()].map(([source, visits]) => ({ source, visits })).sort((a, b) => b.visits - a.visits);
+}

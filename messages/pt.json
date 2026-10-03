@@ -890,5 +890,19 @@
         "description": "Aparece antes da listagem comum, com logo, descrição e botão de WhatsApp."
       }
     }
+  },
+  "Share": {
+    "title": "Compartilhar",
+    "copy": "Copiar link",
+    "copied": "Link copiado!",
+    "text": "Conheça {name} no Cerâmica Hub",
+    "categoryText": "{category} no Espaço Cerâmica: veja as empresas no Cerâmica Hub"
+  },
+  "Consent": {
+    "title": "Cookies e privacidade",
+    "text": "Usamos cookies de medição e publicidade (Google e Meta) para entender o uso do site e divulgar melhor as empresas do Cerâmica. Você escolhe.",
+    "policy": "Política de privacidade",
+    "accept": "Aceitar",
+    "decline": "Recusar"
   }
 }

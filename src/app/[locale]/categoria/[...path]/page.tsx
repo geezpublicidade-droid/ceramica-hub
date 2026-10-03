@@ -10,6 +10,7 @@ import {
   type PlacementCardLabels,
 } from "@/components/business/PlacementCard";
 import { CompanySearchBox } from "@/components/empresas/CompanySearchBox";
+import { ShareButtons } from "@/components/promo/ShareButtons";
 import {
   DiscoveryFilters,
   type DiscoveryFilterLabels,
@@ -22,7 +23,7 @@ import {
   type RawSearchParams,
 } from "@/lib/discovery-params";
 import { jsonLdString } from "@/lib/json-ld";
-import { localizedUrl, buildAlternates, buildSocialMetadata } from "@/lib/seo";
+import { localizedUrl, buildAlternates, buildSocialMetadata, siteUrl } from "@/lib/seo";
 import {
   categoryPath,
   hasApprovedBusinesses,
@@ -87,6 +88,7 @@ export async function generateMetadata({
       locale,
       path: canonicalPath,
       type: "website",
+      image: `${siteUrl}/api/og/categoria?path=${encodeURIComponent(path.join("/"))}`,
     }),
   };
 }
@@ -104,8 +106,9 @@ export default async function CategoryPage({
   const basePath = `/categoria/${path.join("/")}`;
   const filters = { ...parsed, cat: path[0], sub: path[1], spec: path[2] };
 
-  const [t, tCommon, allBusinesses, links] = await Promise.all([
+  const [t, tShare, tCommon, allBusinesses, links] = await Promise.all([
     getTranslations("CategoryPage"),
+    getTranslations("Share"),
     getTranslations("Common"),
     getAllBusinesses(locale),
     getBusinessCategoryLinks(),
@@ -424,6 +427,15 @@ export default async function CategoryPage({
                 count: result.total + placedBusinessIds(placements).size,
               })}
             </p>
+
+            <div className="mt-5">
+              <ShareButtons
+                url={localizedUrl(locale, basePath)}
+                text={tShare("categoryText", { category: category.name })}
+                campaign={`categoria-${path.join("-")}`}
+                labels={{ title: tShare("title"), copy: tShare("copy"), copied: tShare("copied") }}
+              />
+            </div>
 
             <div className="mt-8 max-w-3xl">
               <CompanySearchBox

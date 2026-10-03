@@ -9,7 +9,7 @@ import { VirtualTourViewer } from "@/components/VirtualTourViewer";
 import { ReviewsSection } from "@/components/business/ReviewsSection";
 import { Link, redirect } from "@/i18n/navigation";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
-import { localizedUrl, buildAlternates, buildSocialMetadata } from "@/lib/seo";
+import { localizedUrl, buildAlternates, buildSocialMetadata, siteUrl } from "@/lib/seo";
 import { jsonLdString } from "@/lib/json-ld";
 import {
   getAllBusinesses,
@@ -26,6 +26,7 @@ import {
 import { WhatsAppLink } from "@/components/WhatsAppLink";
 import { ContactLink } from "@/components/ContactLink";
 import { ProfileVisitTracker } from "@/components/business/ProfileVisitTracker";
+import { ShareButtons } from "@/components/promo/ShareButtons";
 import { getActiveTowers } from "@/lib/services/towers";
 
 type PageProps = {
@@ -68,7 +69,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       locale,
       path: `/empresa/${business.slug}`,
       type: "profile",
-      image: business.coverPhoto ?? business.logo,
+      // arte da marca com a logo (a foto de capa só entra com uso de imagem autorizado, e isso o gerador já respeita)
+      image: `${siteUrl}/api/og/empresa/${business.slug}`,
     }),
   };
 }
@@ -87,8 +89,9 @@ export default async function BusinessProfilePage({ params }: PageProps) {
     redirect({ href: `/empresa/${business.slug}`, locale });
   }
 
-  const [t, tCategories, tCommon, tOpportunityTypes, tBenefitKinds] = await Promise.all([
+  const [t, tShare, tCategories, tCommon, tOpportunityTypes, tBenefitKinds] = await Promise.all([
     getTranslations("EmpresaPage"),
+    getTranslations("Share"),
     getTranslations("categories"),
     getTranslations("Common"),
     getTranslations("opportunityTypeLabels"),
@@ -157,7 +160,7 @@ export default async function BusinessProfilePage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: jsonLdString(breadcrumbJsonLd) }}
       />
       <Header />
-      <ProfileVisitTracker businessId={business.id} />
+      <ProfileVisitTracker businessId={business.id} name={business.name} category={business.category} />
       <main className="flex-1">
         {/* Banner de ponta a ponta: sem max-width, a foto de capa (ou o
             degradê de fallback) vai até a borda da viewport. Avatar/nome
@@ -224,6 +227,7 @@ export default async function BusinessProfilePage({ params }: PageProps) {
                   <WhatsAppLink
                     href={buildWhatsAppLink(business.phone, business.name)}
                     businessId={business.id}
+                    businessName={business.name}
                     className="neu-primary rounded-full px-6 py-3 text-[16px] font-medium text-white"
                   >
                     {tCommon("whatsapp")}
@@ -252,6 +256,14 @@ export default async function BusinessProfilePage({ params }: PageProps) {
                     </ContactLink>
                   )}
                   <FavoriteButton businessId={business.id} />
+                </div>
+                <div className="mt-6">
+                  <ShareButtons
+                    url={canonicalUrl}
+                    text={tShare("text", { name: business.name })}
+                    campaign={`empresa-${business.slug}`}
+                    labels={{ title: tShare("title"), copy: tShare("copy"), copied: tShare("copied") }}
+                  />
                 </div>
               </div>
             </div>

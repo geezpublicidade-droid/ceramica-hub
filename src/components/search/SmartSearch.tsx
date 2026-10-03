@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "@/i18n/navigation";
 import { logSearchPerformed } from "@/lib/actions/log-search";
+import { track } from "@/lib/analytics";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import type { PopularSearches, ShortcutKey, SmartSearchResponse, Suggestion } from "@/lib/services/smart-search";
 
@@ -192,7 +193,10 @@ export function SmartSearch({ variant, source, defaultValue = "" }: SmartSearchP
 
   function go(href: string) {
     setOpen(false);
-    if (query) void logSearchPerformed(query, source).catch(() => undefined);
+    if (query) {
+      track({ name: "search", term: query });
+      void logSearchPerformed(query, source).catch(() => undefined);
+    }
     router.push(href);
   }
 

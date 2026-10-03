@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { getBusinessById } from "@/lib/services/platform";
-import { getBusinessResults, parsePeriod, previousMonthKey, formatMonthLabel, RESULT_PERIODS } from "@/lib/services/business-results";
+import { getBusinessResults, getVisitSources, parsePeriod, previousMonthKey, formatMonthLabel, RESULT_PERIODS } from "@/lib/services/business-results";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { BackLink } from "@/components/nav/BackLink";
 import { StatTile } from "@/components/dashboard/StatTile";
@@ -11,6 +11,7 @@ import { DeltaBadge } from "@/components/dashboard/DeltaBadge";
 import { RequestActionForm } from "@/components/dashboard/RequestActionForm";
 import { PlacementResultsSection } from "@/components/dashboard/PlacementResultsSection";
 import { getBusinessPlacementResults } from "@/lib/services/placement-metrics";
+import { VisitSourcesCard } from "@/components/dashboard/VisitSourcesCard";
 
 export const metadata = { title: "Resultados — Cerâmica Hub" };
 
@@ -31,7 +32,11 @@ export default async function DashboardResultadosPage({ searchParams }: PageProp
   const reportMonth = previousMonthKey();
   const now = new Date();
   const periodEnd = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
-  const placements = await getBusinessPlacementResults(businessId, new Date(periodEnd.getTime() - period * 86400000), periodEnd);
+  const periodStart = new Date(periodEnd.getTime() - period * 86400000);
+  const [placements, sources] = await Promise.all([
+    getBusinessPlacementResults(businessId, periodStart, periodEnd),
+    getVisitSources(businessId, periodStart, periodEnd),
+  ]);
 
   const tiles = [
     { label: "Visualizações da página", value: totals.views, previous: previous.views, hint: undefined },
@@ -102,6 +107,8 @@ export default async function DashboardResultadosPage({ searchParams }: PageProp
               <ResultsChart data={daily} />
             </div>
           )}
+
+          {hasDetailedMetrics && <VisitSourcesCard sources={sources} periodLabel={`últimos ${period} dias`} />}
 
           <PlacementResultsSection placements={placements} periodLabel={`últimos ${period} dias`} allowRenewal />
 

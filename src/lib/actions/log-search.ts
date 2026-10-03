@@ -86,9 +86,10 @@ export async function logPlacementClick(placementId: string, businessId: string,
 }
 
 /** Visita ao perfil comercial da empresa (chamada pelo navegador, uma vez por sessão). */
-export async function logCommercialPageView(businessId: string) {
+export async function logCommercialPageView(businessId: string, source?: string) {
   if (!UUID_RE.test(businessId)) return;
-  await logMetricEvent("commercial_page_viewed", businessId);
+  const cleanSource = source?.trim().toLowerCase().slice(0, 40);
+  await logMetricEvent("commercial_page_viewed", businessId, cleanSource ? { source: cleanSource } : undefined);
 }
 
 export async function logPlacementProfileView(placementId: string, businessId: string) {

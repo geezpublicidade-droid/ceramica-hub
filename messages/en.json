@@ -890,5 +890,19 @@
         "description": "Shown before the regular listing, with logo, description and WhatsApp button."
       }
     }
+  },
+  "Share": {
+    "title": "Share",
+    "copy": "Copy link",
+    "copied": "Link copied!",
+    "text": "Meet {name} on Cerâmica Hub",
+    "categoryText": "{category} at Espaço Cerâmica: see the businesses on Cerâmica Hub"
+  },
+  "Consent": {
+    "title": "Cookies and privacy",
+    "text": "We use measurement and advertising cookies (Google and Meta) to understand site usage and promote Cerâmica businesses better. You choose.",
+    "policy": "Privacy policy",
+    "accept": "Accept",
+    "decline": "Decline"
   }
 }

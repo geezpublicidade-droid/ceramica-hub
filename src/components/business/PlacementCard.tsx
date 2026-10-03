@@ -7,6 +7,7 @@ import { BusinessAvatar } from "@/components/BusinessAvatar";
 import { TrackedLink } from "@/components/TrackedLink";
 import { logPlacementClick, logPlacementImpression, logWhatsAppClick } from "@/lib/actions/log-search";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
+import { track } from "@/lib/analytics";
 
 export type PlacementCardLabels = {
   badge: string;
@@ -137,6 +138,7 @@ export function PlacementCard({
           <TrackedLink
             href={buildWhatsAppLink(business.phone, business.name)}
             onTrack={() => {
+              track({ name: "contact", method: "whatsapp", businessName: business.name });
               void logWhatsAppClick(business.id).catch(() => undefined);
               void logPlacementClick(placementId, business.id, "whatsapp").catch(() => undefined);
             }}
