@@ -10,6 +10,7 @@ import {
   listAdminPlacements,
   type AdminPlacement,
 } from "@/lib/services/category-placements-admin";
+import { emptyPlacementMetrics, getPlacementMetrics } from "@/lib/services/placement-metrics";
 import { formatCents } from "@/lib/utils";
 
 export const metadata = { title: "Publicidade por categoria — Cerâmica Hub" };
@@ -33,7 +34,12 @@ function SummaryCard({ label, value, hint }: { label: string; value: string; hin
 
 export default async function CategoryPlacementsPage() {
   const { adminRole } = await requireAdminPage(["super_admin", "admin", "comercial", "marketing"]);
-  const [types, placements, options] = await Promise.all([getPlacementTypes(), listAdminPlacements(), getPlacementFormOptions()]);
+  const [types, placements, options, metrics] = await Promise.all([
+    getPlacementTypes(),
+    listAdminPlacements(),
+    getPlacementFormOptions(),
+    getPlacementMetrics(),
+  ]);
   const inventory = await getPlacementInventory(types, placements);
 
   const live = placements.filter((p) => p.liveState === "no_ar" || p.liveState === "vencendo");
@@ -121,7 +127,7 @@ export default async function CategoryPlacementsPage() {
               <p className="text-[13px] text-muted">{section.hint}</p>
             </div>
             {rows.map((placement) => (
-              <CategoryPlacementRow key={placement.id} placement={placement} />
+              <CategoryPlacementRow key={placement.id} placement={placement} metrics={metrics.get(placement.id) ?? emptyPlacementMetrics()} />
             ))}
           </section>
         );

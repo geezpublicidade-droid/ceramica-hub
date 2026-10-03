@@ -48,7 +48,7 @@ export function PlacementCard({
 }: PlacementCardProps) {
   const ref = useRef<HTMLElement>(null);
   const style = VARIANT[variant];
-  const profileHref = `/empresa/${business.slug}`;
+  const profileHref = `/empresa/${business.slug}?pl=${placementId}`;
   const cover = business.imageUsageAuthorized ? business.coverPhoto : undefined;
   // sem capa autorizada o bloco some: nada de retângulo vazio ocupando espaço
   const showCover = variant !== "featured" && Boolean(cover);

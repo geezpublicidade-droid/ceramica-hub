@@ -15,6 +15,7 @@ import {
   type PaymentStatus,
   type PlacementStatus,
 } from "@/lib/services/category-placements-admin";
+import { placementCtr, type PlacementMetrics } from "@/lib/services/placement-metrics";
 import { formatCents, formatDateBR } from "@/lib/utils";
 
 const LIVE_TONE: Record<AdminPlacement["liveState"], string> = {
@@ -29,7 +30,7 @@ const LIVE_TONE: Record<AdminPlacement["liveState"], string> = {
 const smallButton = "rounded-full border border-border bg-white px-3 py-1.5 text-[13px] font-medium text-foreground hover:border-primary/40 disabled:opacity-50";
 
 /** Linha de uma posição: situação real hoje, resultados e ações (liberar, suspender, renovar, pagamento, ordem/peso). */
-export function CategoryPlacementRow({ placement }: { placement: AdminPlacement }) {
+export function CategoryPlacementRow({ placement, metrics }: { placement: AdminPlacement; metrics: PlacementMetrics }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -51,7 +52,7 @@ export function CategoryPlacementRow({ placement }: { placement: AdminPlacement 
 
   const setStatus = (status: PlacementStatus) => run(() => setPlacementStatusAction(placement.id, status));
   const closed = placement.liveState === "encerrada";
-  const ctr = placement.impressions > 0 ? ((placement.clicks / placement.impressions) * 100).toFixed(1) : "—";
+  const ctrValue = placementCtr(metrics);
 
   return (
     <article className="flex flex-col gap-3 rounded-2xl border border-border bg-white/70 p-4">
@@ -72,8 +73,10 @@ export function CategoryPlacementRow({ placement }: { placement: AdminPlacement 
             {PLACEMENT_LIVE_LABEL[placement.liveState]}
           </span>
           <span className="text-[12px] text-muted">
-            {placement.impressions} impressões · {placement.clicks} cliques · CTR {ctr}
-            {ctr !== "—" && "%"}
+            {metrics.impressions} impressões · {metrics.cardClicks} cliques · CTR {ctrValue === null ? "—" : `${ctrValue.toFixed(1)}%`}
+          </span>
+          <span className="text-[12px] text-muted">
+            {metrics.profileViews} visitas ao perfil · {metrics.leads} contatos (WhatsApp {metrics.whatsapp}, telefone {metrics.phone})
           </span>
         </div>
       </div>

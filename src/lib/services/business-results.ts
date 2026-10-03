@@ -155,7 +155,7 @@ export function previousMonthKey(now = new Date()): string {
   return d.toISOString().slice(0, 7);
 }
 
-function monthRange(month: string): { from: Date; to: Date } {
+export function monthRange(month: string): { from: Date; to: Date } {
   const [year, m] = month.split("-").map(Number);
   return { from: new Date(Date.UTC(year, m - 1, 1)), to: new Date(Date.UTC(year, m, 1)) };
 }

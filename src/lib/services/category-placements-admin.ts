@@ -80,8 +80,6 @@ export type AdminPlacement = {
   marketingCampaignId: string | null;
   notes: string | null;
   liveState: PlacementLiveState;
-  impressions: number;
-  clicks: number;
 };
 
 export type PlacementInput = {
@@ -144,27 +142,8 @@ export async function getPlacementTypes(): Promise<PlacementType[]> {
   }));
 }
 
-async function loadPlacementMetrics(): Promise<Map<string, { impressions: number; clicks: number }>> {
-  const { data, error } = await createServiceClient()
-    .from("metrics_events")
-    .select("event_type, metadata")
-    .in("event_type", ["placement_impression", "placement_click"])
-    .limit(100000);
-  if (error) throw error;
-  const totals = new Map<string, { impressions: number; clicks: number }>();
-  for (const row of data ?? []) {
-    const id = (row.metadata as { placementId?: string } | null)?.placementId;
-    if (!id) continue;
-    const entry = totals.get(id) ?? { impressions: 0, clicks: 0 };
-    if (row.event_type === "placement_impression") entry.impressions += 1;
-    else entry.clicks += 1;
-    totals.set(id, entry);
-  }
-  return totals;
-}
-
 export async function listAdminPlacements(): Promise<AdminPlacement[]> {
-  const [tree, rows, metrics] = await Promise.all([
+  const [tree, rows] = await Promise.all([
     getCategoryTree(),
     createServiceClient()
       .from("category_placements")
@@ -172,14 +151,12 @@ export async function listAdminPlacements(): Promise<AdminPlacement[]> {
         "id, business_id, category_id, placement_type_id, position, rotation_weight, starts_at, ends_at, status, payment_status, amount_cents, offer_text, contract_ref, proposal_id, marketing_campaign_id, notes, businesses(name), placement_types(name)",
       )
       .order("ends_at", { ascending: false }),
-    loadPlacementMetrics(),
   ]);
   if (rows.error) throw rows.error;
   const today = todaySaoPaulo();
 
   return (rows.data ?? []).map((row) => {
     const category = tree.byId.get(row.category_id);
-    const stats = metrics.get(row.id);
     return {
       id: row.id,
       businessId: row.business_id,
@@ -201,8 +178,6 @@ export async function listAdminPlacements(): Promise<AdminPlacement[]> {
       marketingCampaignId: row.marketing_campaign_id,
       notes: row.notes,
       liveState: computeLiveState(row, today),
-      impressions: stats?.impressions ?? 0,
-      clicks: stats?.clicks ?? 0,
     };
   });
 }

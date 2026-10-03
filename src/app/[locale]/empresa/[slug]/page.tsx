@@ -26,6 +26,7 @@ import {
 } from "@/lib/services/platform";
 import { WhatsAppLink } from "@/components/WhatsAppLink";
 import { ContactLink } from "@/components/ContactLink";
+import { PlacementAttribution } from "@/components/business/PlacementAttribution";
 import { getActiveTowers } from "@/lib/services/towers";
 
 type PageProps = {
@@ -159,6 +160,7 @@ export default async function BusinessProfilePage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: jsonLdString(breadcrumbJsonLd) }}
       />
       <Header />
+      <PlacementAttribution businessId={business.id} />
       <main className="flex-1">
         {/* Banner de ponta a ponta: sem max-width, a foto de capa (ou o
             degradê de fallback) vai até a borda da viewport. Avatar/nome

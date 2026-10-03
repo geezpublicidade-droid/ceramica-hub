@@ -3,6 +3,8 @@
 import { headers } from "next/headers";
 import { logMetricEvent } from "@/lib/services/platform";
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 /** Loga só o termo (até 80 chars, sem dado sensível) e a origem do disparo. */
 export async function logSearchPerformed(term: string, source: "hero" | "smart_search" | "global_overlay") {
   const trimmed = term.trim().slice(0, 80);
@@ -10,8 +12,13 @@ export async function logSearchPerformed(term: string, source: "hero" | "smart_s
   await logMetricEvent("search_performed", undefined, { term: trimmed, source });
 }
 
-export async function logWhatsAppClick(businessId: string) {
-  await logMetricEvent("whatsapp_clicked", businessId);
+/** Metadata de atribuição a uma posição paga; id inválido vira "sem atribuição". */
+function attribution(placementId: string | undefined): Record<string, unknown> | undefined {
+  return placementId && UUID_RE.test(placementId) ? { placementId } : undefined;
+}
+
+export async function logWhatsAppClick(businessId: string, placementId?: string) {
+  await logMetricEvent("whatsapp_clicked", businessId, attribution(placementId));
 }
 
 export async function logAdClick(campaignId: string) {
@@ -31,10 +38,10 @@ const CONTACT_CLICK_EVENT = {
 export type ContactClickKind = keyof typeof CONTACT_CLICK_EVENT;
 
 /** Clique em telefone, site ou rota da página da empresa (WhatsApp tem ação própria, logWhatsAppClick). */
-export async function logContactClick(businessId: string, kind: ContactClickKind) {
+export async function logContactClick(businessId: string, kind: ContactClickKind, placementId?: string) {
   const eventType = CONTACT_CLICK_EVENT[kind];
   if (!eventType) return;
-  await logMetricEvent(eventType, businessId);
+  await logMetricEvent(eventType, businessId, attribution(placementId));
 }
 
 const LOCALE_PREFIX = /^\/(pt|en|es|zh)(?=\/|$)/;
@@ -65,7 +72,6 @@ export async function logPortalPageView(path: string, referrer: string, utmSourc
   }
 }
 
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const PLACEMENT_CLICK_KINDS = ["profile", "whatsapp"] as const;
 
 /** Card de posição comercial entrou na tela (uma vez por visualização de página). */
@@ -77,4 +83,9 @@ export async function logPlacementImpression(placementId: string, businessId: st
 export async function logPlacementClick(placementId: string, businessId: string, kind: (typeof PLACEMENT_CLICK_KINDS)[number]) {
   if (!UUID_RE.test(placementId) || !UUID_RE.test(businessId) || !PLACEMENT_CLICK_KINDS.includes(kind)) return;
   await logMetricEvent("placement_click", businessId, { placementId, kind });
+}
+
+export async function logPlacementProfileView(placementId: string, businessId: string) {
+  if (!UUID_RE.test(placementId) || !UUID_RE.test(businessId)) return;
+  await logMetricEvent("placement_profile_view", businessId, { placementId });
 }

@@ -9,6 +9,8 @@ import { StatTile } from "@/components/dashboard/StatTile";
 import { ResultsChart } from "@/components/dashboard/ResultsChart";
 import { DeltaBadge } from "@/components/dashboard/DeltaBadge";
 import { RequestActionForm } from "@/components/dashboard/RequestActionForm";
+import { PlacementResultsSection } from "@/components/dashboard/PlacementResultsSection";
+import { getBusinessPlacementResults } from "@/lib/services/placement-metrics";
 
 export const metadata = { title: "Resultados — Cerâmica Hub" };
 
@@ -27,6 +29,9 @@ export default async function DashboardResultadosPage({ searchParams }: PageProp
   const period = hasDetailedMetrics ? parsePeriod((await searchParams).periodo) : 7;
   const { totals, previous, daily } = await getBusinessResults(businessId, period);
   const reportMonth = previousMonthKey();
+  const now = new Date();
+  const periodEnd = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
+  const placements = await getBusinessPlacementResults(businessId, new Date(periodEnd.getTime() - period * 86400000), periodEnd);
 
   const tiles = [
     { label: "Visualizações da página", value: totals.views, previous: previous.views, hint: undefined },
@@ -97,6 +102,8 @@ export default async function DashboardResultadosPage({ searchParams }: PageProp
               <ResultsChart data={daily} />
             </div>
           )}
+
+          <PlacementResultsSection placements={placements} periodLabel={`últimos ${period} dias`} allowRenewal />
 
           {hasDetailedMetrics && (
             <div className="glass-light flex flex-wrap items-center justify-between gap-4 rounded-3xl p-6">

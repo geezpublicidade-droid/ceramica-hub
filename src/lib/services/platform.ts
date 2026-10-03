@@ -670,7 +670,8 @@ export type MetricEventType =
   | "portal_page_viewed"
   | "search_no_results"
   | "placement_impression"
-  | "placement_click";
+  | "placement_click"
+  | "placement_profile_view";
 
 /** Log de evento append-only. Nunca inventar número no painel: sem linha aqui, mostra 0/vazio. */
 export async function logMetricEvent(

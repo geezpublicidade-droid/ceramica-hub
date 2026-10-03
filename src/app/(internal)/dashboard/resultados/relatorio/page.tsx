@@ -2,7 +2,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { getBusinessById } from "@/lib/services/platform";
-import { getMonthlyReport, isValidMonth, previousMonthKey, formatMonthLabel } from "@/lib/services/business-results";
+import { getMonthlyReport, isValidMonth, monthRange, previousMonthKey, formatMonthLabel } from "@/lib/services/business-results";
+import { PlacementResultsSection } from "@/components/dashboard/PlacementResultsSection";
+import { getBusinessPlacementResults } from "@/lib/services/placement-metrics";
 import { DeltaBadge } from "@/components/dashboard/DeltaBadge";
 import { ResultsChart } from "@/components/dashboard/ResultsChart";
 import { PrintButton } from "@/components/dashboard/PrintButton";
@@ -24,6 +26,8 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
   const month = isValidMonth(mes) ? mes : previousMonthKey();
   const { results, previousTotals } = await getMonthlyReport(businessId, month);
   const { totals, daily } = results;
+  const range = monthRange(month);
+  const placements = await getBusinessPlacementResults(businessId, range.from, range.to);
 
   const rows = [
     { label: "Visualizações da página", value: totals.views, previous: previousTotals.views },
@@ -69,6 +73,9 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
           <ResultsChart data={daily} />
         </section>
       )}
+      <div className="mt-10">
+        <PlacementResultsSection placements={placements} periodLabel={formatMonthLabel(month)} />
+      </div>
       {totals.views === 0 && totals.leads === 0 && <p className="mt-8 text-[15px] text-muted">Sem atividade registrada neste mês.</p>}
     </main>
   );
