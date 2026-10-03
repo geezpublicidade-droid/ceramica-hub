@@ -91,7 +91,6 @@ export function DiscoveryFilters({
     <form action={action} method="get" className="flex flex-col gap-4">
       {filters.q && <input type="hidden" name="q" value={filters.q} />}
       {view === "list" && <input type="hidden" name="view" value="list" />}
-      {hideCategory && filters.cat && <input type="hidden" name="cat" value={filters.cat} />}
 
       {!hideCategory && (
         <SelectField name="cat" label={labels.category} value={filters.cat} allLabel={labels.all} options={toOptions(macros)} />

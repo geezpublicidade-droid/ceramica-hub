@@ -64,3 +64,17 @@ export async function logPortalPageView(path: string, referrer: string, utmSourc
     // métrica nunca pode quebrar a navegação
   }
 }
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const PLACEMENT_CLICK_KINDS = ["profile", "whatsapp"] as const;
+
+/** Card de posição comercial entrou na tela (uma vez por visualização de página). */
+export async function logPlacementImpression(placementId: string, businessId: string) {
+  if (!UUID_RE.test(placementId) || !UUID_RE.test(businessId)) return;
+  await logMetricEvent("placement_impression", businessId, { placementId });
+}
+
+export async function logPlacementClick(placementId: string, businessId: string, kind: (typeof PLACEMENT_CLICK_KINDS)[number]) {
+  if (!UUID_RE.test(placementId) || !UUID_RE.test(businessId) || !PLACEMENT_CLICK_KINDS.includes(kind)) return;
+  await logMetricEvent("placement_click", businessId, { placementId, kind });
+}

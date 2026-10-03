@@ -27,6 +27,8 @@ export type DiscoveryFilters = {
   online: boolean;
   sort: DiscoverySort;
   page: number;
+  /** empresas já exibidas em blocos patrocinados: não repetir na listagem orgânica */
+  excludeIds?: ReadonlySet<string>;
 };
 
 export type DiscoveryItem = {
@@ -179,10 +181,14 @@ function compareBy(
  * Resolve tudo em memória sobre as empresas aprovadas (volume pequeno hoje);
  * se o diretório passar de poucas centenas, mover filtro/ordenação para SQL.
  */
-export async function discoverCompanies(filters: DiscoveryFilters, locale: string): Promise<DiscoveryResult> {
+export async function discoverCompanies(
+  filters: DiscoveryFilters,
+  locale: string,
+  preloaded: { businesses?: Business[]; tree?: CategoryTree } = {},
+): Promise<DiscoveryResult> {
   const [businesses, tree, links, { facets, towers }, views, ratings] = await Promise.all([
-    getAllBusinesses(locale),
-    getCategoryTree(locale),
+    preloaded.businesses ?? getAllBusinesses(locale),
+    preloaded.tree ?? getCategoryTree(locale),
     getBusinessCategoryLinks(),
     loadFacets(),
     loadViewCounts(),
@@ -208,6 +214,7 @@ export async function discoverCompanies(filters: DiscoveryFilters, locale: strin
   const scored: { business: Business; tier: number }[] = [];
 
   for (const business of businesses) {
+    if (filters.excludeIds?.has(business.id)) continue;
     const facet = facets.get(business.id);
     const businessLinks = links.get(business.id);
     if (allowedCategoryIds && ![...(businessLinks ?? [])].some((id) => allowedCategoryIds.has(id))) continue;
