@@ -48,7 +48,7 @@ export async function FourUniverses() {
   const ITEM_CLASS =
     "group flex h-full min-h-[112px] w-full flex-col items-center justify-center gap-3 bg-surface/60 px-2 py-4 text-center sm:min-h-[128px] transition-colors duration-300 hover:-translate-y-1 hover:bg-primary hover:shadow-[0_16px_32px_-16px_rgba(179,85,58,0.45)]";
   const LABEL_CLASS =
-    "w-full text-balance text-[13px] font-semibold uppercase leading-[1.15] tracking-wide text-foreground transition-colors group-hover:text-white";
+    "w-full break-words text-balance text-[13px] font-semibold uppercase leading-[1.15] tracking-wide text-foreground transition-colors group-hover:text-white";
   const ICON_CLASS = "h-7 w-7 shrink-0 text-primary transition-colors group-hover:text-white";
 
   const items = [
@@ -68,7 +68,7 @@ export async function FourUniverses() {
 
   return (
     <nav aria-label={tStrip("headline")} className="border-b border-border bg-white">
-      <div className="container-page grid grid-cols-3 gap-3 py-8 sm:grid-cols-5 sm:gap-4 sm:py-10 lg:grid-cols-7">
+      <div className="container-page grid grid-cols-2 gap-3 py-8 min-[380px]:grid-cols-3 sm:grid-cols-5 sm:gap-4 sm:py-10 lg:grid-cols-7">
         {items.map(({ key, href, Icon, label }, index) => (
           <FadeUp
             key={key}

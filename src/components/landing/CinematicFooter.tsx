@@ -41,9 +41,9 @@ export async function CinematicFooter() {
             <p className="mt-1 max-w-sm text-[13px] leading-snug text-muted">{t("tagline")}</p>
           </div>
 
-          <nav className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[12px] text-muted sm:max-w-xl sm:justify-end">
+          <nav className="flex flex-wrap items-center gap-x-4 text-[12px] text-muted sm:max-w-xl sm:justify-end">
             {linkGroups.map((link) => (
-              <Link key={link.label} href={link.href} className="transition-colors hover:text-foreground">
+              <Link key={link.label} href={link.href} className="inline-block py-2 transition-colors hover:text-foreground">
                 {link.label}
               </Link>
             ))}
@@ -52,13 +52,13 @@ export async function CinematicFooter() {
         </div>
 
         <div className="mt-5 border-t border-border pt-3.5">
-          <p className="max-w-3xl text-[11px] leading-snug text-muted">{t("disclaimer")}</p>
-          <div className="mt-2.5 flex flex-col gap-1.5 text-[11px] text-muted sm:flex-row sm:items-center sm:justify-between">
+          <p className="max-w-3xl text-[12px] leading-snug text-muted">{t("disclaimer")}</p>
+          <div className="mt-2.5 flex flex-col gap-1.5 text-[12px] text-muted sm:flex-row sm:items-center sm:justify-between">
             <a
               href="https://www.geezmarketing.com.br"
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors hover:text-foreground"
+              className="inline-block py-1.5 transition-colors hover:text-foreground"
             >
               {t("projectBy")}
             </a>

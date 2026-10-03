@@ -99,13 +99,13 @@ export function Header() {
   return (
     <header className="fixed top-0 z-50 flex h-16 w-full items-center border-b border-border bg-white sm:h-[76px]">
       <div className="container-page flex items-center justify-between gap-4">
-        <Link href="/#top" className="flex shrink-0 items-center gap-2 text-[17px] font-semibold tracking-tight text-foreground sm:text-[20px]">
-          <img src="/images/logo-ceramica-hub.png" alt="" className="h-7 w-7 sm:h-8 sm:w-8" />
+        <Link href="/#top" className="flex shrink-0 items-center gap-2 py-2 text-[15px] font-semibold tracking-tight text-foreground min-[360px]:text-[17px] sm:text-[20px]">
+          <img src="/images/logo-ceramica-hub.png" alt="" className="h-6 w-6 min-[360px]:h-7 min-[360px]:w-7 sm:h-8 sm:w-8" />
           Cerâmica <span className="text-primary">Hub</span>
         </Link>
 
-        {/* Menu central -- desktop apenas; tablet/mobile usam a gaveta lateral */}
-        <nav className="hidden items-center gap-6 lg:flex xl:gap-8">
+        {/* Menu central -- só em telas largas (1440 px+); abaixo disso, tablet e notebook usam a gaveta lateral */}
+        <nav className="hidden items-center gap-6 min-[1440px]:flex min-[1440px]:gap-8">
           {megaMenuGroups.map((group) => (
             <MegaMenuItem key={group.key} group={group} />
           ))}
@@ -113,14 +113,14 @@ export function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className="whitespace-nowrap py-2 text-[15px] font-medium text-muted transition-colors hover:text-foreground xl:text-[16px]"
+              className="whitespace-nowrap py-2 text-[15px] font-medium text-muted transition-colors hover:text-foreground min-[1440px]:text-[16px]"
             >
               {link.label}
             </Link>
           ))}
         </nav>
 
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1 min-[360px]:gap-2 sm:gap-3">
           <button
             type="button"
             aria-label={tSearch("openSearch")}
@@ -154,7 +154,7 @@ export function Header() {
             type="button"
             aria-label={menuOpen ? t("fecharMenu") : t("abrirMenu")}
             onClick={() => setMenuOpen((v) => !v)}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-white text-foreground shadow-[0_2px_10px_rgba(0,0,0,0.12)] lg:hidden"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-white text-foreground shadow-[0_2px_10px_rgba(0,0,0,0.12)] min-[1440px]:hidden"
           >
             {menuOpen ? (
               <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4">

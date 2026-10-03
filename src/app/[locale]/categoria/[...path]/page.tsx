@@ -45,6 +45,9 @@ type PageProps = {
   searchParams: Promise<RawSearchParams>;
 };
 
+/** Abas de subcategoria visíveis no desktop antes do "Ver mais" (Saúde & Estética tem 22). */
+const VISIBLE_SUBCATEGORY_TABS = 10;
+
 // Posições pagas rotacionam a cada carregamento e dependem de data/pagamento: sempre dinâmica.
 export const dynamic = "force-dynamic";
 
@@ -454,18 +457,30 @@ export default async function CategoryPage({
                 aria-label={t("subcategories")}
                 className="-mx-6 mt-8 flex gap-2 overflow-x-auto px-6 pb-2 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
               >
+                {/* checkbox "peer": no desktop, as abas além da 10ª ficam atrás do "Ver mais"; no celular a faixa rola e mostra todas */}
+                <input type="checkbox" id="more-subcategories" className="peer sr-only" />
                 <span className="inline-flex min-h-10 shrink-0 items-center rounded-full bg-primary px-4 text-[14px] font-medium text-white">
                   {t("tabAll")}
                 </span>
-                {category.children.map((child) => (
+                {category.children.map((child, index) => (
                   <Link
                     key={child.id}
                     href={`/categoria/${categoryPath(tree, child)}`}
-                    className="inline-flex min-h-10 shrink-0 items-center rounded-full border border-border bg-white px-4 text-[14px] text-foreground hover:border-primary/40 hover:text-primary"
+                    className={`min-h-10 shrink-0 items-center rounded-full border border-border bg-white px-4 text-[14px] text-foreground hover:border-primary/40 hover:text-primary ${
+                      index < VISIBLE_SUBCATEGORY_TABS ? "inline-flex" : "inline-flex sm:hidden sm:peer-checked:inline-flex"
+                    }`}
                   >
                     {child.name}
                   </Link>
                 ))}
+                {category.children.length > VISIBLE_SUBCATEGORY_TABS && (
+                  <label
+                    htmlFor="more-subcategories"
+                    className="hidden min-h-10 shrink-0 cursor-pointer items-center rounded-full border border-dashed border-primary/50 px-4 text-[14px] font-medium text-primary hover:bg-primary/5 sm:inline-flex sm:peer-checked:hidden"
+                  >
+                    {t("moreSubcategories", { count: category.children.length - VISIBLE_SUBCATEGORY_TABS })}
+                  </label>
+                )}
               </nav>
             )}
 

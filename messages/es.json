@@ -491,7 +491,8 @@
     "next": "Siguiente",
     "pageOf": "Página {page} de {total}",
     "ctaTitle": "¿Quieres destacar tu empresa en esta categoría?",
-    "ctaButton": "Conocer posiciones destacadas"
+    "ctaButton": "Conocer posiciones destacadas",
+    "moreSubcategories": "Ver {count} más"
   },
   "TowerPage": {
     "metaTitle": "Empresas de la {tower} — Cerâmica Hub",

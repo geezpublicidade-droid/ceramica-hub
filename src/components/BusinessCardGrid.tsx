@@ -54,19 +54,19 @@ export function BusinessCardGrid({
       {businesses.map((business) => (
         <div
           key={business.id}
-          className="glass-card-light group flex gap-5 rounded-3xl p-7 transition-all hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15)]"
+          className="glass-card-light group flex gap-4 rounded-3xl p-5 transition-all sm:gap-5 sm:p-7 hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15)]"
         >
           <Link href={`/empresa/${business.slug}`} className="shrink-0">
             <BusinessAvatar
               business={business}
-              className="h-20 w-20 rounded-full bg-white"
+              className="h-16 w-16 rounded-full bg-white sm:h-20 sm:w-20"
               textClassName="text-[20px] font-semibold text-foreground"
             />
           </Link>
 
           <div className="min-w-0 flex-1">
-            <div className="flex items-start justify-between gap-2">
-              <Link href={`/empresa/${business.slug}`} className="min-w-0">
+            <div className="flex flex-wrap items-start justify-between gap-2">
+              <Link href={`/empresa/${business.slug}`} className="min-w-0 break-words">
                 <h2 className="text-[20px] font-semibold leading-snug tracking-tight hover:text-primary">
                   {business.name}
                 </h2>
@@ -85,7 +85,7 @@ export function BusinessCardGrid({
               </div>
             </div>
             <p className="mt-1.5 text-[16px] text-muted">{business.floor}</p>
-            <p className="mt-3 text-[17px] leading-relaxed text-muted">{business.description}</p>
+            <p className="mt-3 break-words text-[17px] leading-relaxed text-muted">{business.description}</p>
             <WhatsAppLink
               href={buildWhatsAppLink(business.phone, business.name)}
               businessId={business.id}

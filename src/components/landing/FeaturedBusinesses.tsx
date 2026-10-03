@@ -79,7 +79,7 @@ export async function FeaturedBusinesses({ businesses }: FeaturedBusinessesProps
                     )}
                   </div>
 
-                  <Link href={`/empresa/${business.slug}`} className="mt-3 block">
+                  <Link href={`/empresa/${business.slug}`} className="mt-3 block py-1.5">
                     <h3 className="text-[17px] font-semibold tracking-tight transition-colors group-hover:text-primary">
                       {business.name}
                     </h3>

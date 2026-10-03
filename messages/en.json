@@ -491,7 +491,8 @@
     "next": "Next",
     "pageOf": "Page {page} of {total}",
     "ctaTitle": "Want to highlight your business in this category?",
-    "ctaButton": "See featured positions"
+    "ctaButton": "See featured positions",
+    "moreSubcategories": "Show {count} more"
   },
   "TowerPage": {
     "metaTitle": "{tower} businesses — Cerâmica Hub",
