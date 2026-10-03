@@ -8,22 +8,11 @@ import {
 } from "@/lib/placement-rules";
 import {
   categoryAndDescendantIds,
+  categoryBreadcrumb,
   getBusinessCategoryLinks,
   getCategoryTree,
   type Category,
-  type CategoryTree,
 } from "@/lib/services/categories";
-
-/** "Saúde & Estética › Dentistas": nomes dos ancestrais até a categoria. */
-export function categoryBreadcrumb(tree: CategoryTree, category: Category): string {
-  const names: string[] = [];
-  let current: Category | undefined = category;
-  while (current) {
-    names.unshift(current.name);
-    current = current.parentId ? tree.byId.get(current.parentId) : undefined;
-  }
-  return names.join(" › ");
-}
 
 export type PlacementType = {
   id: string;

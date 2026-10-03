@@ -1,6 +1,5 @@
 import { createServiceClient } from "@/lib/supabase/server";
-import { getCategoryTree } from "@/lib/services/categories";
-import { categoryBreadcrumb } from "@/lib/services/category-placements-admin";
+import { categoryBreadcrumb, getCategoryTree } from "@/lib/services/categories";
 import {
   PLACEMENT_LIVE_LABEL,
   computeLiveState,

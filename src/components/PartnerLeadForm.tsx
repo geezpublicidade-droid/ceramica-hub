@@ -29,8 +29,15 @@ const EMPTY_FORM: FormState = {
   interest: "anunciante",
 };
 
-export function PartnerLeadForm({ defaultInterest = "anunciante" }: { defaultInterest?: Interest }) {
-  const [form, setForm] = useState<FormState>({ ...EMPTY_FORM, interest: defaultInterest });
+export function PartnerLeadForm({
+  defaultInterest = "anunciante",
+  defaultMessage = "",
+}: {
+  defaultInterest?: Interest;
+  /** mensagem já preenchida (ex.: a posição de destaque que o anunciante está vendo) */
+  defaultMessage?: string;
+}) {
+  const [form, setForm] = useState<FormState>({ ...EMPTY_FORM, interest: defaultInterest, message: defaultMessage });
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
@@ -42,7 +49,7 @@ export function PartnerLeadForm({ defaultInterest = "anunciante" }: { defaultInt
     const result = await submitPartnerLead({ ...form, turnstileToken });
     if (result.success) {
       setStatus("success");
-      setForm({ ...EMPTY_FORM, interest: defaultInterest });
+      setForm({ ...EMPTY_FORM, interest: defaultInterest, message: defaultMessage });
     } else {
       setStatus("error");
       setError(result.error);

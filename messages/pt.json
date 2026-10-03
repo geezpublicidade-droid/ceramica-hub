@@ -864,5 +864,37 @@
     "prev": "Anterior",
     "next": "Próxima",
     "pageOf": "Página {page} de {total}"
+  },
+  "CategoryOffers": {
+    "title": "Destaque na sua categoria",
+    "subtitle": "Apareça no topo de Dentistas, Restaurantes, Advocacia ou da categoria da sua empresa. Escolha a categoria e veja as posições e as vagas livres hoje.",
+    "pickLabel": "Categoria",
+    "pickPlaceholder": "Escolha a categoria",
+    "seePositions": "Ver posições",
+    "notFound": "Categoria não encontrada. Escolha uma da lista.",
+    "positionsIn": "Posições em {category}",
+    "pricePerMonth": "{price}/mês",
+    "priceOnRequest": "Sob consulta",
+    "soldOut": "Sem vagas no momento",
+    "slotsFree": "{free, plural, =0 {Sem vagas livres} one {# vaga livre} other {# vagas livres}} (de {total})",
+    "requestTitle": "Quero uma dessas posições",
+    "requestMessage": "Tenho interesse em uma posição de destaque em {category}.",
+    "types": {
+      "leader": {
+        "name": "Líder da categoria",
+        "badge": "Patrocinado",
+        "description": "Card grande no topo da categoria, com capa, especialidades e uma oferta. Uma única empresa por categoria."
+      },
+      "premium": {
+        "name": "Premium",
+        "badge": "Premium",
+        "description": "Primeira fileira da categoria, logo abaixo do Líder, com imagem e descrição ampliada."
+      },
+      "featured": {
+        "name": "Destaque",
+        "badge": "Destaque",
+        "description": "Aparece antes da listagem comum, com logo, descrição e botão de WhatsApp."
+      }
+    }
   }
 }

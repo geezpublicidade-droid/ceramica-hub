@@ -511,7 +511,7 @@ export default async function CategoryPage({
             <aside className="mt-16 flex flex-col items-start justify-between gap-4 rounded-3xl border border-border bg-white/60 px-6 py-6 sm:flex-row sm:items-center">
               <p className="text-[17px] font-medium">{t("ctaTitle")}</p>
               <Link
-                href={`/planos?categoria=${encodeURIComponent(path.join("/"))}`}
+                href={`/planos?categoria=${encodeURIComponent(path.join("/"))}#destaque-categoria`}
                 className="neu inline-flex min-h-11 w-full items-center justify-center rounded-full px-7 text-center text-[15px] font-medium text-foreground sm:w-auto"
               >
                 {t("ctaButton")}

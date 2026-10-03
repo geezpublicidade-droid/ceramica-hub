@@ -864,5 +864,37 @@
     "prev": "Previous",
     "next": "Next",
     "pageOf": "Page {page} of {total}"
+  },
+  "CategoryOffers": {
+    "title": "Stand out in your category",
+    "subtitle": "Appear at the top of Dentists, Restaurants, Law or your business category. Pick the category and see the positions and free slots today.",
+    "pickLabel": "Category",
+    "pickPlaceholder": "Choose a category",
+    "seePositions": "See positions",
+    "notFound": "Category not found. Pick one from the list.",
+    "positionsIn": "Positions in {category}",
+    "pricePerMonth": "{price}/month",
+    "priceOnRequest": "On request",
+    "soldOut": "No slots available right now",
+    "slotsFree": "{free, plural, =0 {No free slots} one {# slot free} other {# slots free}} (of {total})",
+    "requestTitle": "I want one of these positions",
+    "requestMessage": "I am interested in a featured position in {category}.",
+    "types": {
+      "leader": {
+        "name": "Category leader",
+        "badge": "Sponsored",
+        "description": "Large card at the top of the category, with cover, specialties and an offer. Only one business per category."
+      },
+      "premium": {
+        "name": "Premium",
+        "badge": "Premium",
+        "description": "First row of the category, right below the Leader, with image and extended description."
+      },
+      "featured": {
+        "name": "Featured",
+        "badge": "Featured",
+        "description": "Shown before the regular listing, with logo, description and WhatsApp button."
+      }
+    }
   }
 }

@@ -864,5 +864,37 @@
     "prev": "上一页",
     "next": "下一页",
     "pageOf": "第 {page} 页，共 {total} 页"
+  },
+  "CategoryOffers": {
+    "title": "在您的类别中脱颖而出",
+    "subtitle": "出现在牙医、餐厅、律师或您企业所属类别的顶部。选择类别，查看今天的推荐位和空位。",
+    "pickLabel": "类别",
+    "pickPlaceholder": "选择类别",
+    "seePositions": "查看推荐位",
+    "notFound": "未找到该类别，请从列表中选择。",
+    "positionsIn": "{category} 的推荐位",
+    "pricePerMonth": "{price}/月",
+    "priceOnRequest": "面议",
+    "soldOut": "暂无空位",
+    "slotsFree": "{total} 个中有 {free} 个空位",
+    "requestTitle": "我想要其中一个推荐位",
+    "requestMessage": "我对 {category} 的推荐位感兴趣。",
+    "types": {
+      "leader": {
+        "name": "类别领先者",
+        "badge": "赞助",
+        "description": "类别顶部的大卡片，含封面、专业和优惠。每个类别仅一家企业。"
+      },
+      "premium": {
+        "name": "高级",
+        "badge": "高级",
+        "description": "类别第一行，位于领先者下方，含图片和扩展描述。"
+      },
+      "featured": {
+        "name": "精选",
+        "badge": "精选",
+        "description": "显示在普通列表之前，含标志、描述和 WhatsApp 按钮。"
+      }
+    }
   }
 }

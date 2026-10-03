@@ -136,6 +136,17 @@ export function categoriesWithCompanies(
   return withCompanies;
 }
 
+/** "Saúde & Estética › Dentistas": nomes dos ancestrais até a categoria. */
+export function categoryBreadcrumb(tree: CategoryTree, category: Category): string {
+  const names: string[] = [];
+  let current: Category | undefined = category;
+  while (current) {
+    names.unshift(current.name);
+    current = current.parentId ? tree.byId.get(current.parentId) : undefined;
+  }
+  return names.join(" › ");
+}
+
 /** Caminho slug da categoria (`saude-e-estetica/dentistas`) para montar links. */
 export function categoryPath(tree: CategoryTree, category: Category): string {
   const slugs: string[] = [];
