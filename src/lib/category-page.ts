@@ -31,3 +31,9 @@ export function pillContext(trail: Category[]): { parent: Category; items: Categ
   const parent = trail[trail.length - 2];
   return { parent, items: parent.children, activeId: current.id };
 }
+
+/** URL aceita em campo de anúncio/conteúdo: caminho interno ("/...") ou http(s). Vazio é válido (campo opcional). */
+export function isAllowedUrl(url: string): boolean {
+  const value = url.trim();
+  return value === "" || safeHref(value, "").href === value;
+}

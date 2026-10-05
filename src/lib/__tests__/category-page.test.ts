@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { countActiveFilters, pillContext, safeHref } from "../category-page.ts";
+import { countActiveFilters, isAllowedUrl, pillContext, safeHref } from "../category-page.ts";
 import type { Category } from "../services/categories.ts";
 
 const cat = (id: string, level: 1 | 2 | 3, children: Category[] = []): Category => ({
@@ -40,5 +40,16 @@ describe("pillContext", () => {
     const spec = cat("spec", 3);
     const subWithChildren = cat("sub2", 2, [spec]);
     assert.deepEqual(pillContext([macro, subWithChildren]), { parent: subWithChildren, items: [spec], activeId: null });
+  });
+});
+
+describe("isAllowedUrl", () => {
+  it("aceita vazio, caminho interno e http(s)", () => {
+    for (const ok of ["", "  ", "/planos", "https://exemplo.com/x", "http://exemplo.com"]) assert.equal(isAllowedUrl(ok), true);
+  });
+  it("rejeita esquemas perigosos e protocolo relativo", () => {
+    for (const bad of ["javascript:alert(1)", "data:text/html,x", "//evil.com", "ftp://x.com", "exemplo.com"]) {
+      assert.equal(isAllowedUrl(bad), false);
+    }
   });
 });

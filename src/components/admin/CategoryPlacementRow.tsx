@@ -8,6 +8,7 @@ import {
   setPlacementPaymentAction,
   setPlacementStatusAction,
 } from "@/lib/actions/admin-category-placements";
+import { PlacementCreativeForm } from "@/components/admin/PlacementCreativeForm";
 import type { AdminPlacement } from "@/lib/services/category-placements-admin";
 import {
   PAYMENT_STATUS_LABEL,
@@ -138,6 +139,7 @@ export function CategoryPlacementRow({ placement, metrics }: { placement: AdminP
           Salvar ordem e peso
         </button>
       </div>
+      {!closed && <PlacementCreativeForm placementId={placement.id} creative={placement.creative} />}
       {error && <p className="text-[13px] text-red-700">{error}</p>}
     </article>
   );

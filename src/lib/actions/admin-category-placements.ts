@@ -13,6 +13,8 @@ import {
   type PlacementInput,
   type PlacementPatch,
 } from "@/lib/services/category-placements-admin";
+import { isAllowedUrl } from "@/lib/category-page";
+import type { PlacementCreative } from "@/lib/services/category-placements-admin";
 import { linkBusinessCategories } from "@/lib/services/business-categories";
 
 type ActionResult = { success: true; id?: string } | { success: false; error: string };
@@ -95,6 +97,29 @@ export async function renewPlacementAction(id: string, months: number): Promise<
     revalidatePath(PAGE);
     return { success: true };
   });
+}
+
+const CREATIVE_LIMITS: Record<keyof PlacementCreative, number> = {
+  headline: 80,
+  description: 220,
+  ctaLabel: 30,
+  targetUrl: 500,
+  imageUrl: 500,
+  imageMobileUrl: 500,
+};
+
+/** Criativo da campanha: textos curtos e URLs só internas ou http(s) (nada de javascript:). */
+export async function setPlacementCreativeAction(id: string, input: PlacementCreative): Promise<ActionResult> {
+  const creative = {} as PlacementCreative;
+  for (const key of Object.keys(CREATIVE_LIMITS) as (keyof PlacementCreative)[]) {
+    const value = (input[key] ?? "").trim();
+    if (value.length > CREATIVE_LIMITS[key]) return { success: false, error: "Texto ou endereço longo demais." };
+    if (key.toLowerCase().endsWith("url") && !isAllowedUrl(value)) {
+      return { success: false, error: "Use um endereço começando com https:// ou /." };
+    }
+    creative[key] = value || null;
+  }
+  return patchPlacement(id, { creative }, "set_category_placement_creative", SALES_ROLES);
 }
 
 /** Define as categorias de atuação da empresa (primária + extras); usado no painel da empresa 360°. */

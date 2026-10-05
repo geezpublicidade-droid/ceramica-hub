@@ -25,6 +25,16 @@ export type PlacementType = {
   monthlyPriceCents: number | null;
 };
 
+/** Criativo da campanha patrocinada; vazio = o slide usa capa, nome e descrição da empresa. */
+export type PlacementCreative = {
+  headline: string | null;
+  description: string | null;
+  ctaLabel: string | null;
+  targetUrl: string | null;
+  imageUrl: string | null;
+  imageMobileUrl: string | null;
+};
+
 export type AdminPlacement = {
   id: string;
   businessId: string;
@@ -45,6 +55,7 @@ export type AdminPlacement = {
   proposalId: string | null;
   marketingCampaignId: string | null;
   notes: string | null;
+  creative: PlacementCreative;
   liveState: PlacementLiveState;
 };
 
@@ -90,7 +101,7 @@ export async function listAdminPlacements(): Promise<AdminPlacement[]> {
     createServiceClient()
       .from("category_placements")
       .select(
-        "id, business_id, category_id, placement_type_id, position, rotation_weight, starts_at, ends_at, status, payment_status, amount_cents, offer_text, contract_ref, proposal_id, marketing_campaign_id, notes, businesses(name), placement_types(name)",
+        "id, business_id, category_id, placement_type_id, position, rotation_weight, starts_at, ends_at, status, payment_status, amount_cents, offer_text, contract_ref, proposal_id, marketing_campaign_id, notes, headline, description, cta_label, target_url, image_url, image_mobile_url, businesses(name), placement_types(name)",
       )
       .order("ends_at", { ascending: false }),
   ]);
@@ -119,6 +130,14 @@ export async function listAdminPlacements(): Promise<AdminPlacement[]> {
       proposalId: row.proposal_id,
       marketingCampaignId: row.marketing_campaign_id,
       notes: row.notes,
+      creative: {
+        headline: row.headline,
+        description: row.description,
+        ctaLabel: row.cta_label,
+        targetUrl: row.target_url,
+        imageUrl: row.image_url,
+        imageMobileUrl: row.image_mobile_url,
+      },
       liveState: computeLiveState(row, today),
     };
   });
@@ -223,6 +242,7 @@ export type PlacementPatch = Partial<{
   position: number;
   offerText: string | null;
   amountCents: number | null;
+  creative: PlacementCreative;
 }>;
 
 export async function updatePlacement(id: string, patch: PlacementPatch): Promise<void> {
@@ -235,6 +255,14 @@ export async function updatePlacement(id: string, patch: PlacementPatch): Promis
   if (patch.position !== undefined) update.position = patch.position;
   if (patch.offerText !== undefined) update.offer_text = patch.offerText;
   if (patch.amountCents !== undefined) update.amount_cents = patch.amountCents;
+  if (patch.creative !== undefined) {
+    update.headline = patch.creative.headline;
+    update.description = patch.creative.description;
+    update.cta_label = patch.creative.ctaLabel;
+    update.target_url = patch.creative.targetUrl;
+    update.image_url = patch.creative.imageUrl;
+    update.image_mobile_url = patch.creative.imageMobileUrl;
+  }
   const { error } = await createServiceClient().from("category_placements").update(update).eq("id", id);
   if (error) translateDbError(error);
 }

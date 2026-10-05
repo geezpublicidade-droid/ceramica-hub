@@ -61,6 +61,11 @@ export default async function CategoryPlacementsPage() {
             Produtos
           </Link>
           .
+          Foto, textos e painel comercial de cada vitrine:{" "}
+          <Link href="/admin/publicidade/categorias/conteudo" className="underline">
+            Conteúdo das categorias
+          </Link>
+          .
         </p>
       </div>
 
