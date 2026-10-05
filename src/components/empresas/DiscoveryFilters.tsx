@@ -29,6 +29,8 @@ type DiscoveryFiltersProps = {
   view: "grid" | "list";
   /** Em /categoria a categoria já vem da URL, então o filtro de categoria some. */
   hideCategory?: boolean;
+  /** A ordenação fica fora do formulário (barra da página); só mantém o valor atual ao aplicar filtros. */
+  hideSort?: boolean;
   labels: DiscoveryFilterLabels;
 };
 
@@ -84,6 +86,7 @@ export function DiscoveryFilters({
   floors,
   view,
   hideCategory,
+  hideSort,
   labels,
 }: DiscoveryFiltersProps) {
   const toOptions = (list: Category[]) => list.map((category) => ({ value: category.slug, label: category.name }));
@@ -123,6 +126,9 @@ export function DiscoveryFilters({
         <CheckField name="online" label={labels.online} checked={filters.online} />
       </div>
 
+      {hideSort ? (
+        filters.sort !== "relevance" && <input type="hidden" name="sort" value={filters.sort} />
+      ) : (
       <label className={labelClass}>
         {labels.sort}
         <select name="sort" defaultValue={filters.sort} className={selectClass}>
@@ -133,6 +139,7 @@ export function DiscoveryFilters({
           ))}
         </select>
       </label>
+      )}
 
       <div className="flex items-center gap-3 pt-1">
         <button type="submit" className="neu-primary min-h-11 flex-1 rounded-full px-6 text-[15px] font-medium text-white">

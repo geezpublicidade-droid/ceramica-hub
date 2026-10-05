@@ -493,7 +493,20 @@
     "pageOf": "Página {page} de {total}",
     "ctaTitle": "Quer destacar sua empresa nesta categoria?",
     "ctaButton": "Conhecer posições de destaque",
-    "moreSubcategories": "Ver mais {count}"
+    "moreSubcategories": "Ver mais {count}",
+    "breadcrumbLabel": "Você está em",
+    "highlightsTitle": "Destaques em {category}",
+    "highlightsDefault": "Marcas que fazem parte do dia a dia no Espaço Cerâmica.",
+    "sponsored": "Patrocinado",
+    "carouselPrev": "Destaque anterior",
+    "carouselNext": "Próximo destaque",
+    "carouselGoTo": "Ir para o destaque {n}",
+    "adEyebrow": "Anuncie nesta categoria",
+    "adText": "Conecte sua marca a quem vive, trabalha e circula pelo Cerâmica.",
+    "adCta": "Quero anunciar",
+    "filtersButton": "Filtros",
+    "closeFilters": "Fechar filtros",
+    "heroImageAlt": "Espaço Cerâmica, São Caetano do Sul"
   },
   "TowerPage": {
     "metaTitle": "Empresas da {tower} — Cerâmica Hub",

@@ -11,6 +11,15 @@ export type CategoryPlacement = {
   typeBadge: string;
   business: Business;
   offerText: string | null;
+  /** criativo próprio da campanha; nulo = o slide usa capa, nome e descrição da empresa */
+  creative: {
+    headline: string | null;
+    description: string | null;
+    ctaLabel: string | null;
+    targetUrl: string | null;
+    imageUrl: string | null;
+    imageMobileUrl: string | null;
+  };
 };
 
 type PlacementRow = {
@@ -20,6 +29,12 @@ type PlacementRow = {
   position: number;
   rotation_weight: number;
   offer_text: string | null;
+  headline: string | null;
+  description: string | null;
+  cta_label: string | null;
+  target_url: string | null;
+  image_url: string | null;
+  image_mobile_url: string | null;
   placement_types: { key: PlacementTypeKey; badge_label: string; max_slots: number; sort_order: number; active: boolean };
 };
 
@@ -45,7 +60,7 @@ export async function getVisiblePlacements(
   const { data, error } = await supabase
     .from("category_placements")
     .select(
-      "id, business_id, category_id, position, rotation_weight, offer_text, placement_types!inner(key, badge_label, max_slots, sort_order, active)",
+      "id, business_id, category_id, position, rotation_weight, offer_text, headline, description, cta_label, target_url, image_url, image_mobile_url, placement_types!inner(key, badge_label, max_slots, sort_order, active)",
     )
     .eq("category_id", category.id)
     .eq("status", "active")
@@ -72,6 +87,14 @@ export async function getVisiblePlacements(
       typeBadge: row.placement_types.badge_label,
       business: businessesById.get(row.business_id)!,
       offerText: row.offer_text,
+      creative: {
+        headline: row.headline,
+        description: row.description,
+        ctaLabel: row.cta_label,
+        targetUrl: row.target_url,
+        imageUrl: row.image_url,
+        imageMobileUrl: row.image_mobile_url,
+      },
     }));
   }
   return result;

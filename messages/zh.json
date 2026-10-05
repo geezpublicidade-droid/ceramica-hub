@@ -493,7 +493,20 @@
     "pageOf": "第 {page} 页，共 {total} 页",
     "ctaTitle": "想在此类别中突出您的企业吗？",
     "ctaButton": "了解推荐位置",
-    "moreSubcategories": "再显示 {count} 个"
+    "moreSubcategories": "再显示 {count} 个",
+    "breadcrumbLabel": "当前位置",
+    "highlightsTitle": "{category}精选",
+    "highlightsDefault": "融入 Espaço Cerâmica 日常生活的品牌。",
+    "sponsored": "赞助",
+    "carouselPrev": "上一个精选",
+    "carouselNext": "下一个精选",
+    "carouselGoTo": "前往精选 {n}",
+    "adEyebrow": "在此类别投放广告",
+    "adText": "让您的品牌触达在 Cerâmica 生活、工作和往来的人群。",
+    "adCta": "我要投放广告",
+    "filtersButton": "筛选",
+    "closeFilters": "关闭筛选",
+    "heroImageAlt": "Espaço Cerâmica，圣卡埃塔诺·杜·苏尔"
   },
   "TowerPage": {
     "metaTitle": "{tower} 企业 — Cerâmica Hub",

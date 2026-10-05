@@ -27,6 +27,21 @@ const CSP = [
 ].join("; ");
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    // "Cafeterias e padarias" foi dividida em duas subcategorias (migration 0072)
+    return [
+      {
+        source: "/categoria/alimentacao/cafeterias-e-padarias",
+        destination: "/categoria/alimentacao/cafeterias",
+        permanent: true,
+      },
+      {
+        source: "/:locale(en|es|zh)/categoria/alimentacao/cafeterias-e-padarias",
+        destination: "/:locale/categoria/alimentacao/cafeterias",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

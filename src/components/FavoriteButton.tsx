@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { getFavoriteStatus, toggleFavoriteAction } from "@/lib/actions/member-favorites";
 
@@ -9,13 +9,28 @@ import { getFavoriteStatus, toggleFavoriteAction } from "@/lib/actions/member-fa
 // favorito só chega depois, num fetch client-side, em vez de vir pronto no
 // HTML. Fica um instante em estado neutro (cinza) antes de saber se já é
 // favorito.
-export function FavoriteButton({ businessId }: { businessId: string }) {
+// `overlay` = versão compacta sobre a capa do card: só consulta o status quando entra na tela
+// (uma listagem tem vários cards; consultar todos de uma vez enfileira várias server actions).
+export function FavoriteButton({ businessId, overlay = false }: { businessId: string; overlay?: boolean }) {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [visible, setVisible] = useState(!overlay);
   const [favorited, setFavorited] = useState<boolean | null>(null);
   const [pending, startTransition] = useTransition();
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
+    const element = buttonRef.current;
+    if (visible || !element) return;
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) setVisible(true);
+    });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [visible]);
+
+  useEffect(() => {
+    if (!visible) return;
     let active = true;
     getFavoriteStatus(businessId).then((value) => {
       if (active) setFavorited(value);
@@ -23,7 +38,7 @@ export function FavoriteButton({ businessId }: { businessId: string }) {
     return () => {
       active = false;
     };
-  }, [businessId]);
+  }, [businessId, visible]);
 
   function handleClick() {
     if (favorited === null) return;
@@ -39,14 +54,15 @@ export function FavoriteButton({ businessId }: { businessId: string }) {
 
   return (
     <button
+      ref={buttonRef}
       type="button"
       onClick={handleClick}
       disabled={pending || favorited === null}
       aria-pressed={favorited === true}
       aria-label={favorited ? "Remover dos favoritos" : "Favoritar esta empresa"}
-      className={`neu flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full disabled:opacity-50 ${
-        favorited ? "text-red-500" : "text-foreground"
-      }`}
+      className={`flex shrink-0 items-center justify-center rounded-full disabled:opacity-50 ${
+        overlay ? "h-10 w-10 bg-white/90 backdrop-blur-sm" : "neu h-[52px] w-[52px]"
+      } ${favorited ? "text-red-500" : "text-foreground"}`}
     >
       <svg
         width="22"

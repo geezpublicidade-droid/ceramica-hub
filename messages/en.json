@@ -493,7 +493,20 @@
     "pageOf": "Page {page} of {total}",
     "ctaTitle": "Want to highlight your business in this category?",
     "ctaButton": "See featured positions",
-    "moreSubcategories": "Show {count} more"
+    "moreSubcategories": "Show {count} more",
+    "breadcrumbLabel": "You are here",
+    "highlightsTitle": "Highlights in {category}",
+    "highlightsDefault": "Brands that are part of daily life at Espaço Cerâmica.",
+    "sponsored": "Sponsored",
+    "carouselPrev": "Previous highlight",
+    "carouselNext": "Next highlight",
+    "carouselGoTo": "Go to highlight {n}",
+    "adEyebrow": "Advertise in this category",
+    "adText": "Connect your brand with the people who live, work and walk through Cerâmica.",
+    "adCta": "I want to advertise",
+    "filtersButton": "Filters",
+    "closeFilters": "Close filters",
+    "heroImageAlt": "Espaço Cerâmica, São Caetano do Sul"
   },
   "TowerPage": {
     "metaTitle": "{tower} businesses — Cerâmica Hub",

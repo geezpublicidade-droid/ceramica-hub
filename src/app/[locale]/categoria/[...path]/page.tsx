@@ -4,11 +4,13 @@ import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { Link } from "@/i18n/navigation";
-import { CompanyCard } from "@/components/business/CompanyCard";
-import {
-  PlacementCard,
-  type PlacementCardLabels,
-} from "@/components/business/PlacementCard";
+import { BusinessCard } from "@/components/categoria/BusinessCard";
+import { BusinessGrid } from "@/components/categoria/BusinessGrid";
+import { CategoryAdPanel } from "@/components/categoria/CategoryAdPanel";
+import { CategoryFilterBar, type FilterPill } from "@/components/categoria/CategoryFilterBar";
+import { CategoryHero } from "@/components/categoria/CategoryHero";
+import { EmptyCategoryState } from "@/components/categoria/EmptyCategoryState";
+import { SponsoredCarousel, type SponsoredSlide } from "@/components/categoria/SponsoredCarousel";
 import { CompanySearchBox } from "@/components/empresas/CompanySearchBox";
 import { ShareButtons } from "@/components/promo/ShareButtons";
 import {
@@ -22,6 +24,7 @@ import {
   parseDiscoveryParams,
   type RawSearchParams,
 } from "@/lib/discovery-params";
+import { countActiveFilters, pillContext, safeHref } from "@/lib/category-page";
 import { jsonLdString } from "@/lib/json-ld";
 import { localizedUrl, buildAlternates, buildSocialMetadata, siteUrl } from "@/lib/seo";
 import {
@@ -32,13 +35,10 @@ import {
   getCategoryTree,
   type Category,
 } from "@/lib/services/categories";
+import { getCategoryContent } from "@/lib/services/category-showcase";
 import { discoverCompanies } from "@/lib/services/company-discovery";
 import { getAllBusinesses } from "@/lib/services/platform";
-import {
-  getVisiblePlacements,
-  placedBusinessIds,
-  type CategoryPlacement,
-} from "@/lib/services/placements";
+import { getVisiblePlacements, type CategoryPlacement } from "@/lib/services/placements";
 
 type PageProps = {
   params: Promise<{ locale: string; path: string[] }>;
@@ -108,13 +108,22 @@ export default async function CategoryPage({
   const category = trail[trail.length - 1];
   const basePath = `/categoria/${path.join("/")}`;
   const filters = { ...parsed, cat: path[0], sub: path[1], spec: path[2] };
+  const isFiltering = Boolean(
+    filters.q ||
+    filters.towerId ||
+    filters.floor ||
+    filters.verified ||
+    filters.inPerson ||
+    filters.online,
+  );
 
-  const [t, tShare, tCommon, allBusinesses, links] = await Promise.all([
+  const [t, tShare, tCommon, allBusinesses, links, content] = await Promise.all([
     getTranslations("CategoryPage"),
     getTranslations("Share"),
     getTranslations("Common"),
     getAllBusinesses(locale),
     getBusinessCategoryLinks(),
+    getCategoryContent(trail),
   ]);
 
   const businessesById = new Map(
@@ -125,8 +134,14 @@ export default async function CategoryPage({
     businessesById,
     links,
   );
+  // Líder e Premium vivem no carrossel; Destaque abre a lista (só sem filtro, para não esconder quem bate com ele)
+  const carouselPlacements = [...placements.leader, ...placements.premium];
+  const featuredPlacements = isFiltering ? [] : placements.featured;
+  const excludeIds = new Set(
+    [...carouselPlacements, ...featuredPlacements].map((placement) => placement.business.id),
+  );
   const result = await discoverCompanies(
-    { ...filters, excludeIds: placedBusinessIds(placements) },
+    { ...filters, excludeIds },
     locale,
     { businesses: allBusinesses, tree },
   );
@@ -134,57 +149,40 @@ export default async function CategoryPage({
   const action = localizedPath(locale, basePath);
   const totalPages = Math.max(1, Math.ceil(result.total / result.pageSize));
   const page = Math.min(filters.page, totalPages);
-  const hasSponsored =
-    placements.leader.length +
-      placements.premium.length +
-      placements.featured.length >
-    0;
-  const isFiltering = Boolean(
-    filters.q ||
-    filters.towerId ||
-    filters.floor ||
-    filters.verified ||
-    filters.inPerson ||
-    filters.online,
-  );
+  const shownFeatured = page === 1 ? featuredPlacements : [];
+  const totalResults = result.total + featuredPlacements.length;
+  const advertiseHref = `/planos?categoria=${encodeURIComponent(path.join("/"))}#destaque-categoria`;
 
-  // só a empresa patrocinada existe e nada foi filtrado: não há o que listar nem filtrar
-  const showListing = isFiltering || result.items.length > 0 || !hasSponsored;
-
-  const sectionLabel = (placement: CategoryPlacement): PlacementCardLabels => ({
-    badge: t(`badge.${placement.typeKey}`),
-    verified: tCommon("verified"),
-    viewProfile: t("viewProfile"),
-    whatsapp: tCommon("whatsapp"),
-    offer: t("offer"),
-  });
-
-  /** Categoria mais específica da empresa e as folhas abaixo da categoria atual (especialidades) para o card. */
-  function placementContext(placement: CategoryPlacement) {
+  /** Categoria mais específica da empresa, para o card e os slides. */
+  function categoryLabelFor(placement: CategoryPlacement) {
     const linked = [...(links.get(placement.business.id) ?? [])]
       .map((id) => tree.byId.get(id))
       .filter((c): c is Category => Boolean(c));
-    const deepest = linked.sort((a, b) => b.level - a.level)[0];
-    const specialties = linked
-      .filter((c) => c.level > category.level)
-      .map((c) => c.name);
-    return { categoryLabel: deepest?.name ?? category.name, specialties };
+    return linked.sort((a, b) => b.level - a.level)[0]?.name ?? category.name;
   }
 
-  const renderPlacement = (placement: CategoryPlacement) => {
-    const { categoryLabel, specialties } = placementContext(placement);
-    return (
-      <PlacementCard
-        key={placement.id}
-        variant={placement.typeKey}
-        placementId={placement.id}
-        business={placement.business}
-        categoryLabel={categoryLabel}
-        specialties={specialties}
-        offerText={placement.offerText}
-        labels={sectionLabel(placement)}
-      />
-    );
+  const slides: SponsoredSlide[] = carouselPlacements.map((placement) => {
+    const { business, creative } = placement;
+    const destination = safeHref(creative.targetUrl, `/empresa/${business.slug}?pl=${placement.id}`);
+    return {
+      id: placement.id,
+      placementId: placement.id,
+      businessId: business.id,
+      title: creative.headline ?? business.name,
+      subtitle: [categoryLabelFor(placement), business.floor].filter(Boolean).join(" · "),
+      description: creative.description ?? business.description,
+      image: creative.imageUrl ?? (business.imageUsageAuthorized ? business.coverPhoto : undefined),
+      imageMobile: creative.imageMobileUrl ?? undefined,
+      href: destination.href,
+      external: destination.external,
+      ctaLabel: creative.ctaLabel ?? t("viewProfile"),
+    };
+  });
+
+  const cardLabels = {
+    verified: tCommon("verified"),
+    whatsapp: tCommon("whatsapp"),
+    viewProfile: t("viewProfile"),
   };
 
   const filterLabels: DiscoveryFilterLabels = {
@@ -216,6 +214,7 @@ export default async function CategoryPage({
       floors={result.floors}
       view={view}
       hideCategory
+      hideSort
       labels={filterLabels}
     />
   );
@@ -227,13 +226,12 @@ export default async function CategoryPage({
       href: "/empresas",
       url: localizedUrl(locale, "/empresas"),
     },
-    ...trail.map((node, index) => {
+    ...trail.map((node) => {
       const nodePath = categoryPath(tree, node);
       return {
         name: node.name,
         href: `/categoria/${nodePath}`,
         url: localizedUrl(locale, `/categoria/${nodePath}`),
-        last: index === trail.length - 1,
       };
     }),
   ];
@@ -252,15 +250,14 @@ export default async function CategoryPage({
   // Lista de empresas da página para buscadores: patrocinadas e orgânicas entram do mesmo jeito,
   // sem marcar anúncio no dado estruturado (a identificação "Patrocinado" é do visitante, no card).
   const listedBusinesses = [
-    ...[...placements.leader, ...placements.premium, ...placements.featured].map(
-      (placement) => placement.business,
-    ),
+    ...[...carouselPlacements, ...placements.featured].map((placement) => placement.business),
     ...result.items.map((item) => item.business),
   ];
+  const heroTitle = content.heroTitle ?? t("h1", { category: category.name });
   const collectionJsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: t("h1", { category: category.name }),
+    name: heroTitle,
     url: localizedUrl(locale, basePath),
     mainEntity: {
       "@type": "ItemList",
@@ -274,114 +271,54 @@ export default async function CategoryPage({
     },
   };
 
-  const listing = (
-    <>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-[clamp(1.3rem,2.6vw,1.7rem)] font-semibold tracking-tight">
-          {hasSponsored
-            ? t("allTitle", { category: category.name })
-            : t("companiesTitle", { category: category.name })}
-          <span className="ml-3 text-[15px] font-normal text-muted">
-            {t("resultsCount", { count: result.total })}
-          </span>
-        </h2>
-        <div className="flex items-center gap-1 rounded-full border border-border bg-white p-1 text-[14px]">
-          {(["grid", "list"] as const).map((target) => (
-            <Link
-              key={target}
-              href={`${basePath}${buildDiscoveryQuery(filters, view, { view: target === "list" ? "list" : undefined, cat: undefined, sub: undefined, spec: undefined })}`}
-              aria-current={view === target ? "true" : undefined}
-              className={`inline-flex min-h-9 items-center rounded-full px-4 ${view === target ? "bg-primary text-white" : "text-muted hover:text-primary"}`}
-            >
-              {t(target === "grid" ? "viewGrid" : "viewList")}
-            </Link>
-          ))}
-        </div>
-      </div>
+  const pillInfo = pillContext(trail);
+  const pills: FilterPill[] = pillInfo.items.map((child) => ({
+    id: child.id,
+    label: child.name,
+    href: `/categoria/${categoryPath(tree, child)}`,
+  }));
+  const queryFor = (overrides: Parameters<typeof buildDiscoveryQuery>[2]) =>
+    `${basePath}${buildDiscoveryQuery(filters, view, { cat: undefined, sub: undefined, spec: undefined, page: undefined, ...overrides })}`;
 
-      {result.items.length === 0 ? (
-        <div className="mt-6 rounded-3xl border border-border bg-white/60 px-6 py-14 text-center">
-          <h3 className="text-[clamp(1.2rem,2.4vw,1.5rem)] font-semibold tracking-tight">
-            {isFiltering ? t("noResultsTitle") : t("emptyTitle")}
-          </h3>
-          <p className="mt-3 text-[16px] text-muted">
-            {isFiltering ? t("noResultsDescription") : t("emptyDescription")}
-          </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            {isFiltering ? (
-              <Link
-                href={basePath}
-                className="neu inline-flex min-h-11 items-center rounded-full px-7 text-[16px] font-medium"
-              >
-                {t("clear")}
-              </Link>
-            ) : (
-              <Link
-                href="/cadastro"
-                className="neu-primary inline-flex min-h-11 items-center rounded-full px-7 text-[16px] font-medium text-white"
-              >
-                {t("ctaRegisterFree")}
-              </Link>
-            )}
-          </div>
-        </div>
-      ) : (
-        <div
-          className={`mt-6 grid gap-5 ${view === "list" ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 xl:grid-cols-3"}`}
-        >
-          {result.items.map(({ business, categoryLabel, rating }) => (
-            <CompanyCard
-              key={business.id}
-              business={business}
-              categoryLabel={categoryLabel}
-              layout={view}
-              labels={{
-                verified: tCommon("verified"),
-                whatsapp: tCommon("whatsapp"),
-                viewProfile: t("viewProfile"),
-                rating: rating
-                  ? t("rating", {
-                      average: rating.average.toFixed(1),
-                      count: rating.count,
-                    })
-                  : undefined,
-              }}
-            />
-          ))}
-        </div>
-      )}
+  const adPanel = content.adEnabled ? (
+    <CategoryAdPanel
+      eyebrow={content.adEyebrow ?? t("adEyebrow")}
+      text={content.adText ?? t("adText")}
+      ctaLabel={content.adCtaLabel ?? t("adCta")}
+      ctaHref={safeHref(content.adCtaUrl, advertiseHref).href}
+    />
+  ) : undefined;
 
-      {totalPages > 1 && (
-        <nav
-          className="mt-10 flex items-center justify-between gap-4"
-          aria-label={t("pagination")}
-        >
-          {page > 1 ? (
-            <Link
-              href={`${basePath}${buildDiscoveryQuery(filters, view, { page: page - 1 > 1 ? String(page - 1) : undefined, cat: undefined, sub: undefined, spec: undefined })}`}
-              className="neu inline-flex min-h-11 items-center rounded-full px-6 text-[15px] font-medium"
-            >
-              ← {t("prev")}
+  const emptyState = (
+    <EmptyCategoryState
+      title={isFiltering ? t("noResultsTitle") : t("emptyTitle")}
+      description={isFiltering ? t("noResultsDescription") : t("emptyDescription")}
+      actions={
+        isFiltering ? (
+          <Link href={basePath} className="neu inline-flex min-h-11 items-center rounded-full px-7 text-[16px] font-medium">
+            {t("clear")}
+          </Link>
+        ) : (
+          <>
+            <Link href="/cadastro" className="neu-primary inline-flex min-h-11 items-center rounded-full px-7 text-[16px] font-medium text-white">
+              {t("ctaRegisterFree")}
             </Link>
-          ) : (
-            <span />
-          )}
-          <span className="text-[14px] text-muted">
-            {t("pageOf", { page, total: totalPages })}
-          </span>
-          {page < totalPages ? (
-            <Link
-              href={`${basePath}${buildDiscoveryQuery(filters, view, { page: String(page + 1), cat: undefined, sub: undefined, spec: undefined })}`}
-              className="neu inline-flex min-h-11 items-center rounded-full px-6 text-[15px] font-medium"
-            >
-              {t("next")} →
+            <Link href={advertiseHref} className="neu inline-flex min-h-11 items-center rounded-full px-7 text-[16px] font-medium">
+              {t("ctaButton")}
             </Link>
-          ) : (
-            <span />
-          )}
-        </nav>
-      )}
-    </>
+          </>
+        )
+      }
+    />
+  );
+
+  const paginationLink = (target: number, label: string) => (
+    <Link
+      href={queryFor({ page: target > 1 ? String(target) : undefined })}
+      className="neu inline-flex min-h-11 items-center rounded-full px-6 text-[15px] font-medium"
+    >
+      {label}
+    </Link>
   );
 
   return (
@@ -396,155 +333,151 @@ export default async function CategoryPage({
       />
       <Header />
       <main className="flex-1">
-        <section className="px-6 pb-20 pt-32 sm:pt-36">
-          <div className="mx-auto max-w-6xl">
-            <nav aria-label="breadcrumb" className="text-[14px] text-muted">
-              <ol className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                {breadcrumb.slice(1).map((item, index, items) => (
-                  <li key={item.href} className="flex items-center gap-2">
-                    {index < items.length - 1 ? (
-                      <Link href={item.href} className="inline-block py-2 hover:text-primary">
-                        {item.name}
-                      </Link>
-                    ) : (
-                      <span aria-current="page" className="text-foreground">
-                        {item.name}
-                      </span>
-                    )}
-                    {index < items.length - 1 && (
-                      <span aria-hidden="true">→</span>
-                    )}
-                  </li>
-                ))}
-              </ol>
-            </nav>
+        <CategoryHero
+          breadcrumb={breadcrumb.slice(1).map(({ name, href }) => ({ name, href }))}
+          breadcrumbLabel={t("breadcrumbLabel")}
+          title={heroTitle}
+          description={content.heroDescription ?? category.description ?? t("subtitle")}
+          helper={content.heroHelper}
+          image={{
+            desktop: content.heroImageUrl ?? "/images/ceramica-hub-hero.webp",
+            mobile: content.heroImageMobileUrl,
+            alt: content.heroImageAlt ?? t("heroImageAlt"),
+          }}
+          search={
+            <CompanySearchBox
+              defaultValue={filters.q}
+              placeholder={t("searchPlaceholder", { category: category.name })}
+              buttonLabel={t("searchButton")}
+              hiddenParams={{}}
+              action={action}
+            />
+          }
+          adPanel={adPanel}
+        />
 
-            <h1 className="mt-4 text-[clamp(1.9rem,4vw,3rem)] font-semibold leading-tight tracking-tight">
-              {t("h1", { category: category.name })}
-            </h1>
-            <p className="mt-3 max-w-2xl text-[17px] text-muted">
-              {category.description ?? t("subtitle")}
-            </p>
-            <p className="mt-2 text-[14px] text-muted">
-              {t("companyCountLine", {
-                count: result.total + placedBusinessIds(placements).size,
-              })}
-            </p>
-
-            <div className="mt-5">
-              <ShareButtons
-                url={localizedUrl(locale, basePath)}
-                text={tShare("categoryText", { category: category.name })}
-                campaign={`categoria-${path.join("-")}`}
-                labels={{ title: tShare("title"), copy: tShare("copy"), copied: tShare("copied") }}
+        {slides.length > 0 && (
+          <section className="container-page pt-10 sm:pt-12">
+            <h2 className="text-[clamp(1.4rem,2.6vw,1.9rem)] font-semibold tracking-tight">
+              {t("highlightsTitle", { category: category.name })}
+            </h2>
+            <p className="mt-1 text-[15px] text-muted">{content.highlightsText ?? t("highlightsDefault")}</p>
+            <div className="mt-5 lg:px-5">
+              <SponsoredCarousel
+                slides={slides}
+                labels={{
+                  sponsored: t("sponsored"),
+                  region: t("highlightsTitle", { category: category.name }),
+                  previous: t("carouselPrev"),
+                  next: t("carouselNext"),
+                  goTo: t("carouselGoTo", { n: "{n}" }),
+                }}
               />
             </div>
+          </section>
+        )}
 
-            <div className="mt-8 max-w-3xl">
-              <CompanySearchBox
-                defaultValue={filters.q}
-                placeholder={t("searchPlaceholder", {
-                  category: category.name,
-                })}
-                buttonLabel={t("searchButton")}
-                hiddenParams={{}}
-                action={action}
-              />
-            </div>
+        <section className="container-page pb-20 pt-8 sm:pt-10">
+          <CategoryFilterBar
+            pills={pills}
+            allHref={`/categoria/${categoryPath(tree, pillInfo.parent)}`}
+            activePillId={pillInfo.activeId}
+            visiblePills={VISIBLE_SUBCATEGORY_TABS}
+            labels={{
+              subcategories: t("subcategories"),
+              all: t("tabAll"),
+              more: t("moreSubcategories", { count: Math.max(0, pills.length - VISIBLE_SUBCATEGORY_TABS) }),
+              filters: t("filtersButton"),
+              filtersTitle: t("filtersTitle"),
+              close: t("closeFilters"),
+              sort: t("sortLabel"),
+              resultsCount: t("resultsCount", { count: totalResults }),
+              viewGrid: t("viewGrid"),
+              viewList: t("viewList"),
+            }}
+            activeFilterCount={countActiveFilters(filters)}
+            filtersForm={filtersForm}
+            sort={{
+              value: filters.sort,
+              options: DISCOVERY_SORTS.map((sort) => ({
+                value: sort,
+                label: t(`sort.${sort}`),
+                href: queryFor({ sort: sort === "relevance" ? undefined : sort }),
+              })),
+            }}
+            view={view}
+            viewHrefs={{ grid: queryFor({ view: undefined }), list: queryFor({ view: "list" }) }}
+          />
 
-            {category.children.length > 0 && (
-              <nav
-                aria-label={t("subcategories")}
-                className="-mx-6 mt-8 flex gap-2 overflow-x-auto px-6 pb-2 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
-              >
-                {/* checkbox "peer": no desktop, as abas além da 10ª ficam atrás do "Ver mais"; no celular a faixa rola e mostra todas */}
-                <input type="checkbox" id="more-subcategories" className="peer sr-only" />
-                <span className="inline-flex min-h-10 shrink-0 items-center rounded-full bg-primary px-4 text-[14px] font-medium text-white">
-                  {t("tabAll")}
-                </span>
-                {category.children.map((child, index) => (
-                  <Link
-                    key={child.id}
-                    href={`/categoria/${categoryPath(tree, child)}`}
-                    className={`min-h-10 shrink-0 items-center rounded-full border border-border bg-white px-4 text-[14px] text-foreground hover:border-primary/40 hover:text-primary ${
-                      index < VISIBLE_SUBCATEGORY_TABS ? "inline-flex" : "inline-flex sm:hidden sm:peer-checked:inline-flex"
-                    }`}
-                  >
-                    {child.name}
-                  </Link>
+          <h2 className="sr-only">{t("companiesTitle", { category: category.name })}</h2>
+
+          <div className="mt-6">
+            {shownFeatured.length === 0 && result.items.length === 0 ? (
+              emptyState
+            ) : (
+              <BusinessGrid layout={view}>
+                {shownFeatured.map((placement) => (
+                  <BusinessCard
+                    key={placement.id}
+                    business={placement.business}
+                    categoryLabel={categoryLabelFor(placement)}
+                    layout={view}
+                    labels={cardLabels}
+                    placement={{ id: placement.id, badge: t("badge.featured") }}
+                  />
                 ))}
-                {category.children.length > VISIBLE_SUBCATEGORY_TABS && (
-                  <label
-                    htmlFor="more-subcategories"
-                    className="hidden min-h-10 shrink-0 cursor-pointer items-center rounded-full border border-dashed border-primary/50 px-4 text-[14px] font-medium text-primary hover:bg-primary/5 sm:inline-flex sm:peer-checked:hidden"
-                  >
-                    {t("moreSubcategories", { count: category.children.length - VISIBLE_SUBCATEGORY_TABS })}
-                  </label>
-                )}
-              </nav>
+                {result.items.map(({ business, categoryLabel, rating }) => (
+                  <BusinessCard
+                    key={business.id}
+                    business={business}
+                    categoryLabel={categoryLabel}
+                    layout={view}
+                    labels={{
+                      ...cardLabels,
+                      rating: rating
+                        ? t("rating", { average: rating.average.toFixed(1), count: rating.count })
+                        : undefined,
+                    }}
+                  />
+                ))}
+              </BusinessGrid>
             )}
-
-            {placements.leader.length > 0 && (
-              <div className="mt-10">
-                <h2 className="mb-4 text-[15px] font-medium uppercase tracking-[0.18em] text-primary">
-                  {t("sponsoredTitle")}
-                </h2>
-                {placements.leader.map(renderPlacement)}
-              </div>
-            )}
-
-            {placements.premium.length > 0 && (
-              <div className="mt-10">
-                <h2 className="mb-4 text-[15px] font-medium uppercase tracking-[0.18em] text-primary">
-                  {t("premiumTitle", { category: category.name })}
-                </h2>
-                <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-                  {placements.premium.map(renderPlacement)}
-                </div>
-              </div>
-            )}
-
-            {placements.featured.length > 0 && (
-              <div className="mt-10">
-                <h2 className="mb-4 text-[15px] font-medium uppercase tracking-[0.18em] text-primary">
-                  {t("featuredTitle", { category: category.name })}
-                </h2>
-                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                  {placements.featured.map(renderPlacement)}
-                </div>
-              </div>
-            )}
-
-            {showListing && (
-              <div className="mt-12 grid gap-10 lg:grid-cols-[260px_minmax(0,1fr)]">
-                <aside className="lg:sticky lg:top-28 lg:self-start">
-                  <details className="rounded-2xl border border-border bg-white p-4 lg:hidden">
-                    <summary className="flex min-h-11 cursor-pointer items-center text-[16px] font-medium">
-                      {t("filtersTitle")}
-                    </summary>
-                    <div className="mt-4">{filtersForm}</div>
-                  </details>
-                  <div className="hidden lg:block">
-                    <h2 className="mb-4 text-[15px] font-medium uppercase tracking-[0.18em] text-primary">
-                      {t("filtersTitle")}
-                    </h2>
-                    {filtersForm}
-                  </div>
-                </aside>
-                <div className="min-w-0">{listing}</div>
-              </div>
-            )}
-
-            <aside className="mt-16 flex flex-col items-start justify-between gap-4 rounded-3xl border border-border bg-white/60 px-6 py-6 sm:flex-row sm:items-center">
-              <p className="text-[17px] font-medium">{t("ctaTitle")}</p>
-              <Link
-                href={`/planos?categoria=${encodeURIComponent(path.join("/"))}#destaque-categoria`}
-                className="neu inline-flex min-h-11 w-full items-center justify-center rounded-full px-7 text-center text-[15px] font-medium text-foreground sm:w-auto"
-              >
-                {t("ctaButton")}
-              </Link>
-            </aside>
           </div>
+
+          {totalPages > 1 && (
+            <nav className="mt-10 flex items-center justify-between gap-4" aria-label={t("pagination")}>
+              {page > 1 ? paginationLink(page - 1, `← ${t("prev")}`) : <span />}
+              <span className="text-[14px] text-muted">{t("pageOf", { page, total: totalPages })}</span>
+              {page < totalPages ? paginationLink(page + 1, `${t("next")} →`) : <span />}
+            </nav>
+          )}
+
+          {content.seoText && (
+            <div className="mt-16 max-w-3xl space-y-4 text-[16px] leading-relaxed text-muted">
+              {content.seoText.split(/\n{2,}/).map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
+          )}
+
+          <div className="mt-10">
+            <ShareButtons
+              url={localizedUrl(locale, basePath)}
+              text={tShare("categoryText", { category: category.name })}
+              campaign={`categoria-${path.join("-")}`}
+              labels={{ title: tShare("title"), copy: tShare("copy"), copied: tShare("copied") }}
+            />
+          </div>
+
+          <aside className="mt-10 flex flex-col items-start justify-between gap-4 rounded-2xl border border-border bg-white/60 px-6 py-6 sm:flex-row sm:items-center">
+            <p className="text-[17px] font-medium">{t("ctaTitle")}</p>
+            <Link
+              href={advertiseHref}
+              className="neu inline-flex min-h-11 w-full items-center justify-center rounded-full px-7 text-center text-[15px] font-medium text-foreground sm:w-auto"
+            >
+              {t("ctaButton")}
+            </Link>
+          </aside>
         </section>
       </main>
       <CinematicFooter />
