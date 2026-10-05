@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
+import { AdHereBanner } from "@/components/ads/AdHereBanner";
 import { RealEstateListingsGrid } from "@/components/RealEstateListingsGrid";
 import { getActiveListings } from "@/lib/services/real-estate";
 import { buildAlternates, buildSocialMetadata } from "@/lib/seo";
@@ -51,6 +52,7 @@ export default async function ImobiliariasPage() {
             </Suspense>
           )}
         </div>
+        <AdHereBanner />
       </main>
       <CinematicFooter />
     </>

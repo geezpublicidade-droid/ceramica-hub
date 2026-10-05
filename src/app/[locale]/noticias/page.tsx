@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
+import { AdHereBanner } from "@/components/ads/AdHereBanner";
 import { getRecentNews } from "@/lib/services/news";
 import { buildAlternates, buildSocialMetadata } from "@/lib/seo";
 
@@ -70,6 +71,7 @@ export default async function NoticiasPage() {
             </div>
           )}
         </div>
+        <AdHereBanner />
       </main>
       <CinematicFooter />
     </>

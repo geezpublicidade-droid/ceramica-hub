@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
+import { AdHereBanner } from "@/components/ads/AdHereBanner";
 import { getPublishedPosts } from "@/lib/services/blog";
 import { buildAlternates, buildSocialMetadata } from "@/lib/seo";
 
@@ -70,6 +71,7 @@ export default async function BlogPage({ params }: { params: Promise<{ locale: s
             </div>
           )}
         </div>
+        <AdHereBanner />
       </main>
       <CinematicFooter />
     </>

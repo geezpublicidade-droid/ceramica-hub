@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
+import { AdHereBanner } from "@/components/ads/AdHereBanner";
 import { Link } from "@/i18n/navigation";
 import { BusinessCard } from "@/components/categoria/BusinessCard";
 import { BusinessGrid } from "@/components/categoria/BusinessGrid";
@@ -514,6 +515,7 @@ export default async function CategoryPage({
             </Link>
           </aside>
         </section>
+        <AdHereBanner href={advertiseHref} topic={category.name} />
       </main>
       <CinematicFooter />
     </>

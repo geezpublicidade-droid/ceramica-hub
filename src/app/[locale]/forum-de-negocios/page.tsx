@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
+import { AdHereBanner } from "@/components/ads/AdHereBanner";
 import { EventInterestLink } from "@/components/EventInterestLink";
 import { getUpcomingEvents } from "@/lib/services/events";
 import { buildAlternates, buildSocialMetadata, localizedUrl } from "@/lib/seo";
@@ -109,6 +110,7 @@ export default async function ForumDeNegociosPage({ params }: { params: Promise<
             </div>
           )}
         </div>
+        <AdHereBanner />
       </main>
       <CinematicFooter />
     </>

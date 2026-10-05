@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
+import { AdHereBanner } from "@/components/ads/AdHereBanner";
 import { getPublishedPostBySlug } from "@/lib/services/blog";
 import { buildAlternates, buildSocialMetadata, localizedUrl } from "@/lib/seo";
 import { jsonLdString } from "@/lib/json-ld";
@@ -85,6 +86,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </h1>
           <p className="mt-6 whitespace-pre-wrap text-[18px] leading-relaxed text-foreground/85">{post.content}</p>
         </div>
+        <AdHereBanner />
       </main>
       <CinematicFooter />
     </>

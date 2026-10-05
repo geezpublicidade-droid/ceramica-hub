@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
+import { AdHereBanner } from "@/components/ads/AdHereBanner";
 import { Link } from "@/i18n/navigation";
 import { CompanyCard } from "@/components/business/CompanyCard";
 import { CategoryIcon } from "@/components/empresas/CategoryIcon";
@@ -315,6 +316,7 @@ export default async function EmpresasPage({ params, searchParams }: PageProps) 
             </div>
           </div>
         </section>
+        <AdHereBanner />
       </main>
       <CinematicFooter />
     </>

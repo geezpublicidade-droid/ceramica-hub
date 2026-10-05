@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
+import { AdHereBanner } from "@/components/ads/AdHereBanner";
 import { Link } from "@/i18n/navigation";
 import { searchGlobal, SEARCH_TYPE_LABEL } from "@/lib/services/global-search";
 
@@ -75,6 +76,7 @@ export default async function SearchPage({ params, searchParams }: PageProps) {
             )}
           </div>
         </section>
+        <AdHereBanner />
       </main>
       <CinematicFooter />
     </>

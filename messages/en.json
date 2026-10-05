@@ -923,5 +923,12 @@
     "policy": "Privacy policy",
     "accept": "Accept",
     "decline": "Decline"
+  },
+  "AdHere": {
+    "eyebrow": "Advertising space",
+    "title": "Advertise here",
+    "text": "Put your brand in front of the people who live, work and pass through Cerâmica.",
+    "textTopic": "Put your brand in the spotlight in {topic}, in front of the people who live and work at Cerâmica.",
+    "cta": "I want to advertise"
   }
 }

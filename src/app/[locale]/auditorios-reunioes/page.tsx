@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
+import { AdHereBanner } from "@/components/ads/AdHereBanner";
 import { getActiveMeetingSpaces } from "@/lib/services/meeting-spaces";
 import { buildAlternates, buildSocialMetadata } from "@/lib/seo";
 
@@ -79,6 +80,7 @@ export default async function AuditoriosReunioesPage() {
             </div>
           )}
         </div>
+        <AdHereBanner />
       </main>
       <CinematicFooter />
     </>

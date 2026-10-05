@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
+import { AdHereBanner } from "@/components/ads/AdHereBanner";
 import { getActivePartners } from "@/lib/services/institutional-partners";
 import { buildAlternates, buildSocialMetadata } from "@/lib/seo";
 import { PARTNER_TIERS } from "@/lib/partner-tiers";
@@ -90,6 +91,7 @@ export default async function PartnersPage() {
             )}
           </div>
         </section>
+        <AdHereBanner />
       </main>
       <CinematicFooter />
     </>

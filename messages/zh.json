@@ -923,5 +923,12 @@
     "policy": "隐私政策",
     "accept": "接受",
     "decline": "拒绝"
+  },
+  "AdHere": {
+    "eyebrow": "广告位",
+    "title": "在此投放广告",
+    "text": "让您的品牌触达在 Cerâmica 生活、工作和往来的人群。",
+    "textTopic": "让您的品牌在{topic}中脱颖而出，触达在 Cerâmica 生活和工作的人群。",
+    "cta": "我要投放广告"
   }
 }

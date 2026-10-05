@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
+import { AdHereBanner } from "@/components/ads/AdHereBanner";
 import { getPublicImpactReport } from "@/lib/services/impact-report";
 import { buildAlternates, buildSocialMetadata } from "@/lib/seo";
 
@@ -65,6 +66,7 @@ export default async function ImpactoPage() {
 
           <p className="mt-12 max-w-2xl text-[14px] leading-relaxed text-muted">{t("disclaimer")}</p>
         </div>
+        <AdHereBanner />
       </main>
       <CinematicFooter />
     </>

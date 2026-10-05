@@ -923,5 +923,12 @@
     "policy": "Política de privacidade",
     "accept": "Aceitar",
     "decline": "Recusar"
+  },
+  "AdHere": {
+    "eyebrow": "Espaço publicitário",
+    "title": "Anuncie aqui",
+    "text": "Sua marca diante de quem vive, trabalha e circula pelo Cerâmica.",
+    "textTopic": "Sua marca em destaque em {topic}, diante de quem vive e trabalha no Cerâmica.",
+    "cta": "Quero anunciar"
   }
 }

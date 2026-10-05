@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
+import { AdHereBanner } from "@/components/ads/AdHereBanner";
 import { BusinessCardGrid } from "@/components/BusinessCardGrid";
 import { getAllBusinesses } from "@/lib/services/platform";
 import { getActiveTowers, getTowerBySlug } from "@/lib/services/towers";
@@ -89,6 +90,7 @@ export default async function TowerPage({ params }: PageProps) {
             />
           </div>
         </section>
+        <AdHereBanner />
       </main>
       <CinematicFooter />
     </>

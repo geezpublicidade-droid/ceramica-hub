@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
+import { AdHereBanner } from "@/components/ads/AdHereBanner";
 import { Link } from "@/i18n/navigation";
 import { getPublicAnchorBySlug, getPublicStores } from "@/lib/services/anchors";
 import { buildAlternates, buildSocialMetadata } from "@/lib/seo";
@@ -98,6 +99,7 @@ export default async function AnchorPartnerPublicPage({ params }: PageProps) {
             )}
           </div>
         </section>
+        <AdHereBanner />
       </main>
       <CinematicFooter />
     </>
