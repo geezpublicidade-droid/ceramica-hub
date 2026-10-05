@@ -1,38 +1,10 @@
 import { getTranslations } from "next-intl/server";
-import {
-  Scale,
-  HeartPulse,
-  UtensilsCrossed,
-  Shirt,
-  Megaphone,
-  GraduationCap,
-  PenTool,
-  BedDouble,
-  Building2,
-  LayoutGrid,
-  TrendingUp,
-  Gavel,
-  FlaskConical,
-  Ellipsis,
-} from "lucide-react";
+import { BedDouble, Building2, LayoutGrid } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { FadeUp } from "@/components/motion/FadeUp";
 import { categories } from "@/data/businesses";
+import { CATEGORY_ICONS } from "@/lib/category-icons";
 import { slugFromCategory } from "@/lib/category-slug";
-
-const CATEGORY_ICONS: Record<string, typeof Scale> = {
-  "Contabilidade & Jurídico": Scale,
-  "Saúde & Estética": HeartPulse,
-  Alimentação: UtensilsCrossed,
-  "Moda & Beleza": Shirt,
-  "Tecnologia & Marketing": Megaphone,
-  Educação: GraduationCap,
-  "Design & Arquitetura": PenTool,
-  Investimentos: TrendingUp,
-  Direito: Gavel,
-  Laboratório: FlaskConical,
-  Outros: Ellipsis,
-};
 
 const realCategories = categories.filter((category) => category !== "Todas");
 

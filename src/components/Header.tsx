@@ -5,10 +5,19 @@ import { useTranslations } from "next-intl";
 import NextLink from "next/link";
 import { Link } from "@/i18n/navigation";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { MegaMenuItem, type MegaMenuGroup } from "@/components/MegaMenu";
-import { AdSlot } from "@/components/ads/AdSlot";
 import { GlobalSearchOverlay } from "@/components/GlobalSearchOverlay";
+import {
+  Anchor, BadgeDollarSign, BedDouble, BookOpen, Building2, DoorOpen, KeyRound, LayoutGrid,
+  LineChart, Newspaper, Plane, Presentation, UserPlus, Users, type LucideIcon,
+} from "lucide-react";
+import { categories } from "@/data/businesses";
+import { CATEGORY_ICONS } from "@/lib/category-icons";
 import { slugFromCategory } from "@/lib/category-slug";
+
+type MenuLink = { href: string; label: string; Icon: LucideIcon };
+type MenuGroup = { key: string; label: string; links: MenuLink[] };
+
+const realCategories = categories.filter((name) => name !== "Todas");
 
 function cat(name: string) {
   return `/categoria/${slugFromCategory(name)}`;
@@ -19,58 +28,46 @@ export function Header() {
   const tCategories = useTranslations("categories");
   const tSearch = useTranslations("GlobalSearch");
 
-  const megaMenuGroups: MegaMenuGroup[] = [
+  const menuGroups: MenuGroup[] = [
     {
-      key: "corporate",
-      label: t("navCorporate"),
-      columns: [
-        { label: tCategories("Contabilidade & Jurídico"), href: cat("Contabilidade & Jurídico") },
-        { label: tCategories("Tecnologia & Marketing"), href: cat("Tecnologia & Marketing") },
-        { label: tCategories("Design & Arquitetura"), href: cat("Design & Arquitetura") },
-        { label: tCategories("Educação"), href: cat("Educação") },
-      ],
-      editorial: <AdSlot placementKey="mega_menu_corporate" />,
-    },
-    {
-      key: "lifestyle",
-      label: t("navLifestyle"),
-      columns: [
-        { label: tCategories("Alimentação"), href: cat("Alimentação") },
-        { label: tCategories("Saúde & Estética"), href: cat("Saúde & Estética") },
-        { label: tCategories("Moda & Beleza"), href: cat("Moda & Beleza") },
-      ],
+      key: "categorias",
+      label: t("navCategorias"),
+      links: realCategories.map((name) => ({
+        href: cat(name),
+        label: tCategories(name),
+        Icon: CATEGORY_ICONS[name] ?? LayoutGrid,
+      })),
     },
     {
       key: "hoteis",
       label: t("navHoteisEventos"),
-      columns: [
-        { label: t("catHospedagemCorporativa"), href: "/business-travel" },
-        { label: t("catAuditorios"), href: "/auditorios-reunioes" },
-        { label: t("catBusinessTravel"), href: "/business-travel" },
+      links: [
+        { href: "/business-travel", label: t("catHospedagemCorporativa"), Icon: BedDouble },
+        { href: "/auditorios-reunioes", label: t("catAuditorios"), Icon: Presentation },
+        { href: "/business-travel", label: t("catBusinessTravel"), Icon: Plane },
       ],
     },
     {
       key: "imobiliarias",
       label: t("navImobiliarias"),
-      columns: [
-        { label: t("catLocacaoComercial"), href: "/imobiliarias?tipo=locacao" },
-        { label: t("catVendaLajes"), href: "/imobiliarias?tipo=venda" },
-        { label: t("catSalasDisponiveis"), href: "/imobiliarias" },
+      links: [
+        { href: "/imobiliarias?tipo=locacao", label: t("catLocacaoComercial"), Icon: KeyRound },
+        { href: "/imobiliarias?tipo=venda", label: t("catVendaLajes"), Icon: Building2 },
+        { href: "/imobiliarias", label: t("catSalasDisponiveis"), Icon: DoorOpen },
       ],
     },
-  ];
-
-  const flatLinks = [
-    { href: "/forum-de-negocios", label: t("navForum") },
-    { href: "/parceiros", label: t("navAncoras") },
-  ];
-
-  const secondaryLinks = [
-    { href: "/planos", label: t("navPlanos") },
-    { href: "/blog", label: t("navBlog") },
-    { href: "/noticias", label: t("navNoticias") },
-    { href: "/forum-de-negocios", label: t("navForum") },
-    { href: "/impacto", label: t("navImpacto") },
+    {
+      key: "portal",
+      label: "Cerâmica Hub",
+      links: [
+        { href: "/parceiros", label: t("navAncoras"), Icon: Anchor },
+        { href: "/forum-de-negocios", label: t("navForum"), Icon: Users },
+        { href: "/planos", label: t("navPlanos"), Icon: BadgeDollarSign },
+        { href: "/blog", label: t("navBlog"), Icon: BookOpen },
+        { href: "/noticias", label: t("navNoticias"), Icon: Newspaper },
+        { href: "/impacto", label: t("navImpacto"), Icon: LineChart },
+      ],
+    },
   ];
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -103,22 +100,6 @@ export function Header() {
           <img src="/images/logo-ceramica-hub.png" alt="" className="h-6 w-6 min-[360px]:h-7 min-[360px]:w-7 sm:h-8 sm:w-8" />
           Cerâmica <span className="text-primary">Hub</span>
         </Link>
-
-        {/* Menu central -- só em telas largas (1440 px+); abaixo disso, tablet e notebook usam a gaveta lateral */}
-        <nav className="hidden items-center gap-6 min-[1440px]:flex min-[1440px]:gap-8">
-          {megaMenuGroups.map((group) => (
-            <MegaMenuItem key={group.key} group={group} />
-          ))}
-          {flatLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="whitespace-nowrap py-2 text-[15px] font-medium text-muted transition-colors hover:text-foreground min-[1440px]:text-[16px]"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
 
         <div className="flex items-center gap-1 min-[360px]:gap-2 sm:gap-3">
           <button
@@ -154,7 +135,7 @@ export function Header() {
             type="button"
             aria-label={menuOpen ? t("fecharMenu") : t("abrirMenu")}
             onClick={() => setMenuOpen((v) => !v)}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-white text-foreground shadow-[0_2px_10px_rgba(0,0,0,0.12)] min-[1440px]:hidden"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-white text-foreground shadow-[0_2px_10px_rgba(0,0,0,0.12)]"
           >
             {menuOpen ? (
               <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4">
@@ -206,45 +187,30 @@ export function Header() {
           </button>
         </div>
         <div className="flex flex-1 flex-col gap-1">
-          {megaMenuGroups.map((group) => (
+          {menuGroups.map((group) => (
             <div key={group.key} className="border-b border-border pb-2 last:border-0">
               <p className="px-3 pt-2 text-[13px] font-semibold uppercase tracking-wide text-muted">{group.label}</p>
-              {group.columns.map((link) => (
+              {group.links.map(({ href, label, Icon }) => (
                 <Link
-                  key={link.href + link.label}
-                  href={link.href}
+                  key={href + label}
+                  href={href}
                   onClick={() => setMenuOpen(false)}
-                  className="block rounded-xl px-3 py-2.5 text-foreground transition-colors hover:bg-black/5"
+                  className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-foreground transition-colors hover:bg-black/5"
                 >
-                  {link.label}
+                  <Icon aria-hidden="true" className="h-[18px] w-[18px] shrink-0 text-primary" strokeWidth={1.6} />
+                  {label}
                 </Link>
               ))}
             </div>
           ))}
-          {secondaryLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setMenuOpen(false)}
-              className="rounded-xl px-3 py-2.5 text-foreground transition-colors hover:bg-black/5"
-            >
-              {link.label}
-            </Link>
-          ))}
           <Link
             href="/cadastro"
             onClick={() => setMenuOpen(false)}
-            className="rounded-xl px-3 py-2.5 text-foreground transition-colors hover:bg-black/5"
+            className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-foreground transition-colors hover:bg-black/5"
           >
+            <UserPlus aria-hidden="true" className="h-[18px] w-[18px] shrink-0 text-primary" strokeWidth={1.6} />
             {t("cadastrarEmpresa")}
           </Link>
-          <NextLink
-            href="/entrar"
-            onClick={() => setMenuOpen(false)}
-            className="rounded-xl px-3 py-2.5 text-foreground transition-colors hover:bg-black/5"
-          >
-            {t("entrar")}
-          </NextLink>
         </div>
         <div className="mt-2 border-t border-border pt-3">
           <LanguageSwitcher />
