@@ -6,6 +6,7 @@ import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { Link } from "@/i18n/navigation";
 import { BusinessCard } from "@/components/categoria/BusinessCard";
 import { BusinessGrid } from "@/components/categoria/BusinessGrid";
+import { AdSlotCard } from "@/components/categoria/AdSlotCard";
 import { CategoryAdPanel } from "@/components/categoria/CategoryAdPanel";
 import { CategoryFilterBar, type FilterPill } from "@/components/categoria/CategoryFilterBar";
 import { CategoryHero } from "@/components/categoria/CategoryHero";
@@ -39,6 +40,10 @@ import { getCategoryContent } from "@/lib/services/category-showcase";
 import { discoverCompanies } from "@/lib/services/company-discovery";
 import { getAllBusinesses } from "@/lib/services/platform";
 import { getVisiblePlacements, type CategoryPlacement } from "@/lib/services/placements";
+
+const CAROUSEL_SLOTS = 4; // 1 Líder + 3 Premium
+const FEATURED_SLOTS = 6;
+const GRID_OPEN_SLOTS = 3;
 
 type PageProps = {
   params: Promise<{ locale: string; path: string[] }>;
@@ -178,6 +183,21 @@ export default async function CategoryPage({
     };
   });
 
+  // vagas livres: o carrossel sempre mostra as 4 cotas (Líder + 3 Premium) e a grade até 3 vagas Destaque
+  const openSlides: SponsoredSlide[] = Array.from({ length: Math.max(0, CAROUSEL_SLOTS - slides.length) }, (_, i) => ({
+    id: `open-${i}`,
+    placementId: "",
+    businessId: "",
+    title: t("adHere"),
+    subtitle: category.name,
+    description: t("adHereText", { category: category.name }),
+    href: advertiseHref,
+    external: false,
+    ctaLabel: t("adCta"),
+    open: true,
+  }));
+  const openGridSlots = isFiltering || page !== 1 ? 0 : Math.min(GRID_OPEN_SLOTS, Math.max(0, FEATURED_SLOTS - shownFeatured.length));
+
   const cardLabels = {
     verified: tCommon("verified"),
     whatsapp: tCommon("whatsapp"),
@@ -288,6 +308,19 @@ export default async function CategoryPage({
     />
   ) : undefined;
 
+  const openCards = Array.from({ length: openGridSlots }, (_, i) => (
+    <AdSlotCard
+      key={`open-${i}`}
+      index={i}
+      title={t("adHere")}
+      description={t("adHereText", { category: category.name })}
+      ctaLabel={t("adCta")}
+      badge={t("openSlot")}
+      href={advertiseHref}
+    />
+  ));
+  const openGrid = openGridSlots > 0 ? <BusinessGrid layout={view}>{openCards}</BusinessGrid> : null;
+
   const emptyState = (
     <EmptyCategoryState
       title={isFiltering ? t("noResultsTitle") : t("emptyTitle")}
@@ -355,17 +388,17 @@ export default async function CategoryPage({
           adPanel={adPanel}
         />
 
-        {slides.length > 0 && (
-          <section className="container-page pt-10 sm:pt-12">
+        <section className="container-page pt-10 sm:pt-12">
             <h2 className="text-[clamp(1.4rem,2.6vw,1.9rem)] font-semibold tracking-tight">
               {t("highlightsTitle", { category: category.name })}
             </h2>
             <p className="mt-1 text-[15px] text-muted">{content.highlightsText ?? t("highlightsDefault")}</p>
             <div className="mt-5 lg:px-5">
               <SponsoredCarousel
-                slides={slides}
+                slides={[...slides, ...openSlides]}
                 labels={{
                   sponsored: t("sponsored"),
+                  openSlot: t("openSlot"),
                   region: t("highlightsTitle", { category: category.name }),
                   previous: t("carouselPrev"),
                   next: t("carouselNext"),
@@ -374,7 +407,6 @@ export default async function CategoryPage({
               />
             </div>
           </section>
-        )}
 
         <section className="container-page pb-20 pt-8 sm:pt-10">
           <CategoryFilterBar
@@ -412,7 +444,10 @@ export default async function CategoryPage({
 
           <div className="mt-6">
             {shownFeatured.length === 0 && result.items.length === 0 ? (
-              emptyState
+              <>
+                {emptyState}
+                {openGrid}
+              </>
             ) : (
               <BusinessGrid layout={view}>
                 {shownFeatured.map((placement) => (
@@ -425,6 +460,7 @@ export default async function CategoryPage({
                     placement={{ id: placement.id, badge: t("badge.featured") }}
                   />
                 ))}
+                {openCards}
                 {result.items.map(({ business, categoryLabel, rating }) => (
                   <BusinessCard
                     key={business.id}

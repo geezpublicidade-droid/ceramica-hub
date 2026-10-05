@@ -5,6 +5,7 @@ import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { logPlacementClick, logPlacementImpression } from "@/lib/actions/log-search";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { openSlotBackground } from "./open-slot";
 
 export type SponsoredSlide = {
   id: string;
@@ -20,11 +21,15 @@ export type SponsoredSlide = {
   /** link externo (campanha com URL própria): abre em outra aba e leva rel="sponsored" */
   external: boolean;
   ctaLabel: string;
+  /** vaga livre ("Anuncie aqui"): sem selo de patrocinado, sem métricas */
+  open?: boolean;
 };
 
 export type SponsoredCarouselLabels = {
   /** selo de todo slide */
   sponsored: string;
+  /** selo das vagas livres */
+  openSlot: string;
   region: string;
   previous: string;
   next: string;
@@ -117,7 +122,7 @@ export function SponsoredCarousel({ slides, labels }: SponsoredCarouselProps) {
   // 1 impressão por campanha: quando ela é o slide ativo com o carrossel na tela
   useEffect(() => {
     const slide = slides[active];
-    if (!inView || !slide || loggedRef.current.has(slide.placementId)) return;
+    if (!inView || !slide || slide.open || loggedRef.current.has(slide.placementId)) return;
     loggedRef.current.add(slide.placementId);
     void logPlacementImpression(slide.placementId, slide.businessId).catch(() => undefined);
   }, [active, inView, slides]);
@@ -156,7 +161,7 @@ export function SponsoredCarousel({ slides, labels }: SponsoredCarouselProps) {
       >
         {slides.map((slide, index) => {
           const isActive = index === active;
-          const onClick = () => void logPlacementClick(slide.placementId, slide.businessId, "profile").catch(() => undefined);
+          const onClick = () => slide.open ? undefined : void logPlacementClick(slide.placementId, slide.businessId, "profile").catch(() => undefined);
           return (
             <div
               key={slide.id}
@@ -166,7 +171,7 @@ export function SponsoredCarousel({ slides, labels }: SponsoredCarouselProps) {
               style={{ "--grow": isActive ? 7 : 1 } as React.CSSProperties}
               className="relative h-[280px] shrink-0 basis-[86%] snap-center overflow-hidden rounded-2xl bg-graphite text-white sm:h-[300px] sm:basis-[62%] lg:h-[320px] lg:min-w-[150px] lg:basis-0 lg:[flex-grow:var(--grow)] motion-safe:lg:transition-[flex-grow] motion-safe:lg:duration-500"
             >
-              <div className="absolute inset-0" style={slide.image ? undefined : FALLBACK_BG}>
+              <div className="absolute inset-0" style={slide.open ? openSlotBackground(index) : slide.image ? undefined : FALLBACK_BG}>
                 {slide.image && (
                   <picture>
                     {slide.imageMobile && <source media="(max-width: 639px)" srcSet={slide.imageMobile} />}
@@ -183,7 +188,7 @@ export function SponsoredCarousel({ slides, labels }: SponsoredCarouselProps) {
               </div>
 
               <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1 text-[12px] font-medium text-primary">
-                {labels.sponsored}
+                {slide.open ? labels.openSlot : labels.sponsored}
               </span>
 
               {isActive ? (
