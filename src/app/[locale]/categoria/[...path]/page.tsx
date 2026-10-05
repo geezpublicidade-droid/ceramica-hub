@@ -46,7 +46,6 @@ type PageProps = {
 };
 
 /** Abas de subcategoria visíveis no desktop antes do "Ver mais" (Saúde & Estética tem 22). */
-const VISIBLE_SUBCATEGORY_TABS = 10;
 
 // Posições pagas rotacionam a cada carregamento e dependem de data/pagamento: sempre dinâmica.
 export const dynamic = "force-dynamic";
@@ -382,11 +381,11 @@ export default async function CategoryPage({
             pills={pills}
             allHref={`/categoria/${categoryPath(tree, pillInfo.parent)}`}
             activePillId={pillInfo.activeId}
-            visiblePills={VISIBLE_SUBCATEGORY_TABS}
             labels={{
               subcategories: t("subcategories"),
               all: t("tabAll"),
-              more: t("moreSubcategories", { count: Math.max(0, pills.length - VISIBLE_SUBCATEGORY_TABS) }),
+              subcategoriesPrev: t("subcategoriesPrev"),
+              subcategoriesNext: t("subcategoriesNext"),
               filters: t("filtersButton"),
               filtersTitle: t("filtersTitle"),
               close: t("closeFilters"),
