@@ -82,7 +82,7 @@ export default async function TowerPage({ params }: PageProps) {
               emptyDescription={tDirectory("emptyDescription")}
               ctaRegisterFree={tDirectory("ctaRegisterFree")}
               ctaBackLabel={t("backToAll")}
-              ctaBackHref="/preview#empresas"
+              ctaBackHref="/empresas"
               verifiedLabel={tCommon("verified")}
               founderLabel={tCommon("founder")}
               whatsappLabel={tCommon("whatsapp")}

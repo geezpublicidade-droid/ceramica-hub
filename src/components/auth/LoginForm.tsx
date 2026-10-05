@@ -41,7 +41,7 @@ export function LoginForm({
       />
       <div className="relative w-full max-w-sm">
         <div className="mb-4">
-          <BackLink href="/preview" label="Voltar ao site" />
+          <BackLink href="/" label="Voltar ao site" />
         </div>
         <div className="rounded-[28px] border border-white/10 bg-white p-8 shadow-[0_40px_80px_-30px_rgba(0,0,0,0.6)]">
         <Link href="/" className="flex items-center gap-2 text-[17px] font-semibold tracking-tight text-foreground">

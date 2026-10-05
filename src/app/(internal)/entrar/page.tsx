@@ -45,7 +45,7 @@ export default function EntrarPage() {
 
       <div className="relative w-full max-w-3xl">
         <div className="mb-6">
-          <BackLink href="/preview" label="Voltar ao site" />
+          <BackLink href="/" label="Voltar ao site" />
         </div>
 
         <div className="mb-8 text-center">

@@ -76,7 +76,7 @@ export default async function MemberPage() {
         {favorites.length === 0 ? (
           <p className="text-[15px] text-muted">
             Você ainda não favoritou nenhuma empresa. Explore o{" "}
-            <Link href="/preview#empresas" className="text-primary underline">
+            <Link href="/empresas" className="text-primary underline">
               diretório
             </Link>{" "}
             e clique no coração da empresa pra guardar aqui.
