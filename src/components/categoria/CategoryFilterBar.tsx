@@ -48,8 +48,9 @@ export function CategoryFilterBar({
   view,
   viewHrefs,
 }: CategoryFilterBarProps) {
+  // sem data-reveal nesta barra: o transform do efeito prenderia a gaveta de filtros (fixed) dentro dela
   return (
-    <div data-reveal className="border-b border-border pb-5">
+    <div className="border-b border-border pb-5">
       {pills.length > 0 && (
         <SubcategoryCarousel3D
           ariaLabel={labels.subcategories}

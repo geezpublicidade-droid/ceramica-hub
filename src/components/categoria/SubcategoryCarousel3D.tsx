@@ -157,6 +157,7 @@ export function SubcategoryCarousel3D({
   return (
     <nav
       aria-label={ariaLabel}
+      data-reveal
       className="relative"
       onMouseEnter={() => (hovering.current = true)}
       onMouseLeave={() => (hovering.current = false)}
