@@ -74,7 +74,7 @@ export function BusinessCard({ business, categoryLabel, labels, placement, layou
   return (
     <article
       ref={ref}
-      className={`group flex h-full overflow-hidden rounded-2xl border border-border bg-white transition-shadow hover:shadow-[0_12px_28px_-18px_rgba(0,0,0,0.25)] ${
+      className={`group lift flex h-full overflow-hidden rounded-2xl border border-border bg-white hover:shadow-[0_18px_36px_-18px_rgba(0,0,0,0.3)] ${
         isList ? "flex-col sm:flex-row" : "flex-col"
       } ${placement ? "border-primary/25" : ""}`}
     >

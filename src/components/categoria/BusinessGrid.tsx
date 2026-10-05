@@ -9,6 +9,7 @@ type BusinessGridProps = {
 export function BusinessGrid({ layout, children }: BusinessGridProps) {
   return (
     <div
+      data-reveal-group
       className={`grid items-stretch gap-5 ${layout === "list" ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2 xl:grid-cols-3"}`}
     >
       {children}

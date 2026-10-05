@@ -144,6 +144,7 @@ export function SponsoredCarousel({ slides, labels }: SponsoredCarouselProps) {
       ref={rootRef}
       aria-roledescription="carousel"
       aria-label={labels.region}
+      data-reveal
       className="relative"
       onPointerEnter={() => {
         hoveringRef.current = true;

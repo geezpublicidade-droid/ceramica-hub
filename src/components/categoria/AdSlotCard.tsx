@@ -16,7 +16,7 @@ export function AdSlotCard({ index, title, description, ctaLabel, badge, href }:
   return (
     <Link
       href={href}
-      className="group relative flex aspect-video min-h-[190px] flex-col justify-end overflow-hidden rounded-2xl p-5 text-white transition-transform hover:-translate-y-0.5"
+      className="group lift relative flex aspect-video min-h-[190px] flex-col justify-end overflow-hidden rounded-2xl p-5 text-white"
       style={openSlotBackground(index)}
     >
       <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-[12px] font-medium text-primary">

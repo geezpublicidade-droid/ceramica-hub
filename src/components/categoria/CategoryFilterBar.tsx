@@ -49,7 +49,7 @@ export function CategoryFilterBar({
   viewHrefs,
 }: CategoryFilterBarProps) {
   return (
-    <div className="border-b border-border pb-5">
+    <div data-reveal className="border-b border-border pb-5">
       {pills.length > 0 && (
         <SubcategoryCarousel3D
           ariaLabel={labels.subcategories}

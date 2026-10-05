@@ -94,7 +94,7 @@ export function Header() {
   }, [menuOpen]);
 
   return (
-    <header className="fixed top-0 z-50 flex h-16 w-full items-center border-b border-border bg-white sm:h-[76px]">
+    <header className="fixed top-0 z-50 flex h-16 w-full items-center border-b border-border/60 bg-white/75 backdrop-blur-xl backdrop-saturate-150 transition-colors duration-500 sm:h-[76px]">
       <div className="container-page flex items-center justify-between gap-4">
         <Link href="/#top" className="flex shrink-0 items-center gap-2 py-2 text-[15px] font-semibold tracking-tight text-foreground min-[360px]:text-[17px] sm:text-[20px]">
           <img src="/images/logo-ceramica-hub.png" alt="" className="h-6 w-6 min-[360px]:h-7 min-[360px]:w-7 sm:h-8 sm:w-8" />

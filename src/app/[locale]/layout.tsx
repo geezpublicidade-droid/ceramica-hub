@@ -13,6 +13,7 @@ import { ReferralCapture } from "@/components/referrals/ReferralCapture";
 import { ConsentManager } from "@/components/analytics/ConsentManager";
 import "../globals.css";
 import { jsonLdString } from "@/lib/json-ld";
+import { ScrollReveal } from "@/components/motion/ScrollReveal";
 
 // Tipografia oficial do Manual de Identidade Visual v1.0 -- Montserrat é a
 // principal (títulos/textos), Playfair Display fica disponível via
@@ -103,6 +104,7 @@ export default async function LocaleLayout({
       </head>
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>
+          <ScrollReveal />
           {children}
           <PortalPageViewTracker />
           <PwaRegister />

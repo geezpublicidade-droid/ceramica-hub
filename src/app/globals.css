@@ -479,3 +479,69 @@ body {
 /* Área de toque ampliada (≈ 40 px) para links e botões pequenos, sem alterar o visual nem empurrar vizinhos */
 .tap:not(.absolute):not(.fixed):not(.sticky) { position: relative; }
 .tap::after { content: ""; position: absolute; inset: -9px 0; }
+
+/* ---------- Fluidez: revelar ao rolar, hero em foco, header de vidro ----------
+   O JS só ativa .js-reveal depois de hidratar e nunca esconde o que já está na tela. */
+html {
+  scroll-behavior: smooth;
+}
+
+.js-reveal :is([data-reveal], [data-reveal-group] > *):not(.in) {
+  opacity: 0;
+  filter: blur(14px);
+  transform: translate3d(0, 28px, 0) scale(0.985);
+}
+
+.js-reveal :is([data-reveal], [data-reveal-group] > *) {
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+    filter 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms);
+}
+
+/* escalonamento dos cards de uma grade */
+[data-reveal-group] > :nth-child(3n + 2) {
+  --reveal-delay: 90ms;
+}
+
+[data-reveal-group] > :nth-child(3n) {
+  --reveal-delay: 180ms;
+}
+
+/* imagem do hero entra desfocada e "assenta" em foco */
+@keyframes focus-in {
+  from {
+    filter: blur(18px);
+    transform: scale(1.07);
+  }
+  to {
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+
+.hero-focus-in {
+  animation: focus-in 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* card que sobe suavemente ao passar o mouse */
+.lift {
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) {
+  .lift:hover {
+    transform: translate3d(0, -6px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-focus-in {
+    animation: none;
+  }
+  .lift:hover {
+    transform: none;
+  }
+}

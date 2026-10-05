@@ -32,7 +32,7 @@ export function CategoryHero({ breadcrumb, breadcrumbLabel, title, description, 
           <div className="absolute inset-0 -z-10 overflow-hidden">
             <picture>
               <source media="(max-width: 639px)" srcSet={mobileSrc} />
-              <img src={image.desktop} alt={image.alt} fetchPriority="high" decoding="async" className="h-full w-full object-cover" />
+              <img src={image.desktop} alt={image.alt} fetchPriority="high" decoding="async" className="hero-focus-in h-full w-full object-cover" />
             </picture>
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 to-black/25" />
           </div>
