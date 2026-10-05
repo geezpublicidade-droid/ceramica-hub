@@ -59,7 +59,7 @@ export function CategoryHero({ breadcrumb, breadcrumbLabel, title, description, 
           <h1 className="mt-3 max-w-2xl text-[clamp(2rem,4.6vw,3.6rem)] font-semibold leading-[1.08] tracking-tight">{title}</h1>
           <p className="mt-4 max-w-xl text-[clamp(1rem,1.5vw,1.15rem)] leading-relaxed text-white/85">{description}</p>
 
-          <div className="relative z-10 mt-6 max-w-2xl">{search}</div>
+          <div className="relative z-10 mt-6 max-w-2xl [&_.glass-card-light]:!bg-white [&_.glass-card-light]:!backdrop-blur-none">{search}</div>
           {helper && <p className="mt-3 max-w-xl text-[14px] text-white/75">{helper}</p>}
         </div>
 

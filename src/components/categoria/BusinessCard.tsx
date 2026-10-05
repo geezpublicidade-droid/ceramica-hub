@@ -104,17 +104,17 @@ export function BusinessCard({ business, categoryLabel, labels, placement, layou
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col px-5 pb-5">
-        <div className={`relative flex items-end gap-3 ${isList ? "sm:mt-5" : "-mt-8"}`}>
-          <Link href={profileHref} aria-label={business.name} className="shrink-0">
+        <div className={`relative flex items-start gap-3 ${isList ? "sm:mt-5" : ""}`}>
+          <Link href={profileHref} aria-label={business.name} className={`shrink-0 ${isList ? "" : "-mt-8"}`}>
             <BusinessAvatar
               business={business}
               className={`h-16 w-16 rounded-full border-4 border-white bg-white shadow-sm ${isList ? "sm:h-14 sm:w-14 sm:border-0 sm:shadow-none" : ""}`}
               textClassName="text-[18px] font-semibold text-foreground"
             />
           </Link>
-          <div className="min-w-0 flex-1 pb-0.5">
+          <div className="min-w-0 flex-1 pt-2">
             <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-              <h3 className="min-w-0 truncate text-[17px] font-semibold leading-snug tracking-tight">
+              <h3 className="min-w-0 line-clamp-2 text-[17px] font-semibold leading-snug tracking-tight">
                 <Link href={profileHref} className="hover:text-primary">
                   {business.name}
                 </Link>
@@ -129,7 +129,7 @@ export function BusinessCard({ business, categoryLabel, labels, placement, layou
           </div>
         </div>
 
-        <p className="mt-3 truncate text-[14px] text-muted">
+        <p className="mt-2 truncate text-[14px] text-muted">
           <span className="font-medium text-primary/90">{categoryLabel}</span>
           {business.floor && <> · {business.floor}</>}
         </p>
