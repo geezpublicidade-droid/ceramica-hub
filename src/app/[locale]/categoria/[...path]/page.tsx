@@ -480,6 +480,8 @@ export default async function CategoryPage({
             )}
           </div>
 
+          {result.items.length > 3 && <AdHereBanner inline href={advertiseHref} topic={category.name} tone={1} />}
+
           {totalPages > 1 && (
             <nav className="mt-10 flex items-center justify-between gap-4" aria-label={t("pagination")}>
               {page > 1 ? paginationLink(page - 1, `← ${t("prev")}`) : <span />}

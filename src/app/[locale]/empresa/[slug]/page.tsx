@@ -332,6 +332,8 @@ export default async function BusinessProfilePage({ params }: PageProps) {
           </section>
         )}
 
+        <AdHereBanner tone={1} />
+
         {(opportunities.length > 0 || benefits.length > 0) && (
           <section className="bg-surface px-6 py-16">
             <div className="mx-auto max-w-4xl space-y-10">

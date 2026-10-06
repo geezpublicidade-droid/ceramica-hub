@@ -287,6 +287,8 @@ export default async function EmpresasPage({ params, searchParams }: PageProps) 
                   </div>
                 )}
 
+                {result.items.length > 3 && <AdHereBanner inline tone={1} />}
+
                 {totalPages > 1 && (
                   <nav className="mt-10 flex items-center justify-between gap-4" aria-label={t("pagination")}>
                     {page > 1 ? (
