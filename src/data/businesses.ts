@@ -70,6 +70,12 @@ export type BusinessService = {
   photo: string | null;
   startingPrice: number | null;
   sortOrder: number;
+  /** ex.: "45 min" (landing page) */
+  duration?: string | null;
+  /** texto do botão na landing; vazio = "Tenho interesse" */
+  ctaLabel?: string | null;
+  /** false = oculto na landing sem apagar */
+  active?: boolean;
 };
 
 export const categories = [

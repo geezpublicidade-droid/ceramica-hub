@@ -103,3 +103,12 @@ export async function logPlacementProfileView(placementId: string, businessId: s
   if (!UUID_RE.test(placementId) || !UUID_RE.test(businessId)) return;
   await logPublicMetric("placement_profile_view", businessId, { placementId });
 }
+
+const LANDING_EVENTS = ["service_clicked", "offer_clicked", "gallery_viewed", "video_played"] as const;
+export type LandingEvent = (typeof LANDING_EVENTS)[number];
+
+/** Interações da landing da empresa (clique em serviço/oferta, abertura de galeria/vídeo). `itemId` é o serviço/oferta/mídia. */
+export async function logLandingEvent(businessId: string, event: LandingEvent, itemId?: string) {
+  if (!UUID_RE.test(businessId) || !LANDING_EVENTS.includes(event)) return;
+  await logPublicMetric(event, businessId, itemId && UUID_RE.test(itemId) ? { itemId } : undefined);
+}

@@ -19,7 +19,7 @@ const CSP = [
   "img-src 'self' https: data: blob:",
   "font-src 'self' data:",
   `connect-src 'self' https://challenges.cloudflare.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://www.facebook.com https://connect.facebook.net${supabaseUrl ? ` ${supabaseUrl}` : ""}`,
-  "frame-src https://challenges.cloudflare.com",
+  "frame-src https://challenges.cloudflare.com https://www.google.com",
   "frame-ancestors 'self'",
   "base-uri 'self'",
   "form-action 'self'",

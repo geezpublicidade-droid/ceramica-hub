@@ -17,6 +17,8 @@
   --border: rgba(0, 0, 0, 0.08);
   --border-dark: rgba(255, 255, 255, 0.12);
   --primary: #b3553a;
+  --whatsapp: #1f6f4a;
+  --whatsapp-hover: #185a3c;
   --primary-light: #c6806b;
   --connection: #ddb3a6;
   --glow: rgba(198, 128, 107, 0.35);
@@ -61,6 +63,8 @@
   --color-border: var(--border);
   --color-border-dark: var(--border-dark);
   --color-primary: var(--primary);
+  --color-whatsapp: var(--whatsapp);
+  --color-whatsapp-hover: var(--whatsapp-hover);
   --color-primary-light: var(--primary-light);
   --color-connection: var(--connection);
   --color-accent: var(--accent);

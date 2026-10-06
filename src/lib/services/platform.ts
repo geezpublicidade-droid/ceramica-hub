@@ -455,21 +455,31 @@ export async function getBusinessServices(businessId: string, locale?: string): 
       photo: row.photo_url,
       startingPrice: row.starting_price,
       sortOrder: row.sort_order,
+      duration: row.duration ?? null,
+      ctaLabel: row.cta_label ?? null,
+      active: row.active ?? true,
     };
   });
 }
 
-export type OwnedPhoto = { id: string; url: string; sortOrder: number };
+export type OwnedPhoto = { id: string; url: string; sortOrder: number; kind: "photo" | "video"; caption: string | null; alt: string | null };
 
 export async function getBusinessPhotos(businessId: string): Promise<OwnedPhoto[]> {
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("business_photos")
-    .select("id, url, sort_order")
+    .select("id, url, sort_order, kind, caption, alt")
     .eq("business_id", businessId)
     .order("sort_order", { ascending: true });
   if (error) throw error;
-  return (data ?? []).map((row) => ({ id: row.id, url: row.url, sortOrder: row.sort_order }));
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    url: row.url,
+    sortOrder: row.sort_order,
+    kind: row.kind === "video" ? "video" : "photo",
+    caption: row.caption ?? null,
+    alt: row.alt ?? null,
+  }));
 }
 
 export type VirtualTourScene =
@@ -671,7 +681,10 @@ export type MetricEventType =
   | "search_no_results"
   | "placement_impression"
   | "placement_click"
-  | "placement_profile_view";
+  | "placement_profile_view"
+  | "service_clicked"
+  | "offer_clicked"
+  | "lead_submitted";
 
 /** Log de evento append-only. Nunca inventar número no painel: sem linha aqui, mostra 0/vazio. */
 export async function logMetricEvent(
