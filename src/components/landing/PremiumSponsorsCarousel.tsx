@@ -6,7 +6,7 @@ type PremiumSponsorsCarouselProps = {
   partners: InstitutionalPartner[];
 };
 
-const mark = (text: string) => <span className="text-[18px] font-medium tracking-tight text-white sm:text-xl">{text}</span>;
+const mark = (text: string) => <span className="text-2xl font-semibold leading-tight tracking-tight text-white sm:text-3xl">{text}</span>;
 
 /** "Patrocinadores Premium" -- seção própria logo abaixo do hero. Com
  * patrocinador real cadastrado (institutional_partners, status "ativo"),
@@ -14,10 +14,9 @@ const mark = (text: string) => <span className="text-[18px] font-medium tracking
  * que reusam texto real já existente no site (plano Patrocinador em
  * Pricing.tsx, AdvertisersCTA) -- nunca inventa marca ou depoimento fictício. */
 export async function PremiumSponsorsCarousel({ partners }: PremiumSponsorsCarouselProps) {
-  const [t, tPricing, tAds] = await Promise.all([
+  const [t, tPricing] = await Promise.all([
     getTranslations("PremiumSponsors"),
     getTranslations("Pricing"),
-    getTranslations("AdvertisersCTA"),
   ]);
 
   const slides: SqueezeSlide[] =
@@ -39,7 +38,7 @@ export async function PremiumSponsorsCarousel({ partners }: PremiumSponsorsCarou
             title: tPricing("plans.patrocinador.name"),
             description: tPricing("plans.patrocinador.description"),
             image: "/images/ceramica-hub-hero.webp",
-            overlay: mark(tPricing("plans.patrocinador.name")),
+            overlay: mark(t("becomeSponsor")),
             action: t("ctaAction"),
             href: "/seja-um-parceiro?tipo=patrocinador",
           },
@@ -48,7 +47,7 @@ export async function PremiumSponsorsCarousel({ partners }: PremiumSponsorsCarou
             title: t("slide2Title"),
             description: t("slide2Description"),
             image: "/images/ceramica-hub-corporativo.webp",
-            overlay: mark(tAds("eyebrow")),
+            overlay: mark(t("becomeSponsor")),
             action: t("ctaAction"),
             href: "/seja-um-parceiro?tipo=patrocinador",
           },
@@ -57,7 +56,7 @@ export async function PremiumSponsorsCarousel({ partners }: PremiumSponsorsCarou
             title: t("slide3Title"),
             description: t("slide3Description"),
             image: "/images/ceramica-hub-eventos.webp",
-            overlay: mark(tAds("eyebrow")),
+            overlay: mark(t("becomeSponsor")),
             action: t("ctaAction"),
             href: "/seja-um-parceiro?tipo=patrocinador",
           },
