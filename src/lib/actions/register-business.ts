@@ -7,6 +7,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { slugify } from "@/lib/slug";
 import { translateAndStore } from "@/lib/services/translate";
 import { verifyTurnstileToken } from "@/lib/services/turnstile";
+import { RATE_LIMITS, withinRateLimit } from "@/lib/services/rate-limit";
 import { recordReferral } from "@/lib/services/referrals";
 import { REFERRAL_COOKIE } from "@/lib/services/referral-code";
 
@@ -109,6 +110,10 @@ export async function registerBusiness(rawInput: RegisterBusinessInput): Promise
     return { success: false, error: parsed.error.issues[0]?.message ?? "Dados inválidos." };
   }
   const input = parsed.data;
+
+  if (!(await withinRateLimit(RATE_LIMITS.register))) {
+    return { success: false, error: "Muitas tentativas de cadastro. Aguarde alguns minutos e tente de novo." };
+  }
 
   const turnstileOk = await verifyTurnstileToken(input.turnstileToken);
   if (!turnstileOk) {

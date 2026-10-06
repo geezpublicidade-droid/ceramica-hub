@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { routing } from "@/i18n/routing";
 import { getPopularSearches, smartSearch } from "@/lib/services/smart-search";
+import { RATE_LIMITS, withinRateLimit } from "@/lib/services/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +13,10 @@ function resolveLocale(raw: string | null): string {
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const locale = resolveLocale(url.searchParams.get("locale"));
+
+  if (!(await withinRateLimit(RATE_LIMITS.smartSearch))) {
+    return NextResponse.json({ error: "Muitas buscas. Tente de novo em instantes." }, { status: 429, headers: { "Retry-After": "60" } });
+  }
 
   try {
     if (url.searchParams.get("popular") === "1") {

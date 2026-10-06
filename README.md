@@ -49,7 +49,8 @@ essas chegam sozinhas em toda branch/preview/produção:
 
 | Variável | Efeito sem configurar |
 |---|---|
-| `MERCADOPAGO_ACCESS_TOKEN` | Cobrança fica 100% manual (admin confirma pagamento em `/admin/financeiro`) — decisão consciente, pagamento automático fica pra depois do lançamento. |
+| `MERCADOPAGO_ACCESS_TOKEN` | Sem ele não há link de pagamento e o webhook responde 503; a cobrança fica 100% manual (admin confirma em `/admin/financeiro`). |
+| `MERCADOPAGO_WEBHOOK_SECRET` | Segredo de assinatura do webhook (painel Mercado Pago → Webhooks). Sem ele `/api/webhooks/mercadopago` responde 503 e o plano só ativa por confirmação manual. URL a cadastrar: `https://ceramicahub.com.br/api/webhooks/mercadopago`, evento **Pagamentos**. |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` / `TURNSTILE_SECRET_KEY` | Formulário de cadastro fica sem proteção anti-spam/bot. |
 | `NEXT_PUBLIC_SENTRY_DSN` / `SENTRY_DSN` / `SENTRY_AUTH_TOKEN` / `SENTRY_ORG` / `SENTRY_PROJECT` | Erros de produção não são reportados automaticamente. |
 | `NEXT_PUBLIC_SUPPORT_WHATSAPP_PHONE` | Sem essa variável, o botão flutuante de "Fale com o suporte" (WhatsApp, visível em todo o site) fica escondido — o canal de suporte por chamado (`/dashboard/suporte`, `/membro/suporte`, `/admin/suporte`) funciona normalmente sem ela. Formato: só dígitos com DDI+DDD, ex: `5511999998888`. |

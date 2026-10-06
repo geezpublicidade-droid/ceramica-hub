@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { createServiceClient } from "@/lib/supabase/server";
 import { verifyTurnstileToken } from "@/lib/services/turnstile";
+import { RATE_LIMITS, withinRateLimit } from "@/lib/services/rate-limit";
 import { triggerNewLeadNotification } from "@/lib/services/automations/triggers";
 
 const submitPartnerLeadSchema = z.object({
@@ -27,6 +28,10 @@ export async function submitPartnerLead(rawInput: SubmitPartnerLeadInput): Promi
     return { success: false, error: parsed.error.issues[0]?.message ?? "Dados inválidos." };
   }
   const input = parsed.data;
+
+  if (!(await withinRateLimit(RATE_LIMITS.partnerLead))) {
+    return { success: false, error: "Muitas tentativas. Aguarde alguns minutos e tente de novo." };
+  }
 
   const turnstileOk = await verifyTurnstileToken(input.turnstileToken);
   if (!turnstileOk) {
