@@ -391,6 +391,9 @@ export default async function Company360Page({ params }: { params: Promise<{ id:
         <Link href={`/admin/propostas/nova?businessId=${data.profile.id}`} className="tap mt-2 inline-block text-[14px] font-medium text-primary hover:underline">
           Criar proposta →
         </Link>
+        <Link href={`/admin/empresas/${data.profile.id}/landing`} className="tap mt-2 ml-4 inline-block text-[14px] font-medium text-primary hover:underline">
+          Editar landing page →
+        </Link>
       </div>
 
       <CompanyTabs

@@ -7,9 +7,7 @@ import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { AdHereBanner } from "@/components/ads/AdHereBanner";
 import { BusinessAvatar } from "@/components/BusinessAvatar";
 import { LandingPageEmpresa } from "@/components/landing-empresa/LandingPageEmpresa";
-import type { LandingContext } from "@/components/landing-empresa/context";
 import { Link, redirect } from "@/i18n/navigation";
-import { defaultWhatsappMessage, whatsappDigits, whatsappUrl } from "@/lib/landing/whatsapp";
 import { localizedUrl, buildAlternates, buildSocialMetadata, siteUrl } from "@/lib/seo";
 import { jsonLdString } from "@/lib/json-ld";
 import {
@@ -19,13 +17,12 @@ import {
   getRelatedBusinesses,
   getOpportunities,
   getBenefits,
-  getVirtualTourScenes,
   UUID_RE,
 } from "@/lib/services/platform";
-import { getLandingConfig, getLandingData } from "@/lib/services/landing";
+import { getLandingConfig } from "@/lib/services/landing";
+import { buildLandingContext } from "@/lib/services/landing-context";
 import { ProfileVisitTracker } from "@/components/business/ProfileVisitTracker";
 import { ShareButtons } from "@/components/promo/ShareButtons";
-import { getActiveTowers } from "@/lib/services/towers";
 
 type PageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -98,39 +95,19 @@ export default async function BusinessProfilePage({ params }: PageProps) {
     getTranslations("benefitKindLabels"),
   ]);
 
-  const [related, allOpportunities, allBenefits, virtualTourScenes, landingData, towers] = await Promise.all([
-    getRelatedBusinesses(business, 3, locale),
-    getOpportunities(locale),
-    getBenefits(locale),
-    getVirtualTourScenes(business.id, locale),
-    getLandingData(business, { locale }),
-    getActiveTowers(),
-  ]);
-
-  const tower = towers.find((item) => business.floor.startsWith(item.name));
-  const towerQuery = tower ? `${tower.name}, ${tower.address}` : null;
-  const phoneDigits = business.phone.replace(/[^\d+]/g, "");
-  const whatsappPhone = whatsappDigits(landingData.config.whatsappPhone ?? business.phone);
-
-  const opportunities = allOpportunities.filter((o) => o.businessId === business.id);
-  const benefits = allBenefits.filter((b) => b.businessId === business.id);
-
   const canonicalUrl = localizedUrl(locale, `/empresa/${business.slug}`);
   const categoryLabel = tCategories(business.category);
 
-  const ctx: LandingContext = {
-    business,
-    data: landingData,
-    whatsappHref: whatsappUrl(whatsappPhone, landingData.config.whatsappMessage ?? defaultWhatsappMessage(business.name)),
-    whatsappPhone,
-    phoneDigits,
-    directionsUrl: towerQuery ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(towerQuery)}` : null,
-    mapEmbedUrl: towerQuery ? `https://www.google.com/maps?q=${encodeURIComponent(towerQuery)}&output=embed` : null,
-    address: tower?.address ?? null,
-    categoryLabel,
-    tourScenes: virtualTourScenes,
-    canonicalUrl,
-  };
+  const [related, allOpportunities, allBenefits, ctx] = await Promise.all([
+    getRelatedBusinesses(business, 3, locale),
+    getOpportunities(locale),
+    getBenefits(locale),
+    buildLandingContext(business, canonicalUrl, categoryLabel, { locale }),
+  ]);
+  const landingData = ctx.data;
+
+  const opportunities = allOpportunities.filter((o) => o.businessId === business.id);
+  const benefits = allBenefits.filter((b) => b.businessId === business.id);
 
   const businessJsonLd = {
     "@context": "https://schema.org",

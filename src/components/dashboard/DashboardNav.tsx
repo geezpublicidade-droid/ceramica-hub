@@ -20,6 +20,8 @@ const NAV_ITEMS = [
   { label: "Meu perfil", href: editarHref("perfil"), Icon: IconProfile },
   { label: "Fotos e conteúdo", href: editarHref("fotos"), Icon: IconPhotos },
   { label: "Serviços", href: editarHref("servicos"), Icon: IconServices },
+  { label: "Landing page", href: "/dashboard/landing", Icon: IconProfile },
+  { label: "Leads", href: "/dashboard/leads", Icon: IconResults },
   { label: "Promoções", href: editarHref("promocoes"), Icon: IconPromotions },
   { label: "Resultados", href: "/dashboard/resultados", Icon: IconResults },
   { label: "Divulgação", href: "/dashboard/divulgacao", Icon: IconPromotions },

@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { logMetricEvent } from "@/lib/services/platform";
 import { RATE_LIMITS, withinRateLimit } from "@/lib/services/rate-limit";
+import { deviceFromUserAgent } from "@/lib/landing/origin";
 
 /** Ações públicas de métrica: acima do limite por IP o evento é descartado em silêncio (não vira erro na tela). */
 async function logPublicMetric(...args: Parameters<typeof logMetricEvent>): Promise<void> {
@@ -93,10 +94,18 @@ export async function logPlacementClick(placementId: string, businessId: string,
 }
 
 /** Visita ao perfil comercial da empresa (chamada pelo navegador, uma vez por sessão). */
-export async function logCommercialPageView(businessId: string, source?: string) {
+export async function logCommercialPageView(businessId: string, source?: string, extra?: { campaign?: string; fromCategory?: string }) {
   if (!UUID_RE.test(businessId)) return;
   const cleanSource = source?.trim().toLowerCase().slice(0, 40);
-  await logPublicMetric("commercial_page_viewed", businessId, cleanSource ? { source: cleanSource } : undefined);
+  const campaign = extra?.campaign?.trim().toLowerCase().slice(0, 60);
+  const fromCategory = extra?.fromCategory?.trim().toLowerCase().slice(0, 60);
+  const device = deviceFromUserAgent((await headers()).get("user-agent"));
+  await logPublicMetric("commercial_page_viewed", businessId, {
+    device,
+    ...(cleanSource ? { source: cleanSource } : {}),
+    ...(campaign ? { campaign } : {}),
+    ...(fromCategory ? { fromCategory } : {}),
+  });
 }
 
 export async function logPlacementProfileView(placementId: string, businessId: string) {

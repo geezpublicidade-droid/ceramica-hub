@@ -1,4 +1,5 @@
 import type { Business } from "@/data/businesses";
+import { PLAN_LIMITS } from "../plan-limits.ts";
 
 /** Seções reordenáveis/desativáveis (hero, barra de confiança e CTA flutuante são fixos). */
 export const SECTION_KEYS = ["about", "services", "offer", "gallery", "reviews", "location", "faq", "cta"] as const;
@@ -26,20 +27,23 @@ export type LandingCapabilities = {
 };
 
 /**
- * O que a landing mostra por plano. Gratuito e Profissional seguem a spec (Gratuito: básico + até 3 serviços;
- * Profissional: capa, mais serviços, galeria, FAQ e métricas básicas). Os planos acima são extrapolação
- * (oferta/formulário no Destaque, vídeo na Experiência, tour 3D só no Premium) — ajustar só aqui.
+ * O que a landing mostra por plano. Quantidades (serviços, fotos) vêm de PLAN_LIMITS — a mesma fonte do editor e dos
+ * textos de marketing, então a página nunca mostra mais do que o editor deixa cadastrar. Os recursos por plano seguem
+ * a spec (Profissional: capa, galeria, FAQ, métricas básicas) e, acima dele, uma suposição: oferta e formulário no
+ * Destaque, vídeo na Experiência, tour 3D só no Premium. Ajustar só aqui.
+ * Pendente da análise de planos: a spec diz "Gratuito: até 3 serviços", mas PLAN_LIMITS.presenca.maxServices é 0.
  */
-export const LANDING_CAPABILITIES: Record<Business["plan"], LandingCapabilities> = {
-  presenca: { maxServices: 3, customCover: false, gallery: false, maxGalleryItems: 0, video: false, faq: false, offer: false, leadForm: false, virtualTour: false, metrics: "none" },
-  profissional: { maxServices: 6, customCover: true, gallery: true, maxGalleryItems: 6, video: false, faq: true, offer: false, leadForm: false, virtualTour: false, metrics: "basic" },
-  destaque: { maxServices: 9, customCover: true, gallery: true, maxGalleryItems: 12, video: false, faq: true, offer: true, leadForm: true, virtualTour: false, metrics: "full" },
-  experiencia: { maxServices: Infinity, customCover: true, gallery: true, maxGalleryItems: 30, video: true, faq: true, offer: true, leadForm: true, virtualTour: false, metrics: "full" },
-  premium: { maxServices: Infinity, customCover: true, gallery: true, maxGalleryItems: 30, video: true, faq: true, offer: true, leadForm: true, virtualTour: true, metrics: "full" },
+const FEATURES: Record<Business["plan"], Omit<LandingCapabilities, "maxServices" | "maxGalleryItems">> = {
+  presenca: { customCover: false, gallery: false, video: false, faq: false, offer: false, leadForm: false, virtualTour: false, metrics: "none" },
+  profissional: { customCover: true, gallery: true, video: false, faq: true, offer: false, leadForm: false, virtualTour: false, metrics: "basic" },
+  destaque: { customCover: true, gallery: true, video: false, faq: true, offer: true, leadForm: true, virtualTour: false, metrics: "full" },
+  experiencia: { customCover: true, gallery: true, video: true, faq: true, offer: true, leadForm: true, virtualTour: false, metrics: "full" },
+  premium: { customCover: true, gallery: true, video: true, faq: true, offer: true, leadForm: true, virtualTour: true, metrics: "full" },
 };
 
 export function landingCapabilitiesFor(plan: Business["plan"]): LandingCapabilities {
-  return LANDING_CAPABILITIES[plan];
+  const limits = PLAN_LIMITS[plan];
+  return { ...FEATURES[plan], maxServices: limits.maxServices, maxGalleryItems: limits.maxPhotos };
 }
 
 /** Taxa de conversão = ações de contato ÷ visualizações × 100 (0 quando não há visualização). */

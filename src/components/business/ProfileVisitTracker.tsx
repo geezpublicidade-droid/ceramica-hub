@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { logCommercialPageView, logPlacementProfileView } from "@/lib/actions/log-search";
 import { isPlacementId, markCountedThisSession, rememberPlacement } from "@/lib/placement-attribution";
 import { utmSourceFromSearch } from "@/lib/share-links";
+import { categoryFromReferrer, utmCampaignFromSearch } from "@/lib/landing/origin";
 import { track } from "@/lib/analytics";
 
 /**
@@ -16,7 +17,10 @@ export function ProfileVisitTracker({ businessId, name, category }: { businessId
     if (markCountedThisSession(`profile:${businessId}`)) {
       track({ name: "view_profile", businessName: name, category });
       // utm_source do link rastreado (instagram, facebook, google...); sem UTM, a origem fica vazia
-      void logCommercialPageView(businessId, utmSourceFromSearch(window.location.search) || undefined).catch(() => undefined);
+      void logCommercialPageView(businessId, utmSourceFromSearch(window.location.search) || undefined, {
+        campaign: utmCampaignFromSearch(window.location.search) || undefined,
+        fromCategory: categoryFromReferrer(document.referrer, window.location.hostname) ?? undefined,
+      }).catch(() => undefined);
     }
 
     const placementId = new URLSearchParams(window.location.search).get("pl");
