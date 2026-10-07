@@ -1,0 +1,548 @@
+{
+  "generatedAt": "2026-10-07T13:10:04.162Z",
+  "note": "Backup logico das regras de plano ANTES da migracao para o sistema central de permissoes (migration 0076). Infinity aparece como null.",
+  "code": {
+    "PLAN_LIMITS": {
+      "presenca": {
+        "maxServices": 0,
+        "maxPhotos": 0,
+        "maxPromotions": 0,
+        "couponsAllowed": false,
+        "videoAllowed": false,
+        "virtualTourAllowed": false,
+        "featuredAllowed": false
+      },
+      "profissional": {
+        "maxServices": 3,
+        "maxPhotos": 3,
+        "maxPromotions": 1,
+        "couponsAllowed": false,
+        "videoAllowed": false,
+        "virtualTourAllowed": false,
+        "featuredAllowed": false
+      },
+      "destaque": {
+        "maxServices": 6,
+        "maxPhotos": 6,
+        "maxPromotions": 4,
+        "couponsAllowed": true,
+        "videoAllowed": false,
+        "virtualTourAllowed": false,
+        "featuredAllowed": true
+      },
+      "experiencia": {
+        "maxServices": "unlimited",
+        "maxPhotos": 30,
+        "maxPromotions": 4,
+        "couponsAllowed": true,
+        "videoAllowed": true,
+        "virtualTourAllowed": false,
+        "featuredAllowed": true
+      },
+      "premium": {
+        "maxServices": "unlimited",
+        "maxPhotos": 30,
+        "maxPromotions": 4,
+        "couponsAllowed": true,
+        "videoAllowed": true,
+        "virtualTourAllowed": true,
+        "featuredAllowed": true
+      }
+    },
+    "PLAN_PRICES_CENTS": {
+      "profissional": 7900,
+      "destaque": 14700,
+      "experiencia": 29700,
+      "premium": 49700
+    },
+    "PLAN_PRICE_DISPLAY": {
+      "presenca": {
+        "price": "R$ 0",
+        "hasPeriod": false
+      },
+      "profissional": {
+        "price": "R$ 79",
+        "hasPeriod": true
+      },
+      "destaque": {
+        "price": "R$ 147",
+        "hasPeriod": true
+      },
+      "experiencia": {
+        "price": "R$ 297",
+        "hasPeriod": true
+      },
+      "premium": {
+        "price": "R$ 497",
+        "hasPeriod": true
+      }
+    },
+    "PLAN_ORDER": [
+      "presenca",
+      "profissional",
+      "destaque",
+      "experiencia",
+      "premium"
+    ],
+    "landingCapabilities": {
+      "presenca": {
+        "customCover": false,
+        "gallery": false,
+        "video": false,
+        "faq": false,
+        "offer": false,
+        "leadForm": false,
+        "virtualTour": false,
+        "metrics": "none",
+        "maxServices": 0,
+        "maxGalleryItems": 0
+      },
+      "profissional": {
+        "customCover": true,
+        "gallery": true,
+        "video": false,
+        "faq": true,
+        "offer": false,
+        "leadForm": false,
+        "virtualTour": false,
+        "metrics": "basic",
+        "maxServices": 3,
+        "maxGalleryItems": 3
+      },
+      "destaque": {
+        "customCover": true,
+        "gallery": true,
+        "video": false,
+        "faq": true,
+        "offer": true,
+        "leadForm": true,
+        "virtualTour": false,
+        "metrics": "full",
+        "maxServices": 6,
+        "maxGalleryItems": 6
+      },
+      "experiencia": {
+        "customCover": true,
+        "gallery": true,
+        "video": true,
+        "faq": true,
+        "offer": true,
+        "leadForm": true,
+        "virtualTour": false,
+        "metrics": "full",
+        "maxServices": "unlimited",
+        "maxGalleryItems": 30
+      },
+      "premium": {
+        "customCover": true,
+        "gallery": true,
+        "video": true,
+        "faq": true,
+        "offer": true,
+        "leadForm": true,
+        "virtualTour": true,
+        "metrics": "full",
+        "maxServices": "unlimited",
+        "maxGalleryItems": 30
+      }
+    },
+    "pricingMessagesPt": {
+      "heading": "Comece com sua página comercial. Cresça quando fizer sentido.",
+      "subheading": "Veja o que cada plano inclui e escolha o que faz sentido agora pro seu negócio.",
+      "ctaChoosePlan": "Quero esse plano",
+      "ctaSeeDetails": "Ver detalhes do plano",
+      "ctaTalkToUs": "Seja um patrocinador",
+      "mostChosen": "Mais escolhido",
+      "perMonth": "/mês",
+      "priceOnRequest": "Sob consulta",
+      "plans": {
+        "presenca": {
+          "name": "Presença Gratuita",
+          "description": "Comece sua presença no Cerâmica sem custo -- só nome e logo.",
+          "features": [
+            "Página básica no Cerâmica Hub",
+            "Nome e logo",
+            "Categoria",
+            "Torre, andar e sala",
+            "Participação nas buscas",
+            "URL exclusiva"
+          ]
+        },
+        "profissional": {
+          "name": "Profissional",
+          "description": "Página comercial completa, pra empresas que já querem crescer.",
+          "features": [
+            "Tudo do plano gratuito",
+            "Até 3 serviços com foto e descrição",
+            "Galeria com até 3 fotos reais (sem artes)",
+            "Descrição completa da empresa",
+            "Botão de WhatsApp e redes sociais",
+            "Horário de atendimento",
+            "Uma promoção ativa",
+            "Selo de empresa patrocinada",
+            "Suporte"
+          ]
+        },
+        "destaque": {
+          "name": "Destaque",
+          "description": "Pra quem quer aparecer primeiro e ser visto por mais gente.",
+          "features": [
+            "Tudo do plano Profissional",
+            "Prioridade na categoria e nas buscas",
+            "Até 6 serviços com fotos",
+            "Galeria com até 6 fotos",
+            "Até quatro promoções",
+            "Cupons rastreáveis",
+            "Destaque rotativo nos cards",
+            "Divulgação semanal nos Stories",
+            "Publicação de oportunidades",
+            "Condições especiais na Geez Marketing"
+          ]
+        },
+        "experiencia": {
+          "name": "Experiência",
+          "description": "Página comercial completa, com presença premium no ecossistema.",
+          "features": [
+            "Tudo do plano Destaque",
+            "Página mais completa e personalizada",
+            "Galeria ampliada (até 30 fotos)",
+            "Vídeo em destaque",
+            "Diferenciais da empresa em evidência",
+            "Destaque editorial eventual",
+            "Formulário próprio direto pro WhatsApp",
+            "Métricas completas",
+            "Condições premium na Geez Marketing (em breve)"
+          ]
+        },
+        "premium": {
+          "name": "Premium",
+          "description": "Pra empresas que querem a maior visibilidade dentro do ecossistema Cerâmica.",
+          "features": [
+            "Tudo do plano Experiência",
+            "Prioridade em Negócios em Destaque",
+            "Participação prioritária em encontros empresariais",
+            "Café da manhã ou almoço de networking, conforme calendário",
+            "Conteúdo institucional especial",
+            "Apresentação 3D da sua sala (1 produção por ciclo, em escopo padrão)",
+            "Visibilidade reforçada no ecossistema"
+          ]
+        },
+        "patrocinador": {
+          "name": "Patrocinador",
+          "description": "Pra marcas que querem ir além e se tornar patrocinadoras oficiais do Cerâmica Hub.",
+          "features": [
+            "Tudo do plano Experiência",
+            "Proposta sob medida com o time Cerâmica Hub",
+            "Posições de patrocínio exclusivas",
+            "Ativações e presença institucional",
+            "Reunião de diagnóstico com nosso time"
+          ]
+        }
+      }
+    },
+    "expiryRule": "operations/rules.ts subscriptionExpiredRule: assinatura active com ends_at vencido vira expired e a empresa volta ao plano presenca (businesses.plan) se nao houver outra assinatura ativa.",
+    "effectivePlan": "platform.ts resolveEffectivePlan: trial ativo (trial_status=active, trial_ends_at futuro, trial_plan) sobrepoe businesses.plan; senao businesses.plan."
+  },
+  "database": {
+    "products": [
+      {
+        "id": "3576e42e-b3e3-4ccb-9613-b25aba05aadd",
+        "slug": "plano-presenca",
+        "name": "Presença",
+        "category": "plano",
+        "description": "Cadastro básico gratuito.",
+        "billing_type": "mensal",
+        "monthly_price_cents": 0,
+        "yearly_price_cents": 0,
+        "benefits": [],
+        "limits": {
+          "maxPhotos": 0,
+          "maxServices": 0,
+          "maxPromotions": 0
+        },
+        "plan_key": "presenca",
+        "active": true,
+        "sort_order": 10,
+        "created_at": "2026-09-30T13:02:42.990674+00:00",
+        "updated_at": "2026-09-30T13:02:42.990674+00:00"
+      },
+      {
+        "id": "c949a159-4c49-47c6-b98e-b7130d4848e6",
+        "slug": "plano-profissional",
+        "name": "Profissional",
+        "category": "plano",
+        "description": "Plano de entrada pago.",
+        "billing_type": "mensal",
+        "monthly_price_cents": 7900,
+        "yearly_price_cents": 79000,
+        "benefits": [],
+        "limits": {
+          "maxPhotos": 3,
+          "maxServices": 3,
+          "maxPromotions": 1
+        },
+        "plan_key": "profissional",
+        "active": true,
+        "sort_order": 20,
+        "created_at": "2026-09-30T13:02:42.990674+00:00",
+        "updated_at": "2026-09-30T13:02:42.990674+00:00"
+      },
+      {
+        "id": "b507076a-5a38-48b6-b57c-a759d4bd9517",
+        "slug": "plano-destaque",
+        "name": "Destaque",
+        "category": "plano",
+        "description": "Destaque nas buscas e cupons.",
+        "billing_type": "mensal",
+        "monthly_price_cents": 14700,
+        "yearly_price_cents": 147000,
+        "benefits": [],
+        "limits": {
+          "maxPhotos": 6,
+          "maxServices": 6,
+          "maxPromotions": 4
+        },
+        "plan_key": "destaque",
+        "active": true,
+        "sort_order": 30,
+        "created_at": "2026-09-30T13:02:42.990674+00:00",
+        "updated_at": "2026-09-30T13:02:42.990674+00:00"
+      },
+      {
+        "id": "1d71f7d3-c055-4620-b7a7-6479eb68efdc",
+        "slug": "plano-experiencia",
+        "name": "Experiência",
+        "category": "plano",
+        "description": "Vídeo e fotos ampliadas.",
+        "billing_type": "mensal",
+        "monthly_price_cents": 29700,
+        "yearly_price_cents": 297000,
+        "benefits": [],
+        "limits": {
+          "maxPhotos": 30,
+          "maxPromotions": 4
+        },
+        "plan_key": "experiencia",
+        "active": true,
+        "sort_order": 40,
+        "created_at": "2026-09-30T13:02:42.990674+00:00",
+        "updated_at": "2026-09-30T13:02:42.990674+00:00"
+      },
+      {
+        "id": "901b3fe8-f582-4932-8983-897386f2b946",
+        "slug": "plano-premium",
+        "name": "Premium",
+        "category": "plano",
+        "description": "Tudo do Experiência + Sala 3D.",
+        "billing_type": "mensal",
+        "monthly_price_cents": 49700,
+        "yearly_price_cents": 497000,
+        "benefits": [],
+        "limits": {
+          "maxPhotos": 30,
+          "maxPromotions": 4
+        },
+        "plan_key": "premium",
+        "active": true,
+        "sort_order": 50,
+        "created_at": "2026-09-30T13:02:42.990674+00:00",
+        "updated_at": "2026-09-30T13:02:42.990674+00:00"
+      },
+      {
+        "id": "aee5d9ba-adfe-478f-87ae-8f6a4064ce15",
+        "slug": "plano-ancora",
+        "name": "Empresa Âncora",
+        "category": "patrocinio",
+        "description": "Patrocínio sob medida, valor negociado por contrato.",
+        "billing_type": "personalizado",
+        "monthly_price_cents": null,
+        "yearly_price_cents": null,
+        "benefits": [],
+        "limits": {},
+        "plan_key": null,
+        "active": true,
+        "sort_order": 60,
+        "created_at": "2026-09-30T13:02:42.990674+00:00",
+        "updated_at": "2026-09-30T13:02:42.990674+00:00"
+      },
+      {
+        "id": "37e6f558-7fa4-432a-adfb-9375cda9a629",
+        "slug": "categoria-lider",
+        "name": "Líder da categoria",
+        "category": "publicidade",
+        "description": "Card grande no topo da categoria ou subcategoria, com capa, logo, especialidades, oferta e selo Patrocinado. Uma única empresa por categoria.",
+        "billing_type": "mensal",
+        "monthly_price_cents": 69000,
+        "yearly_price_cents": 690000,
+        "benefits": [
+          "Primeira posição da categoria, acima de todas as outras",
+          "Card grande com capa, logo, descrição e especialidades",
+          "Espaço para uma oferta ou benefício exclusivo",
+          "Botões de perfil e WhatsApp com cliques medidos",
+          "Relatório de impressões, visitas e contatos gerados"
+        ],
+        "limits": {
+          "maxSlots": 1,
+          "exclusive": true
+        },
+        "plan_key": null,
+        "active": true,
+        "sort_order": 200,
+        "created_at": "2026-10-03T15:30:33.64249+00:00",
+        "updated_at": "2026-10-03T16:51:04.685846+00:00"
+      },
+      {
+        "id": "5a578401-cc04-4029-a6e7-5e18622694fe",
+        "slug": "categoria-premium",
+        "name": "Destaque Premium na categoria",
+        "category": "publicidade",
+        "description": "Primeira fileira da categoria, abaixo do Líder, com capa, logo e descrição ampliada. Até 3 empresas por categoria.",
+        "billing_type": "mensal",
+        "monthly_price_cents": 39000,
+        "yearly_price_cents": 390000,
+        "benefits": [
+          "Primeira fileira da categoria, logo abaixo do Líder",
+          "Card com capa, logo, especialidades e descrição ampliada",
+          "Botões de perfil e WhatsApp com cliques medidos",
+          "Relatório de impressões, visitas e contatos gerados"
+        ],
+        "limits": {
+          "maxSlots": 3,
+          "exclusive": false
+        },
+        "plan_key": null,
+        "active": true,
+        "sort_order": 210,
+        "created_at": "2026-10-03T15:30:33.64249+00:00",
+        "updated_at": "2026-10-03T16:51:04.858826+00:00"
+      },
+      {
+        "id": "05bbe97c-72cb-4a24-a820-dba5270b0f76",
+        "slug": "categoria-destaque",
+        "name": "Destaque na categoria",
+        "category": "publicidade",
+        "description": "Aparece antes da listagem comum da categoria, com logo, descrição e botão de WhatsApp. Até 6 empresas por categoria.",
+        "billing_type": "mensal",
+        "monthly_price_cents": 19000,
+        "yearly_price_cents": 190000,
+        "benefits": [
+          "Aparece antes da listagem comum da categoria",
+          "Card com logo, descrição resumida e botão de WhatsApp",
+          "Selo Destaque discreto",
+          "Relatório de impressões, visitas e contatos gerados"
+        ],
+        "limits": {
+          "maxSlots": 6,
+          "exclusive": false
+        },
+        "plan_key": null,
+        "active": true,
+        "sort_order": 220,
+        "created_at": "2026-10-03T15:30:33.64249+00:00",
+        "updated_at": "2026-10-03T16:51:05.016267+00:00"
+      }
+    ],
+    "platform_settings": [
+      {
+        "id": true,
+        "geez_discount_enabled": false,
+        "geez_discount_max_percentage": 50,
+        "geez_discount_terms": null,
+        "geez_monthly_slots_limit": null,
+        "site_credit_enabled": false,
+        "site_credit_percentage": 0,
+        "site_credit_month_limit": null,
+        "site_credit_maximum": null,
+        "site_credit_terms": null,
+        "trial_enabled": true,
+        "trial_plan": "destaque",
+        "trial_duration_days": 14
+      }
+    ],
+    "businessesByPlan": {
+      "destaque": 2,
+      "presenca": 3,
+      "experiencia": 1
+    },
+    "businesses": [
+      {
+        "id": "933ac893-8d80-4dc0-a4d8-f17cd156b2d0",
+        "slug": "axis-investimentos",
+        "name": "Axis Investimentos",
+        "plan": "destaque",
+        "trial_status": "none",
+        "trial_plan": null,
+        "trial_ends_at": null,
+        "status": "approved"
+      },
+      {
+        "id": "e18c45e9-e27f-44ea-9113-de9c68bc1387",
+        "slug": "duavesso-studio",
+        "name": "Duavesso Studio & Estética Regenerativa",
+        "plan": "destaque",
+        "trial_status": "none",
+        "trial_plan": null,
+        "trial_ends_at": null,
+        "status": "approved"
+      },
+      {
+        "id": "1153014e-03db-4a4a-adcc-ec6f5ed25552",
+        "slug": null,
+        "name": "Empresa Demo",
+        "plan": "presenca",
+        "trial_status": "none",
+        "trial_plan": null,
+        "trial_ends_at": null,
+        "status": "rejected"
+      },
+      {
+        "id": "8210dfb0-5ad3-4634-9058-fc3f6ca42912",
+        "slug": "geez-marketing",
+        "name": "Geez Marketing",
+        "plan": "experiencia",
+        "trial_status": "none",
+        "trial_plan": null,
+        "trial_ends_at": null,
+        "status": "approved"
+      },
+      {
+        "id": "337266d9-499b-4c02-944f-d9f447c3d122",
+        "slug": "axis",
+        "name": "axis",
+        "plan": "presenca",
+        "trial_status": "none",
+        "trial_plan": null,
+        "trial_ends_at": null,
+        "status": "pending"
+      },
+      {
+        "id": "2fe69adb-3880-4064-b2b1-971e7393c461",
+        "slug": "padaria-teste-estrutura",
+        "name": "Padaria Teste Estrutura",
+        "plan": "presenca",
+        "trial_status": "none",
+        "trial_plan": null,
+        "trial_ends_at": null,
+        "status": "approved"
+      }
+    ],
+    "subscriptions": [
+      {
+        "id": "04ef3bb0-bcef-4904-aa15-526d25017af9",
+        "business_id": "1153014e-03db-4a4a-adcc-ec6f5ed25552",
+        "plan": "profissional",
+        "status": "pending",
+        "started_at": null,
+        "ends_at": null
+      },
+      {
+        "id": "8e31d109-c02b-48a0-bc1e-63dac1269f74",
+        "business_id": "8210dfb0-5ad3-4634-9058-fc3f6ca42912",
+        "plan": "profissional",
+        "status": "pending",
+        "started_at": null,
+        "ends_at": null
+      }
+    ]
+  }
+}
