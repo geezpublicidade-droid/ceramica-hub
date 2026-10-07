@@ -315,7 +315,9 @@
       "moda-e-beleza": "Moda",
       "tecnologia-e-marketing": "Tecnologia",
       "design-e-arquitetura": "Design"
-    }
+    },
+    "prev": "Categorias anteriores",
+    "next": "Próximas categorias"
   },
   "FeaturedBusinesses": {
     "eyebrow": "Quem já está no Cerâmica",

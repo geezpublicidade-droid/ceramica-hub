@@ -81,16 +81,16 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           {/* 2. Categorias -- direto abaixo do hero */}
           <FourUniverses />
 
+          {/* 2b. Parceiros fundadores -- empresas que impulsionam o Hub */}
+          <PremiumSponsorsCarousel
+            partners={partners.filter((p) => p.tier === "ancora_fundadora" || p.tier === "parceiro_premium")}
+          />
+
           {/* 3. Negócios em destaque (planos pagos primeiro) + diretório completo (destino da busca do hero) */}
           <FeaturedBusinesses businesses={featuredBusinesses} />
           <Suspense fallback={null}>
             <Directory businesses={directoryBusinesses} />
           </Suspense>
-
-          {/* 4. Parceiros fundadores -- empresas que impulsionam o Hub */}
-          <PremiumSponsorsCarousel
-            partners={partners.filter((p) => p.tier === "ancora_fundadora" || p.tier === "parceiro_premium")}
-          />
 
           {/* 5. Faixa de logos (máx. 10) */}
           <InstitutionalPartners />

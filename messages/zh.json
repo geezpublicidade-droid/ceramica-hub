@@ -315,7 +315,9 @@
       "moda-e-beleza": "时尚",
       "tecnologia-e-marketing": "科技",
       "design-e-arquitetura": "设计"
-    }
+    },
+    "prev": "上一组分类",
+    "next": "下一组分类"
   },
   "FeaturedBusinesses": {
     "eyebrow": "已入驻 Cerâmica 的企业",
