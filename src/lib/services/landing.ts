@@ -4,6 +4,7 @@ import { getBusinessPhotos, getBusinessServices, type OwnedPhoto } from "@/lib/s
 import { getApprovedReviews, getReviewStats, type BusinessReview } from "@/lib/services/reviews";
 import { landingCapabilitiesFor, resolveSectionOrder, type LandingCapabilities, type SectionKey } from "@/lib/landing/sections";
 import { parseSchedule, type OpeningSchedule } from "@/lib/landing/hours";
+import { applyDemoContent } from "@/lib/landing/demo";
 
 export type HeroCtaKind = "servicos" | "orcamento" | "agendar" | "cardapio";
 
@@ -205,10 +206,13 @@ async function loadReviews(businessId: string) {
  * Tudo que a landing pública precisa, já filtrado pelo plano da empresa. Rascunho: o público vê só o conteúdo
  * básico (a configuração é ignorada); a empresa e o admin veem o rascunho no preview do painel (`allowDraft`).
  */
-export async function getLandingData(business: Business, options: { locale?: string; allowDraft?: boolean } = {}): Promise<LandingData> {
+export async function getLandingData(
+  business: Business,
+  options: { locale?: string; allowDraft?: boolean; simulatePlan?: Business["plan"]; demoContent?: boolean } = {},
+): Promise<LandingData> {
   const stored = await loadConfig(business.id);
   const config = stored.status === "draft" && !options.allowDraft ? EMPTY_CONFIG : stored;
-  const capabilities = landingCapabilitiesFor(business.effectivePlan);
+  const capabilities = landingCapabilitiesFor(options.simulatePlan ?? business.effectivePlan);
 
   const [allServices, allPhotos, faqs, offer, reviewData] = await Promise.all([
     getBusinessServices(business.id, options.locale),
@@ -222,7 +226,7 @@ export async function getLandingData(business: Business, options: { locale?: str
   const services = Number.isFinite(capabilities.maxServices) ? activeServices.slice(0, capabilities.maxServices) : activeServices;
   const media = capabilities.gallery ? allPhotos : [];
 
-  return {
+  const data: LandingData = {
     config,
     capabilities,
     sections: resolveSectionOrder(config.sectionOrder, config.sectionsDisabled),
@@ -234,4 +238,8 @@ export async function getLandingData(business: Business, options: { locale?: str
     videos: capabilities.video ? media.filter((item) => item.kind === "video") : [],
     ...reviewData,
   };
+
+  if (!options.demoContent) return data;
+  const ownImages = [business.coverPhoto, ...allPhotos.filter((item) => item.kind === "photo").map((item) => item.url)].filter((url): url is string => Boolean(url));
+  return applyDemoContent(data, { business, ownImages });
 }

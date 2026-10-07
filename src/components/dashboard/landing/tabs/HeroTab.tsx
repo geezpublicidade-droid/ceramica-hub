@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { saveLandingConfig } from "@/lib/actions/landing-editor";
 import { Field, SaveBar, TabIntro, UpgradeNote, ghostButtonClass, inputClass, useSaver } from "../ui";
+import { BrandingCard } from "../BrandingCard";
 import { UploadButton } from "../UploadButton";
 import type { TabProps } from "../types";
 
@@ -29,7 +29,8 @@ export function HeroTab({ data, target }: TabProps) {
 
   return (
     <div className="space-y-4">
-      <TabIntro>O topo da página: a proposta de valor e o botão que leva à conversão. A logo e a foto de capa da empresa são editadas em &quot;Editar página&quot;.</TabIntro>
+      <BrandingCard data={data} target={target} />
+      <TabIntro>O topo da página: a proposta de valor e o botão que leva à conversão.</TabIntro>
       <Field label="Título principal" hint="Proposta de valor em uma frase (até 120 caracteres).">
         <input maxLength={120} value={form.heroHeadline} onChange={(e) => set("heroHeadline", e.target.value)} className={inputClass} />
       </Field>
@@ -71,12 +72,7 @@ export function HeroTab({ data, target }: TabProps) {
             <UpgradeNote>A imagem de capa personalizada faz parte do plano Profissional ou superior.</UpgradeNote>
           </div>
         )}
-        <p className="mt-2 text-[12.5px] text-muted">
-          Recomendado: foto horizontal, ao menos 1600 px de largura.{" "}
-          <Link href="/dashboard/editar" className="font-medium text-primary hover:underline">
-            Editar logo e capa básica
-          </Link>
-        </p>
+        <p className="mt-2 text-[12.5px] text-muted">Recomendado: foto horizontal, ao menos 1600 px de largura. Se ficar vazia, o hero usa a capa da empresa.</p>
       </div>
       <SaveBar pending={pending} message={message} onSave={() => run(() => saveLandingConfig(target, form))} />
     </div>

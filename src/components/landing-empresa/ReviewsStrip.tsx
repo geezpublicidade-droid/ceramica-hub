@@ -7,11 +7,11 @@ const MAX_REVIEWS = 4;
 
 function Stars({ rating }: { rating: number }) {
   return (
-    <div className="flex gap-0.5" role="img" aria-label={`${rating}/5`}>
+    <span className="inline-flex gap-0.5" role="img" aria-label={`${rating}/5`}>
       {[1, 2, 3, 4, 5].map((n) => (
         <Star key={n} className="h-4 w-4 text-amber-500" fill={n <= rating ? "currentColor" : "none"} strokeWidth={1.5} aria-hidden="true" />
       ))}
-    </div>
+    </span>
   );
 }
 

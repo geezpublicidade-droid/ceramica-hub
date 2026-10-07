@@ -14,6 +14,7 @@ import { OffersTab } from "./tabs/OffersTab";
 import { ReviewsTab } from "./tabs/ReviewsTab";
 import { SeoTab } from "./tabs/SeoTab";
 import { ServicesTab } from "./tabs/ServicesTab";
+import { PlanMatrix } from "./PlanMatrix";
 import type { TabProps } from "./types";
 import { buttonClass, ghostButtonClass, useSaver } from "./ui";
 
@@ -70,6 +71,8 @@ export function LandingEditor({ data, target, previewHref, publicHref }: Landing
         </button>
         {message && <span className={`w-full text-[13.5px] font-medium ${message.ok ? "text-whatsapp" : "text-red-700"}`}>{message.text}</span>}
       </div>
+
+      <PlanMatrix currentPlan={data.business.effectivePlan} previewHref={previewHref} />
 
       <div role="tablist" aria-label="Seções da landing page" className="mt-5 flex gap-1.5 overflow-x-auto pb-1">
         {TABS.map((tab) => (

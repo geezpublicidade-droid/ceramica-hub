@@ -5,7 +5,7 @@ import { getVirtualTourScenes } from "@/lib/services/platform";
 import { getActiveTowers } from "@/lib/services/towers";
 import { defaultWhatsappMessage, whatsappDigits, whatsappUrl } from "@/lib/landing/whatsapp";
 
-type Options = { locale?: string; allowDraft?: boolean };
+type Options = { locale?: string; allowDraft?: boolean; simulatePlan?: Business["plan"]; demoContent?: boolean };
 
 /**
  * Monta o contexto da landing (dados, WhatsApp, mapa, rota). Usado pela página pública
@@ -15,10 +15,10 @@ export async function buildLandingContext(
   business: Business,
   canonicalUrl: string,
   categoryLabel: string,
-  { locale, allowDraft = false }: Options = {},
+  { locale, allowDraft = false, simulatePlan, demoContent = false }: Options = {},
 ): Promise<LandingContext> {
   const [data, tourScenes, towers] = await Promise.all([
-    getLandingData(business, { locale, allowDraft }),
+    getLandingData(business, { locale, allowDraft, simulatePlan, demoContent }),
     getVirtualTourScenes(business.id, locale),
     getActiveTowers(),
   ]);

@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { checkPatchAgainstPlan, landingPatchSchema, patchToRow } from "../landing/editor-schema.ts";
+import { brandingSchema, brandingToRow, checkBrandingAgainstPlan, checkPatchAgainstPlan, landingPatchSchema, patchToRow } from "../landing/editor-schema.ts";
 import { landingCapabilitiesFor } from "../landing/sections.ts";
 
 describe("landingPatchSchema", () => {
@@ -57,5 +57,21 @@ describe("checkPatchAgainstPlan", () => {
     assert.ok(checkPatchAgainstPlan({ leadFormEnabled: true }, landingCapabilitiesFor("profissional")));
     assert.equal(checkPatchAgainstPlan({ leadFormEnabled: true }, landingCapabilitiesFor("destaque")), null);
     assert.equal(checkPatchAgainstPlan({ leadFormEnabled: false }, free), null);
+  });
+});
+
+describe("identidade da empresa (branding)", () => {
+  it("valida e mapeia para as colunas de businesses", () => {
+    const parsed = brandingSchema.parse({ description: "  Texto  ", logoUrl: "https://x.com/l.png", coverPhotoUrl: "", instagram: "@duavesso" });
+    assert.deepEqual(brandingToRow(parsed), { description: "Texto", logo_url: "https://x.com/l.png", cover_photo_url: null, instagram: "@duavesso" });
+    assert.equal(brandingSchema.safeParse({ logoUrl: "javascript:alert(1)" }).success, false);
+    assert.equal(brandingSchema.safeParse({ description: "x".repeat(601) }).success, false);
+  });
+
+  it("capa personalizada só nos planos que incluem; remover a capa é sempre permitido", () => {
+    assert.ok(checkBrandingAgainstPlan({ coverPhotoUrl: "https://x.com/c.jpg" }, landingCapabilitiesFor("presenca")));
+    assert.equal(checkBrandingAgainstPlan({ coverPhotoUrl: "https://x.com/c.jpg" }, landingCapabilitiesFor("profissional")), null);
+    assert.equal(checkBrandingAgainstPlan({ coverPhotoUrl: null }, landingCapabilitiesFor("presenca")), null);
+    assert.equal(checkBrandingAgainstPlan({ logoUrl: "https://x.com/l.png" }, landingCapabilitiesFor("presenca")), null);
   });
 });

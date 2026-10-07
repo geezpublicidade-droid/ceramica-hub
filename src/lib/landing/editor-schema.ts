@@ -124,3 +124,38 @@ export function checkPatchAgainstPlan(patch: LandingPatch, capabilities: Landing
   if (patch.leadFormEnabled && !capabilities.leadForm) return "O formulário de contato faz parte de um plano superior.";
   return null;
 }
+
+/** Identidade da empresa (tabela businesses): logo, capa, descrição, Instagram e site. */
+export const brandingSchema = z
+  .object({
+    description: text(600),
+    logoUrl: httpsUrl,
+    coverPhotoUrl: httpsUrl,
+    instagram: text(60),
+    websiteUrl: httpsUrl,
+  })
+  .partial();
+
+export type BrandingPatch = z.infer<typeof brandingSchema>;
+
+const BRANDING_COLUMNS: Record<keyof BrandingPatch, string> = {
+  description: "description",
+  logoUrl: "logo_url",
+  coverPhotoUrl: "cover_photo_url",
+  instagram: "instagram",
+  websiteUrl: "website_url",
+};
+
+export function brandingToRow(patch: BrandingPatch): Record<string, unknown> {
+  const row: Record<string, unknown> = {};
+  for (const [field, column] of Object.entries(BRANDING_COLUMNS)) {
+    const value = patch[field as keyof BrandingPatch];
+    if (value !== undefined) row[column] = value;
+  }
+  return row;
+}
+
+/** Capa personalizada é recurso de plano; trocar/remover a logo e o resto é livre. */
+export function checkBrandingAgainstPlan(patch: BrandingPatch, capabilities: LandingCapabilities): string | null {
+  return patch.coverPhotoUrl && !capabilities.customCover ? "A capa personalizada faz parte de um plano superior." : null;
+}

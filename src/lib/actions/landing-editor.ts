@@ -5,7 +5,8 @@ import { revalidatePath } from "next/cache";
 import { createServiceClient } from "@/lib/supabase/server";
 import { logAdminAction } from "@/lib/audit-log";
 import { resolveLandingTarget, type LandingTarget } from "@/lib/landing/guard";
-import { checkPatchAgainstPlan, landingPatchSchema, patchToRow } from "@/lib/landing/editor-schema";
+import { brandingSchema, brandingToRow, checkBrandingAgainstPlan, checkPatchAgainstPlan, landingPatchSchema, patchToRow } from "@/lib/landing/editor-schema";
+import { translateAndStore } from "@/lib/services/translate";
 import { resolveRange, summarizeEvents, type LandingMetrics, type RangePreset } from "@/lib/landing/metrics";
 
 type Result = { success: true } | { success: false; error: string };
@@ -49,6 +50,28 @@ export async function saveLandingConfig(adminBusinessId: string | undefined, raw
     if (error) return fail("Não foi possível salvar.");
 
     await audit(target, "edit_landing", { fields: Object.keys(parsed.data) });
+    refresh(target);
+    return { success: true };
+  });
+}
+
+/** Logo, capa, descrição, Instagram e site da empresa (a empresa e o admin editam; a descrição é retraduzida). */
+export async function saveBranding(adminBusinessId: string | undefined, rawPatch: unknown): Promise<Result> {
+  const parsed = brandingSchema.safeParse(rawPatch);
+  if (!parsed.success) return fail(firstIssue(parsed.error));
+
+  return withTarget(adminBusinessId, async (target) => {
+    const planError = checkBrandingAgainstPlan(parsed.data, target.capabilities);
+    if (planError) return fail(planError);
+
+    const { error } = await createServiceClient().from("businesses").update(brandingToRow(parsed.data)).eq("id", target.businessId);
+    if (error) return fail("Não foi possível salvar.");
+
+    if (parsed.data.description !== undefined) {
+      await translateAndStore("business", target.businessId, { description: parsed.data.description ?? "" }).catch(() => undefined);
+    }
+    await audit(target, "edit_business_branding", { fields: Object.keys(parsed.data) });
+    revalidatePath("/[locale]/empresas", "page");
     refresh(target);
     return { success: true };
   });
