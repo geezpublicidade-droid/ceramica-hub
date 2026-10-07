@@ -75,10 +75,14 @@ export function DragScroller({ children, label, prevLabel, nextLabel }: DragScro
     }
   };
 
+  // véu nas pontas: blur + degradê de transparência, só onde ainda há conteúdo escondido (dá profundidade)
+  const edge = "pointer-events-none absolute inset-y-0 z-[5] w-16 backdrop-blur-[6px] transition-opacity duration-300 sm:w-24";
   const arrow = "absolute top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-white text-foreground shadow-md transition-opacity hover:bg-surface disabled:pointer-events-none disabled:opacity-0 sm:flex";
 
   return (
     <div className="relative" role="group" aria-label={label}>
+      <div aria-hidden="true" className={`${edge} left-0 bg-gradient-to-r from-white/90 via-white/50 to-transparent [mask-image:linear-gradient(to_right,black_30%,transparent)] ${edges.start ? "opacity-0" : "opacity-100"}`} />
+      <div aria-hidden="true" className={`${edge} right-0 bg-gradient-to-l from-white/90 via-white/50 to-transparent [mask-image:linear-gradient(to_left,black_30%,transparent)] ${edges.end ? "opacity-0" : "opacity-100"}`} />
       <button type="button" aria-label={prevLabel} disabled={edges.start} onClick={() => scrollByPage(-1)} className={`${arrow} -left-3`}>
         <ChevronLeft className="h-5 w-5" aria-hidden="true" />
       </button>
