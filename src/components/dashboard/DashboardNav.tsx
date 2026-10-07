@@ -27,7 +27,7 @@ const NAV_ITEMS = [
   { label: "Divulgação", href: "/dashboard/divulgacao", Icon: IconPromotions },
   { label: "Cupons", href: "/dashboard/cupons", Icon: IconPromotions },
   { label: "Indicações", href: "/dashboard/indicacoes", Icon: IconPromotions },
-  { label: "Plano e assinatura", href: dashboardHref("plano"), Icon: IconPlan },
+  { label: "Plano e assinatura", href: "/dashboard/plano", Icon: IconPlan },
   { label: "Configurações", href: dashboardHref("privacidade"), Icon: IconSettings },
   { label: "Suporte", href: "/dashboard/suporte", Icon: IconSupport },
 ] as const;

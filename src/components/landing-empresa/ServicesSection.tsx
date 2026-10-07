@@ -14,7 +14,7 @@ export async function ServicesSection({ ctx }: { ctx: LandingContext }) {
     id: service.id,
     name: service.name,
     description: service.description,
-    photo: service.photo,
+    photo: ctx.data.capabilities.servicePhotos ? service.photo : null,
     priceLabel: service.startingPrice != null ? t("priceFrom", { price: BRL.format(service.startingPrice) }) : null,
     duration: service.duration ?? null,
     ctaLabel: service.ctaLabel ?? null,

@@ -1,6 +1,7 @@
 import type { ReactElement } from "react";
 import type { SectionKey } from "@/lib/landing/sections";
 import { AboutSection } from "./AboutSection";
+import { BasicProfile } from "./BasicProfile";
 import type { LandingContext } from "./context";
 import { FaqSection } from "./FaqSection";
 import { FinalCta } from "./FinalCta";
@@ -30,6 +31,16 @@ const SECTIONS: Record<SectionKey, (props: { ctx: LandingContext }) => Promise<R
  * Alimentada só por dados cadastrados; seção sem conteúdo ou desativada simplesmente não aparece.
  */
 export async function LandingPageEmpresa({ ctx, children }: { ctx: LandingContext; children?: React.ReactNode }) {
+  // Plano gratuito: perfil simples (sem hero, seções nem botões flutuantes)
+  if (ctx.data.capabilities.layout === "basic") {
+    return (
+      <div className="bg-[#fbf9f6]">
+        <BasicProfile ctx={ctx} />
+        {children}
+      </div>
+    );
+  }
+
   return (
     <div className="bg-[#fbf9f6] pb-16 md:pb-0">
       <Hero ctx={ctx} />

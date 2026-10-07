@@ -2,9 +2,10 @@
 
 import { createServiceClient } from "@/lib/supabase/server";
 import { getBusinessById } from "@/lib/services/platform";
-import { PLAN_PRICES_CENTS, type PayablePlan } from "@/lib/plan-limits";
+import { getPlanPriceCents } from "@/lib/services/plan-prices";
+import { getCompanyPermissions } from "@/lib/services/company-plan";
 import { createPaymentPreference } from "@/lib/services/mercadopago";
-import { planLabels } from "@/data/businesses";
+import { loadPlanCatalog, planNameFrom } from "@/lib/services/plan-catalog";
 import { requireBusinessOwner } from "@/lib/auth-guards";
 
 type CreatePaymentLinkResult =
@@ -18,13 +19,20 @@ type CreatePaymentLinkResult =
  * (ver confirmInvoicePayment em admin-billing.ts) — nada aqui muda
  * `businesses.plan` ainda.
  */
-export async function createPaymentLink(plan: PayablePlan): Promise<CreatePaymentLinkResult> {
+export async function createPaymentLink(plan: string): Promise<CreatePaymentLinkResult> {
   const businessId = await requireBusinessOwner();
   const business = await getBusinessById(businessId);
   if (!business) return { success: false, error: "Empresa não encontrada." };
 
   const supabase = createServiceClient();
-  const amountCents = PLAN_PRICES_CENTS[plan];
+  // preço vem do catálogo comercial (editável no admin); nunca de constante em tela
+  const listPriceCents = await getPlanPriceCents(plan);
+  if (!listPriceCents) return { success: false, error: "Este plano não está disponível para contratação online. Fale com a equipe." };
+  // desconto negociado para esta empresa (definido pelo admin no plano da empresa)
+  const permissions = await getCompanyPermissions(businessId);
+  const discount = permissions?.discountPercent ?? 0;
+  const amountCents = Math.round(listPriceCents * (1 - discount / 100));
+  if (amountCents <= 0) return { success: false, error: "Não foi possível gerar a fatura. Fale com a equipe." };
 
   const { data: subscription, error: subscriptionError } = await supabase
     .from("subscriptions")
@@ -46,7 +54,7 @@ export async function createPaymentLink(plan: PayablePlan): Promise<CreatePaymen
   if (invoiceError) return { success: false, error: "Não foi possível gerar a fatura." };
 
   const preference = await createPaymentPreference({
-    title: `Cerâmica Hub — Plano ${planLabels[plan]}`,
+    title: `Cerâmica Hub — Plano ${planNameFrom(await loadPlanCatalog(), plan)}`,
     unitPrice: amountCents / 100,
     externalReference: invoice.id,
   });

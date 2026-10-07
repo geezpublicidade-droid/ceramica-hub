@@ -10,13 +10,13 @@ import { LandingPageEmpresa } from "@/components/landing-empresa/LandingPageEmpr
 import { Link, redirect } from "@/i18n/navigation";
 import { localizedUrl, buildAlternates, buildSocialMetadata, siteUrl } from "@/lib/seo";
 import { jsonLdString } from "@/lib/json-ld";
+import { canAccess } from "@/lib/plans/resolve";
 import {
   getAllBusinesses,
   getBusinessById,
   getBusinessBySlug,
   getRelatedBusinesses,
   getOpportunities,
-  getBenefits,
   UUID_RE,
 } from "@/lib/services/platform";
 import { getLandingConfig } from "@/lib/services/landing";
@@ -86,28 +86,27 @@ export default async function BusinessProfilePage({ params }: PageProps) {
     redirect({ href: `/empresa/${business.slug}`, locale });
   }
 
-  const [t, tShare, tCategories, tCommon, tOpportunityTypes, tBenefitKinds] = await Promise.all([
+  const [t, tShare, tCategories, tCommon, tOpportunityTypes] = await Promise.all([
     getTranslations("EmpresaPage"),
     getTranslations("Share"),
     getTranslations("categories"),
     getTranslations("Common"),
     getTranslations("opportunityTypeLabels"),
-    getTranslations("benefitKindLabels"),
   ]);
 
   const canonicalUrl = localizedUrl(locale, `/empresa/${business.slug}`);
   const categoryLabel = tCategories(business.category);
 
-  const [related, allOpportunities, allBenefits, ctx] = await Promise.all([
+  const [related, allOpportunities, ctx] = await Promise.all([
     getRelatedBusinesses(business, 3, locale),
     getOpportunities(locale),
-    getBenefits(locale),
     buildLandingContext(business, canonicalUrl, categoryLabel, { locale }),
   ]);
   const landingData = ctx.data;
 
-  const opportunities = allOpportunities.filter((o) => o.businessId === business.id);
-  const benefits = allBenefits.filter((b) => b.businessId === business.id);
+  const caps = landingData.capabilities;
+  // oportunidades só no plano que inclui; as promoções já aparecem na seção de ofertas (limite do plano aplicado em getLandingData)
+  const opportunities = canAccess(landingData.features, "opportunities") ? allOpportunities.filter((o) => o.businessId === business.id) : [];
 
   const businessJsonLd = {
     "@context": "https://schema.org",
@@ -115,12 +114,12 @@ export default async function BusinessProfilePage({ params }: PageProps) {
     name: business.name,
     description: business.description,
     url: canonicalUrl,
-    ...(business.phone ? { telephone: business.phone } : {}),
+    ...(business.phone && caps.commercialInfo ? { telephone: business.phone } : {}),
     ...(business.coverPhoto || business.logo
       ? { image: business.coverPhoto ?? business.logo }
       : {}),
-    ...(business.instagram ? { sameAs: [instagramUrl(business.instagram)] } : {}),
-    ...(business.openingHours ? { openingHours: business.openingHours } : {}),
+    ...(business.instagram && caps.socialMedia ? { sameAs: [instagramUrl(business.instagram)] } : {}),
+    ...(business.openingHours && caps.businessHours ? { openingHours: business.openingHours } : {}),
     ...(landingData.reviewStats.count > 0
       ? { aggregateRating: { "@type": "AggregateRating", ratingValue: landingData.reviewStats.average.toFixed(1), reviewCount: landingData.reviewStats.count } }
       : {}),
@@ -163,7 +162,7 @@ export default async function BusinessProfilePage({ params }: PageProps) {
       <ProfileVisitTracker businessId={business.id} name={business.name} category={business.category} />
       <main className="flex-1">
         <LandingPageEmpresa ctx={ctx}>
-          {business.videoUrl && landingData.videos.length === 0 && (
+          {business.videoUrl && caps.video && landingData.videos.length === 0 && (
             <section className="container-page py-10">
               <div className="mx-auto max-w-4xl overflow-hidden rounded-md">
                 <video src={business.videoUrl} controls className="w-full" />
@@ -182,7 +181,7 @@ export default async function BusinessProfilePage({ params }: PageProps) {
 
           <AdHereBanner tone={1} />
 
-          {(opportunities.length > 0 || benefits.length > 0) && (
+          {opportunities.length > 0 && (
             <section className="bg-surface px-6 py-16">
               <div className="mx-auto max-w-4xl space-y-10">
                 {opportunities.length > 0 && (
@@ -204,24 +203,6 @@ export default async function BusinessProfilePage({ params }: PageProps) {
                   </div>
                 )}
 
-                {benefits.length > 0 && (
-                  <div>
-                    <h2 className="text-[15px] font-medium uppercase tracking-[0.2em] text-primary">
-                      {t("sectionBenefits")}
-                    </h2>
-                    <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                      {benefits.map((benefit) => (
-                        <div key={benefit.id} className="glass-card-light rounded-2xl p-5">
-                          <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[13px] font-medium text-primary">
-                            {tBenefitKinds(benefit.kind)}
-                          </span>
-                          <p className="mt-3 text-[17px] font-semibold tracking-tight">{benefit.title}</p>
-                          <p className="mt-1.5 text-[15px] leading-relaxed text-muted">{benefit.description}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
             </section>
           )}

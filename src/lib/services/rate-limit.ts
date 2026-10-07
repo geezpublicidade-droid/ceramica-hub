@@ -12,6 +12,7 @@ export const RATE_LIMITS = {
   metricLog: { scope: "metric-log", max: 120, windowSeconds: 60 },
   register: { scope: "register", max: 5, windowSeconds: 600 },
   partnerLead: { scope: "partner-lead", max: 5, windowSeconds: 600 },
+  profileClaim: { scope: "profile-claim", max: 3, windowSeconds: 3600 },
   businessLead: { scope: "business-lead", max: 5, windowSeconds: 600 },
 } as const satisfies Record<string, RateLimitRule>;
 

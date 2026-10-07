@@ -7,6 +7,7 @@ export const OPERATIONAL_RULES = [
   "overdue_payment",
   "inactive_business",
   "subscription_expired",
+  "plan_grace_expired",
   "placement_release",
   "placement_expired",
 ] as const;
@@ -46,9 +47,15 @@ export const OPERATIONAL_RULE_META: Record<OperationalRule, OperationalRuleMeta>
     effect: "task",
   },
   subscription_expired: {
-    label: "Contrato terminou: benefícios bloqueados",
+    label: "Assinatura vencida: empresa em atraso",
     description:
-      "Assinatura com prazo vencido passa a Expirada e a empresa volta ao plano Presença, desde que não tenha outra assinatura ativa. Campanhas de publicidade já encerram sozinhas pela data.",
+      "Assinatura com prazo vencido passa a Expirada e a empresa fica em atraso: os recursos continuam durante a tolerância configurada, sem apagar nenhum conteúdo. Campanhas de publicidade já encerram sozinhas pela data.",
+    effect: "state",
+  },
+  plan_grace_expired: {
+    label: "Tolerância esgotada: página volta ao plano gratuito",
+    description:
+      "Empresa em atraso que passou do prazo de tolerância tem a página pública reduzida aos recursos do plano gratuito. O conteúdo pago fica salvo (inativo) e é restaurado quando o pagamento for regularizado.",
     effect: "state",
   },
   placement_release: {

@@ -264,14 +264,14 @@ function completeServices(real: LandingData["services"], text: DemoText, input: 
   return [...real, ...extra.slice(0, goal - real.length)].map((service, index) => ({ ...service, sortOrder: index }));
 }
 
-function demoOffer(text: DemoText, input: DemoInput): LandingOffer {
+function demoOffer(text: DemoText, input: DemoInput, withCoupon: boolean): LandingOffer {
   return {
     id: "demo-offer",
     title: text.offer.title,
     description: text.offer.description,
     imageUrl: pickDemoImages(input.ownImages, 2)[1],
     ctaLabel: null,
-    couponCode: "CERAMICA10",
+    couponCode: withCoupon ? "CERAMICA10" : null,
     validUntil: null,
   };
 }
@@ -313,6 +313,7 @@ export function applyDemoContent(data: LandingData, input: DemoInput): LandingDa
   const services = completeServices(data.services, text, input, capabilities.maxServices);
   const gallery = data.gallery.length > 0 || !capabilities.gallery ? data.gallery : demoGallery(input, Math.min(capabilities.maxGalleryItems, 6));
   const reviews = data.reviews.length > 0 ? data.reviews : demoReviews(text, input);
+  const offers = data.offers.length > 0 || !capabilities.offer ? data.offers : [demoOffer(text, input, capabilities.trackableCoupons)];
 
   return {
     ...data,
@@ -320,7 +321,8 @@ export function applyDemoContent(data: LandingData, input: DemoInput): LandingDa
     services,
     hasMoreServices: services.length > 6,
     faqs: data.faqs.length > 0 || !capabilities.faq ? data.faqs : faqs,
-    offer: data.offer ?? (capabilities.offer ? demoOffer(text, input) : null),
+    offers,
+    offer: offers[0] ?? null,
     gallery,
     reviews,
     reviewStats: data.reviews.length > 0 ? data.reviewStats : { average: reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length, count: reviews.length },

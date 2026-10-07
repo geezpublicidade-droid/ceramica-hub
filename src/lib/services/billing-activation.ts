@@ -1,5 +1,6 @@
 import { createServiceClient } from "@/lib/supabase/server";
 import { markReferralConverted } from "@/lib/services/referrals";
+import { changeCompanyPlan } from "@/lib/services/plan-admin";
 
 export const SUBSCRIPTION_DAYS = 30;
 
@@ -42,7 +43,19 @@ export async function activateInvoice(invoiceId: string, confirmedByAdminId: str
     .from("subscriptions")
     .update({ status: "active", started_at: startedAt.toISOString(), ends_at: endsAt.toISOString() })
     .eq("id", subscription.id);
-  await supabase.from("businesses").update({ plan: subscription.plan }).eq("id", claimed.business_id);
+  // ativa pelo serviço central: grava plano, status ativo, início e vencimento, registra no histórico e avisa empresa e admins
+  await changeCompanyPlan({
+    businessId: claimed.business_id,
+    plan: subscription.plan,
+    status: "active",
+    startedAt: startedAt.toISOString(),
+    expiresAt: endsAt.toISOString(),
+    billingCycle: "monthly",
+    manualOverride: false,
+    kind: "payment",
+    reason: confirmedByAdminId ? "Pagamento confirmado manualmente pelo admin" : "Pagamento aprovado (Mercado Pago)",
+    actor: confirmedByAdminId ? { type: "admin", id: confirmedByAdminId } : { type: "system" },
+  });
 
   try {
     await markReferralConverted(claimed.business_id);

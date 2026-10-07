@@ -234,8 +234,8 @@ export function diffFeatures(from: Readonly<FeatureMap>, to: Readonly<FeatureMap
 // ---------------------------------------------------------------------------------------------------------------
 
 /** Itens que ficam no ar: só os ativos, até o limite do plano, na ordem recebida. O excedente continua salvo (inativo). */
-export function publishedItems<T extends { active?: boolean }>(items: readonly T[], limit: number): T[] {
-  const active = items.filter((item) => item.active !== false);
+export function publishedItems<T extends object>(items: readonly T[], limit: number): T[] {
+  const active = items.filter((item) => (item as { active?: boolean }).active !== false);
   return Number.isFinite(limit) ? active.slice(0, Math.max(0, limit)) : active;
 }
 

@@ -204,3 +204,41 @@ export async function getContentUsage(businessId: string): Promise<ContentUsage>
   ]);
   return { services, gallery_images: photos, featured_videos: videos, active_promotions: promotions };
 }
+
+// ---------------------------------------------------------------------------------------------------------------
+// Histórico
+// ---------------------------------------------------------------------------------------------------------------
+
+export type PlanHistoryEntry = {
+  id: string;
+  kind: string;
+  fromPlan: PlanKey | null;
+  toPlan: PlanKey | null;
+  fromStatus: PlanStatus | null;
+  toStatus: PlanStatus | null;
+  reason: string | null;
+  effectiveAt: string;
+  changedByType: "admin" | "business" | "system";
+  metadata: Record<string, unknown> | null;
+};
+
+export async function getPlanHistory(businessId: string, limit = 50): Promise<PlanHistoryEntry[]> {
+  const { data } = await createServiceClient()
+    .from("plan_change_history")
+    .select("id, kind, from_plan, to_plan, from_status, to_status, reason, effective_at, changed_by_type, metadata")
+    .eq("business_id", businessId)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    kind: row.kind,
+    fromPlan: row.from_plan,
+    toPlan: row.to_plan,
+    fromStatus: row.from_status,
+    toStatus: row.to_status,
+    reason: row.reason,
+    effectiveAt: row.effective_at,
+    changedByType: row.changed_by_type,
+    metadata: row.metadata,
+  }));
+}

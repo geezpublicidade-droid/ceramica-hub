@@ -7,6 +7,7 @@ import { getCompanyPermissions } from "@/lib/services/company-plan";
 import { loadPlanCatalog } from "@/lib/services/plan-catalog";
 import { publishedItems } from "@/lib/plans/resolve";
 import type { FeatureMap } from "@/lib/plans/features";
+import { gateLandingConfig } from "@/lib/landing/gate";
 import { parseSchedule, type OpeningSchedule } from "@/lib/landing/hours";
 import { applyDemoContent } from "@/lib/landing/demo";
 
@@ -65,7 +66,12 @@ export type LandingData = {
   services: BusinessService[];
   hasMoreServices: boolean;
   faqs: LandingFaq[];
+  /** a promoção em destaque (a mais recente publicada) */
   offer: LandingOffer | null;
+  /** todas as promoções publicadas, até o limite do plano (a primeira é o `offer`) */
+  offers: LandingOffer[];
+  /** mapa de recursos que valeu para montar esta página (plano em vigor + overrides) */
+  features: FeatureMap;
   gallery: OwnedPhoto[];
   videos: OwnedPhoto[];
   reviews: BusinessReview[];
@@ -173,8 +179,8 @@ async function loadFaqs(businessId: string): Promise<LandingFaq[]> {
   return (data ?? []).map((row) => ({ id: row.id, question: row.question, answer: row.answer }));
 }
 
-/** Primeira promoção ativa e dentro da validade (a mais recente). */
-async function loadOffer(businessId: string): Promise<LandingOffer | null> {
+/** Promoções ativas e dentro da validade, da mais recente para a mais antiga, até o limite do plano. */
+async function loadOffers(businessId: string, limit: number): Promise<LandingOffer[]> {
   const today = new Date().toISOString().slice(0, 10);
   const { data, error } = await createServiceClient()
     .from("benefits")
@@ -183,18 +189,17 @@ async function loadOffer(businessId: string): Promise<LandingOffer | null> {
     .eq("active", true)
     .or(`valid_until.is.null,valid_until.gte.${today}`)
     .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-  if (error || !data) return null;
-  return {
-    id: data.id,
-    title: data.title,
-    description: data.description ?? "",
-    imageUrl: text(data.image_url),
-    ctaLabel: text(data.cta_label),
-    couponCode: text(data.coupon_code),
-    validUntil: text(data.valid_until),
-  };
+    .limit(Number.isFinite(limit) ? Math.max(0, limit) : 12);
+  if (error || !data) return [];
+  return data.map((row) => ({
+    id: row.id,
+    title: row.title,
+    description: row.description ?? "",
+    imageUrl: text(row.image_url),
+    ctaLabel: text(row.cta_label),
+    couponCode: text(row.coupon_code),
+    validUntil: text(row.valid_until),
+  }));
 }
 
 async function loadReviews(businessId: string) {
@@ -204,6 +209,11 @@ async function loadReviews(businessId: string) {
   } catch {
     return { reviews: [], reviewStats: { average: 0, count: 0 } };
   }
+}
+
+/** Sem cupom rastreável no plano, a promoção aparece sem o código. */
+function couponGate(offers: LandingOffer[], capabilities: LandingCapabilities): LandingOffer[] {
+  return capabilities.trackableCoupons ? offers : offers.map((offer) => ({ ...offer, couponCode: null }));
 }
 
 /** Recursos que valem para esta página: os da empresa (plano em vigor + overrides) ou, na simulação, os de fábrica/admin do plano escolhido. */
@@ -223,15 +233,16 @@ export async function getLandingData(
   options: { locale?: string; allowDraft?: boolean; simulatePlan?: Business["plan"]; demoContent?: boolean } = {},
 ): Promise<LandingData> {
   const stored = await loadConfig(business.id);
-  const config = stored.status === "draft" && !options.allowDraft ? EMPTY_CONFIG : stored;
   const features = await featuresFor(business, options.simulatePlan);
   const capabilities = landingCapabilitiesFromFeatures(features);
+  // rascunho: o público vê só o básico; o plano em vigor esconde (sem apagar) o que a configuração salva não pode mais mostrar
+  const config = gateLandingConfig(stored.status === "draft" && !options.allowDraft ? EMPTY_CONFIG : stored, capabilities);
 
-  const [allServices, allPhotos, faqs, offer, reviewData] = await Promise.all([
+  const [allServices, allPhotos, faqs, offers, reviewData] = await Promise.all([
     getBusinessServices(business.id, options.locale),
     getBusinessPhotos(business.id),
     capabilities.faq ? loadFaqs(business.id) : Promise.resolve([]),
-    capabilities.offer ? loadOffer(business.id) : Promise.resolve(null),
+    capabilities.offer ? loadOffers(business.id, capabilities.maxPromotions) : Promise.resolve([] as LandingOffer[]),
     loadReviews(business.id),
   ]);
 
@@ -246,7 +257,10 @@ export async function getLandingData(
     services,
     hasMoreServices: services.length > 6,
     faqs,
-    offer,
+    // cupom rastreável só aparece se o plano incluir
+    offer: offers.length > 0 ? couponGate(offers, capabilities)[0] : null,
+    offers: couponGate(offers, capabilities),
+    features,
     gallery: publishedItems(media.filter((item) => item.kind === "photo"), capabilities.maxGalleryItems),
     videos: capabilities.video ? publishedItems(media.filter((item) => item.kind === "video"), capabilities.maxVideos) : [],
     ...reviewData,

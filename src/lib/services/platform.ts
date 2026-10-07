@@ -4,8 +4,9 @@ import { type Opportunity } from "@/data/opportunities";
 import { type Benefit } from "@/data/benefits";
 import { getTranslationsFor, type EntityTranslations } from "@/lib/services/translate";
 import { cachedPlanSettings, loadPlanCatalog } from "@/lib/services/plan-catalog";
+import { getFeaturesForBusinesses } from "@/lib/services/company-plan";
 import type { BuiltInPlan } from "@/lib/plans/features";
-import { resolveEffectivePlan, type EffectivePlan, type PlanStatus } from "@/lib/plans/resolve";
+import { canAccess, getLimit, publishedItems, resolveEffectivePlan, type EffectivePlan, type PlanStatus } from "@/lib/plans/resolve";
 
 export type PlatformStats = {
   businesses: number;
@@ -352,7 +353,7 @@ export async function getOpportunities(locale?: string): Promise<OpportunityWith
     translationsByEntityId("business", rows.map((row) => row.business_id), locale),
   ]);
 
-  return rows.map((row) => {
+  const mapped = rows.map((row) => {
     const business = mapBusiness(row.businesses as unknown as BusinessRow, businessTranslations[row.business_id]);
     const translation = ownTranslations[row.id];
     return {
@@ -364,6 +365,12 @@ export async function getOpportunities(locale?: string): Promise<OpportunityWith
       business,
     };
   });
+  // publicar oportunidades é recurso de plano: sem ele, ficam salvas e não aparecem
+  const features = await getFeaturesForBusinesses(mapped.map((item) => item.business));
+  return mapped.filter((item) => {
+    const map = features.get(item.businessId);
+    return map ? canAccess(map, "opportunities") : false;
+  });
 }
 
 export type BenefitWithBusiness = Benefit & { business: Business };
@@ -373,9 +380,10 @@ export async function getBenefits(locale?: string): Promise<BenefitWithBusiness[
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("benefits")
-    .select(`id, kind, title, description, valid_until, coupon_code, max_total_uses, business_id, businesses!inner(${BUSINESS_SELECT})`)
+    .select(`id, kind, title, description, valid_until, coupon_code, max_total_uses, business_id, created_at, businesses!inner(${BUSINESS_SELECT})`)
     .eq("active", true)
-    .eq("businesses.status", "approved");
+    .eq("businesses.status", "approved")
+    .order("created_at", { ascending: false });
   if (error) throw error;
 
   const rows = data ?? [];
@@ -384,7 +392,7 @@ export async function getBenefits(locale?: string): Promise<BenefitWithBusiness[
     translationsByEntityId("business", rows.map((row) => row.business_id), locale),
   ]);
 
-  return rows.map((row) => {
+  const mapped = rows.map((row) => {
     const business = mapBusiness(row.businesses as unknown as BusinessRow, businessTranslations[row.business_id]);
     const translation = ownTranslations[row.id];
     return {
@@ -399,6 +407,29 @@ export async function getBenefits(locale?: string): Promise<BenefitWithBusiness[
       business,
     };
   });
+  return gateBenefitsByPlan(mapped);
+}
+
+/**
+ * Promoções publicadas = as mais recentes ativas, até o limite do plano em vigor (o excedente de um downgrade continua salvo);
+ * o código do cupom só aparece se o plano incluir cupons rastreáveis.
+ */
+async function gateBenefitsByPlan(benefits: BenefitWithBusiness[]): Promise<BenefitWithBusiness[]> {
+  const features = await getFeaturesForBusinesses(benefits.map((benefit) => benefit.business));
+  const byBusiness = new Map<string, BenefitWithBusiness[]>();
+  for (const benefit of benefits) byBusiness.set(benefit.businessId, [...(byBusiness.get(benefit.businessId) ?? []), benefit]);
+
+  const published: BenefitWithBusiness[] = [];
+  for (const [businessId, items] of byBusiness) {
+    const map = features.get(businessId);
+    if (!map) continue;
+    const trackable = canAccess(map, "trackable_coupons");
+    for (const item of publishedItems(items, getLimit(map, "active_promotions"))) {
+      published.push(trackable ? item : { ...item, couponCode: undefined, maxTotalUses: undefined });
+    }
+  }
+  const order = new Map(benefits.map((benefit, index) => [benefit.id, index]));
+  return published.sort((a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0));
 }
 
 /** Só os benefícios que viram "cupom" de verdade pro membro resgatar --

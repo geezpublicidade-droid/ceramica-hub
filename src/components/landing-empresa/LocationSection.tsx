@@ -16,7 +16,8 @@ export async function LocationSection({ ctx }: { ctx: LandingContext }) {
   const { business, data } = ctx;
   const { config } = data;
   const scheduleLines = formatSchedule(config.openingSchedule);
-  const hours = scheduleLines.length > 0 ? scheduleLines : business.openingHours ? [business.openingHours] : [];
+  const caps = data.capabilities;
+  const hours = scheduleLines.length > 0 ? scheduleLines : caps.businessHours && business.openingHours ? [business.openingHours] : [];
 
   const rows: Row[] = [
     { icon: MapPin, title: t("address"), lines: [business.floor, ctx.address, config.referencePoint].filter((v): v is string => Boolean(v)) },
@@ -26,7 +27,7 @@ export async function LocationSection({ ctx }: { ctx: LandingContext }) {
   ].filter((row) => row.lines.length > 0);
 
   const socials = [
-    business.instagram ? { label: "Instagram", href: instagramUrl(business.instagram) } : null,
+    caps.socialMedia && business.instagram ? { label: "Instagram", href: instagramUrl(business.instagram) } : null,
     config.facebookUrl ? { label: "Facebook", href: config.facebookUrl } : null,
     config.tiktokUrl ? { label: "TikTok", href: config.tiktokUrl } : null,
     config.youtubeUrl ? { label: "YouTube", href: config.youtubeUrl } : null,
@@ -63,13 +64,13 @@ export async function LocationSection({ ctx }: { ctx: LandingContext }) {
             </div>
           ))}
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[14.5px]">
-            {ctx.phoneDigits && (
+            {ctx.phoneDigits && caps.commercialInfo && (
               <ContactLink href={`tel:${ctx.phoneDigits}`} businessId={business.id} kind="phone" className="inline-flex items-center gap-1.5 font-medium text-foreground hover:text-primary">
                 <Phone className="h-4 w-4" aria-hidden="true" />
                 {business.phone}
               </ContactLink>
             )}
-            {business.websiteUrl && (
+            {business.websiteUrl && caps.commercialInfo && (
               <ContactLink href={business.websiteUrl} businessId={business.id} kind="website" className="inline-flex items-center gap-1.5 font-medium text-foreground hover:text-primary">
                 <Globe className="h-4 w-4" aria-hidden="true" />
                 {business.websiteUrl.replace(/^https?:\/\/(www\.)?/, "")}

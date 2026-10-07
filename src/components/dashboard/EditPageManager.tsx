@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { Business, BusinessService } from "@/data/businesses";
 import type { OwnedPhoto, OwnedPromotion, VirtualTourScene } from "@/lib/services/platform";
-import { upgradeTargetPlan, type PlanLimits } from "@/lib/plan-limits";
-import { planLabels } from "@/data/businesses";
+import { usePlanFeatures } from "@/components/plans/PlanProvider";
+import { UpgradePrompt } from "@/components/plans/UpgradePrompt";
 import { EDITAR_ANCHOR } from "@/lib/dashboard-anchors";
 import {
   updateBusinessProfile,
@@ -25,16 +25,16 @@ const inputClass =
   "mt-1.5 w-full rounded-xl border border-border bg-white px-4 py-2.5 text-[16px] text-foreground outline-none focus:border-primary";
 const labelClass = "text-[15px] font-medium text-foreground";
 
-function UpgradeNotice({ message, targetPlan }: { message: string; targetPlan: Business["plan"] | null }) {
+/** Convite ao upgrade: o plano que libera o recurso vem da matriz central (nunca de uma lista fixa nesta tela). */
+function UpgradeNotice({ message, feature }: { message: string; feature: string }) {
+  const { requiredPlanFor } = usePlanFeatures();
+  const required = requiredPlanFor(feature);
   return (
     <div className="mt-3 rounded-xl bg-primary/5 px-4 py-3 text-[15px] text-foreground">
       <p className="font-medium">Esse recurso faz parte de um plano superior.</p>
       <p className="mt-1 text-muted">{message}</p>
-      <Link
-        href={targetPlan ? `/planos/${targetPlan}` : "/planos"}
-        className="tap mt-2 inline-block font-medium text-primary hover:underline"
-      >
-        {targetPlan ? `Conhecer o plano ${planLabels[targetPlan]} →` : "Conhecer os planos →"}
+      <Link href={required ? `/planos/${required.key}` : "/planos"} className="tap mt-2 inline-block font-medium text-primary hover:underline">
+        {required ? `Conhecer o plano ${required.name} →` : "Conhecer os planos →"}
       </Link>
     </div>
   );
@@ -46,16 +46,23 @@ export function EditPageManager({
   photos,
   promotions,
   virtualTourScenes,
-  limits,
 }: {
   business: Business;
   services: BusinessService[];
   photos: OwnedPhoto[];
   promotions: OwnedPromotion[];
   virtualTourScenes: VirtualTourScene[];
-  limits: PlanLimits;
 }) {
   const router = useRouter();
+  const plan = usePlanFeatures();
+  const limits = {
+    maxServices: plan.getLimit("services"),
+    maxPhotos: plan.getLimit("gallery_images"),
+    maxPromotions: plan.getLimit("active_promotions"),
+    couponsAllowed: plan.canAccess("trackable_coupons"),
+    videoAllowed: plan.canAccess("featured_videos"),
+    virtualTourAllowed: plan.canAccess("tour_3d"),
+  };
   const [isPending, startTransition] = useTransition();
 
   const [profile, setProfile] = useState({
@@ -177,6 +184,7 @@ export function EditPageManager({
             <textarea
               className={inputClass}
               rows={3}
+              disabled={!plan.canAccess("full_description")}
               value={profile.description}
               onChange={(e) => setProfile((p) => ({ ...p, description: e.target.value }))}
             />
@@ -193,6 +201,7 @@ export function EditPageManager({
             <span className={labelClass}>URL da foto de capa</span>
             <input
               className={inputClass}
+              disabled={!plan.canAccess("landing_layout")}
               value={profile.coverPhotoUrl}
               onChange={(e) => setProfile((p) => ({ ...p, coverPhotoUrl: e.target.value }))}
             />
@@ -201,6 +210,7 @@ export function EditPageManager({
             <span className={labelClass}>Instagram</span>
             <input
               className={inputClass}
+              disabled={!plan.canAccess("social_media")}
               value={profile.instagram}
               onChange={(e) => setProfile((p) => ({ ...p, instagram: e.target.value }))}
             />
@@ -209,6 +219,7 @@ export function EditPageManager({
             <span className={labelClass}>Site</span>
             <input
               className={inputClass}
+              disabled={!plan.canAccess("commercial_info")}
               value={profile.websiteUrl}
               onChange={(e) => setProfile((p) => ({ ...p, websiteUrl: e.target.value }))}
             />
@@ -217,6 +228,7 @@ export function EditPageManager({
             <span className={labelClass}>Horário de atendimento</span>
             <input
               className={inputClass}
+              disabled={!plan.canAccess("business_hours")}
               value={profile.openingHours}
               onChange={(e) => setProfile((p) => ({ ...p, openingHours: e.target.value }))}
             />
@@ -234,9 +246,10 @@ export function EditPageManager({
           {!limits.videoAllowed && (
             <UpgradeNotice
               message="Vídeo em destaque é um recurso do plano Experiência."
-              targetPlan={upgradeTargetPlan(business.plan, "videoAllowed")}
+              feature="featured_videos"
             />
           )}
+          {!plan.canAccess("full_description") && <UpgradePrompt feature="full_description" label="Descrição completa, capa, redes sociais, site e horário" />}
           {profileError && <p className="text-[15px] text-red-600">{profileError}</p>}
           {profileSaved && <p className="text-[15px] text-primary">Salvo.</p>}
           <button
@@ -282,7 +295,7 @@ export function EditPageManager({
                 ? "Cadastro de serviços é exclusivo dos planos pagos."
                 : `Seu plano permite até ${limits.maxServices} serviços.`
             }
-            targetPlan={upgradeTargetPlan(business.plan, "maxServices")}
+            feature="services"
           />
         ) : (
           <div className="mt-4 flex flex-col gap-2">
@@ -336,7 +349,7 @@ export function EditPageManager({
         {photos.length >= limits.maxPhotos ? (
           <UpgradeNotice
             message={`Seu plano permite até ${limits.maxPhotos} imagens na galeria.`}
-            targetPlan={upgradeTargetPlan(business.plan, "maxPhotos")}
+            feature="gallery_images"
           />
         ) : (
           <div className="mt-4 flex gap-2">
@@ -390,7 +403,7 @@ export function EditPageManager({
         {!limits.virtualTourAllowed ? (
           <UpgradeNotice
             message="Visita virtual 360° é um recurso do plano Experiência."
-            targetPlan={upgradeTargetPlan(business.plan, "virtualTourAllowed")}
+            feature="tour_3d"
           />
         ) : (
           <div className="mt-4 flex flex-col gap-2">
@@ -448,12 +461,12 @@ export function EditPageManager({
         {limits.maxPromotions === 0 ? (
           <UpgradeNotice
             message="Promoções fazem parte dos planos Profissional, Destaque e Experiência."
-            targetPlan={upgradeTargetPlan(business.plan, "maxPromotions")}
+            feature="active_promotions"
           />
         ) : activePromotions.length >= limits.maxPromotions ? (
           <UpgradeNotice
             message={`Seu plano permite até ${limits.maxPromotions} promoção(ões) ativa(s) por vez.`}
-            targetPlan={upgradeTargetPlan(business.plan, "maxPromotions")}
+            feature="active_promotions"
           />
         ) : (
           <div className="mt-4 flex flex-col gap-2">

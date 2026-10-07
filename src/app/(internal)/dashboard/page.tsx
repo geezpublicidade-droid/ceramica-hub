@@ -3,7 +3,6 @@ import { auth, signOut } from "@/auth";
 import {
   getBusinessById,
   getMetricsSummary,
-  getOwnedInvoices,
   getDailyPageViews,
   getBusinessServices,
   getBusinessPhotos,
@@ -13,7 +12,6 @@ import { listStaff } from "@/lib/actions/business-staff";
 import { planLabels } from "@/data/businesses";
 import { calculatePresenceScore, getNextStepRecommendation } from "@/lib/services/presence-score";
 import { DASHBOARD_ANCHOR } from "@/lib/dashboard-anchors";
-import { PlanBilling } from "@/components/dashboard/PlanBilling";
 import { PrivacyControls } from "@/components/dashboard/PrivacyControls";
 import { StaffManagement } from "@/components/dashboard/StaffManagement";
 import { SignOutButton } from "@/components/nav/SignOutButton";
@@ -24,6 +22,9 @@ import { PresenceScoreCard } from "@/components/dashboard/PresenceScoreCard";
 import { NextStepCard } from "@/components/dashboard/NextStepCard";
 import { ChannelsCard } from "@/components/dashboard/ChannelsCard";
 import { StatTile } from "@/components/dashboard/StatTile";
+import { UpgradePrompt } from "@/components/plans/UpgradePrompt";
+import { getCompanyPermissions } from "@/lib/services/company-plan";
+import { landingCapabilitiesFromFeatures } from "@/lib/landing/sections";
 import { DailyViewsChart } from "@/components/dashboard/DailyViewsChart";
 import { LivePreviewCard } from "@/components/dashboard/LivePreviewCard";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
@@ -47,21 +48,23 @@ export default async function DashboardPage() {
   const isOwner = session?.user?.role === "business";
   const businessId = session?.user?.businessId;
 
-  const [business, metrics, invoices, staff, services, photos, promotions, dailyViewsRaw] =
+  const [business, metrics, staff, services, photos, promotions, dailyViewsRaw, permissions] =
     await Promise.all([
       businessId ? getBusinessById(businessId) : Promise.resolve(undefined),
       businessId ? getMetricsSummary(businessId) : Promise.resolve(undefined),
-      businessId ? getOwnedInvoices(businessId) : Promise.resolve([]),
       isOwner ? listStaff() : Promise.resolve([]),
       businessId ? getBusinessServices(businessId) : Promise.resolve([]),
       businessId ? getBusinessPhotos(businessId) : Promise.resolve([]),
       businessId ? getOwnedPromotions(businessId) : Promise.resolve([]),
       businessId ? getDailyPageViews(businessId, 7) : Promise.resolve([]),
+      businessId ? getCompanyPermissions(businessId) : Promise.resolve(null),
     ]);
 
   const totalViews = metrics?.commercial_page_viewed ?? 0;
   const totalContacts = (metrics?.whatsapp_clicked ?? 0) + (metrics?.appointment_clicked ?? 0);
-  const hasDetailedMetrics = business?.effectivePlan !== "presenca";
+  // métricas por plano: nenhuma (gratuito), só visualizações (resumo), básicas ou completas
+  const metricsLevel = permissions ? landingCapabilitiesFromFeatures(permissions.features).metrics : "none";
+  const hasDetailedMetrics = metricsLevel !== "none" && metricsLevel !== "summary";
   const dailyViews = hasDetailedMetrics ? dailyViewsRaw : [];
 
   const hasActivePromotion = promotions.some((promotion) => promotion.active);
@@ -190,14 +193,19 @@ export default async function DashboardPage() {
                 </p>
                 <Link href="/dashboard/resultados" className="text-[14px] font-medium text-primary hover:underline">Ver detalhes: 7, 30 e 90 dias</Link>
               </div>
-              <div className="mt-4 grid grid-cols-2 gap-4">
-                <StatTile label="Visualizações da página" value={totalViews} />
-                <StatTile label="Contatos recebidos" value={totalContacts} />
-              </div>
-              {!hasDetailedMetrics && (
+              {metricsLevel === "none" ? (
+                <div className="mt-4">
+                  <UpgradePrompt feature="metrics_summary" label="Métricas da página" description="Acompanhe visualizações e contatos da sua empresa." />
+                </div>
+              ) : (
+                <div className={`mt-4 grid gap-4 ${hasDetailedMetrics ? "grid-cols-2" : "grid-cols-1"}`}>
+                  <StatTile label="Visualizações da página" value={totalViews} />
+                  {hasDetailedMetrics && <StatTile label="Contatos recebidos" value={totalContacts} />}
+                </div>
+              )}
+              {metricsLevel === "summary" && (
                 <p className="mt-5 rounded-xl bg-primary/5 px-4 py-3 text-[15px] text-foreground">
-                  Sua página recebeu interesse. Faça upgrade para visualizar a origem das
-                  buscas, períodos e serviços mais acessados.
+                  Faça upgrade para visualizar contatos, cliques em promoções, uso de cupons, origem das visitas e períodos.
                 </p>
               )}
               {hasDetailedMetrics && dailyViews.length > 0 && (
@@ -206,7 +214,7 @@ export default async function DashboardPage() {
                   <DailyViewsChart data={dailyViews} />
                 </div>
               )}
-              {totalViews === 0 && totalContacts === 0 && (
+              {metricsLevel !== "none" && totalViews === 0 && totalContacts === 0 && (
                 <p className="mt-5 text-[15px] text-muted">
                   Seu perfil acabou de entrar no ar. As primeiras métricas aparecerão assim que
                   ele começar a ser exibido.
@@ -216,7 +224,7 @@ export default async function DashboardPage() {
 
             <NextStepCard recommendation={nextStep} />
 
-            <ChannelsCard business={business} hasActivePromotion={hasActivePromotion} />
+            <ChannelsCard business={business} hasActivePromotion={hasActivePromotion} features={permissions?.features ?? null} />
 
             <LivePreviewCard business={business} photos={photos} />
 
@@ -280,8 +288,18 @@ export default async function DashboardPage() {
             </div>
 
             {isOwner && (
-              <div id={DASHBOARD_ANCHOR.plano} className="scroll-mt-24">
-                <PlanBilling currentPlan={business.plan} invoices={invoices} />
+              <div id={DASHBOARD_ANCHOR.plano} className="scroll-mt-24 glass-light flex flex-wrap items-center justify-between gap-4 rounded-3xl p-6">
+                <div>
+                  <p className="text-[15px] font-medium uppercase tracking-[0.15em] text-muted">Plano e assinatura</p>
+                  <p className="mt-2 text-[16px] text-foreground">
+                    {planLabels[business.effectivePlan]}
+                    {business.planInGrace ? " — pagamento em atraso" : business.planStatus !== "active" ? ` — ${business.planStatus === "pending" ? "aguardando pagamento" : business.planStatus}` : ""}
+                  </p>
+                  <p className="mt-1 text-[14px] text-muted">Recursos, limites, renovação, upgrade e histórico.</p>
+                </div>
+                <Link href="/dashboard/plano" className="neu rounded-full px-6 py-3 text-[15px] font-medium text-foreground">
+                  Gerenciar plano
+                </Link>
               </div>
             )}
             {isOwner && <StaffManagement staff={staff} />}

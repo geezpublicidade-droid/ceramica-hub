@@ -2,6 +2,7 @@ import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { applyDemoContent, familyFor, pickDemoImages, DEMO_STOCK_IMAGES } from "../landing/demo.ts";
 import { landingCapabilitiesFor } from "../landing/sections.ts";
+import { gateLandingConfig } from "../landing/gate.ts";
 
 type Plan = "presenca" | "profissional" | "destaque" | "experiencia" | "premium";
 
@@ -20,6 +21,8 @@ function emptyData(plan: Plan) {
     hasMoreServices: false,
     faqs: [],
     offer: null,
+    offers: [],
+    features: {},
     gallery: [],
     videos: [],
     reviews: [],
@@ -102,5 +105,51 @@ describe("grade de serviços da simulação", () => {
   it("plano gratuito (limite 0) continua sem serviços", () => {
     const out = applyDemoContent(emptyData("presenca") as never, { business: business("Saúde & Estética"), ownImages: [] });
     assert.equal(out.services.length, 0);
+  });
+});
+
+describe("gateLandingConfig (downgrade esconde sem apagar)", () => {
+  const full = {
+    ...(emptyData("premium").config as Record<string, unknown>),
+    heroHeadline: "Título", heroImageUrl: "https://x.com/h.jpg", aboutProblem: "x", aboutDifferentials: ["a"], yearsInBusiness: 5,
+    finalCtaTitle: "Fim", leadFormEnabled: true, whatsappPhone: "11987654321", whatsappMessage: "Oi", facebookUrl: "https://facebook.com/x",
+    openingSchedule: { mon: [["09:00", "18:00"]] }, parkingInfo: "vaga", seoTitle: "SEO",
+  };
+
+  it("Experiência mantém tudo", () => {
+    const out = gateLandingConfig(full as never, landingCapabilitiesFor("experiencia"));
+    assert.equal(out.heroHeadline, "Título");
+    assert.equal(out.leadFormEnabled, true);
+    assert.deepEqual(out.aboutDifferentials, ["a"]);
+  });
+
+  it("Profissional perde hero, seções, CTAs e formulário, mas mantém WhatsApp, redes, horário e info comercial", () => {
+    const out = gateLandingConfig(full as never, landingCapabilitiesFor("profissional"));
+    assert.equal(out.heroHeadline, null);
+    assert.equal(out.heroImageUrl, null);
+    assert.equal(out.aboutProblem, null);
+    assert.equal(out.finalCtaTitle, null);
+    assert.equal(out.whatsappMessage, null);
+    assert.equal(out.leadFormEnabled, false);
+    assert.equal(out.seoTitle, null);
+    assert.equal(out.whatsappPhone, "11987654321");
+    assert.equal(out.facebookUrl, "https://facebook.com/x");
+    assert.ok(out.openingSchedule);
+    assert.equal(out.parkingInfo, "vaga");
+  });
+
+  it("Gratuito não mostra nada da configuração salva", () => {
+    const out = gateLandingConfig(full as never, landingCapabilitiesFor("presenca"));
+    assert.equal(out.whatsappPhone, null);
+    assert.equal(out.facebookUrl, null);
+    assert.equal(out.openingSchedule, null);
+    assert.equal(out.parkingInfo, null);
+    assert.equal(out.heroHeadline, null);
+  });
+
+  it("não altera o objeto original (nada é apagado)", () => {
+    const original = JSON.stringify(full);
+    gateLandingConfig(full as never, landingCapabilitiesFor("presenca"));
+    assert.equal(JSON.stringify(full), original);
   });
 });

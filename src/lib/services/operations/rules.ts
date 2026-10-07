@@ -4,6 +4,9 @@ import { logSystemAction } from "@/lib/audit-log";
 import { formatDateBR } from "@/lib/utils";
 import type { TaskPriority } from "@/lib/services/tasks";
 import type { OperationalRule } from "./catalog";
+import { changeCompanyPlan } from "@/lib/services/plan-admin";
+import { loadPlanCatalog } from "@/lib/services/plan-catalog";
+import { resolveEffectivePlan } from "@/lib/plans/resolve";
 
 type Supabase = ReturnType<typeof createServiceClient>;
 
@@ -135,26 +138,22 @@ export async function inactiveBusinessRule(supabase: Supabase): Promise<number> 
   );
 }
 
-/** Rebaixa a empresa ao plano gratuito só se o plano dela é o da assinatura que venceu e não resta outra ativa. */
-async function downgradeIfNoActiveSubscription(supabase: Supabase, businessId: string, expiredPlan: string): Promise<boolean> {
-  const { count, error } = await supabase
-    .from("subscriptions")
-    .select("id", { count: "exact", head: true })
-    .eq("business_id", businessId)
-    .eq("status", "active");
+/**
+ * Assinatura vencida: marca a empresa como "em atraso" (past_due). O plano CONTRATADO não é reescrito: durante a tolerância
+ * os recursos continuam, e depois dela o plano em vigor volta ao gratuito sozinho. Todo o conteúdo pago fica salvo (inativo)
+ * e é restaurado na regularização. Cortesia (manual_override) nunca vence sozinha.
+ */
+async function markPastDueIfNoActiveSubscription(supabase: Supabase, businessId: string, expiredPlan: string): Promise<boolean> {
+  const { count, error } = await supabase.from("subscriptions").select("id", { count: "exact", head: true }).eq("business_id", businessId).eq("status", "active");
   if (error) throw error;
   if ((count ?? 0) > 0) return false;
 
-  const { data, error: updateError } = await supabase
-    .from("businesses")
-    .update({ plan: FREE_PLAN })
-    .eq("id", businessId)
-    .eq("plan", expiredPlan)
-    .select("id");
-  if (updateError) throw updateError;
-  if (!data?.length) return false;
-  await logSystemAction("subscription_expired_downgrade", "business", businessId, { from: expiredPlan, to: FREE_PLAN });
-  return true;
+  const { data: business, error: readError } = await supabase.from("businesses").select("plan, plan_status, manual_override").eq("id", businessId).maybeSingle();
+  if (readError) throw readError;
+  if (!business || business.plan !== expiredPlan || business.manual_override || ["past_due", "expired", "suspended", "canceled"].includes(business.plan_status)) return false;
+
+  const result = await changeCompanyPlan({ businessId, status: "past_due", kind: "status_change", reason: "Assinatura venceu sem renovação", actor: { type: "system" } });
+  return result.ok;
 }
 
 export async function subscriptionExpiredRule(supabase: Supabase): Promise<number> {
@@ -166,8 +165,35 @@ export async function subscriptionExpiredRule(supabase: Supabase): Promise<numbe
     .select("id, business_id, plan");
   if (error) throw error;
   const expired = data ?? [];
-  for (const sub of expired) await downgradeIfNoActiveSubscription(supabase, sub.business_id, sub.plan);
+  for (const sub of expired) await markPastDueIfNoActiveSubscription(supabase, sub.business_id, sub.plan);
   return expired.length;
+}
+
+/**
+ * Tolerância esgotada: empresa em atraso (ou ativa com vencimento passado) cujo plano em vigor já voltou ao gratuito passa a
+ * "expirada" e isso é registrado no histórico. É só o registro: o conteúdo continua salvo e a regularização restaura tudo.
+ */
+export async function planGraceExpiredRule(supabase: Supabase): Promise<number> {
+  const catalog = await loadPlanCatalog({ fresh: true });
+  const { data, error } = await supabase
+    .from("businesses")
+    .select("id, plan, plan_status, plan_expires_at, plan_updated_at, plan_started_at, manual_override")
+    .in("plan_status", ["active", "trialing", "past_due"])
+    .neq("plan", FREE_PLAN)
+    .eq("manual_override", false);
+  if (error) throw error;
+
+  let count = 0;
+  for (const row of data ?? []) {
+    const effective = resolveEffectivePlan(
+      { plan: row.plan, status: row.plan_status, startedAt: row.plan_started_at, expiresAt: row.plan_expires_at, updatedAt: row.plan_updated_at, manualOverride: false },
+      { graceDays: catalog.graceDays, ranks: catalog.ranks },
+    );
+    if (!effective.downgraded || effective.reason !== "free_expired") continue;
+    const result = await changeCompanyPlan({ businessId: row.id, status: "expired", kind: "auto_downgrade", reason: `Tolerância de ${catalog.graceDays} dia(s) esgotada: a página voltou aos recursos gratuitos`, actor: { type: "system" } });
+    if (result.ok) count += 1;
+  }
+  return count;
 }
 
 export async function placementReleaseRule(supabase: Supabase): Promise<number> {

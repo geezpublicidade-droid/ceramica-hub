@@ -1,5 +1,6 @@
 import type { Business } from "@/data/businesses";
-import { limitsFor } from "@/lib/plan-limits";
+import { DEFAULT_PLAN_FEATURES, type FeatureMap } from "@/lib/plans/features";
+import { canAccess, getLimit } from "@/lib/plans/resolve";
 import { StatusPill, type StatusPillTone } from "@/components/dashboard/StatusPill";
 
 type Channel = { label: string; status: string; tone: StatusPillTone };
@@ -18,23 +19,25 @@ function publicVisibilityChannel(label: string, business: Business): Channel {
 export function ChannelsCard({
   business,
   hasActivePromotion,
+  features,
 }: {
   business: Business;
   hasActivePromotion: boolean;
+  /** recursos em vigor da empresa (plano atual + overrides); sem eles usa o gratuito */
+  features: FeatureMap | null;
 }) {
-  const limits = limitsFor(business.plan);
-  const featuredLimits = limitsFor(business.effectivePlan);
+  const map = features ?? DEFAULT_PLAN_FEATURES.presenca;
 
   const publicVisibilityLabels = ["Perfil público", "Categoria da empresa", "Busca", "Torre ou localização"];
 
   const channels: Channel[] = [
     ...publicVisibilityLabels.map((label) => publicVisibilityChannel(label, business)),
-    limits.maxPromotions === 0
+    getLimit(map, "active_promotions") === 0
       ? { label: "Promoções e benefícios", status: "Não incluído no plano", tone: "neutral" as const }
       : hasActivePromotion
         ? { label: "Promoções e benefícios", status: "Ativo", tone: "positive" as const }
         : { label: "Promoções e benefícios", status: "Requer configuração", tone: "pending" as const },
-    featuredLimits.featuredAllowed
+    canAccess(map, "rotating_card")
       ? { label: "Destaques", status: "Ativo", tone: "positive" as const }
       : { label: "Destaques", status: "Não incluído no plano", tone: "neutral" as const },
   ];

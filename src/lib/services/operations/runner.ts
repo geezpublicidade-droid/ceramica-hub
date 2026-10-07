@@ -6,6 +6,7 @@ import {
   overduePaymentRule,
   placementExpiredRule,
   placementReleaseRule,
+  planGraceExpiredRule,
   proposalExpiredRule,
   proposalExpiringRule,
   subscriptionExpiredRule,
@@ -20,6 +21,7 @@ const RULES: Record<OperationalRule, (supabase: Supabase) => Promise<number>> = 
   overdue_payment: overduePaymentRule,
   inactive_business: inactiveBusinessRule,
   subscription_expired: subscriptionExpiredRule,
+  plan_grace_expired: planGraceExpiredRule,
   placement_release: placementReleaseRule,
   placement_expired: placementExpiredRule,
 };

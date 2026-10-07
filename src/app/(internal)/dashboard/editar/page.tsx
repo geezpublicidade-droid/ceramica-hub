@@ -7,7 +7,6 @@ import {
   getOwnedPromotions,
   getVirtualTourScenes,
 } from "@/lib/services/platform";
-import { limitsFor } from "@/lib/plan-limits";
 import { createServiceClient } from "@/lib/supabase/server";
 import { getBusinessCategoryIds, getCategoryGroups } from "@/lib/services/business-categories";
 import { updateOwnCategorizationAction } from "@/lib/actions/business-categorization";
@@ -72,7 +71,6 @@ export default async function EditarPaginaPage() {
             photos={photos}
             promotions={promotions}
             virtualTourScenes={virtualTourScenes}
-            limits={limitsFor(business.effectivePlan)}
           />
         </div>
       </div>

@@ -34,7 +34,8 @@ function secondaryCta(ctx: LandingContext, t: Awaited<ReturnType<typeof getTrans
 
 function HeroImage({ ctx }: { ctx: LandingContext }) {
   const { business, data } = ctx;
-  const image = data.capabilities.customCover ? (data.config.heroImageUrl ?? business.coverPhoto) : null;
+  const { customCover, coverImage } = data.capabilities;
+  const image = customCover ? (data.config.heroImageUrl ?? business.coverPhoto) : coverImage ? business.coverPhoto : null;
 
   if (!image) {
     return (
@@ -55,9 +56,14 @@ export async function Hero({ ctx }: { ctx: LandingContext }) {
   const [t, tPage, tCategories] = await Promise.all([getTranslations("LandingEmpresa"), getTranslations("EmpresaPage"), getTranslations("categories")]);
   const { business, data } = ctx;
   const { config } = data;
-  const secondary = secondaryCta(ctx, t);
+  // botão secundário: personalizado (Experiência+) ou "Conhecer serviços" quando há serviços na página
+  const hasServices = ctx.data.services.length > 0 && ctx.data.sections.includes("services");
+  const secondary = ctx.data.capabilities.customCover || hasServices ? secondaryCta(ctx, t) : null;
   const open = isOpenNow(config.openingSchedule);
-  const subtitle = config.heroSubtitle ?? business.description;
+  const subtitle = config.heroSubtitle ?? (data.capabilities.fullDescription ? business.description : null);
+  const { whatsapp, sponsoredBadge, featuredBadge, premiumBadge } = data.capabilities;
+  // selo discreto e transparente: só o mais alto que o plano libera (Premium > Em destaque > Patrocinada)
+  const badge = premiumBadge ? t("badgePremium") : featuredBadge ? t("badgeFeatured") : sponsoredBadge ? t("badgeSponsored") : null;
 
   return (
     <section className="relative overflow-hidden bg-[#fbf9f6]">
@@ -69,6 +75,7 @@ export async function Hero({ ctx }: { ctx: LandingContext }) {
           <div className="flex flex-wrap items-center gap-4">
             <BusinessAvatar business={business} className="h-16 w-16 rounded-md bg-white shadow-sm ring-1 ring-black/5" textClassName="text-[20px] font-semibold text-primary" />
             <p className="text-[15px] font-medium uppercase tracking-[0.18em] text-foreground">{business.name}</p>
+            {badge && <span className="rounded-full bg-foreground/90 px-3 py-1 text-[11.5px] font-medium tracking-wide text-white">{badge}</span>}
             {business.verified && (
               <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-white px-3 py-1 text-[12px] font-medium text-primary">
                 <BadgeCheck className="h-3.5 w-3.5" aria-hidden="true" />
@@ -97,11 +104,13 @@ export async function Hero({ ctx }: { ctx: LandingContext }) {
           </h1>
           {subtitle && <p className="max-w-lg text-[17px] leading-relaxed text-foreground/75">{subtitle}</p>}
           <div className="flex flex-wrap items-center gap-3">
-            <WhatsAppLink href={ctx.whatsappHref} businessId={business.id} businessName={business.name} className={WHATSAPP_BUTTON}>
-              {t("whatsappCta")}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </WhatsAppLink>
-            {secondary.external ? (
+            {whatsapp && (
+              <WhatsAppLink href={ctx.whatsappHref} businessId={business.id} businessName={business.name} className={WHATSAPP_BUTTON}>
+                {t("whatsappCta")}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </WhatsAppLink>
+            )}
+            {!secondary ? null : secondary.external ? (
               <a href={secondary.href} target="_blank" rel="noopener noreferrer" className={OUTLINE_BUTTON}>
                 {secondary.label}
               </a>
