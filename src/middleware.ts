@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "@/i18n/routing";
 import { LOGIN_PATH_BY_AREA } from "@/lib/login-paths";
@@ -14,6 +14,20 @@ const ROLE_BY_PREFIX: { prefix: string; roles: ("business" | "business_staff" | 
 const NO_LOCALE_PATHS = ["/login", "/entrar", "/esqueci-senha", "/redefinir-senha"];
 
 const intlMiddleware = createMiddleware(routing);
+
+// Pré-lançamento: qualquer URL pública (as que o Google já indexou) leva ao "Em breve".
+// Redirect 307 (temporário) pra não transferir/perder ranking. Quem está logado e a home
+// de cada idioma passam; /preview segue acessível por link direto (noindex).
+const LOCALE_PREFIX = /^/(en|es|zh)(?=/|$)/;
+const COMING_SOON_OPEN = [/^/?$/, /^/preview(/|$)/, /^/empresa/[^/]+/preview$/];
+
+function comingSoonRedirect(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+  const localePrefix = LOCALE_PREFIX.exec(pathname)?.[0] ?? "";
+  const bare = pathname.slice(localePrefix.length);
+  if (COMING_SOON_OPEN.some((re) => re.test(bare))) return null;
+  return NextResponse.redirect(new URL(localePrefix || "/", req.nextUrl.origin), 307);
+}
 
 export default auth((req) => {
   const { pathname } = req.nextUrl;
