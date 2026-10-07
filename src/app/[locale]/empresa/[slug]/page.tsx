@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/Header";
 import { CinematicFooter } from "@/components/landing/CinematicFooter";
-import { AdHereBanner } from "@/components/ads/AdHereBanner";
 import { BusinessAvatar } from "@/components/BusinessAvatar";
 import { LandingPageEmpresa } from "@/components/landing-empresa/LandingPageEmpresa";
 import { Link, redirect } from "@/i18n/navigation";
@@ -179,8 +178,6 @@ export default async function BusinessProfilePage({ params }: PageProps) {
             />
           </div>
 
-          <AdHereBanner tone={1} />
-
           {opportunities.length > 0 && (
             <section className="bg-surface px-6 py-16">
               <div className="mx-auto max-w-4xl space-y-10">
@@ -235,7 +232,6 @@ export default async function BusinessProfilePage({ params }: PageProps) {
               </div>
             </section>
           )}
-          <AdHereBanner />
         </LandingPageEmpresa>
       </main>
       <CinematicFooter />
