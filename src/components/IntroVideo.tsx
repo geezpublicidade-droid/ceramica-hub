@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 
 const SEEN_KEY = "ceramica:intro-seen";
+const FADE_MS = 800;
 
 const markSeen = () => {
   try {
@@ -31,13 +32,17 @@ const subscribeNothing = () => () => undefined;
 export function IntroVideo() {
   const t = useTranslations("IntroVideo");
   const skipped = useSyncExternalStore(subscribeNothing, alreadySkipped, () => false);
+  const [leaving, setLeaving] = useState(false);
   const [closed, setClosed] = useState(false);
   const visible = !skipped && !closed;
   const videoRef = useRef<HTMLVideoElement>(null);
 
+/** Sai com fade + leve zoom do vídeo, revelando o site por baixo; só depois desmonta. */
   const close = () => {
+    if (leaving) return;
     markSeen();
-    setClosed(true);
+    setLeaving(true);
+    window.setTimeout(() => setClosed(true), FADE_MS);
   };
 
   useEffect(() => {
@@ -52,8 +57,8 @@ export function IntroVideo() {
   if (!visible) return null;
 
   return (
-    <div role="dialog" aria-label={t("label")} className="fixed inset-0 z-[100] flex items-center justify-center bg-black">
-      <video ref={videoRef} src="/videos/abertura.mp4" muted playsInline autoPlay preload="auto" onEnded={close} onError={close} className="h-full w-full object-contain" />
+    <div role="dialog" aria-label={t("label")} style={{ transitionDuration: `${FADE_MS}ms` }} className={`fixed inset-0 z-[100] bg-black transition-opacity ease-out ${leaving ? "opacity-0" : "opacity-100"}`}>
+      <video ref={videoRef} src="/videos/abertura.mp4" muted playsInline autoPlay preload="auto" onEnded={close} onError={close} style={{ transitionDuration: `${FADE_MS}ms` }} className={`h-full w-full object-cover transition-transform ease-out ${leaving ? "scale-110" : "scale-100"}`} />
       <button type="button" onClick={close} className="absolute bottom-6 right-6 rounded-full bg-white/15 px-5 py-2.5 text-[15px] font-medium text-white backdrop-blur transition-colors hover:bg-white/25">
         {t("skip")}
       </button>
