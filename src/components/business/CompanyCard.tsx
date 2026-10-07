@@ -43,13 +43,13 @@ export function CompanyCard({ business, categoryLabel, layout, labels, position 
           />
         </Link>
         <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between gap-2">
-            <Link href={profileHref} className="min-w-0">
+          <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1.5">
+            <Link href={profileHref} className="w-full min-w-0">
               <h3 className="line-clamp-2 text-[18px] font-semibold leading-snug tracking-tight hover:text-primary">
                 {business.name}
               </h3>
             </Link>
-            <div className="flex shrink-0 flex-wrap items-center justify-end gap-1.5">
+            <div className="flex flex-wrap items-center gap-1.5">
               <ListingBadge badge={business.listing.badge} />
               {business.verified && (
                 <span className="shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-[12px] font-medium text-primary">
@@ -65,10 +65,10 @@ export function CompanyCard({ business, categoryLabel, layout, labels, position 
         </div>
       </div>
 
-      <div className={`flex items-center gap-3 ${isList ? "sm:shrink-0" : "mt-auto"}`}>
+      <div className={`flex flex-wrap items-center gap-3 ${isList ? "sm:shrink-0" : "mt-auto"}`}>
         <Link
           href={profileHref}
-          className="neu inline-flex min-h-11 flex-1 items-center justify-center rounded-full px-5 text-[15px] font-medium text-foreground sm:flex-none"
+          className="neu inline-flex min-h-11 flex-1 items-center justify-center whitespace-nowrap rounded-full px-4 text-[15px] font-medium text-foreground sm:flex-none"
         >
           {labels.viewProfile}
         </Link>
@@ -76,7 +76,7 @@ export function CompanyCard({ business, categoryLabel, layout, labels, position 
           <WhatsAppLink
             href={buildWhatsAppLink(business.phone, business.name)}
             businessId={business.id}
-            className="neu-primary inline-flex min-h-11 flex-1 items-center justify-center rounded-full px-5 text-[15px] font-medium text-white sm:flex-none"
+            className="neu-primary inline-flex min-h-11 flex-1 items-center justify-center whitespace-nowrap rounded-full px-4 text-[15px] font-medium text-white sm:flex-none"
           >
             {labels.whatsapp}
           </WhatsAppLink>

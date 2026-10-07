@@ -267,7 +267,7 @@ export default async function EmpresasPage({ params, searchParams }: PageProps) 
                   </div>
                 ) : (
                   <div
-                    className={`mt-6 grid gap-5 ${view === "list" ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 xl:grid-cols-3"}`}
+                    className={`mt-6 grid gap-5 ${view === "list" ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"}`}
                   >
                     {result.items.map(({ business, categoryLabel, rating, position }) => (
                       <CompanyCard
