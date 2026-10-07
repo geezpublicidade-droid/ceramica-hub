@@ -16,10 +16,10 @@ const NO_LOCALE_PATHS = ["/login", "/entrar", "/esqueci-senha", "/redefinir-senh
 const intlMiddleware = createMiddleware(routing);
 
 // Pré-lançamento: qualquer URL pública (as que o Google já indexou) leva ao "Em breve".
-// Redirect 307 (temporário) pra não transferir/perder ranking. Quem está logado e a home
-// de cada idioma passam; /preview segue acessível por link direto (noindex).
+// Redirect 307 (temporário) pra não transferir/perder ranking. Só a home de cada idioma
+// e sessões de admin passam; /preview e as APIs públicas também ficam fechados.
 const LOCALE_PREFIX = /^\/(en|es|zh)(?=\/|$)/;
-const COMING_SOON_OPEN = [/^\/?$/, /^\/preview(\/|$)/, /^\/empresa\/[^/]+\/preview$/];
+const COMING_SOON_OPEN = [/^\/?$/];
 
 function comingSoonRedirect(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -31,6 +31,11 @@ function comingSoonRedirect(req: NextRequest) {
 
 export default auth((req) => {
   const { pathname } = req.nextUrl;
+  const isAdmin = req.auth?.user.role === "admin";
+
+  // APIs de dados públicos (busca, anúncios, QR): só com sessão até o lançamento.
+  if (pathname.startsWith("/api/")) return req.auth ? undefined : NextResponse.json({ error: "not_found" }, { status: 404 });
+
   const match = ROLE_BY_PREFIX.find(({ prefix }) => pathname.startsWith(prefix));
 
   if (match) {
@@ -49,7 +54,7 @@ export default auth((req) => {
 
   if (NO_LOCALE_PATHS.includes(pathname) || pathname.startsWith("/proposta/") || pathname.startsWith("/descadastrar/")) return;
 
-  if (!req.auth) {
+  if (!isAdmin) {
     const redirect = comingSoonRedirect(req);
     if (redirect) return redirect;
   }
@@ -58,5 +63,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/membro/:path*", "/admin/:path*", "/((?!api|_next|_vercel|.*\\..*).*)"],
+  matcher: ["/dashboard/:path*", "/membro/:path*", "/admin/:path*", "/api/search/:path*", "/api/ads/:path*", "/api/business/:path*", "/((?!api|_next|_vercel|.*\\..*).*)"],
 };
