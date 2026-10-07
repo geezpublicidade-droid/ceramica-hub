@@ -18,8 +18,8 @@ const intlMiddleware = createMiddleware(routing);
 // Pré-lançamento: qualquer URL pública (as que o Google já indexou) leva ao "Em breve".
 // Redirect 307 (temporário) pra não transferir/perder ranking. Quem está logado e a home
 // de cada idioma passam; /preview segue acessível por link direto (noindex).
-const LOCALE_PREFIX = /^/(en|es|zh)(?=/|$)/;
-const COMING_SOON_OPEN = [/^/?$/, /^/preview(/|$)/, /^/empresa/[^/]+/preview$/];
+const LOCALE_PREFIX = /^\/(en|es|zh)(?=\/|$)/;
+const COMING_SOON_OPEN = [/^\/?$/, /^\/preview(\/|$)/, /^\/empresa\/[^/]+\/preview$/];
 
 function comingSoonRedirect(req: NextRequest) {
   const { pathname } = req.nextUrl;
