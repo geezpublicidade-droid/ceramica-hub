@@ -1,5 +1,12 @@
 import type { Business } from "@/data/businesses";
+import { DEFAULT_PLAN_FEATURES, type FeatureMap } from "@/lib/plans/features";
+import { canAccess, getLimit } from "@/lib/plans/resolve";
 
+/**
+ * Visão compatível (maxServices, maxPhotos...) dos recursos de um plano. A fonte de verdade é a matriz central
+ * (src/lib/plans/features.ts + tabela plan_features); este formato só existe para os componentes antigos.
+ * Para uma EMPRESA use getCompanyPermissions (considera status, tolerância e overrides).
+ */
 export type PlanLimits = {
   maxServices: number;
   maxPhotos: number;
@@ -10,14 +17,22 @@ export type PlanLimits = {
   featuredAllowed: boolean;
 };
 
-export const PLAN_LIMITS: Record<Business["plan"], PlanLimits> = {
-  presenca: { maxServices: 0, maxPhotos: 0, maxPromotions: 0, couponsAllowed: false, videoAllowed: false, virtualTourAllowed: false, featuredAllowed: false },
-  profissional: { maxServices: 3, maxPhotos: 3, maxPromotions: 1, couponsAllowed: false, videoAllowed: false, virtualTourAllowed: false, featuredAllowed: false },
-  destaque: { maxServices: 6, maxPhotos: 6, maxPromotions: 4, couponsAllowed: true, videoAllowed: false, virtualTourAllowed: false, featuredAllowed: true },
-  // Sala 3D é exclusiva do Premium (1 produção por ciclo dentro do escopo padrão; extras cobradas à parte).
-  experiencia: { maxServices: Infinity, maxPhotos: 30, maxPromotions: 4, couponsAllowed: true, videoAllowed: true, virtualTourAllowed: false, featuredAllowed: true },
-  premium: { maxServices: Infinity, maxPhotos: 30, maxPromotions: 4, couponsAllowed: true, videoAllowed: true, virtualTourAllowed: true, featuredAllowed: true },
-};
+export function limitsFromFeatures(features: Readonly<FeatureMap>): PlanLimits {
+  return {
+    maxServices: getLimit(features, "services"),
+    maxPhotos: getLimit(features, "gallery_images"),
+    maxPromotions: getLimit(features, "active_promotions"),
+    couponsAllowed: canAccess(features, "trackable_coupons"),
+    videoAllowed: canAccess(features, "featured_videos"),
+    virtualTourAllowed: canAccess(features, "tour_3d"),
+    featuredAllowed: canAccess(features, "rotating_card"),
+  };
+}
+
+/** Padrão de fábrica por plano (sem overrides nem edições do admin). */
+export const PLAN_LIMITS = Object.fromEntries(
+  (Object.keys(DEFAULT_PLAN_FEATURES) as Business["plan"][]).map((plan) => [plan, limitsFromFeatures(DEFAULT_PLAN_FEATURES[plan])]),
+) as Record<Business["plan"], PlanLimits>;
 
 export function limitsFor(plan: Business["plan"]): PlanLimits {
   return PLAN_LIMITS[plan];
@@ -59,4 +74,5 @@ export const PLAN_PRICE_DISPLAY: Record<Business["plan"], { price: string; hasPe
   destaque: { price: "R$ 147", hasPeriod: true },
   experiencia: { price: "R$ 297", hasPeriod: true },
   premium: { price: "R$ 497", hasPeriod: true },
+  patrocinador: { price: "Sob consulta", hasPeriod: false },
 };

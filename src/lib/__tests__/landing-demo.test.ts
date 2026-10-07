@@ -69,12 +69,13 @@ describe("applyDemoContent respeita o plano simulado", () => {
     assert.equal(out.config.heroImageUrl, null);
   });
 
-  it("Profissional: FAQ e galeria sim; oferta e formulário não", () => {
+  it("Profissional (perfil padronizado): galeria e 1 promoção sim; FAQ, formulário e capa personalizada não", () => {
     const out = applyDemoContent(emptyData("profissional") as never, { business: business("Alimentação"), ownImages: [] });
-    assert.ok(out.faqs.length > 0);
     assert.ok(out.gallery.length > 0);
-    assert.equal(out.offer, null);
+    assert.ok(out.offer);
+    assert.equal(out.faqs.length, 0);
     assert.equal(out.config.leadFormEnabled, false);
+    assert.equal(out.config.heroImageUrl, null);
   });
 
   it("conteúdo real nunca é sobrescrito", () => {

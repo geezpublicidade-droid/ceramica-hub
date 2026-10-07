@@ -3,6 +3,9 @@ import { categories, type Business, type BusinessService, type VirtualVisitType 
 import { type Opportunity } from "@/data/opportunities";
 import { type Benefit } from "@/data/benefits";
 import { getTranslationsFor, type EntityTranslations } from "@/lib/services/translate";
+import { cachedPlanSettings, loadPlanCatalog } from "@/lib/services/plan-catalog";
+import type { BuiltInPlan } from "@/lib/plans/features";
+import { resolveEffectivePlan, type EffectivePlan, type PlanStatus } from "@/lib/plans/resolve";
 
 export type PlatformStats = {
   businesses: number;
@@ -44,11 +47,17 @@ type BusinessRow = {
   address_verified: boolean;
   photographed: boolean;
   founder: boolean;
-  plan: "presenca" | "profissional" | "destaque" | "experiencia" | "premium";
+  plan: BuiltInPlan;
   status: "pending" | "approved" | "rejected" | "suspended";
   trial_status: "none" | "active" | "expired";
-  trial_plan: "presenca" | "profissional" | "destaque" | "experiencia" | "premium" | null;
+  trial_plan: BuiltInPlan | null;
   trial_ends_at: string | null;
+  plan_status: PlanStatus;
+  plan_started_at: string | null;
+  plan_expires_at: string | null;
+  plan_updated_at: string | null;
+  manual_override: boolean;
+  owner_validated: boolean;
   updated_at: string;
   towers: TowerJoin;
 };
@@ -68,23 +77,29 @@ function initialsFrom(name: string): string {
   return initials || name.slice(0, 2).toUpperCase();
 }
 
-function resolveEffectivePlan(row: BusinessRow): {
-  effectivePlan: BusinessRow["plan"];
-  trialStatus: "none" | "active" | "expired";
-} {
-  if (row.trial_status !== "active" || !row.trial_ends_at || !row.trial_plan) {
-    return { effectivePlan: row.plan, trialStatus: row.trial_status };
-  }
-  const stillActive = new Date(row.trial_ends_at).getTime() > Date.now();
-  return stillActive
-    ? { effectivePlan: row.trial_plan, trialStatus: "active" }
-    : { effectivePlan: row.plan, trialStatus: "expired" };
+/** Plano em vigor da empresa (status, vencimento, tolerância, cortesia e teste) — mesma regra de src/lib/plans/resolve.ts e das funções SQL. */
+function planStateFor(row: BusinessRow): { effective: EffectivePlan; trialStatus: "none" | "active" | "expired" } {
+  const { graceDays, ranks } = cachedPlanSettings();
+  const effective = resolveEffectivePlan(
+    {
+      plan: row.plan,
+      status: row.plan_status ?? "active",
+      startedAt: row.plan_started_at ?? null,
+      expiresAt: row.plan_expires_at ?? null,
+      updatedAt: row.plan_updated_at ?? null,
+      manualOverride: row.manual_override ?? false,
+      trial: { status: row.trial_status, plan: row.trial_plan, endsAt: row.trial_ends_at },
+    },
+    { graceDays, ranks },
+  );
+  const trialEnded = row.trial_status === "active" && (!row.trial_ends_at || new Date(row.trial_ends_at).getTime() <= Date.now());
+  return { effective, trialStatus: trialEnded ? "expired" : row.trial_status };
 }
 
 /** `translation` é o mapa field->value já resolvido pra ESSA empresa num idioma específico (ver `getTranslationsFor`); ausente/sem entrada = mantém o texto em português. */
 function mapBusiness(row: BusinessRow, translation?: Record<string, string>): Business {
   const verified = row.status === "approved" && row.address_verified;
-  const { effectivePlan, trialStatus } = resolveEffectivePlan(row);
+  const { effective, trialStatus } = planStateFor(row);
   return {
     id: row.id,
     slug: row.slug ?? row.id,
@@ -97,7 +112,12 @@ function mapBusiness(row: BusinessRow, translation?: Record<string, string>): Bu
     verified,
     initials: initialsFrom(row.name),
     plan: row.plan,
-    effectivePlan,
+    effectivePlan: effective.plan as Business["plan"],
+    planStatus: row.plan_status ?? "active",
+    planExpiresAt: row.plan_expires_at ?? null,
+    planReason: effective.reason,
+    planInGrace: effective.inGrace,
+    ownerValidated: row.owner_validated ?? true,
     trial: { status: trialStatus, plan: row.trial_plan, endsAt: row.trial_ends_at },
     status: row.status,
     logo: row.logo_url ?? undefined,
@@ -225,6 +245,7 @@ export async function getCategoryBreakdown(): Promise<CategoryBreakdown[]> {
 }
 
 export async function getFeaturedBusinesses(limit?: number, locale?: string): Promise<Business[]> {
+  await loadPlanCatalog();
   const supabase = createServiceClient();
   let query = supabase.from("businesses").select(BUSINESS_SELECT).eq("status", "approved");
   if (typeof limit === "number") query = query.limit(limit);
@@ -237,6 +258,7 @@ export async function getFeaturedBusinesses(limit?: number, locale?: string): Pr
 }
 
 export async function getAllBusinesses(locale?: string): Promise<Business[]> {
+  await loadPlanCatalog();
   const supabase = createServiceClient();
   const { data, error } = await supabase.from("businesses").select(BUSINESS_SELECT).eq("status", "approved");
   if (error) throw error;
@@ -248,6 +270,7 @@ export async function getAllBusinesses(locale?: string): Promise<Business[]> {
 
 /** Favoritos do membro, mais recente primeiro — empresa desaprovada/removida some da lista sem quebrar. */
 export async function getMemberFavorites(memberId: string, locale?: string): Promise<Business[]> {
+  await loadPlanCatalog();
   const supabase = createServiceClient();
   const { data: favorites, error: favoritesError } = await supabase
     .from("member_favorites")
@@ -271,6 +294,7 @@ export async function getMemberFavorites(memberId: string, locale?: string): Pro
 export const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export async function getBusinessById(id: string, locale?: string): Promise<Business | undefined> {
+  await loadPlanCatalog();
   if (!UUID_RE.test(id)) return undefined;
 
   const supabase = createServiceClient();
@@ -283,6 +307,7 @@ export async function getBusinessById(id: string, locale?: string): Promise<Busi
 }
 
 export async function getBusinessBySlug(slug: string, locale?: string): Promise<Business | undefined> {
+  await loadPlanCatalog();
   const supabase = createServiceClient();
   const { data, error } = await supabase.from("businesses").select(BUSINESS_SELECT).eq("slug", slug).maybeSingle();
   if (error) throw error;
@@ -293,6 +318,7 @@ export async function getBusinessBySlug(slug: string, locale?: string): Promise<
 }
 
 export async function getRelatedBusinesses(business: Business, limit = 3, locale?: string): Promise<Business[]> {
+  await loadPlanCatalog();
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("businesses")
@@ -311,6 +337,7 @@ export async function getRelatedBusinesses(business: Business, limit = 3, locale
 export type OpportunityWithBusiness = Opportunity & { business: Business };
 
 export async function getOpportunities(locale?: string): Promise<OpportunityWithBusiness[]> {
+  await loadPlanCatalog();
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("opportunities")
@@ -342,6 +369,7 @@ export async function getOpportunities(locale?: string): Promise<OpportunityWith
 export type BenefitWithBusiness = Benefit & { business: Business };
 
 export async function getBenefits(locale?: string): Promise<BenefitWithBusiness[]> {
+  await loadPlanCatalog();
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("benefits")
@@ -389,6 +417,7 @@ export type ClaimedCoupon = BenefitWithBusiness & { claimedAt: string; token: st
  * empresa já validou. Benefício desativado desde então ainda aparece -- só some se a empresa foi excluída
  * de fato, já que `benefits` tem cascade em `business_id`. */
 export async function getMemberCouponHistory(memberId: string, locale?: string): Promise<ClaimedCoupon[]> {
+  await loadPlanCatalog();
   const supabase = createServiceClient();
   const { data: claims, error } = await supabase
     .from("coupon_claims")
@@ -462,13 +491,13 @@ export async function getBusinessServices(businessId: string, locale?: string): 
   });
 }
 
-export type OwnedPhoto = { id: string; url: string; sortOrder: number; kind: "photo" | "video"; caption: string | null; alt: string | null };
+export type OwnedPhoto = { id: string; url: string; sortOrder: number; kind: "photo" | "video"; caption: string | null; alt: string | null; active?: boolean };
 
 export async function getBusinessPhotos(businessId: string): Promise<OwnedPhoto[]> {
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from("business_photos")
-    .select("id, url, sort_order, kind, caption, alt")
+    .select("id, url, sort_order, kind, caption, alt, active")
     .eq("business_id", businessId)
     .order("sort_order", { ascending: true });
   if (error) throw error;
@@ -479,6 +508,7 @@ export async function getBusinessPhotos(businessId: string): Promise<OwnedPhoto[
     kind: row.kind === "video" ? "video" : "photo",
     caption: row.caption ?? null,
     alt: row.alt ?? null,
+    active: row.active ?? true,
   }));
 }
 

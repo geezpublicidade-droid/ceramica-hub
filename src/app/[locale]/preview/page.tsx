@@ -48,7 +48,7 @@ export async function generateMetadata() {
 const TEST_RECORD_RE = /\bteste\b/i;
 
 // Planos pagos aparecem primeiro em "Negócios em destaque".
-const PLAN_PRIORITY: Record<Business["plan"], number> = { premium: 4, experiencia: 3, destaque: 2, profissional: 1, presenca: 0 };
+const PLAN_PRIORITY: Record<Business["plan"], number> = { patrocinador: 5, premium: 4, experiencia: 3, destaque: 2, profissional: 1, presenca: 0 };
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

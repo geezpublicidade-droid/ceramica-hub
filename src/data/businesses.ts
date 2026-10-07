@@ -1,3 +1,5 @@
+import type { BuiltInPlan } from "@/lib/plans/features";
+import type { EffectiveReason, PlanStatus } from "@/lib/plans/resolve";
 export type VirtualVisitType = "photos" | "video" | "iframe_360" | "matterport" | "external_url";
 
 export type VirtualVisit = {
@@ -32,12 +34,20 @@ export type Business = {
   /** = status === 'approved' no banco — selo de verificação real, não um flag arbitrário */
   verified: boolean;
   initials: string;
-  plan: "presenca" | "profissional" | "destaque" | "experiencia" | "premium";
-  /** plano "de verdade" pra fins de exibição/gating: plan, ou trial.plan enquanto o trial estiver ativo e dentro do prazo */
-  effectivePlan: "presenca" | "profissional" | "destaque" | "experiencia" | "premium";
+  /** plano CONTRATADO (o que a empresa paga ou ganhou) */
+  plan: BuiltInPlan;
+  /** plano EM VIGOR agora: considera status, vencimento, tolerância, cortesia e teste. É o que vale para exibir e liberar recursos (src/lib/plans/resolve.ts) */
+  effectivePlan: BuiltInPlan;
+  planStatus: PlanStatus;
+  planExpiresAt: string | null;
+  /** por que o plano em vigor é o que é (ativo, cortesia, teste, tolerância, expirado...) */
+  planReason: EffectiveReason;
+  planInGrace: boolean;
+  /** false = perfil sem proprietário validado (convite a reivindicar) */
+  ownerValidated: boolean;
   trial: {
     status: "none" | "active" | "expired";
-    plan: "presenca" | "profissional" | "destaque" | "experiencia" | "premium" | null;
+    plan: BuiltInPlan | null;
     endsAt: string | null;
   };
   status: "pending" | "approved" | "rejected" | "suspended";
@@ -60,6 +70,7 @@ export const planLabels: Record<Business["plan"], string> = {
   destaque: "Destaque",
   experiencia: "Experiência",
   premium: "Premium",
+  patrocinador: "Patrocinador",
 };
 
 export type BusinessService = {

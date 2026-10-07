@@ -3,10 +3,10 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { createServiceClient } from "@/lib/supabase/server";
-import { limitsFor } from "@/lib/plan-limits";
 import { getBusinessById } from "@/lib/services/platform";
 import { translateAndStore } from "@/lib/services/translate";
 import { requireOwnBusiness } from "@/lib/auth-guards";
+import { gateFeature, gateLimit, getContentUsage, planErrorFromDatabase } from "@/lib/services/company-plan";
 
 type ActionResult = { success: true } | { success: false; error: string };
 
@@ -23,9 +23,13 @@ function revalidateBusiness(businessId: string, slug: string) {
   revalidatePath(`/empresa/${slug}`);
 }
 
+const fail = (error: string): ActionResult => ({ success: false, error });
+/** Erro do banco: se for um bloqueio de plano (trigger), mostra a mensagem de plano; senão a mensagem comum. */
+const dbFail = (message: string | undefined, fallback: string): ActionResult => fail(planErrorFromDatabase(message) ?? fallback);
+
 // ---- perfil básico ----
 
-export async function updateBusinessProfile(input: {
+type ProfileInput = {
   description: string;
   logoUrl: string;
   coverPhotoUrl: string;
@@ -33,15 +37,45 @@ export async function updateBusinessProfile(input: {
   websiteUrl: string;
   openingHours: string;
   videoUrl: string;
-}): Promise<ActionResult> {
+};
+
+/**
+ * Um campo de plano só pode ser PREENCHIDO ou ALTERADO se o plano incluir o recurso. Se o valor não mudou (empresa que fez
+ * downgrade e reenvia o formulário), é aceito sem bloqueio e continua salvo — nada é apagado.
+ */
+async function blockedProfileField(businessId: string, input: ProfileInput, current: ProfileInput): Promise<string | null> {
+  const changed = (next: string, previous: string) => next.trim() !== previous.trim() && next.trim() !== "";
+  const checks: { changed: boolean; feature: string; label: string }[] = [
+    { changed: changed(input.description, current.description), feature: "full_description", label: "A descrição completa" },
+    { changed: changed(input.coverPhotoUrl, current.coverPhotoUrl), feature: "landing_layout", label: "A foto de capa" },
+    { changed: changed(input.instagram, current.instagram), feature: "social_media", label: "As redes sociais" },
+    { changed: changed(input.websiteUrl, current.websiteUrl), feature: "commercial_info", label: "O site e as informações comerciais" },
+    { changed: changed(input.openingHours, current.openingHours), feature: "business_hours", label: "O horário de funcionamento" },
+    { changed: changed(input.videoUrl, current.videoUrl), feature: "featured_videos", label: "O vídeo em destaque" },
+  ];
+  for (const check of checks) {
+    if (!check.changed) continue;
+    const gate = await gateFeature(businessId, check.feature, check.label);
+    if (!gate.ok) return gate.error;
+  }
+  return null;
+}
+
+export async function updateBusinessProfile(input: ProfileInput): Promise<ActionResult> {
   const businessId = await requireOwnBusiness();
   const business = await getBusinessById(businessId);
-  if (!business) return { success: false, error: "Empresa não encontrada." };
+  if (!business) return fail("Empresa não encontrada.");
 
-  const limits = limitsFor(business.effectivePlan);
-  if (input.videoUrl.trim() && !limits.videoAllowed) {
-    return { success: false, error: "Vídeo em destaque é um recurso do plano Experiência." };
-  }
+  const blocked = await blockedProfileField(businessId, input, {
+    description: business.description ?? "",
+    logoUrl: business.logo ?? "",
+    coverPhotoUrl: business.coverPhoto ?? "",
+    instagram: business.instagram ?? "",
+    websiteUrl: business.websiteUrl ?? "",
+    openingHours: business.openingHours ?? "",
+    videoUrl: business.videoUrl ?? "",
+  });
+  if (blocked) return fail(blocked);
 
   const supabase = createServiceClient();
   const { error } = await supabase
@@ -53,10 +87,10 @@ export async function updateBusinessProfile(input: {
       instagram: input.instagram.trim() || null,
       website_url: input.websiteUrl.trim() || null,
       opening_hours: input.openingHours.trim() || null,
-      video_url: limits.videoAllowed ? input.videoUrl.trim() || null : null,
+      video_url: input.videoUrl.trim() || null,
     })
     .eq("id", businessId);
-  if (error) return { success: false, error: "Não foi possível salvar." };
+  if (error) return fail("Não foi possível salvar.");
 
   await translateAndStore("business", businessId, {
     description: input.description.trim(),
@@ -72,32 +106,21 @@ export async function updateBusinessProfile(input: {
 export async function addService(name: string, description: string): Promise<ActionResult> {
   const businessId = await requireOwnBusiness();
   const business = await getBusinessById(businessId);
-  if (!business) return { success: false, error: "Empresa não encontrada." };
-  if (!name.trim()) return { success: false, error: "Informe o nome do serviço." };
+  if (!business) return fail("Empresa não encontrada.");
+  if (!name.trim()) return fail("Informe o nome do serviço.");
 
-  const limits = limitsFor(business.effectivePlan);
+  const usage = await getContentUsage(businessId);
+  const gate = await gateLimit(businessId, "services", usage.services ?? 0, "serviços");
+  if (!gate.ok) return fail(gate.error);
+
   const supabase = createServiceClient();
-  const { count } = await supabase
-    .from("business_services")
-    .select("id", { count: "exact", head: true })
-    .eq("business_id", businessId);
-
-  if ((count ?? 0) >= limits.maxServices) {
-    return {
-      success: false,
-      error:
-        limits.maxServices === 0
-          ? "Cadastro de serviços é exclusivo dos planos pagos."
-          : `Esse recurso faz parte do plano superior. Seu plano atual permite até ${limits.maxServices} serviços.`,
-    };
-  }
-
+  const { count } = await supabase.from("business_services").select("id", { count: "exact", head: true }).eq("business_id", businessId);
   const { data: inserted, error } = await supabase
     .from("business_services")
     .insert({ business_id: businessId, name: name.trim(), description: description.trim() || null, sort_order: count ?? 0 })
     .select("id")
     .single();
-  if (error) return { success: false, error: "Não foi possível adicionar o serviço." };
+  if (error) return dbFail(error.message, "Não foi possível adicionar o serviço.");
 
   await translateAndStore("business_service", inserted.id, {
     name: name.trim(),
@@ -111,15 +134,11 @@ export async function addService(name: string, description: string): Promise<Act
 export async function deleteService(serviceId: string): Promise<ActionResult> {
   const businessId = await requireOwnBusiness();
   const business = await getBusinessById(businessId);
-  if (!business) return { success: false, error: "Empresa não encontrada." };
+  if (!business) return fail("Empresa não encontrada.");
 
   const supabase = createServiceClient();
-  const { error } = await supabase
-    .from("business_services")
-    .delete()
-    .eq("id", serviceId)
-    .eq("business_id", businessId);
-  if (error) return { success: false, error: "Não foi possível remover o serviço." };
+  const { error } = await supabase.from("business_services").delete().eq("id", serviceId).eq("business_id", businessId);
+  if (error) return fail("Não foi possível remover o serviço.");
 
   revalidateBusiness(businessId, business.slug);
   return { success: true };
@@ -130,27 +149,17 @@ export async function deleteService(serviceId: string): Promise<ActionResult> {
 export async function addPhoto(url: string): Promise<ActionResult> {
   const businessId = await requireOwnBusiness();
   const business = await getBusinessById(businessId);
-  if (!business) return { success: false, error: "Empresa não encontrada." };
-  if (!url.trim()) return { success: false, error: "Informe a URL da imagem." };
+  if (!business) return fail("Empresa não encontrada.");
+  if (!url.trim()) return fail("Informe a URL da imagem.");
 
-  const limits = limitsFor(business.effectivePlan);
+  const usage = await getContentUsage(businessId);
+  const gate = await gateLimit(businessId, "gallery_images", usage.gallery_images ?? 0, "imagens na galeria");
+  if (!gate.ok) return fail(gate.error);
+
   const supabase = createServiceClient();
-  const { count } = await supabase
-    .from("business_photos")
-    .select("id", { count: "exact", head: true })
-    .eq("business_id", businessId);
-
-  if ((count ?? 0) >= limits.maxPhotos) {
-    return {
-      success: false,
-      error: `Esse recurso faz parte do plano superior. Seu plano atual permite até ${limits.maxPhotos} ${limits.maxPhotos === 1 ? "imagem" : "imagens"} na galeria.`,
-    };
-  }
-
-  const { error } = await supabase
-    .from("business_photos")
-    .insert({ business_id: businessId, url: url.trim(), sort_order: count ?? 0 });
-  if (error) return { success: false, error: "Não foi possível adicionar a imagem." };
+  const { count } = await supabase.from("business_photos").select("id", { count: "exact", head: true }).eq("business_id", businessId);
+  const { error } = await supabase.from("business_photos").insert({ business_id: businessId, url: url.trim(), sort_order: count ?? 0 });
+  if (error) return dbFail(error.message, "Não foi possível adicionar a imagem.");
 
   revalidateBusiness(businessId, business.slug);
   return { success: true };
@@ -159,15 +168,11 @@ export async function addPhoto(url: string): Promise<ActionResult> {
 export async function deletePhoto(photoId: string): Promise<ActionResult> {
   const businessId = await requireOwnBusiness();
   const business = await getBusinessById(businessId);
-  if (!business) return { success: false, error: "Empresa não encontrada." };
+  if (!business) return fail("Empresa não encontrada.");
 
   const supabase = createServiceClient();
-  const { error } = await supabase
-    .from("business_photos")
-    .delete()
-    .eq("id", photoId)
-    .eq("business_id", businessId);
-  if (error) return { success: false, error: "Não foi possível remover a imagem." };
+  const { error } = await supabase.from("business_photos").delete().eq("id", photoId).eq("business_id", businessId);
+  if (error) return fail("Não foi possível remover a imagem.");
 
   revalidateBusiness(businessId, business.slug);
   return { success: true };
@@ -184,10 +189,8 @@ export async function uploadVirtualTourImage(formData: FormData): Promise<Upload
   const business = await getBusinessById(businessId);
   if (!business) return { success: false, error: "Empresa não encontrada." };
 
-  const limits = limitsFor(business.effectivePlan);
-  if (!limits.virtualTourAllowed) {
-    return { success: false, error: "Visita virtual 360° é um recurso do plano Experiência." };
-  }
+  const gate = await gateFeature(businessId, "tour_3d");
+  if (!gate.ok) return { success: false, error: gate.error };
 
   const file = formData.get("file");
   if (!(file instanceof File) || file.size === 0) {
@@ -204,9 +207,7 @@ export async function uploadVirtualTourImage(formData: FormData): Promise<Upload
   const path = `${businessId}/${crypto.randomUUID()}.${extension}`;
 
   const supabase = createServiceClient();
-  const { error: uploadError } = await supabase.storage
-    .from("virtual-tour")
-    .upload(path, file, { contentType: file.type, upsert: false });
+  const { error: uploadError } = await supabase.storage.from("virtual-tour").upload(path, file, { contentType: file.type, upsert: false });
   if (uploadError) return { success: false, error: "Não foi possível enviar a imagem." };
 
   const { data } = supabase.storage.from("virtual-tour").getPublicUrl(path);
@@ -216,27 +217,22 @@ export async function uploadVirtualTourImage(formData: FormData): Promise<Upload
 export async function addVirtualTourScene(label: string, imageUrl: string): Promise<ActionResult> {
   const businessId = await requireOwnBusiness();
   const business = await getBusinessById(businessId);
-  if (!business) return { success: false, error: "Empresa não encontrada." };
-  if (!label.trim()) return { success: false, error: "Informe um nome pra essa cena (ex: Recepção)." };
-  if (!imageUrl.trim()) return { success: false, error: "Informe a URL da foto panorâmica." };
+  if (!business) return fail("Empresa não encontrada.");
+  if (!label.trim()) return fail("Informe um nome pra essa cena (ex: Recepção).");
+  if (!imageUrl.trim()) return fail("Informe a URL da foto panorâmica.");
 
-  const limits = limitsFor(business.effectivePlan);
-  if (!limits.virtualTourAllowed) {
-    return { success: false, error: "Visita virtual 360° é um recurso do plano Experiência." };
-  }
+  const gate = await gateFeature(businessId, "tour_3d");
+  if (!gate.ok) return fail(gate.error);
 
   const supabase = createServiceClient();
-  const { count } = await supabase
-    .from("virtual_tour_scenes")
-    .select("id", { count: "exact", head: true })
-    .eq("business_id", businessId);
+  const { count } = await supabase.from("virtual_tour_scenes").select("id", { count: "exact", head: true }).eq("business_id", businessId);
 
   const { data: inserted, error } = await supabase
     .from("virtual_tour_scenes")
     .insert({ business_id: businessId, label: label.trim(), image_url: imageUrl.trim(), sort_order: count ?? 0 })
     .select("id")
     .single();
-  if (error) return { success: false, error: "Não foi possível adicionar a cena." };
+  if (error) return fail("Não foi possível adicionar a cena.");
 
   await translateAndStore("virtual_tour_scene", inserted.id, { label: label.trim() });
 
@@ -247,15 +243,11 @@ export async function addVirtualTourScene(label: string, imageUrl: string): Prom
 export async function deleteVirtualTourScene(sceneId: string): Promise<ActionResult> {
   const businessId = await requireOwnBusiness();
   const business = await getBusinessById(businessId);
-  if (!business) return { success: false, error: "Empresa não encontrada." };
+  if (!business) return fail("Empresa não encontrada.");
 
   const supabase = createServiceClient();
-  const { error } = await supabase
-    .from("virtual_tour_scenes")
-    .delete()
-    .eq("id", sceneId)
-    .eq("business_id", businessId);
-  if (error) return { success: false, error: "Não foi possível remover a cena." };
+  const { error } = await supabase.from("virtual_tour_scenes").delete().eq("id", sceneId).eq("business_id", businessId);
+  if (error) return fail("Não foi possível remover a cena.");
 
   revalidateBusiness(businessId, business.slug);
   return { success: true };
@@ -271,37 +263,24 @@ export async function addPromotion(rawInput: {
   maxTotalUses?: number | null;
 }): Promise<ActionResult> {
   const parsed = addPromotionSchema.safeParse(rawInput);
-  if (!parsed.success) {
-    return { success: false, error: parsed.error.issues[0]?.message ?? "Dados inválidos." };
-  }
+  if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? "Dados inválidos.");
   const input = parsed.data;
 
   const businessId = await requireOwnBusiness();
   const business = await getBusinessById(businessId);
-  if (!business) return { success: false, error: "Empresa não encontrada." };
+  if (!business) return fail("Empresa não encontrada.");
 
-  const limits = limitsFor(business.effectivePlan);
-  if (limits.maxPromotions === 0) {
-    return { success: false, error: "Esse recurso faz parte do plano superior. Faça upgrade para publicar promoções." };
-  }
-  if (input.couponCode.trim() && !limits.couponsAllowed) {
-    return { success: false, error: "Cupons rastreáveis fazem parte do plano Destaque." };
+  const usage = await getContentUsage(businessId);
+  const gate = await gateLimit(businessId, "active_promotions", usage.active_promotions ?? 0, "promoções ativas");
+  if (!gate.ok) return fail(gate.error);
+
+  const hasCoupon = input.couponCode.trim() !== "";
+  if (hasCoupon) {
+    const couponGate = await gateFeature(businessId, "trackable_coupons");
+    if (!couponGate.ok) return fail(couponGate.error);
   }
 
   const supabase = createServiceClient();
-  const { count } = await supabase
-    .from("benefits")
-    .select("id", { count: "exact", head: true })
-    .eq("business_id", businessId)
-    .eq("active", true);
-
-  if ((count ?? 0) >= limits.maxPromotions) {
-    return {
-      success: false,
-      error: `Esse recurso faz parte do plano superior. Seu plano atual permite até ${limits.maxPromotions} promoção${limits.maxPromotions > 1 ? "ões" : ""} ativa${limits.maxPromotions > 1 ? "s" : ""}.`,
-    };
-  }
-
   const { data: inserted, error } = await supabase
     .from("benefits")
     .insert({
@@ -309,14 +288,14 @@ export async function addPromotion(rawInput: {
       kind: "promocao",
       title: input.title.trim(),
       description: input.description.trim() || null,
-      coupon_code: limits.couponsAllowed ? input.couponCode.trim() || null : null,
+      coupon_code: hasCoupon ? input.couponCode.trim() : null,
       valid_until: input.validUntil || null,
-      max_total_uses: limits.couponsAllowed && input.couponCode.trim() ? input.maxTotalUses ?? null : null,
+      max_total_uses: hasCoupon ? input.maxTotalUses ?? null : null,
       active: true,
     })
     .select("id")
     .single();
-  if (error) return { success: false, error: "Não foi possível criar a promoção." };
+  if (error) return dbFail(error.message, "Não foi possível criar a promoção.");
 
   await translateAndStore("benefit", inserted.id, {
     title: input.title.trim(),
@@ -330,15 +309,11 @@ export async function addPromotion(rawInput: {
 export async function deactivatePromotion(benefitId: string): Promise<ActionResult> {
   const businessId = await requireOwnBusiness();
   const business = await getBusinessById(businessId);
-  if (!business) return { success: false, error: "Empresa não encontrada." };
+  if (!business) return fail("Empresa não encontrada.");
 
   const supabase = createServiceClient();
-  const { error } = await supabase
-    .from("benefits")
-    .update({ active: false })
-    .eq("id", benefitId)
-    .eq("business_id", businessId);
-  if (error) return { success: false, error: "Não foi possível encerrar a promoção." };
+  const { error } = await supabase.from("benefits").update({ active: false }).eq("id", benefitId).eq("business_id", businessId);
+  if (error) return fail("Não foi possível encerrar a promoção.");
 
   revalidateBusiness(businessId, business.slug);
   return { success: true };

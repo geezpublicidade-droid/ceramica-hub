@@ -2,7 +2,11 @@ import { createServiceClient } from "@/lib/supabase/server";
 import type { Business, BusinessService } from "@/data/businesses";
 import { getBusinessPhotos, getBusinessServices, type OwnedPhoto } from "@/lib/services/platform";
 import { getApprovedReviews, getReviewStats, type BusinessReview } from "@/lib/services/reviews";
-import { landingCapabilitiesFor, resolveSectionOrder, type LandingCapabilities, type SectionKey } from "@/lib/landing/sections";
+import { SECTIONS_BY_LAYOUT, landingCapabilitiesFromFeatures, resolveSectionOrder, type LandingCapabilities, type SectionKey } from "@/lib/landing/sections";
+import { getCompanyPermissions } from "@/lib/services/company-plan";
+import { loadPlanCatalog } from "@/lib/services/plan-catalog";
+import { publishedItems } from "@/lib/plans/resolve";
+import type { FeatureMap } from "@/lib/plans/features";
 import { parseSchedule, type OpeningSchedule } from "@/lib/landing/hours";
 import { applyDemoContent } from "@/lib/landing/demo";
 
@@ -202,6 +206,14 @@ async function loadReviews(businessId: string) {
   }
 }
 
+/** Recursos que valem para esta página: os da empresa (plano em vigor + overrides) ou, na simulação, os de fábrica/admin do plano escolhido. */
+async function featuresFor(business: Business, simulatePlan?: Business["plan"]): Promise<FeatureMap> {
+  if (simulatePlan) return (await loadPlanCatalog()).features[simulatePlan];
+  const permissions = await getCompanyPermissions(business.id);
+  if (permissions) return permissions.features;
+  return (await loadPlanCatalog()).features[business.effectivePlan];
+}
+
 /**
  * Tudo que a landing pública precisa, já filtrado pelo plano da empresa. Rascunho: o público vê só o conteúdo
  * básico (a configuração é ignorada); a empresa e o admin veem o rascunho no preview do painel (`allowDraft`).
@@ -212,7 +224,8 @@ export async function getLandingData(
 ): Promise<LandingData> {
   const stored = await loadConfig(business.id);
   const config = stored.status === "draft" && !options.allowDraft ? EMPTY_CONFIG : stored;
-  const capabilities = landingCapabilitiesFor(options.simulatePlan ?? business.effectivePlan);
+  const features = await featuresFor(business, options.simulatePlan);
+  const capabilities = landingCapabilitiesFromFeatures(features);
 
   const [allServices, allPhotos, faqs, offer, reviewData] = await Promise.all([
     getBusinessServices(business.id, options.locale),
@@ -222,20 +235,20 @@ export async function getLandingData(
     loadReviews(business.id),
   ]);
 
-  const activeServices = allServices.filter((service) => service.active !== false);
-  const services = Number.isFinite(capabilities.maxServices) ? activeServices.slice(0, capabilities.maxServices) : activeServices;
-  const media = capabilities.gallery ? allPhotos : [];
+  // Downgrade nunca apaga: só os itens ATIVOS, até o limite do plano, ficam publicados; o resto continua salvo
+  const services = publishedItems(allServices, capabilities.maxServices);
+  const media = capabilities.gallery ? publishedItems(allPhotos, Infinity) : [];
 
   const data: LandingData = {
     config,
     capabilities,
-    sections: resolveSectionOrder(config.sectionOrder, config.sectionsDisabled),
+    sections: resolveSectionOrder(config.sectionOrder, config.sectionsDisabled, SECTIONS_BY_LAYOUT[capabilities.layout]),
     services,
     hasMoreServices: services.length > 6,
     faqs,
     offer,
-    gallery: media.filter((item) => item.kind === "photo").slice(0, capabilities.maxGalleryItems),
-    videos: capabilities.video ? media.filter((item) => item.kind === "video") : [],
+    gallery: publishedItems(media.filter((item) => item.kind === "photo"), capabilities.maxGalleryItems),
+    videos: capabilities.video ? publishedItems(media.filter((item) => item.kind === "video"), capabilities.maxVideos) : [],
     ...reviewData,
   };
 

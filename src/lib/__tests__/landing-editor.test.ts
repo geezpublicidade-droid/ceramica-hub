@@ -51,12 +51,30 @@ describe("patchToRow", () => {
 });
 
 describe("checkPatchAgainstPlan", () => {
-  it("bloqueia capa e formulário em planos sem o recurso", () => {
-    const free = landingCapabilitiesFor("presenca");
-    assert.ok(checkPatchAgainstPlan({ heroImageUrl: "https://x.com/a.jpg" }, free));
-    assert.ok(checkPatchAgainstPlan({ leadFormEnabled: true }, landingCapabilitiesFor("profissional")));
-    assert.equal(checkPatchAgainstPlan({ leadFormEnabled: true }, landingCapabilitiesFor("destaque")), null);
+  const free = landingCapabilitiesFor("presenca");
+  const pro = landingCapabilitiesFor("profissional");
+  const exp = landingCapabilitiesFor("experiencia");
+
+  it("hero, seções, CTAs e formulário só do Experiência para cima", () => {
+    assert.ok(checkPatchAgainstPlan({ heroImageUrl: "https://x.com/a.jpg" }, pro));
+    assert.ok(checkPatchAgainstPlan({ heroHeadline: "Oi" }, landingCapabilitiesFor("destaque")));
+    assert.ok(checkPatchAgainstPlan({ aboutProblem: "x" }, pro));
+    assert.ok(checkPatchAgainstPlan({ finalCtaTitle: "x" }, pro));
+    assert.ok(checkPatchAgainstPlan({ leadFormEnabled: true }, landingCapabilitiesFor("destaque")));
+    assert.equal(checkPatchAgainstPlan({ heroHeadline: "Oi", aboutProblem: "x", finalCtaTitle: "t", leadFormEnabled: true }, exp), null);
+  });
+
+  it("WhatsApp, redes, horário e informações comerciais a partir do Profissional", () => {
+    assert.ok(checkPatchAgainstPlan({ whatsappPhone: "11987654321" }, free));
+    assert.ok(checkPatchAgainstPlan({ facebookUrl: "https://facebook.com/x" }, free));
+    assert.ok(checkPatchAgainstPlan({ openingSchedule: { mon: [["09:00", "18:00"]] } }, free));
+    assert.ok(checkPatchAgainstPlan({ parkingInfo: "x" }, free));
+    assert.equal(checkPatchAgainstPlan({ whatsappPhone: "11987654321", facebookUrl: "https://facebook.com/x", openingSchedule: { mon: [["09:00", "18:00"]] }, parkingInfo: "x" }, pro), null);
+  });
+
+  it("desligar recurso ou salvar vazio nunca é bloqueado", () => {
     assert.equal(checkPatchAgainstPlan({ leadFormEnabled: false }, free), null);
+    assert.equal(checkPatchAgainstPlan({}, free), null);
   });
 });
 
@@ -68,10 +86,14 @@ describe("identidade da empresa (branding)", () => {
     assert.equal(brandingSchema.safeParse({ description: "x".repeat(601) }).success, false);
   });
 
-  it("capa personalizada só nos planos que incluem; remover a capa é sempre permitido", () => {
-    assert.ok(checkBrandingAgainstPlan({ coverPhotoUrl: "https://x.com/c.jpg" }, landingCapabilitiesFor("presenca")));
-    assert.equal(checkBrandingAgainstPlan({ coverPhotoUrl: "https://x.com/c.jpg" }, landingCapabilitiesFor("profissional")), null);
-    assert.equal(checkBrandingAgainstPlan({ coverPhotoUrl: null }, landingCapabilitiesFor("presenca")), null);
-    assert.equal(checkBrandingAgainstPlan({ logoUrl: "https://x.com/l.png" }, landingCapabilitiesFor("presenca")), null);
+  it("capa, descrição, redes e site a partir do Profissional; logo e remoção sempre livres", () => {
+    const free = landingCapabilitiesFor("presenca");
+    const pro = landingCapabilitiesFor("profissional");
+    assert.ok(checkBrandingAgainstPlan({ coverPhotoUrl: "https://x.com/c.jpg" }, free));
+    assert.ok(checkBrandingAgainstPlan({ description: "texto" }, free));
+    assert.ok(checkBrandingAgainstPlan({ instagram: "@x" }, free));
+    assert.equal(checkBrandingAgainstPlan({ coverPhotoUrl: "https://x.com/c.jpg", description: "texto", instagram: "@x" }, pro), null);
+    assert.equal(checkBrandingAgainstPlan({ coverPhotoUrl: null, description: null }, free), null);
+    assert.equal(checkBrandingAgainstPlan({ logoUrl: "https://x.com/l.png" }, free), null);
   });
 });

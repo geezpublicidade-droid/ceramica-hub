@@ -1,7 +1,8 @@
 import { auth } from "@/auth";
 import { requireAdmin, requireOwnBusiness } from "@/lib/auth-guards";
 import { getBusinessById } from "@/lib/services/platform";
-import { landingCapabilitiesFor, type LandingCapabilities } from "./sections.ts";
+import { getCompanyPermissions, type CompanyPermissions } from "@/lib/services/company-plan";
+import { landingCapabilitiesFromFeatures, type LandingCapabilities } from "./sections.ts";
 import type { Business } from "@/data/businesses";
 
 /** Papéis de admin que podem editar a landing de qualquer empresa (super_admin sempre passa). */
@@ -11,6 +12,8 @@ export type LandingTarget = {
   businessId: string;
   business: Business;
   capabilities: LandingCapabilities;
+  /** plano em vigor, status, recursos e overrides da empresa */
+  permissions: CompanyPermissions;
   /** id do admin quando a edição vem do painel administrativo; null quando é a própria empresa */
   adminId: string | null;
 };
@@ -23,9 +26,9 @@ export async function resolveLandingTarget(adminBusinessId?: string): Promise<La
   const adminId = adminBusinessId ? await requireAdmin([...ADMIN_EDITORS]) : null;
   const businessId = adminBusinessId ?? (await requireOwnBusiness());
 
-  const business = await getBusinessById(businessId);
-  if (!business) throw new Error("Empresa não encontrada.");
-  return { businessId, business, capabilities: landingCapabilitiesFor(business.effectivePlan), adminId };
+  const [business, permissions] = await Promise.all([getBusinessById(businessId), getCompanyPermissions(businessId)]);
+  if (!business || !permissions) throw new Error("Empresa não encontrada.");
+  return { businessId, business, capabilities: landingCapabilitiesFromFeatures(permissions.features), permissions, adminId };
 }
 
 /** Para páginas (Server Components): quem está logado e como. */

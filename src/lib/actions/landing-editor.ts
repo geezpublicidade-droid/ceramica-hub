@@ -7,12 +7,15 @@ import { logAdminAction } from "@/lib/audit-log";
 import { resolveLandingTarget, type LandingTarget } from "@/lib/landing/guard";
 import { brandingSchema, brandingToRow, checkBrandingAgainstPlan, checkPatchAgainstPlan, landingPatchSchema, patchToRow } from "@/lib/landing/editor-schema";
 import { translateAndStore } from "@/lib/services/translate";
+import { planErrorFromDatabase } from "@/lib/services/company-plan";
 import { resolveRange, summarizeEvents, type LandingMetrics, type RangePreset } from "@/lib/landing/metrics";
 
 type Result = { success: true } | { success: false; error: string };
 type UploadResult = { success: true; url: string } | { success: false; error: string };
 
 const fail = (error: string): Result => ({ success: false, error });
+/** Erro do banco: se vier de um trigger de plano, mostra a mensagem de plano. */
+const dbFail = (message: string | undefined, fallback: string): Result => fail(planErrorFromDatabase(message) ?? fallback);
 const firstIssue = (error: z.ZodError) => error.issues[0]?.message ?? "Dados inválidos.";
 
 /** Roda uma ação já autorizada; qualquer erro de acesso vira mensagem em vez de exceção solta. */
@@ -112,12 +115,12 @@ export async function saveFaq(adminBusinessId: string | undefined, raw: z.input<
 
     if (id) {
       const { error } = await supabase.from("business_faqs").update(fields).eq("id", id).eq("business_id", target.businessId);
-      if (error) return fail("Não foi possível salvar a pergunta.");
+      if (error) return dbFail(error.message, "Não foi possível salvar a pergunta.");
     } else {
       const { count } = await supabase.from("business_faqs").select("id", { count: "exact", head: true }).eq("business_id", target.businessId);
       if ((count ?? 0) >= MAX_FAQS) return fail(`Limite de ${MAX_FAQS} perguntas.`);
       const { error } = await supabase.from("business_faqs").insert({ ...fields, business_id: target.businessId, sort_order: count ?? 0 });
-      if (error) return fail("Não foi possível adicionar a pergunta.");
+      if (error) return dbFail(error.message, "Não foi possível adicionar a pergunta.");
     }
     refresh(target);
     return { success: true };
@@ -175,7 +178,7 @@ export async function updateServiceDetails(adminBusinessId: string | undefined, 
       .update({ name, description: description || null, starting_price: startingPrice, duration: duration || null, cta_label: ctaLabel || null, photo_url: photoUrl || null, active })
       .eq("id", id)
       .eq("business_id", target.businessId);
-    if (error) return fail("Não foi possível salvar o serviço.");
+    if (error) return dbFail(error.message, "Não foi possível salvar o serviço.");
     refresh(target);
     return { success: true };
   });
@@ -224,10 +227,12 @@ export async function addMedia(adminBusinessId: string | undefined, url: string,
     if (kind === "video" && !capabilities.video) return fail("Vídeos fazem parte de um plano superior.");
     const supabase = createServiceClient();
     const { count } = await supabase.from("business_photos").select("id", { count: "exact", head: true }).eq("business_id", target.businessId);
-    if ((count ?? 0) >= capabilities.maxGalleryItems) return fail(`Seu plano permite até ${capabilities.maxGalleryItems} itens na galeria.`);
+    const { count: activeOfKind } = await supabase.from("business_photos").select("id", { count: "exact", head: true }).eq("business_id", target.businessId).eq("active", true).eq("kind", kind);
+    const limit = kind === "video" ? capabilities.maxVideos : capabilities.maxGalleryItems;
+    if ((activeOfKind ?? 0) >= limit) return fail(kind === "video" ? `Seu plano permite até ${limit} vídeo(s) em destaque.` : `Seu plano permite até ${limit} fotos na galeria.`);
 
     const { error } = await supabase.from("business_photos").insert({ business_id: target.businessId, url: url.trim(), kind, sort_order: count ?? 0 });
-    if (error) return fail("Não foi possível adicionar.");
+    if (error) return dbFail(error.message, "Não foi possível adicionar.");
     refresh(target);
     return { success: true };
   });
@@ -260,7 +265,7 @@ export async function saveOfferDetails(adminBusinessId: string | undefined, raw:
       .update({ image_url: parsed.data.imageUrl || null, cta_label: parsed.data.ctaLabel || null })
       .eq("id", parsed.data.id)
       .eq("business_id", target.businessId);
-    if (error) return fail("Não foi possível salvar a oferta.");
+    if (error) return dbFail(error.message, "Não foi possível salvar a oferta.");
     refresh(target);
     return { success: true };
   });
@@ -338,12 +343,13 @@ export async function createService(adminBusinessId: string | undefined, name: s
   return withTarget(adminBusinessId, async (target) => {
     const supabase = createServiceClient();
     const { count } = await supabase.from("business_services").select("id", { count: "exact", head: true }).eq("business_id", target.businessId);
+    const { count: activeCount } = await supabase.from("business_services").select("id", { count: "exact", head: true }).eq("business_id", target.businessId).eq("active", true);
     const limit = target.capabilities.maxServices;
-    if ((count ?? 0) >= limit) {
+    if ((activeCount ?? 0) >= limit) {
       return fail(limit === 0 ? "Cadastro de serviços é exclusivo dos planos pagos." : `Seu plano permite até ${limit} serviços.`);
     }
     const { error } = await supabase.from("business_services").insert({ business_id: target.businessId, name: trimmed, sort_order: count ?? 0 });
-    if (error) return fail("Não foi possível adicionar o serviço.");
+    if (error) return dbFail(error.message, "Não foi possível adicionar o serviço.");
     refresh(target);
     return { success: true };
   });
