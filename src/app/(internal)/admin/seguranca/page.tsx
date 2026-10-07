@@ -111,7 +111,7 @@ async function Alerts() {
 }
 
 export default async function SecurityPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
-  const { adminRole } = await requireAdminPage(["super_admin", "admin"]);
+  const { adminRole } = await requireAdminPage(["super_admin"]);
   const params = await searchParams;
   const view: AuditView = isAuditView(params.view) ? params.view : "historico";
   const page = Math.max(0, Number.parseInt(params.pagina ?? "0", 10) || 0);

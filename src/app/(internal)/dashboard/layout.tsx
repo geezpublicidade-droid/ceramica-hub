@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { ImpersonationBanner } from "@/components/admin/ImpersonationBanner";
 import { PlanProvider } from "@/components/plans/PlanProvider";
 import { SupportWhatsAppButton } from "@/components/support/SupportWhatsAppButton";
 import { getPlanProviderValue } from "@/lib/services/plan-provider-data";
@@ -11,6 +12,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <>
+      <ImpersonationBanner />
       {plan ? <PlanProvider value={plan}>{children}</PlanProvider> : children}
       <SupportWhatsAppButton />
     </>

@@ -1,6 +1,6 @@
 import { createServiceClient } from "@/lib/supabase/server";
 import { canAccess, getLimit, resolveEffectivePlan, resolveFeatures, type BillingCycle, type EffectivePlan, type FeatureOverride, type PlanStatus } from "@/lib/plans/resolve";
-import { featureDefinition, normalizeFeatureKey, type FeatureKey, type FeatureMap, type FeatureValue, type PlanKey } from "@/lib/plans/features";
+import { MASTER_BUSINESS_SLUGS, featureDefinition, masterFeatures, normalizeFeatureKey, type FeatureKey, type FeatureMap, type FeatureValue, type PlanKey } from "@/lib/plans/features";
 import { loadPlanCatalog, planLadder, planNameFrom, type PlanCatalog } from "@/lib/services/plan-catalog";
 
 export type CompanyPermissions = {
@@ -50,10 +50,11 @@ export function toClientPermissions(permissions: CompanyPermissions): ClientPerm
 }
 
 const PLAN_COLUMNS =
-  "id, plan, plan_status, plan_started_at, plan_expires_at, plan_updated_at, billing_cycle, manual_override, plan_discount_percent, plan_notes, owner_validated, trial_status, trial_plan, trial_ends_at";
+  "id, slug, plan, plan_status, plan_started_at, plan_expires_at, plan_updated_at, billing_cycle, manual_override, plan_discount_percent, plan_notes, owner_validated, trial_status, trial_plan, trial_ends_at";
 
 type PlanRow = {
   id: string;
+  slug: string;
   plan: string;
   plan_status: PlanStatus;
   plan_started_at: string | null;
@@ -89,6 +90,8 @@ function buildPermissions(row: PlanRow, catalog: PlanCatalog, overrideRows: Over
     { graceDays: catalog.graceDays, ranks: catalog.ranks },
   );
   const overrides = overrideRows.map(mapOverride);
+  const resolved = resolveFeatures(catalog.features[effective.plan], effective.plan, overrides);
+  const isMaster = MASTER_BUSINESS_SLUGS.includes(row.slug);
   return {
     businessId: row.id,
     contractedPlan: row.plan,
@@ -104,7 +107,7 @@ function buildPermissions(row: PlanRow, catalog: PlanCatalog, overrideRows: Over
     discountPercent: row.plan_discount_percent,
     notes: row.plan_notes,
     ownerValidated: row.owner_validated,
-    features: resolveFeatures(catalog.features[effective.plan], effective.plan, overrides),
+    features: isMaster ? masterFeatures(resolved) : resolved,
     overrides,
   };
 }

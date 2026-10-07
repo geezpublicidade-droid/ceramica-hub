@@ -9,7 +9,8 @@ import { createProduct, updateProduct, setProductActive, type ProductInput } fro
 type ActionResult = { success: true } | { success: false; error: string };
 
 const PRODUCTS_PATH = "/admin/produtos";
-const PRODUCT_ROLES: AdminRole[] = ["super_admin", "admin", "comercial", "financeiro"];
+// preços e produtos: exclusivo do super_admin (a Geez)
+const PRODUCT_ROLES: AdminRole[] = ["super_admin"];
 
 function validate(input: ProductInput): string | null {
   if (!input.name.trim()) return "Nome é obrigatório.";

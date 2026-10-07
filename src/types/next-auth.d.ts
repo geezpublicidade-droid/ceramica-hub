@@ -22,6 +22,8 @@ declare module "next-auth" {
       adminRole?: AdminRole;
       isStaff?: boolean;
       mfaSetupRequired?: boolean;
+      /** id do super_admin quando está dentro de uma empresa ("entrar como") */
+      impersonatedBy?: string;
     } & DefaultSession["user"];
   }
 
@@ -43,5 +45,6 @@ declare module "next-auth/jwt" {
     adminRole?: AdminRole;
     isStaff?: boolean;
     mfaSetupRequired?: boolean;
+    impersonatedBy?: string;
   }
 }

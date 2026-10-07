@@ -17,7 +17,7 @@ export default async function AdminPlansPage() {
   ]);
   const companyCounts: Record<string, number> = {};
   for (const row of companies.data ?? []) companyCounts[row.plan] = (companyCounts[row.plan] ?? 0) + 1;
-  const canEdit = adminRole === "super_admin" || adminRole === "admin";
+  const canEdit = adminRole === "super_admin";
 
   return (
     <AdminShell currentPath="/admin/planos" adminRole={adminRole} wide>

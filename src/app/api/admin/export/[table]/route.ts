@@ -11,7 +11,7 @@ export const maxDuration = 120;
 export async function GET(request: Request, { params }: { params: Promise<{ table: string }> }) {
   let adminId: string;
   try {
-    adminId = await requireAdmin(["admin"]);
+    adminId = await requireAdmin(["super_admin"]);
   } catch {
     return NextResponse.json({ error: "Acesso restrito." }, { status: 403 });
   }

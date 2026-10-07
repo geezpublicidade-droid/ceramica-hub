@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+import type { JWT } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
@@ -141,7 +142,26 @@ async function authenticateGoogleAccount(
   return foundIndex === -1 ? null : toAuthorizedUser(accounts[foundIndex]!, roles[foundIndex]);
 }
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+/**
+ * "Entrar como" empresa: só o super_admin troca o próprio token para o de uma empresa (e volta).
+ * O super_admin é decidido pelo `adminRole` já gravado no token (nunca pelo payload do update).
+ */
+function applyImpersonation(token: JWT, payload: unknown) {
+  if (token.adminRole !== "super_admin") return;
+  const requested = (payload as { impersonate?: string | null } | null)?.impersonate;
+  if (requested) {
+    token.impersonatedBy = token.impersonatedBy ?? token.sub;
+    token.role = "business";
+    token.businessId = requested;
+    token.isStaff = false;
+  } else if (requested === null && token.impersonatedBy) {
+    token.impersonatedBy = undefined;
+    token.role = "admin";
+    token.businessId = undefined;
+  }
+}
+
+export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
   session: { strategy: "jwt" },
   pages: { signIn: "/login" },
   providers: [
@@ -212,7 +232,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       Object.assign(user, authorized);
       return true;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
+      if (trigger === "update") applyImpersonation(token, session);
       if (user) {
         const u = user as { role: Role; businessId?: string; memberId?: string; adminRole?: AdminRole; isStaff?: boolean; mfaSetupRequired?: boolean };
         token.role = u.role;
@@ -232,6 +253,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.memberId = token.memberId as string | undefined;
         session.user.adminRole = token.adminRole as AdminRole | undefined;
         session.user.isStaff = Boolean(token.isStaff);
+        session.user.impersonatedBy = token.impersonatedBy;
         session.user.mfaSetupRequired = Boolean(token.mfaSetupRequired);
       }
       return session;

@@ -6,7 +6,7 @@ import { AdminShell } from "@/components/admin/AdminShell";
 export const metadata = { title: "Produtos e planos — Cerâmica Hub" };
 
 export default async function AdminProductsPage() {
-  const { adminRole } = await requireAdminPage(["super_admin", "admin", "comercial", "financeiro"]);
+  const { adminRole } = await requireAdminPage(["super_admin"]);
   const products = await getAllProducts();
 
   return (

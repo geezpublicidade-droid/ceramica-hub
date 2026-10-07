@@ -117,6 +117,21 @@ export type FeatureDefinition = FeatureDef & { key: FeatureKey };
 export const FEATURE_DEFINITIONS: readonly FeatureDefinition[] = DEFS;
 export const FEATURE_KEYS: readonly FeatureKey[] = DEFS.map((def) => def.key);
 
+/** Empresas "master" (a própria Geez): todos os recursos ligados e sem limite, em qualquer plano contratado. */
+export const MASTER_BUSINESS_SLUGS: readonly string[] = ["geez-marketing"];
+
+/** Nível de prioridade já vai de 0 a 5: o teto vale, não "ilimitado". */
+const MAX_PRIORITY_LEVEL = 5;
+
+export function masterFeatures(base: Readonly<FeatureMap>): FeatureMap {
+  const map: FeatureMap = { ...base };
+  for (const def of DEFS) {
+    if (def.kind === "flag") map[def.key] = true;
+    if (def.kind === "limit") map[def.key] = def.key === "priority_level" ? MAX_PRIORITY_LEVEL : UNLIMITED;
+  }
+  return map;
+}
+
 const DEF_BY_KEY = new Map<string, FeatureDefinition>(DEFS.map((def) => [def.key, def]));
 
 export function featureDefinition(key: string): FeatureDefinition | undefined {

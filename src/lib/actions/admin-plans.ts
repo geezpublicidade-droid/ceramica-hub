@@ -20,8 +20,8 @@ const fail = (error: string): { success: false; error: string } => ({ success: f
 
 /** Quem mexe em plano de empresa: financeiro, comercial, admin (super_admin sempre passa). */
 const PLAN_ROLES = ["admin", "financeiro", "comercial"] as const;
-/** Quem edita o catálogo de planos e seus recursos: só admin (super_admin sempre passa). */
-const CATALOG_ROLES = ["admin"] as const;
+/** Catálogo de planos e seus recursos: exclusivo do super_admin (a Geez). */
+const CATALOG_ROLES = [] as const;
 
 const dateInput = z.string().nullish();
 

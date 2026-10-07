@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { requireAdminPage } from "@/lib/auth-guards";
+import { startImpersonationAction } from "@/lib/actions/impersonation";
 import type { AdminRole } from "@/auth";
 import { getCompany360, type Company360 } from "@/lib/services/company-360";
 import { getBusinessCategoryIds, getCategoryGroups } from "@/lib/services/business-categories";
@@ -397,6 +398,13 @@ export default async function Company360Page({ params }: { params: Promise<{ id:
         <Link href={`/admin/empresas/${data.profile.id}/plano`} className="tap mt-2 ml-4 inline-block text-[14px] font-medium text-primary hover:underline">
           Gerenciar plano →
         </Link>
+        {adminRole === "super_admin" ? (
+          <form action={startImpersonationAction.bind(null, data.profile.id)} className="mt-2 ml-4 inline-block">
+            <button type="submit" className="tap text-[14px] font-medium text-primary hover:underline">
+              Entrar como esta empresa →
+            </button>
+          </form>
+        ) : null}
       </div>
 
       <CompanyTabs
