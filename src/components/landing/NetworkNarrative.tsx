@@ -147,12 +147,12 @@ export function NetworkNarrative({ towers }: NetworkNarrativeProps) {
             </div>
 
             <div className="mt-[20px] flex flex-wrap items-center gap-4">
-              <a
-                href="#empresas"
+              <Link
+                href="/empresas"
                 className="liquid-dark rounded-full px-5 py-2.5 text-[14px] font-medium text-white sm:px-6 sm:py-3 sm:text-[15px]"
               >
                 {t("ctaExplore")}
-              </a>
+              </Link>
               <Link
                 href="/cadastro"
                 className="text-[14px] font-medium text-white/85 underline underline-offset-4 transition-colors hover:text-white sm:text-[15px]"

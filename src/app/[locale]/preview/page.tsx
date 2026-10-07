@@ -1,11 +1,9 @@
-import { Suspense } from "react";
 import { Header } from "@/components/Header";
 import { NetworkNarrative } from "@/components/landing/NetworkNarrative";
 import { ProofOfRelevance } from "@/components/landing/ProofOfRelevance";
 import { InstitutionalPartners } from "@/components/landing/InstitutionalPartners";
 import { FourUniverses } from "@/components/landing/FourUniverses";
 import { FeaturedBusinesses } from "@/components/landing/FeaturedBusinesses";
-import { Directory } from "@/components/Directory";
 import { DestaqueBlocks } from "@/components/landing/DestaqueBlocks";
 import { CityAndNews } from "@/components/landing/HomeNovidades";
 import { InstitutionalStatement } from "@/components/landing/InstitutionalStatement";
@@ -22,7 +20,6 @@ import { getRecentNews } from "@/lib/services/news";
 import { getUpcomingEvents } from "@/lib/services/events";
 import type { Business } from "@/data/businesses";
 import {
-  getAllBusinesses,
   getFeaturedBusinesses,
   getOpportunities,
   getBenefits,
@@ -52,9 +49,8 @@ const PLAN_PRIORITY: Record<Business["plan"], number> = { patrocinador: 5, premi
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const [allBusinesses, featuredBusinessesRaw, opportunities, benefits, proofStats, towers, partners, news, events] =
+  const [featuredBusinessesRaw, opportunities, benefits, proofStats, towers, partners, news, events] =
     await Promise.all([
-      getAllBusinesses(locale),
       getFeaturedBusinesses(undefined, locale),
       getOpportunities(locale),
       getBenefits(locale),
@@ -68,7 +64,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     .filter((b) => !TEST_RECORD_RE.test(b.name))
     .sort((a, b) => PLAN_PRIORITY[b.effectivePlan] - PLAN_PRIORITY[a.effectivePlan])
     .slice(0, 6);
-  const directoryBusinesses = allBusinesses.filter((b) => !TEST_RECORD_RE.test(b.name));
 
   return (
     <>
@@ -86,11 +81,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             partners={partners.filter((p) => p.tier === "ancora_fundadora" || p.tier === "parceiro_premium")}
           />
 
-          {/* 3. Negócios em destaque (planos pagos primeiro) + diretório completo (destino da busca do hero) */}
+          {/* 3. Negócios em destaque (planos pagos primeiro) */}
           <FeaturedBusinesses businesses={featuredBusinesses} />
-          <Suspense fallback={null}>
-            <Directory businesses={directoryBusinesses} />
-          </Suspense>
 
           {/* 5. Faixa de logos (máx. 10) */}
           <InstitutionalPartners />
