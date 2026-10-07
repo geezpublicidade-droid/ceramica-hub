@@ -89,29 +89,31 @@
     "plans": {
       "presenca": {
         "name": "Presença Gratuita",
-        "description": "Comece sua presença no Cerâmica sem custo -- só nome e logo.",
+        "description": "Comece sua presença no Cerâmica sem custo: página básica e elegante.",
         "features": [
           "Página básica no Cerâmica Hub",
-          "Nome e logo",
+          "Nome da empresa e logo",
           "Categoria",
           "Torre, andar e sala",
           "Participação nas buscas",
-          "URL exclusiva"
+          "URL exclusiva",
+          "Possibilidade de reivindicar o perfil"
         ]
       },
       "profissional": {
         "name": "Profissional",
-        "description": "Página comercial completa, pra empresas que já querem crescer.",
+        "description": "Perfil comercial padronizado, para empresas que já querem crescer.",
         "features": [
           "Tudo do plano gratuito",
-          "Até 3 serviços com foto e descrição",
-          "Galeria com até 3 fotos reais (sem artes)",
           "Descrição completa da empresa",
+          "Até 3 serviços com foto e descrição",
+          "Galeria com até 3 fotos reais (sem artes ou banners)",
           "Botão de WhatsApp e redes sociais",
-          "Horário de atendimento",
+          "Horário de funcionamento",
           "Uma promoção ativa",
           "Selo de empresa patrocinada",
-          "Suporte"
+          "Suporte",
+          "Resumo de visualizações da página"
         ]
       },
       "destaque": {
@@ -122,26 +124,30 @@
           "Prioridade na categoria e nas buscas",
           "Até 6 serviços com fotos",
           "Galeria com até 6 fotos",
-          "Até quatro promoções",
+          "Até 4 promoções ativas",
           "Cupons rastreáveis",
-          "Destaque rotativo nos cards",
-          "Divulgação semanal nos Stories",
+          "Destaque rotativo nos cards e selo “Em destaque”",
+          "Promoção semanal nos Stories",
           "Publicação de oportunidades",
-          "Condições especiais na Geez Marketing"
+          "Condições especiais na Geez Marketing",
+          "Métricas básicas: visualizações, cliques e uso de cupons"
         ]
       },
       "experiencia": {
         "name": "Experiência",
-        "description": "Página comercial completa, com presença premium no ecossistema.",
+        "description": "Landing page completa e personalizada, com serviços ilimitados.",
         "features": [
           "Tudo do plano Destaque",
-          "Página mais completa e personalizada",
+          "Landing page completa e personalizada",
+          "Hero personalizado: capa, título e proposta de valor",
+          "Serviços ilimitados",
+          "Promoções ilimitadas",
           "Galeria ampliada (até 30 fotos)",
           "Vídeo em destaque",
-          "Diferenciais da empresa em evidência",
-          "Destaque editorial eventual",
-          "Formulário próprio direto pro WhatsApp",
-          "Métricas completas",
+          "Diferenciais, seções personalizadas e FAQ",
+          "Formulário próprio direto pro WhatsApp e CTAs personalizados",
+          "Destaque editorial ocasional",
+          "Métricas completas: origem, serviços, formulários e conversão",
           "Condições premium na Geez Marketing (em breve)"
         ]
       },
@@ -150,23 +156,29 @@
         "description": "Pra empresas que querem a maior visibilidade dentro do ecossistema Cerâmica.",
         "features": [
           "Tudo do plano Experiência",
-          "Prioridade em Negócios em Destaque",
+          "Prioridade máxima em “Empresas em Destaque”",
+          "Maior prioridade nas categorias e buscas, com rodízio entre Premium",
           "Participação prioritária em encontros empresariais",
           "Café da manhã ou almoço de networking, conforme calendário",
           "Conteúdo institucional especial",
           "Apresentação 3D da sua sala (1 produção por ciclo, em escopo padrão)",
-          "Visibilidade reforçada no ecossistema"
+          "Selo Premium e visibilidade reforçada no ecossistema",
+          "Relatórios completos",
+          "Participação prioritária em ações especiais do Cerâmica Hub"
         ]
       },
       "patrocinador": {
         "name": "Patrocinador",
-        "description": "Pra marcas que querem ir além e se tornar patrocinadoras oficiais do Cerâmica Hub.",
+        "description": "Pra marcas que querem ir além e se tornar patrocinadoras oficiais. A base é o plano Experiência; benefícios Premium podem ser ativados na proposta personalizada.",
         "features": [
-          "Tudo do plano Experiência",
+          "Base: todos os recursos do plano Experiência",
+          "Benefícios Premium (como o tour 3D) ativados na proposta personalizada",
           "Proposta sob medida com o time Cerâmica Hub",
-          "Posições de patrocínio exclusivas",
-          "Ativações e presença institucional",
-          "Reunião de diagnóstico com nosso time"
+          "Espaços exclusivos de publicidade, ativações e presença institucional",
+          "Landing page institucional",
+          "Reunião de diagnóstico com nosso time",
+          "Métricas de campanha: impressões, cliques e CTR",
+          "Período de veiculação, segmentação por categoria e por página"
         ]
       }
     }
@@ -1009,6 +1021,28 @@
     "defaultHeadline": "{name}",
     "defaultSubtitle": "Conheça a {name}, no Espaço Cerâmica.",
     "reviewInvite": "Já foi cliente? Avalie esta empresa",
-    "mapTitle": "Mapa do Espaço Cerâmica"
+    "mapTitle": "Mapa do Espaço Cerâmica",
+    "badgePremium": "Premium",
+    "badgeFeatured": "Em destaque",
+    "badgeSponsored": "Patrocinada",
+    "offerMore": "Outras promoções",
+    "claimTitle": "Você representa esta empresa?",
+    "claimLead": "Reivindique este perfil para atualizar as informações e liberar os recursos do Cerâmica Hub.",
+    "claimCta": "Reivindicar este perfil",
+    "claimName": "Seu nome",
+    "claimEmail": "E-mail",
+    "claimPhone": "Telefone / WhatsApp",
+    "claimRole": "Seu cargo na empresa",
+    "claimMessage": "Como podemos confirmar que você representa a empresa? (opcional)",
+    "claimConsent": "Concordo em enviar estes dados para análise, conforme a Política de Privacidade.",
+    "claimSubmit": "Enviar pedido",
+    "claimSending": "Enviando…",
+    "claimSuccess": "Pedido enviado! Nossa equipe vai analisar e entrar em contato pelo e-mail informado.",
+    "claimError": "Não foi possível enviar agora. Tente de novo em instantes.",
+    "proFeatures": "Recursos profissionais",
+    "proApresentacao": "Apresentação",
+    "proServicos": "Serviços",
+    "proGaleria": "Galeria",
+    "proWhatsapp": "WhatsApp"
   }
 }

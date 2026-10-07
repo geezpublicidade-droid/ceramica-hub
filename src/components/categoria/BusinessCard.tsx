@@ -8,6 +8,7 @@ import { BusinessAvatar } from "@/components/BusinessAvatar";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { TrackedLink } from "@/components/TrackedLink";
 import { WhatsAppLink } from "@/components/WhatsAppLink";
+import { ListingBadge } from "@/components/business/ListingBadge";
 import { logPlacementClick, logPlacementImpression, logWhatsAppClick } from "@/lib/actions/log-search";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { track } from "@/lib/analytics";
@@ -28,6 +29,8 @@ export type BusinessCardProps = {
   /** presente = posição comercial paga: registra impressão e cliques atribuídos a ela */
   placement?: { id: string; badge: string };
   layout?: "grid" | "list";
+  /** posição na listagem orgânica: liga a medição de impressões e cliques (ListingTracker) */
+  position?: number;
 };
 
 /** Capa sem foto autorizada: textura discreta na cor institucional, sem bloco vazio. */
@@ -47,7 +50,7 @@ const PROFILE_CLASS =
  * botões sempre alinhados no rodapé (altura igual em toda a linha do grid).
  * Com `placement`, é um resultado comercial ("Destaque"), identificado como tal.
  */
-export function BusinessCard({ business, categoryLabel, labels, placement, layout = "grid" }: BusinessCardProps) {
+export function BusinessCard({ business, categoryLabel, labels, placement, layout = "grid", position }: BusinessCardProps) {
   const ref = useRef<HTMLElement>(null);
   const isList = layout === "list";
   const cover = business.imageUsageAuthorized ? business.coverPhoto : undefined;
@@ -74,6 +77,7 @@ export function BusinessCard({ business, categoryLabel, labels, placement, layou
   return (
     <article
       ref={ref}
+      {...(position && !placement ? { "data-imp-id": business.id, "data-imp-pos": position, "data-imp-plan": business.effectivePlan } : {})}
       className={`group lift flex h-full overflow-hidden rounded-2xl border border-border bg-white hover:shadow-[0_18px_36px_-18px_rgba(0,0,0,0.3)] ${
         isList ? "flex-col sm:flex-row" : "flex-col"
       } ${placement ? "border-primary/25" : ""}`}
@@ -119,6 +123,7 @@ export function BusinessCard({ business, categoryLabel, labels, placement, layou
                   {business.name}
                 </Link>
               </h3>
+              <ListingBadge badge={business.listing.badge} />
               {business.verified && (
                 <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[12px] font-medium text-primary">
                   <BadgeCheck aria-hidden="true" className="h-3.5 w-3.5" strokeWidth={2} />
@@ -150,7 +155,7 @@ export function BusinessCard({ business, categoryLabel, labels, placement, layou
               {labels.viewProfile}
             </Link>
           )}
-          {placementId ? (
+          {!business.listing.whatsapp && !placementId ? null : placementId ? (
             <TrackedLink
               href={whatsappHref}
               onTrack={() => {

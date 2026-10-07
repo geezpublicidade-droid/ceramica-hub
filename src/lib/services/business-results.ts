@@ -223,3 +223,49 @@ export async function getVisitSources(businessId: string, from: Date, to: Date):
   }
   return [...counts.entries()].map(([source, visits]) => ({ source, visits })).sort((a, b) => b.visits - a.visits);
 }
+
+export type ListingPerformance = {
+  impressions: number;
+  clicks: number;
+  /** cliques ÷ impressões × 100 */
+  ctr: number;
+  /** posição média em que a empresa apareceu (1 = primeiro) */
+  averagePosition: number | null;
+  byCategory: { category: string; impressions: number }[];
+};
+
+/** Presença nas listagens e buscas (impressões, cliques, CTR, posição média) — relatório Premium. */
+export async function getListingPerformance(businessId: string, from: Date, to: Date): Promise<ListingPerformance> {
+  const { data, error } = await createServiceClient()
+    .from("metrics_events")
+    .select("event_type, metadata")
+    .eq("business_id", businessId)
+    .in("event_type", ["listing_impression", "listing_click"])
+    .gte("created_at", from.toISOString())
+    .lt("created_at", to.toISOString())
+    .limit(20000);
+  if (error) throw error;
+
+  let impressions = 0;
+  let clicks = 0;
+  let positionSum = 0;
+  const categories = new Map<string, number>();
+  for (const row of data ?? []) {
+    const meta = (row.metadata ?? {}) as { position?: number; category?: string | null };
+    if (row.event_type === "listing_click") {
+      clicks += 1;
+      continue;
+    }
+    impressions += 1;
+    if (typeof meta.position === "number") positionSum += meta.position;
+    const category = meta.category || "todas";
+    categories.set(category, (categories.get(category) ?? 0) + 1);
+  }
+  return {
+    impressions,
+    clicks,
+    ctr: impressions > 0 ? Math.round((clicks / impressions) * 1000) / 10 : 0,
+    averagePosition: impressions > 0 ? Math.round((positionSum / impressions) * 10) / 10 : null,
+    byCategory: [...categories.entries()].sort((a, b) => b[1] - a[1]).slice(0, 6).map(([category, count]) => ({ category, impressions: count })),
+  };
+}

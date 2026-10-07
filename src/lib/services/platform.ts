@@ -3,7 +3,9 @@ import { categories, type Business, type BusinessService, type VirtualVisitType 
 import { type Opportunity } from "@/data/opportunities";
 import { type Benefit } from "@/data/benefits";
 import { getTranslationsFor, type EntityTranslations } from "@/lib/services/translate";
-import { cachedPlanSettings, loadPlanCatalog } from "@/lib/services/plan-catalog";
+import { cachedFeaturesFor, cachedPlanSettings, loadPlanCatalog } from "@/lib/services/plan-catalog";
+import { DEFAULT_PLAN_FEATURES } from "@/lib/plans/features";
+import { listingBadge } from "@/lib/plans/ranking";
 import { getFeaturesForBusinesses } from "@/lib/services/company-plan";
 import type { BuiltInPlan } from "@/lib/plans/features";
 import { canAccess, getLimit, publishedItems, resolveEffectivePlan, type EffectivePlan, type PlanStatus } from "@/lib/plans/resolve";
@@ -97,6 +99,12 @@ function planStateFor(row: BusinessRow): { effective: EffectivePlan; trialStatus
   return { effective, trialStatus: trialEnded ? "expired" : row.trial_status };
 }
 
+/** O que o plano em vigor mostra nos cartões de listagem (usa o catálogo em cache; sem ele, o padrão de fábrica). */
+function listingInfo(plan: string): Business["listing"] {
+  const features = cachedFeaturesFor(plan) ?? (DEFAULT_PLAN_FEATURES as Record<string, typeof DEFAULT_PLAN_FEATURES.presenca>)[plan] ?? DEFAULT_PLAN_FEATURES.presenca;
+  return { whatsapp: canAccess(features, "whatsapp"), badge: listingBadge(features) };
+}
+
 /** `translation` é o mapa field->value já resolvido pra ESSA empresa num idioma específico (ver `getTranslationsFor`); ausente/sem entrada = mantém o texto em português. */
 function mapBusiness(row: BusinessRow, translation?: Record<string, string>): Business {
   const verified = row.status === "approved" && row.address_verified;
@@ -119,6 +127,7 @@ function mapBusiness(row: BusinessRow, translation?: Record<string, string>): Bu
     planReason: effective.reason,
     planInGrace: effective.inGrace,
     ownerValidated: row.owner_validated ?? true,
+    listing: listingInfo(effective.plan),
     trial: { status: trialStatus, plan: row.trial_plan, endsAt: row.trial_ends_at },
     status: row.status,
     logo: row.logo_url ?? undefined,
@@ -745,7 +754,9 @@ export type MetricEventType =
   | "placement_profile_view"
   | "service_clicked"
   | "offer_clicked"
-  | "lead_submitted";
+  | "lead_submitted"
+  | "listing_impression"
+  | "listing_click";
 
 /** Log de evento append-only. Nunca inventar número no painel: sem linha aqui, mostra 0/vazio. */
 export async function logMetricEvent(

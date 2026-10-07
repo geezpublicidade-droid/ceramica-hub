@@ -2,6 +2,7 @@ import { Link } from "@/i18n/navigation";
 import type { Business } from "@/data/businesses";
 import { BusinessAvatar } from "@/components/BusinessAvatar";
 import { WhatsAppLink } from "@/components/WhatsAppLink";
+import { ListingBadge } from "@/components/business/ListingBadge";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 
 export type CompanyCardLabels = {
@@ -17,15 +18,18 @@ type CompanyCardProps = {
   categoryLabel: string;
   layout: "grid" | "list";
   labels: CompanyCardLabels;
+  /** posição na listagem: liga a medição de impressões e cliques (ListingTracker) */
+  position?: number;
 };
 
 /** Card padrão (listagem orgânica): altura consistente, texto limitado por line-clamp. */
-export function CompanyCard({ business, categoryLabel, layout, labels }: CompanyCardProps) {
+export function CompanyCard({ business, categoryLabel, layout, labels, position }: CompanyCardProps) {
   const profileHref = `/empresa/${business.slug}`;
   const isList = layout === "list";
 
   return (
     <article
+      {...(position ? { "data-imp-id": business.id, "data-imp-pos": position, "data-imp-plan": business.effectivePlan } : {})}
       className={`glass-card-light flex rounded-3xl p-5 transition-all hover:-translate-y-0.5 hover:shadow-[0_20px_40px_-18px_rgba(0,0,0,0.18)] ${
         isList ? "flex-col gap-4 sm:flex-row sm:items-center" : "h-full flex-col gap-4"
       }`}
@@ -45,11 +49,14 @@ export function CompanyCard({ business, categoryLabel, layout, labels }: Company
                 {business.name}
               </h3>
             </Link>
-            {business.verified && (
-              <span className="shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-[12px] font-medium text-primary">
-                {labels.verified}
-              </span>
-            )}
+            <div className="flex shrink-0 flex-wrap items-center justify-end gap-1.5">
+              <ListingBadge badge={business.listing.badge} />
+              {business.verified && (
+                <span className="shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-[12px] font-medium text-primary">
+                  {labels.verified}
+                </span>
+              )}
+            </div>
           </div>
           <p className="mt-1 truncate text-[14px] font-medium text-primary/90">{categoryLabel}</p>
           <p className="mt-0.5 truncate text-[14px] text-muted">{business.floor}</p>
@@ -65,13 +72,15 @@ export function CompanyCard({ business, categoryLabel, layout, labels }: Company
         >
           {labels.viewProfile}
         </Link>
-        <WhatsAppLink
-          href={buildWhatsAppLink(business.phone, business.name)}
-          businessId={business.id}
-          className="neu-primary inline-flex min-h-11 flex-1 items-center justify-center rounded-full px-5 text-[15px] font-medium text-white sm:flex-none"
-        >
-          {labels.whatsapp}
-        </WhatsAppLink>
+        {business.listing.whatsapp && (
+          <WhatsAppLink
+            href={buildWhatsAppLink(business.phone, business.name)}
+            businessId={business.id}
+            className="neu-primary inline-flex min-h-11 flex-1 items-center justify-center rounded-full px-5 text-[15px] font-medium text-white sm:flex-none"
+          >
+            {labels.whatsapp}
+          </WhatsAppLink>
+        )}
       </div>
     </article>
   );

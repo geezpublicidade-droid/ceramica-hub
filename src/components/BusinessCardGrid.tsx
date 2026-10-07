@@ -2,6 +2,7 @@ import { Link } from "@/i18n/navigation";
 import type { Business } from "@/data/businesses";
 import { BusinessAvatar } from "@/components/BusinessAvatar";
 import { WhatsAppLink } from "@/components/WhatsAppLink";
+import { ListingBadge } from "@/components/business/ListingBadge";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 
 type BusinessCardGridProps = {
@@ -72,6 +73,7 @@ export function BusinessCardGrid({
                 </h2>
               </Link>
               <div className="flex shrink-0 items-center gap-1.5">
+                <ListingBadge badge={business.listing.badge} />
                 {business.seals.founder && (
                   <span className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[13px] font-medium text-amber-800">
                     {founderLabel}
@@ -86,14 +88,16 @@ export function BusinessCardGrid({
             </div>
             <p className="mt-1.5 text-[16px] text-muted">{business.floor}</p>
             <p className="mt-3 break-words text-[17px] leading-relaxed text-muted">{business.description}</p>
-            <WhatsAppLink
-              href={buildWhatsAppLink(business.phone, business.name)}
-              businessId={business.id}
-              className="mt-4 inline-flex items-center gap-1.5 text-[16px] font-medium text-primary transition-transform hover:translate-x-1"
-            >
-              {whatsappLabel}
-              <span aria-hidden="true">→</span>
-            </WhatsAppLink>
+            {business.listing.whatsapp && (
+              <WhatsAppLink
+                href={buildWhatsAppLink(business.phone, business.name)}
+                businessId={business.id}
+                className="mt-4 inline-flex items-center gap-1.5 text-[16px] font-medium text-primary transition-transform hover:translate-x-1"
+              >
+                {whatsappLabel}
+                <span aria-hidden="true">→</span>
+              </WhatsAppLink>
+            )}
           </div>
         </div>
       ))}

@@ -2,6 +2,7 @@
 
 import { headers } from "next/headers";
 import { logMetricEvent } from "@/lib/services/platform";
+import { createServiceClient } from "@/lib/supabase/server";
 import { RATE_LIMITS, withinRateLimit } from "@/lib/services/rate-limit";
 import { deviceFromUserAgent } from "@/lib/landing/origin";
 
@@ -120,4 +121,36 @@ export type LandingEvent = (typeof LANDING_EVENTS)[number];
 export async function logLandingEvent(businessId: string, event: LandingEvent, itemId?: string) {
   if (!UUID_RE.test(businessId) || !LANDING_EVENTS.includes(event)) return;
   await logPublicMetric(event, businessId, itemId && UUID_RE.test(itemId) ? { itemId } : undefined);
+}
+
+export type ListingEntry = { businessId: string; position: number; plan: string };
+export type ListingContextInput = { origin: "empresas" | "categoria" | "busca"; category?: string; query?: string };
+
+const LISTING_ORIGINS = ["empresas", "categoria", "busca"] as const;
+
+function cleanListingBatch(entries: ListingEntry[], context: ListingContextInput) {
+  if (!LISTING_ORIGINS.includes(context.origin)) return [];
+  const category = context.category?.trim().toLowerCase().slice(0, 80) || null;
+  const query = context.query?.trim().toLowerCase().slice(0, 60) || null;
+  return entries
+    .slice(0, 30)
+    .filter((entry) => UUID_RE.test(entry.businessId) && Number.isInteger(entry.position) && entry.position > 0 && entry.position < 10000)
+    .map((entry) => ({
+      business_id: entry.businessId,
+      metadata: { position: entry.position, plan: entry.plan.slice(0, 40), category, origin: context.origin, query },
+    }));
+}
+
+/** Impressões de empresas nas listagens (posição, plano, categoria, origem e termo da busca). Lote de até 30 cartões visíveis. */
+export async function logListingImpressions(entries: ListingEntry[], context: ListingContextInput) {
+  const rows = cleanListingBatch(entries, context).map((row) => ({ ...row, event_type: "listing_impression" }));
+  if (rows.length === 0 || !(await withinRateLimit(RATE_LIMITS.metricLog))) return;
+  await createServiceClient().from("metrics_events").insert(rows);
+}
+
+/** Clique em um cartão da listagem (com a posição em que ele estava). */
+export async function logListingClick(entry: ListingEntry, context: ListingContextInput) {
+  const rows = cleanListingBatch([entry], context).map((row) => ({ ...row, event_type: "listing_click" }));
+  if (rows.length === 0 || !(await withinRateLimit(RATE_LIMITS.metricLog))) return;
+  await createServiceClient().from("metrics_events").insert(rows);
 }

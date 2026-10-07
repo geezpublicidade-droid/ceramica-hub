@@ -1,3 +1,6 @@
+import { cachedFeaturesFor } from "@/lib/services/plan-catalog";
+import { DEFAULT_PLAN_FEATURES, type FeatureMap } from "@/lib/plans/features";
+import { rankingTier } from "@/lib/plans/ranking";
 import { getAllBusinesses, logMetricEvent } from "@/lib/services/platform";
 import { getOpportunities, getBenefits } from "@/lib/services/platform";
 import { getActiveHotels } from "@/lib/services/hotels";
@@ -26,7 +29,11 @@ export const SEARCH_TYPE_LABEL: Record<SearchResult["type"], string> = {
   evento: "Evento",
 };
 
-const PLAN_RANK: Record<string, number> = { premium: 4, experiencia: 3, destaque: 2, profissional: 1, presenca: 0 };
+/** Nível de posicionamento do plano em vigor (matriz central: priority_level). Plano pago aparece marcado como patrocinado. */
+function planRankFor(plan: string): number {
+  const features = cachedFeaturesFor(plan) ?? (DEFAULT_PLAN_FEATURES as Record<string, FeatureMap>)[plan] ?? DEFAULT_PLAN_FEATURES.presenca;
+  return rankingTier(features, "search");
+}
 
 function relevanceTier(term: string, text: string): number | null {
   const normalizedTerm = term.trim().toLowerCase();
@@ -71,9 +78,9 @@ export async function searchGlobal(term: string, locale?: string): Promise<Searc
       title: business.name,
       subtitle: business.category,
       href: `/empresa/${business.slug}`,
-      sponsored: business.effectivePlan !== "presenca",
+      sponsored: business.listing.badge !== null,
       tier,
-      planRank: PLAN_RANK[business.effectivePlan] ?? 0,
+      planRank: planRankFor(business.effectivePlan),
     });
   }
 

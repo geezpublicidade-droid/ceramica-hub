@@ -89,59 +89,65 @@
     "plans": {
       "presenca": {
         "name": "Presencia Gratuita",
-        "description": "Comienza tu presencia en Cerâmica sin costo -- solo nombre y logo.",
+        "description": "Comienza tu presencia en Cerâmica sin costo: una página básica y elegante.",
         "features": [
           "Página básica en Cerâmica Hub",
-          "Nombre y logo",
+          "Nombre de la empresa y logo",
           "Categoría",
           "Torre, piso y sala",
           "Participación en las búsquedas",
-          "URL exclusiva"
+          "URL exclusiva",
+          "Posibilidad de reclamar el perfil"
         ]
       },
       "profissional": {
         "name": "Profesional",
-        "description": "Página comercial completa, para empresas que ya quieren crecer.",
+        "description": "Perfil comercial estandarizado, para empresas que ya quieren crecer.",
         "features": [
           "Todo del plan gratuito",
-          "Hasta 3 servicios con foto y descripción",
-          "Galería con hasta 3 fotos reales (sin artes)",
           "Descripción completa de la empresa",
+          "Hasta 3 servicios con foto y descripción",
+          "Galería con hasta 3 fotos reales (sin artes ni banners)",
           "Botón de WhatsApp y redes sociales",
           "Horario de atención",
           "Una promoción activa",
           "Sello de empresa patrocinada",
-          "Soporte"
+          "Soporte",
+          "Resumen de visualizaciones de la página"
         ]
       },
       "destaque": {
         "name": "Destacado",
-        "description": "Para quienes quieren aparecer primero y ser vistos por más gente.",
+        "description": "Para quien quiere aparecer primero y ser visto por más gente.",
         "features": [
           "Todo del plan Profesional",
-          "Prioridad en tu categoría y en las búsquedas",
+          "Prioridad en la categoría y en las búsquedas",
           "Hasta 6 servicios con fotos",
           "Galería con hasta 6 fotos",
-          "Hasta cuatro promociones",
+          "Hasta 4 promociones activas",
           "Cupones rastreables",
-          "Destaque rotativo en las tarjetas",
-          "Difusión semanal en Stories",
+          "Destaque rotativo en las tarjetas y sello “Destacado”",
+          "Promoción semanal en Stories",
           "Publicación de oportunidades",
-          "Condiciones especiales en Geez Marketing"
+          "Condiciones especiales en Geez Marketing",
+          "Métricas básicas: visualizaciones, clics y uso de cupones"
         ]
       },
       "experiencia": {
         "name": "Experiencia",
-        "description": "Página comercial completa, con presencia premium en el ecosistema.",
+        "description": "Landing page completa y personalizada, con servicios ilimitados.",
         "features": [
-          "Todo el plan Destacado",
-          "Página más completa y personalizada",
+          "Todo del plan Destacado",
+          "Landing page completa y personalizada",
+          "Hero personalizado: portada, título y propuesta de valor",
+          "Servicios ilimitados",
+          "Promociones ilimitadas",
           "Galería ampliada (hasta 30 fotos)",
           "Video destacado",
-          "Diferenciales de la empresa en evidencia",
-          "Destaque editorial eventual",
-          "Formulario propio directo a WhatsApp",
-          "Métricas completas",
+          "Diferenciales, secciones personalizadas y FAQ",
+          "Formulario propio directo a WhatsApp y CTAs personalizados",
+          "Destaque editorial ocasional",
+          "Métricas completas: origen, servicios, formularios y conversión",
           "Condiciones premium en Geez Marketing (próximamente)"
         ]
       },
@@ -149,24 +155,30 @@
         "name": "Premium",
         "description": "Para empresas que quieren la mayor visibilidad dentro del ecosistema Cerâmica.",
         "features": [
-          "Todo el plan Experiencia",
-          "Prioridad en Negocios Destacados",
+          "Todo del plan Experiencia",
+          "Prioridad máxima en “Empresas Destacadas”",
+          "Mayor prioridad en categorías y búsquedas, con rotación entre Premium",
           "Participación prioritaria en encuentros empresariales",
           "Desayuno o almuerzo de networking, según calendario",
           "Contenido institucional especial",
           "Presentación 3D de tu sala (1 producción por ciclo, alcance estándar)",
-          "Visibilidad reforzada en el ecosistema"
+          "Sello Premium y visibilidad reforzada en el ecosistema",
+          "Informes completos",
+          "Participación prioritaria en acciones especiales de Cerâmica Hub"
         ]
       },
       "patrocinador": {
         "name": "Patrocinador",
-        "description": "Para marcas que quieren ir más allá y convertirse en patrocinadoras oficiales de Cerâmica Hub.",
+        "description": "Para marcas que quieren ir más allá y ser patrocinadoras oficiales. La base es el plan Experiencia; los beneficios Premium pueden activarse en la propuesta personalizada.",
         "features": [
-          "Todo del plan Experiencia",
+          "Base: todos los recursos del plan Experiencia",
+          "Beneficios Premium (como el tour 3D) activados en la propuesta personalizada",
           "Propuesta a medida con el equipo de Cerâmica Hub",
-          "Posiciones de patrocinio exclusivas",
-          "Activaciones y presencia institucional",
-          "Reunión de diagnóstico con nuestro equipo"
+          "Espacios publicitarios exclusivos, activaciones y presencia institucional",
+          "Landing page institucional",
+          "Reunión de diagnóstico con nuestro equipo",
+          "Métricas de campaña: impresiones, clics y CTR",
+          "Período de publicación, segmentación por categoría y por página"
         ]
       }
     }

@@ -3,6 +3,8 @@ import type { Business } from "@/data/businesses";
 import { getAllBusinesses } from "@/lib/services/platform";
 import type { DiscoverySort } from "@/lib/discovery-params";
 import { companyTier, meaningfulTokens, tokenize } from "@/lib/search-intent";
+import { getFeaturesForBusinesses } from "@/lib/services/company-plan";
+import { rankCompanies, rankingTier, type RankingContext } from "@/lib/plans/ranking";
 import {
   categoryAndDescendantIds,
   getBusinessCategoryLinks,
@@ -35,6 +37,8 @@ export type DiscoveryItem = {
   business: Business;
   /** nome da categoria mais específica a que a empresa pertence, para o card */
   categoryLabel: string;
+  /** posição (1 = primeiro) em toda a lista, não só na página: base das métricas de impressão */
+  position: number;
   rating: { average: number; count: number } | null;
 };
 
@@ -232,21 +236,32 @@ export async function discoverCompanies(
     scored.push({ business, tier });
   }
 
-  const byChosenSort = compareBy(filters.sort, views, sortRatings, facets);
-  const byRelevance = compareBy("relevance", views, sortRatings, facets);
-  scored.sort((a, b) => {
-    // com busca por texto, a relevância textual vem sempre antes do critério escolhido
-    if (term && filters.sort === "relevance" && a.tier !== b.tier) return a.tier - b.tier;
-    return byChosenSort(a.business, b.business) || byRelevance(a.business, b.business) || a.business.name.localeCompare(b.business.name, "pt-BR");
-  });
+  let ordered = scored;
+  if (filters.sort === "relevance") {
+    // Padrão: relevância textual > nível do plano (Premium > ... > Gratuito) > rodízio equilibrado dentro do mesmo nível
+    const context: RankingContext = term ? "search" : activeCategory ? "category" : "directory";
+    const features = await getFeaturesForBusinesses(scored.map(({ business }) => business));
+    const byId = new Map(scored.map((entry) => [entry.business.id, entry]));
+    const ranked = rankCompanies(
+      scored.map(({ business, tier }) => ({ id: business.id, relevance: term ? tier : 0, tier: features.has(business.id) ? rankingTier(features.get(business.id)!, context) : 0 })),
+      { context: `${context}|${activeCategory?.slug ?? "todas"}|${queryTokens.join(" ")}` },
+    );
+    ordered = ranked.map((entry) => byId.get(entry.id)!);
+  } else {
+    // Ordenação escolhida pelo usuário (acessos, nota, recentes, A–Z): sem prioridade de plano
+    const byChosenSort = compareBy(filters.sort, views, sortRatings, facets);
+    const byRelevance = compareBy("relevance", views, sortRatings, facets);
+    scored.sort((a, b) => byChosenSort(a.business, b.business) || byRelevance(a.business, b.business) || a.business.name.localeCompare(b.business.name, "pt-BR"));
+  }
 
   const start = (filters.page - 1) * DISCOVERY_PAGE_SIZE;
-  const pageBusinesses = scored.slice(start, start + DISCOVERY_PAGE_SIZE);
+  const pageBusinesses = ordered.slice(start, start + DISCOVERY_PAGE_SIZE);
   // na ordenação por nota o mapa completo já está carregado; senão busca só as notas dos cards da página
   const ratings =
     filters.sort === "rating" ? sortRatings : await loadRatings(pageBusinesses.map(({ business }) => business.id));
-  const items: DiscoveryItem[] = pageBusinesses.map(({ business }) => ({
+  const items: DiscoveryItem[] = pageBusinesses.map(({ business }, index) => ({
     business,
+    position: start + index + 1,
     categoryLabel: mostSpecificCategory(tree, links.get(business.id))?.name ?? business.category,
     rating: ratings.get(business.id) ?? null,
   }));

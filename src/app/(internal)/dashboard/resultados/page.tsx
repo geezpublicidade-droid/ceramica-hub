@@ -5,7 +5,7 @@ import { getBusinessById } from "@/lib/services/platform";
 import { getCompanyPermissions } from "@/lib/services/company-plan";
 import { landingCapabilitiesFromFeatures } from "@/lib/landing/sections";
 import { UpgradePrompt } from "@/components/plans/UpgradePrompt";
-import { getBusinessResults, getVisitSources, parsePeriod, previousMonthKey, formatMonthLabel, RESULT_PERIODS } from "@/lib/services/business-results";
+import { getBusinessResults, getListingPerformance, getVisitSources, parsePeriod, previousMonthKey, formatMonthLabel, RESULT_PERIODS } from "@/lib/services/business-results";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { BackLink } from "@/components/nav/BackLink";
 import { StatTile } from "@/components/dashboard/StatTile";
@@ -41,9 +41,10 @@ export default async function DashboardResultadosPage({ searchParams }: PageProp
   const now = new Date();
   const periodEnd = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
   const periodStart = new Date(periodEnd.getTime() - period * 86400000);
-  const [placements, sources] = await Promise.all([
+  const [placements, sources, listing] = await Promise.all([
     getBusinessPlacementResults(businessId, periodStart, periodEnd),
     getVisitSources(businessId, periodStart, periodEnd),
+    hasPremium ? getListingPerformance(businessId, periodStart, periodEnd) : Promise.resolve(null),
   ]);
 
   const allTiles = [
@@ -124,6 +125,21 @@ export default async function DashboardResultadosPage({ searchParams }: PageProp
           )}
 
           {hasFull && <VisitSourcesCard sources={sources} periodLabel={`últimos ${period} dias`} />}
+
+          {hasPremium && listing && (
+            <div className="glass-light rounded-3xl p-6">
+              <p className="text-[15px] font-medium uppercase tracking-[0.15em] text-muted">Presença nas listagens e buscas</p>
+              <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
+                <StatTile label="Impressões" value={listing.impressions} />
+                <StatTile label="Cliques" value={listing.clicks} />
+                <StatTile label="CTR" value={`${listing.ctr}%`} />
+                <StatTile label="Posição média" value={listing.averagePosition ?? "—"} />
+              </div>
+              {listing.byCategory.length > 0 && (
+                <p className="mt-4 text-[14px] text-muted">Mais exibida em: {listing.byCategory.map((row) => `${row.category} (${row.impressions})`).join(", ")}.</p>
+              )}
+            </div>
+          )}
 
           {hasPremium && <PlacementResultsSection placements={placements} periodLabel={`últimos ${period} dias`} allowRenewal />}
 

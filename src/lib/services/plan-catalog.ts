@@ -97,6 +97,11 @@ export function cachedPlanSettings(): { graceDays: number; ranks: Record<PlanKey
   return cache ? { graceDays: cache.catalog.graceDays, ranks: cache.catalog.ranks } : { graceDays: DEFAULT_GRACE_DAYS, ranks: Object.fromEntries(DEFAULT_PLAN_DEFINITIONS.map((plan) => [plan.key, plan.rank])) };
 }
 
+/** Recursos do plano que já estão em cache (leitura síncrona para mapBusiness); undefined se o catálogo ainda não foi carregado. */
+export function cachedFeaturesFor(plan: PlanKey): FeatureMap | undefined {
+  return cache?.catalog.features[plan];
+}
+
 export function planNameFrom(catalog: PlanCatalog, key: PlanKey): string {
   return catalog.plans.find((plan) => plan.key === key)?.name ?? key;
 }

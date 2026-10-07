@@ -151,15 +151,17 @@ export function Directory({ businesses }: DirectoryProps) {
                     {tCategories(business.category)} · {business.floor}
                   </p>
                   <p className="mt-3 text-[17px] leading-relaxed text-muted">{business.description}</p>
-                  <a
-                    href={buildWhatsAppLink(business.phone, business.name)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-4 inline-flex items-center gap-1.5 text-[16px] font-medium text-primary transition-transform hover:translate-x-1"
-                  >
-                    {tCommon("whatsapp")}
-                    <span aria-hidden="true">→</span>
-                  </a>
+                  {business.listing.whatsapp && (
+                    <a
+                      href={buildWhatsAppLink(business.phone, business.name)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-4 inline-flex items-center gap-1.5 text-[16px] font-medium text-primary transition-transform hover:translate-x-1"
+                    >
+                      {tCommon("whatsapp")}
+                      <span aria-hidden="true">→</span>
+                    </a>
+                  )}
                 </div>
               </div>
             ))}

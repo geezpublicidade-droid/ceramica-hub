@@ -89,84 +89,96 @@
     "plans": {
       "presenca": {
         "name": "Free Presence",
-        "description": "Start your presence at Cerâmica at no cost -- just name and logo.",
+        "description": "Start your presence at Cerâmica at no cost: a clean, basic page.",
         "features": [
           "Basic page on Cerâmica Hub",
-          "Name and logo",
+          "Company name and logo",
           "Category",
           "Tower, floor and room",
           "Included in search",
-          "Exclusive URL"
+          "Exclusive URL",
+          "Option to claim the profile"
         ]
       },
       "profissional": {
         "name": "Professional",
-        "description": "A complete business page, for businesses ready to grow.",
+        "description": "A standardized business profile for companies ready to grow.",
         "features": [
           "Everything in the free plan",
+          "Full company description",
           "Up to 3 services with photo and description",
-          "Gallery with up to 3 real photos (no graphic art)",
-          "Full business description",
+          "Gallery with up to 3 real photos (no graphics or banners)",
           "WhatsApp button and social media",
-          "Business hours",
+          "Opening hours",
           "One active promotion",
-          "Sponsored-business seal",
-          "Support"
+          "Sponsored company badge",
+          "Support",
+          "Page views summary"
         ]
       },
       "destaque": {
         "name": "Featured",
-        "description": "For businesses that want to appear first and be seen by more people.",
+        "description": "For those who want to appear first and be seen by more people.",
         "features": [
-          "Everything in the Professional plan",
-          "Priority in your category and in search",
+          "Everything in Professional",
+          "Priority in the category and in search",
           "Up to 6 services with photos",
           "Gallery with up to 6 photos",
-          "Up to four promotions",
+          "Up to 4 active promotions",
           "Trackable coupons",
-          "Rotating highlight on cards",
+          "Rotating highlight on cards and a “Featured” badge",
           "Weekly promotion on Stories",
-          "Publish opportunities",
-          "Special rates at Geez Marketing"
+          "Publishing opportunities",
+          "Special conditions at Geez Marketing",
+          "Basic metrics: views, clicks and coupon use"
         ]
       },
       "experiencia": {
         "name": "Experience",
-        "description": "A complete business page with a premium presence in the ecosystem.",
+        "description": "A complete, customized landing page with unlimited services.",
         "features": [
-          "Everything in the Featured plan",
-          "A fuller, customized page",
-          "Expanded gallery (up to 30 photos)",
+          "Everything in Featured",
+          "Complete, customized landing page",
+          "Custom hero: cover, title and value proposition",
+          "Unlimited services",
+          "Unlimited promotions",
+          "Extended gallery (up to 30 photos)",
           "Featured video",
-          "Company differentiators highlighted",
+          "Differentials, custom sections and FAQ",
+          "Own form straight to WhatsApp and custom CTAs",
           "Occasional editorial highlight",
-          "Own form straight to WhatsApp",
-          "Full metrics",
-          "Premium terms at Geez Marketing (coming soon)"
+          "Full metrics: source, services, forms and conversion",
+          "Premium conditions at Geez Marketing (coming soon)"
         ]
       },
       "premium": {
         "name": "Premium",
-        "description": "For companies that want the highest visibility within the Cerâmica ecosystem.",
+        "description": "For companies that want the greatest visibility in the Cerâmica ecosystem.",
         "features": [
-          "Everything in the Experience plan",
-          "Priority in Featured Businesses",
-          "Priority participation in business meetups",
+          "Everything in Experience",
+          "Top priority in “Featured Companies”",
+          "Higher priority in categories and search, rotating among Premium",
+          "Priority at business meetings",
           "Networking breakfast or lunch, per calendar",
           "Special institutional content",
           "3D presentation of your room (1 production per cycle, standard scope)",
-          "Reinforced visibility in the ecosystem"
+          "Premium badge and reinforced visibility in the ecosystem",
+          "Complete reports",
+          "Priority in special Cerâmica Hub initiatives"
         ]
       },
       "patrocinador": {
         "name": "Sponsor",
-        "description": "For brands that want to go further and become an official Cerâmica Hub sponsor.",
+        "description": "For brands that want to go further and become official sponsors. The base is the Experience plan; Premium benefits can be activated in the custom proposal.",
         "features": [
-          "Everything in the Experience plan",
-          "Tailored proposal with the Cerâmica Hub team",
-          "Exclusive sponsorship placements",
-          "Activations and institutional presence",
-          "Diagnostic meeting with our team"
+          "Base: every feature of the Experience plan",
+          "Premium benefits (such as the 3D tour) activated in the custom proposal",
+          "Tailor-made proposal with the Cerâmica Hub team",
+          "Exclusive advertising spaces, activations and institutional presence",
+          "Institutional landing page",
+          "Diagnostic meeting with our team",
+          "Campaign metrics: impressions, clicks and CTR",
+          "Run period, targeting by category and by page"
         ]
       }
     }
@@ -1009,6 +1021,28 @@
     "defaultHeadline": "{name}",
     "defaultSubtitle": "Meet {name}, at Espaço Cerâmica.",
     "reviewInvite": "Been a customer? Review this business",
-    "mapTitle": "Espaço Cerâmica map"
+    "mapTitle": "Espaço Cerâmica map",
+    "badgePremium": "Premium",
+    "badgeFeatured": "Featured",
+    "badgeSponsored": "Sponsored",
+    "offerMore": "More offers",
+    "claimTitle": "Do you represent this business?",
+    "claimLead": "Claim this profile to update the information and unlock Cerâmica Hub features.",
+    "claimCta": "Claim this profile",
+    "claimName": "Your name",
+    "claimEmail": "E-mail",
+    "claimPhone": "Phone / WhatsApp",
+    "claimRole": "Your role at the company",
+    "claimMessage": "How can we confirm you represent the business? (optional)",
+    "claimConsent": "I agree to send this data for review, per the Privacy Policy.",
+    "claimSubmit": "Send request",
+    "claimSending": "Sending…",
+    "claimSuccess": "Request sent! Our team will review it and contact you by e-mail.",
+    "claimError": "We couldn't send it right now. Please try again shortly.",
+    "proFeatures": "Professional features",
+    "proApresentacao": "Presentation",
+    "proServicos": "Services",
+    "proGaleria": "Gallery",
+    "proWhatsapp": "WhatsApp"
   }
 }

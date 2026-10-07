@@ -5,6 +5,7 @@ import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { AdHereBanner } from "@/components/ads/AdHereBanner";
 import { Link } from "@/i18n/navigation";
 import { CompanyCard } from "@/components/business/CompanyCard";
+import { ListingTracker } from "@/components/business/ListingTracker";
 import { CategoryIcon } from "@/components/empresas/CategoryIcon";
 import { SmartSearch } from "@/components/search/SmartSearch";
 import { DiscoveryFilters, type DiscoveryFilterLabels } from "@/components/empresas/DiscoveryFilters";
@@ -268,9 +269,10 @@ export default async function EmpresasPage({ params, searchParams }: PageProps) 
                   <div
                     className={`mt-6 grid gap-5 ${view === "list" ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 xl:grid-cols-3"}`}
                   >
-                    {result.items.map(({ business, categoryLabel, rating }) => (
+                    {result.items.map(({ business, categoryLabel, rating, position }) => (
                       <CompanyCard
                         key={business.id}
+                        position={position}
                         business={business}
                         categoryLabel={categoryLabel}
                         layout={view}
@@ -286,6 +288,8 @@ export default async function EmpresasPage({ params, searchParams }: PageProps) 
                     ))}
                   </div>
                 )}
+
+                <ListingTracker origin={filters.q ? "busca" : "empresas"} category={filters.cat} query={filters.q || undefined} />
 
                 {result.items.length > 3 && <AdHereBanner inline tone={1} />}
 

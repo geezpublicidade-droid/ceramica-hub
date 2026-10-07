@@ -6,6 +6,7 @@ import { CinematicFooter } from "@/components/landing/CinematicFooter";
 import { AdHereBanner } from "@/components/ads/AdHereBanner";
 import { Link } from "@/i18n/navigation";
 import { BusinessCard } from "@/components/categoria/BusinessCard";
+import { ListingTracker } from "@/components/business/ListingTracker";
 import { BusinessGrid } from "@/components/categoria/BusinessGrid";
 import { AdSlotCard } from "@/components/categoria/AdSlotCard";
 import { CategoryAdPanel } from "@/components/categoria/CategoryAdPanel";
@@ -462,9 +463,10 @@ export default async function CategoryPage({
                   />
                 ))}
                 {openCards}
-                {result.items.map(({ business, categoryLabel, rating }) => (
+                {result.items.map(({ business, categoryLabel, rating, position }) => (
                   <BusinessCard
                     key={business.id}
+                    position={position}
                     business={business}
                     categoryLabel={categoryLabel}
                     layout={view}
@@ -479,6 +481,8 @@ export default async function CategoryPage({
               </BusinessGrid>
             )}
           </div>
+
+          <ListingTracker origin={filters.q ? "busca" : "categoria"} category={path.join("/")} query={filters.q || undefined} />
 
           {result.items.length > 3 && <AdHereBanner inline href={advertiseHref} topic={category.name} tone={1} />}
 

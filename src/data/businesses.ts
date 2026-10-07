@@ -45,6 +45,8 @@ export type Business = {
   planInGrace: boolean;
   /** false = perfil sem proprietário validado (convite a reivindicar) */
   ownerValidated: boolean;
+  /** o que o plano em vigor libera nas LISTAGENS (cartões): WhatsApp e selo discreto de plano pago */
+  listing: { whatsapp: boolean; badge: "premium" | "featured" | "sponsored" | null };
   trial: {
     status: "none" | "active" | "expired";
     plan: BuiltInPlan | null;
