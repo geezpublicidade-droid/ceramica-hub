@@ -1044,5 +1044,9 @@
     "proServicos": "Serviços",
     "proGaleria": "Galeria",
     "proWhatsapp": "WhatsApp"
+  },
+  "IntroVideo": {
+    "label": "Vídeo de abertura",
+    "skip": "Pular"
   }
 }

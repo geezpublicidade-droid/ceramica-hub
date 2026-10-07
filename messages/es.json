@@ -943,5 +943,9 @@
     "text": "Su marca frente a quienes viven, trabajan y circulan por Cerâmica.",
     "textTopic": "Su marca destacada en {topic}, frente a quienes viven y trabajan en Cerâmica.",
     "cta": "Quiero anunciar"
+  },
+  "IntroVideo": {
+    "label": "Video de apertura",
+    "skip": "Saltar"
   }
 }
