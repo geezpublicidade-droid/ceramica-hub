@@ -374,6 +374,7 @@ const METRIC_EVENTS = [
   "lead_submitted",
   "offer_clicked",
   "service_clicked",
+  "coupon_redeemed",
 ];
 const MAX_METRIC_ROWS = 20000;
 
@@ -392,6 +393,10 @@ export async function fetchLandingMetrics(
 
   try {
     const target = await resolveLandingTarget(adminBusinessId);
+    // métricas por plano: nenhuma (gratuito), resumo, básicas, completas (período livre só a partir daqui)
+    const level = target.capabilities.metrics;
+    if (level === "none") return { success: false, error: "As métricas fazem parte do plano Profissional ou superior." };
+    if (preset === "custom" && !["full", "premium", "campaign"].includes(level)) return { success: false, error: "O período personalizado faz parte do plano Experiência ou superior." };
     const supabase = createServiceClient();
     const { data, error } = await supabase
       .from("metrics_events")

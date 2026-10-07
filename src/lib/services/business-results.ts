@@ -19,6 +19,9 @@ export type ResultTotals = {
   website: number;
   directions: number;
   appointments: number;
+  /** cliques em promoções (“Quero aproveitar”) e cupons rastreáveis usados */
+  offerClicks: number;
+  couponsUsed: number;
   /** Contatos gerados: toda ação em que o visitante procurou a empresa (exceto ver rota/site). */
   leads: number;
 };
@@ -38,6 +41,8 @@ const TRACKED = [
   "website_clicked",
   "directions_clicked",
   "appointment_clicked",
+  "offer_clicked",
+  "coupon_redeemed",
 ] as const;
 
 const LEAD_EVENTS = new Set<string>(["whatsapp_clicked", "phone_clicked", "appointment_clicked"]);
@@ -49,6 +54,8 @@ const emptyTotals = (): ResultTotals => ({
   website: 0,
   directions: 0,
   appointments: 0,
+  offerClicks: 0,
+  couponsUsed: 0,
   leads: 0,
 });
 
@@ -71,6 +78,12 @@ function addToTotals(totals: ResultTotals, eventType: string) {
       break;
     case "appointment_clicked":
       totals.appointments += 1;
+      break;
+    case "offer_clicked":
+      totals.offerClicks += 1;
+      break;
+    case "coupon_redeemed":
+      totals.couponsUsed += 1;
       break;
   }
   if (LEAD_EVENTS.has(eventType)) totals.leads += 1;

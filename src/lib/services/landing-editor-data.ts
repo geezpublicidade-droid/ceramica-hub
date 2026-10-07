@@ -2,7 +2,9 @@ import { createServiceClient } from "@/lib/supabase/server";
 import type { Business, BusinessService } from "@/data/businesses";
 import { getBusinessPhotos, getBusinessServices, type OwnedPhoto } from "@/lib/services/platform";
 import { getLandingConfig, type LandingConfig } from "@/lib/services/landing";
-import { landingCapabilitiesFor, type LandingCapabilities } from "@/lib/landing/sections";
+import { landingCapabilitiesFromFeatures, type LandingCapabilities } from "@/lib/landing/sections";
+import { getCompanyPermissions } from "@/lib/services/company-plan";
+import { loadPlanCatalog } from "@/lib/services/plan-catalog";
 import type { ReviewStatus } from "@/lib/services/reviews";
 
 import { LEAD_STATUSES, type LeadStatus } from "@/lib/landing/leads";
@@ -85,7 +87,7 @@ async function loadLeadCounts(businessId: string): Promise<Record<LeadStatus, nu
 
 /** Tudo que o editor precisa, sem filtrar rascunho, itens ocultos nem pendentes de moderação. */
 export async function getLandingEditorData(business: Business): Promise<LandingEditorData> {
-  const [config, faqs, services, media, offers, reviews, leadCounts] = await Promise.all([
+  const [config, faqs, services, media, offers, reviews, leadCounts, permissions, catalog] = await Promise.all([
     getLandingConfig(business.id),
     loadFaqs(business.id),
     getBusinessServices(business.id),
@@ -93,8 +95,12 @@ export async function getLandingEditorData(business: Business): Promise<LandingE
     loadOffers(business.id),
     loadReviews(business.id),
     loadLeadCounts(business.id),
+    getCompanyPermissions(business.id),
+    loadPlanCatalog(),
   ]);
-  return { business, capabilities: landingCapabilitiesFor(business.effectivePlan), config, faqs, services, media, offers, reviews, leadCounts };
+  // recursos em vigor (plano + overrides + edições do admin no catálogo); sem eles, o plano em vigor do cache
+  const features = permissions?.features ?? catalog.features[business.effectivePlan];
+  return { business, capabilities: landingCapabilitiesFromFeatures(features), config, faqs, services, media, offers, reviews, leadCounts };
 }
 
 export async function listBusinessLeads(businessId: string, limit = 100): Promise<BusinessLead[]> {

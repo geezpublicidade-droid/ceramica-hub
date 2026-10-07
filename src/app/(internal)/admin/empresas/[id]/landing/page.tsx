@@ -5,6 +5,8 @@ import { getBusinessById, UUID_RE } from "@/lib/services/platform";
 import { getLandingEditorData } from "@/lib/services/landing-editor-data";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { LandingEditor } from "@/components/dashboard/landing/LandingEditor";
+import { PlanProvider } from "@/components/plans/PlanProvider";
+import { getPlanProviderValue } from "@/lib/services/plan-provider-data";
 
 export const metadata = { title: "Landing page da empresa — Cerâmica Hub" };
 
@@ -15,7 +17,8 @@ export default async function AdminCompanyLandingPage({ params }: { params: Prom
 
   const business = await getBusinessById(id);
   if (!business) notFound();
-  const data = await getLandingEditorData(business);
+  const [data, planValue] = await Promise.all([getLandingEditorData(business), getPlanProviderValue(id)]);
+  if (!planValue) notFound();
 
   return (
     <AdminShell currentPath="/admin/empresas" adminRole={adminRole} wide>
@@ -33,7 +36,9 @@ export default async function AdminCompanyLandingPage({ params }: { params: Prom
         <h1 className="mt-1 text-2xl font-semibold text-foreground">Landing page — {business.name}</h1>
         <p className="mt-1 text-[14px] text-muted">Plano atual: {business.effectivePlan}. As alterações ficam registradas na auditoria.</p>
       </div>
-      <LandingEditor data={data} target={id} previewHref={`/empresa/${business.slug}/preview`} publicHref={`/empresa/${business.slug}`} />
+      <PlanProvider value={planValue}>
+        <LandingEditor data={data} target={id} previewHref={`/empresa/${business.slug}/preview`} publicHref={`/empresa/${business.slug}`} />
+      </PlanProvider>
     </AdminShell>
   );
 }

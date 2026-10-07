@@ -14,22 +14,25 @@ import { OffersTab } from "./tabs/OffersTab";
 import { ReviewsTab } from "./tabs/ReviewsTab";
 import { SeoTab } from "./tabs/SeoTab";
 import { ServicesTab } from "./tabs/ServicesTab";
+import { UpgradePrompt } from "@/components/plans/UpgradePrompt";
+import { usePlanFeatures } from "@/components/plans/PlanProvider";
 import { PlanMatrix } from "./PlanMatrix";
 import type { TabProps } from "./types";
 import { buttonClass, ghostButtonClass, useSaver } from "./ui";
 
-const TABS: { key: string; label: string; Component: ComponentType<TabProps> }[] = [
-  { key: "main", label: "Informações principais", Component: MainTab },
+/** Recurso que libera cada aba (a matriz central decide; sem ele a aba mostra o convite ao upgrade). */
+const TABS: { key: string; label: string; Component: ComponentType<TabProps>; feature?: string; lockedText?: string }[] = [
+  { key: "main", label: "Informações principais", Component: MainTab, feature: "custom_sections", lockedText: "Apresentação, diferenciais e barra de confiança fazem parte da landing page personalizada." },
   { key: "hero", label: "Hero e identidade visual", Component: HeroTab },
-  { key: "services", label: "Serviços", Component: ServicesTab },
-  { key: "offers", label: "Ofertas", Component: OffersTab },
-  { key: "gallery", label: "Galeria e vídeos", Component: GalleryTab },
+  { key: "services", label: "Serviços", Component: ServicesTab, feature: "services", lockedText: "Cadastre serviços com foto e descrição." },
+  { key: "offers", label: "Ofertas", Component: OffersTab, feature: "active_promotions", lockedText: "Publique promoções em destaque." },
+  { key: "gallery", label: "Galeria e vídeos", Component: GalleryTab, feature: "gallery_images", lockedText: "Mostre fotos reais da sua empresa." },
   { key: "reviews", label: "Depoimentos", Component: ReviewsTab },
-  { key: "location", label: "Localização e horários", Component: LocationTab },
-  { key: "faq", label: "FAQ", Component: FaqTab },
-  { key: "conversion", label: "Botões e conversão", Component: ConversionTab },
-  { key: "seo", label: "SEO", Component: SeoTab },
-  { key: "metrics", label: "Métricas", Component: MetricsTab },
+  { key: "location", label: "Localização e horários", Component: LocationTab, feature: "business_hours", lockedText: "Horários, estacionamento, acessibilidade e redes sociais." },
+  { key: "faq", label: "FAQ", Component: FaqTab, feature: "faq", lockedText: "Responda as dúvidas que mais travam um contato." },
+  { key: "conversion", label: "Botões e conversão", Component: ConversionTab, feature: "whatsapp", lockedText: "Botão de WhatsApp, formulário e chamadas finais." },
+  { key: "seo", label: "SEO", Component: SeoTab, feature: "custom_sections", lockedText: "Título e descrição próprios para o Google." },
+  { key: "metrics", label: "Métricas", Component: MetricsTab, feature: "metrics_summary", lockedText: "Acompanhe visualizações e contatos." },
 ];
 
 type LandingEditorProps = {
@@ -47,7 +50,10 @@ export function LandingEditor({ data, target, previewHref, publicHref }: Landing
   const [active, setActive] = useState(TABS[0].key);
   const { pending, message, run } = useSaver();
   const published = data.config.status === "published";
-  const Current = TABS.find((tab) => tab.key === active)!.Component;
+  const { canAccess } = usePlanFeatures();
+  const current = TABS.find((tab) => tab.key === active)!;
+  const Current = current.Component;
+  const locked = current.feature !== undefined && !canAccess(current.feature);
 
   return (
     <div>
@@ -90,7 +96,7 @@ export function LandingEditor({ data, target, previewHref, publicHref }: Landing
       </div>
 
       <div role="tabpanel" className="mt-5">
-        <Current data={data} target={target} />
+        {locked && current.feature ? <UpgradePrompt feature={current.feature} label={current.label} description={current.lockedText} /> : <Current data={data} target={target} />}
       </div>
     </div>
   );

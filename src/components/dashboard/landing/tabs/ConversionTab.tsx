@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { saveLandingConfig } from "@/lib/actions/landing-editor";
 import { resolveSectionOrder, SECTION_KEYS, type SectionKey } from "@/lib/landing/sections";
-import { Field, SaveBar, TabIntro, UpgradeNote, ghostButtonClass, inputClass, moveId, useSaver } from "../ui";
+import { UpgradePrompt } from "@/components/plans/UpgradePrompt";
+import { Field, SaveBar, TabIntro, ghostButtonClass, inputClass, moveId, useSaver } from "../ui";
 import type { TabProps } from "../types";
 
 const SECTION_LABELS: Record<SectionKey, string> = {
@@ -33,11 +34,13 @@ export function ConversionTab({ data, target }: TabProps) {
   const { pending, message, run } = useSaver();
 
   function save() {
+    const { whatsappPhone, whatsappMessage, leadFormEnabled, finalCtaTitle, finalCtaText, finalCtaLabel } = form;
     run(() =>
       saveLandingConfig(target, {
-        ...form,
-        sectionOrder: resolveSectionOrder(order, []),
-        sectionsDisabled: SECTION_KEYS.filter((key) => disabled.includes(key)),
+        whatsappPhone,
+        ...(capabilities.customCta ? { whatsappMessage, finalCtaTitle, finalCtaText, finalCtaLabel } : {}),
+        ...(capabilities.leadForm ? { leadFormEnabled } : {}),
+        ...(capabilities.customSections ? { sectionOrder: resolveSectionOrder(order, []), sectionsDisabled: SECTION_KEYS.filter((key) => disabled.includes(key)) } : {}),
       }),
     );
   }
@@ -49,9 +52,13 @@ export function ConversionTab({ data, target }: TabProps) {
         <Field label="WhatsApp da página" hint="Vazio usa o telefone do cadastro.">
           <input type="tel" value={form.whatsappPhone} onChange={(e) => setForm({ ...form, whatsappPhone: e.target.value })} className={inputClass} />
         </Field>
-        <Field label="Mensagem automática do WhatsApp" hint="Vazio usa a mensagem padrão do Hub.">
-          <input maxLength={300} value={form.whatsappMessage} onChange={(e) => setForm({ ...form, whatsappMessage: e.target.value })} className={inputClass} />
-        </Field>
+        {capabilities.customCta ? (
+          <Field label="Mensagem automática do WhatsApp" hint="Vazio usa a mensagem padrão do Hub.">
+            <input maxLength={300} value={form.whatsappMessage} onChange={(e) => setForm({ ...form, whatsappMessage: e.target.value })} className={inputClass} />
+          </Field>
+        ) : (
+          <UpgradePrompt compact feature="custom_cta" label="Mensagem automática personalizada" />
+        )}
       </div>
 
       <div className="rounded-lg border border-border bg-white p-4">
@@ -64,10 +71,11 @@ export function ConversionTab({ data, target }: TabProps) {
             </span>
           </label>
         ) : (
-          <UpgradeNote>O formulário de contato faz parte do plano Destaque ou superior.</UpgradeNote>
+          <UpgradePrompt feature="lead_forms" label="Formulário próprio" description="Receba pedidos de contato direto no painel, com consentimento LGPD." />
         )}
       </div>
 
+      {capabilities.customCta ? (
       <div className="grid gap-4">
         <Field label="Título da chamada final">
           <input maxLength={120} value={form.finalCtaTitle} onChange={(e) => setForm({ ...form, finalCtaTitle: e.target.value })} className={inputClass} />
@@ -79,7 +87,11 @@ export function ConversionTab({ data, target }: TabProps) {
           <input maxLength={30} value={form.finalCtaLabel} onChange={(e) => setForm({ ...form, finalCtaLabel: e.target.value })} className={inputClass} />
         </Field>
       </div>
+      ) : (
+        <UpgradePrompt feature="custom_cta" label="Chamada final personalizada" />
+      )}
 
+      {capabilities.customSections ? (
       <fieldset>
         <legend className="text-[14px] font-medium">Ordem e visibilidade das seções</legend>
         <ul className="mt-2 divide-y divide-border rounded-lg border border-border bg-white">
@@ -104,6 +116,9 @@ export function ConversionTab({ data, target }: TabProps) {
         </ul>
         <p className="mt-1.5 text-[12.5px] text-muted">Seções sem conteúdo (por exemplo, sem oferta ativa) não aparecem, mesmo marcadas.</p>
       </fieldset>
+      ) : (
+        <UpgradePrompt feature="custom_sections" label="Ordem e visibilidade das seções" />
+      )}
       <SaveBar pending={pending} message={message} onSave={save} />
     </div>
   );

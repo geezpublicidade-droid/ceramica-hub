@@ -1,3 +1,5 @@
+import { getCompanyPermissions } from "@/lib/services/company-plan";
+import { canAccess } from "@/lib/plans/resolve";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
@@ -20,7 +22,9 @@ export default async function MonthlyReportPage({ searchParams }: PageProps) {
 
   const business = await getBusinessById(businessId);
   if (!business) redirect("/login");
-  if (business.effectivePlan === "presenca") redirect("/dashboard/resultados");
+  // relatório mensal completo: recurso de métricas premium (Premium e acima)
+  const permissions = await getCompanyPermissions(businessId);
+  if (!permissions || !canAccess(permissions.features, "metrics_premium")) redirect("/dashboard/resultados");
 
   const { mes } = await searchParams;
   const month = isValidMonth(mes) ? mes : previousMonthKey();

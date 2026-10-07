@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { saveLandingConfig } from "@/lib/actions/landing-editor";
 import { Field, SaveBar, TabIntro, UpgradeNote, ghostButtonClass, inputClass, useSaver } from "../ui";
+import { UpgradePrompt } from "@/components/plans/UpgradePrompt";
 import { BrandingCard } from "../BrandingCard";
 import { UploadButton } from "../UploadButton";
 import type { TabProps } from "../types";
@@ -25,6 +26,15 @@ export function HeroTab({ data, target }: TabProps) {
     heroImageUrl: config.heroImageUrl ?? "",
   });
   const { pending, message, run } = useSaver();
+  if (!capabilities.customCover) {
+    // identidade (logo, descrição...) vale para todos; o hero personalizado é do Experiência para cima
+    return (
+      <div className="space-y-4">
+        <BrandingCard data={data} target={target} />
+        <UpgradePrompt feature="custom_hero" label="Hero personalizado" description="Título, proposta de valor, imagem e botão próprios no topo da página." />
+      </div>
+    );
+  }
   const set = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) => setForm((current) => ({ ...current, [key]: value }));
 
   return (

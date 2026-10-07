@@ -5,6 +5,7 @@ import Link from "next/link";
 import { fetchLandingMetrics, type LandingMetricsResult } from "@/lib/actions/landing-editor";
 import type { RangePreset } from "@/lib/landing/metrics";
 import { LEAD_STATUSES, LEAD_STATUS_LABELS } from "@/lib/landing/leads";
+import { UpgradePrompt } from "@/components/plans/UpgradePrompt";
 import { TabIntro, UpgradeNote, ghostButtonClass, inputClass } from "../ui";
 import type { TabProps } from "../types";
 
@@ -77,7 +78,11 @@ export function MetricsTab({ data, target }: TabProps) {
   const [preset, setPreset] = useState<RangePreset>("30d");
   const [custom, setCustom] = useState({ from: "", to: "" });
   const [state, setState] = useState<{ key: string; result: LandingMetricsResult } | null>(null);
-  const full = data.capabilities.metrics === "full";
+  // níveis cumulativos: resumo (só visitas) < básicas < completas < relatórios premium/campanhas
+  const level = data.capabilities.metrics;
+  const basic = level !== "none" && level !== "summary";
+  const full = level === "full" || level === "premium" || level === "campaign";
+  const presets = full ? PRESETS : PRESETS.filter((item) => item.value !== "custom");
   const key = `${preset}|${custom.from}|${custom.to}`;
   const ready = preset !== "custom" || Boolean(custom.from && custom.to);
 
@@ -106,7 +111,7 @@ export function MetricsTab({ data, target }: TabProps) {
     <div className="space-y-5">
       <TabIntro>Visitas são contadas uma vez por sessão. Taxa de conversão = ações de contato (WhatsApp, telefone, como chegar e formulário) ÷ visitas × 100.</TabIntro>
       <div className="flex flex-wrap items-center gap-2">
-        {PRESETS.map((item) => (
+        {presets.map((item) => (
           <button key={item.value} type="button" onClick={() => setPreset(item.value)} className={`${ghostButtonClass} ${preset === item.value ? "!border-primary !bg-primary/10 !text-primary" : ""}`}>
             {item.label}
           </button>
@@ -126,13 +131,14 @@ export function MetricsTab({ data, target }: TabProps) {
         <div className={loading ? "opacity-60" : ""}>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <Kpi label="Visitas" value={metrics.views} />
-            <Kpi label="Cliques no WhatsApp" value={metrics.whatsapp} />
-            <Kpi label="Cliques no telefone" value={metrics.phone} />
-            <Kpi label="Como chegar" value={metrics.directions} />
-            <Kpi label="Formulários" value={metrics.leads} />
-            <Kpi label="Cupons / ofertas" value={metrics.offerClicks} hint="cliques em “Quero aproveitar”" />
-            <Kpi label="Serviços clicados" value={metrics.serviceClicks} />
-            <Kpi label="Conversão" value={`${metrics.conversionRate}%`} hint={`${metrics.contactActions} ações de contato`} />
+            {basic && <Kpi label="Cliques no WhatsApp" value={metrics.whatsapp} />}
+            {basic && <Kpi label="Cliques em promoções" value={metrics.offerClicks} hint="“Quero aproveitar”" />}
+            {basic && <Kpi label="Cupons usados" value={metrics.couponsUsed} hint="validados pela empresa" />}
+            {full && <Kpi label="Cliques no telefone" value={metrics.phone} />}
+            {full && <Kpi label="Como chegar" value={metrics.directions} />}
+            {full && <Kpi label="Formulários" value={metrics.leads} />}
+            {full && <Kpi label="Serviços clicados" value={metrics.serviceClicks} />}
+            {full && <Kpi label="Conversão" value={`${metrics.conversionRate}%`} hint={`${metrics.contactActions} ações de contato`} />}
           </div>
           {result?.success && result.truncated && <p className="mt-2 text-[12.5px] text-amber-700">Período muito movimentado: contamos os primeiros 20.000 eventos.</p>}
           {full ? (
@@ -146,7 +152,7 @@ export function MetricsTab({ data, target }: TabProps) {
             </div>
           ) : (
             <div className="mt-4">
-              <UpgradeNote>Gráficos, origem das visitas, dispositivo e serviços mais clicados fazem parte do plano Destaque ou superior.</UpgradeNote>
+              <UpgradePrompt feature="metrics_full" label="Métricas completas" description="Origem das visitas, serviços mais clicados, formulários, conversão, dispositivos e período livre." />
             </div>
           )}
         </div>

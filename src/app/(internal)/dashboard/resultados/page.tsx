@@ -2,6 +2,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { getBusinessById } from "@/lib/services/platform";
+import { getCompanyPermissions } from "@/lib/services/company-plan";
+import { landingCapabilitiesFromFeatures } from "@/lib/landing/sections";
+import { UpgradePrompt } from "@/components/plans/UpgradePrompt";
 import { getBusinessResults, getVisitSources, parsePeriod, previousMonthKey, formatMonthLabel, RESULT_PERIODS } from "@/lib/services/business-results";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { BackLink } from "@/components/nav/BackLink";
@@ -25,8 +28,13 @@ export default async function DashboardResultadosPage({ searchParams }: PageProp
   const business = await getBusinessById(businessId);
   if (!business) redirect("/login");
 
-  // Plano gratuito vê só os últimos 7 dias (mesma regra do painel: detalhe é benefício de plano pago).
-  const hasDetailedMetrics = business.effectivePlan !== "presenca";
+  // Métricas por plano (cumulativas): nenhuma < resumo (só visualizações) < básicas < completas < relatórios premium.
+  const permissions = await getCompanyPermissions(businessId);
+  const level = permissions ? landingCapabilitiesFromFeatures(permissions.features).metrics : "none";
+  const hasBasic = level !== "none" && level !== "summary";
+  const hasFull = level === "full" || level === "premium" || level === "campaign";
+  const hasPremium = level === "premium" || level === "campaign";
+  const hasDetailedMetrics = hasBasic;
   const period = hasDetailedMetrics ? parsePeriod((await searchParams).periodo) : 7;
   const { totals, previous, daily } = await getBusinessResults(businessId, period);
   const reportMonth = previousMonthKey();
@@ -38,14 +46,17 @@ export default async function DashboardResultadosPage({ searchParams }: PageProp
     getVisitSources(businessId, periodStart, periodEnd),
   ]);
 
-  const tiles = [
-    { label: "Visualizações da página", value: totals.views, previous: previous.views, hint: undefined },
-    { label: "Contatos gerados", value: totals.leads, previous: previous.leads, hint: "WhatsApp, telefone e agendamentos" },
-    { label: "Cliques no WhatsApp", value: totals.whatsapp, previous: previous.whatsapp, hint: undefined },
-    { label: "Cliques no telefone", value: totals.phone, previous: previous.phone, hint: undefined },
-    { label: "Cliques no site", value: totals.website, previous: previous.website, hint: undefined },
-    { label: "Cliques em “como chegar”", value: totals.directions, previous: previous.directions, hint: undefined },
+  const allTiles = [
+    { label: "Visualizações da página", value: totals.views, previous: previous.views, hint: undefined, from: "summary" },
+    { label: "Cliques no WhatsApp", value: totals.whatsapp, previous: previous.whatsapp, hint: undefined, from: "basic" },
+    { label: "Cliques em promoções", value: totals.offerClicks, previous: previous.offerClicks, hint: "“Quero aproveitar”", from: "basic" },
+    { label: "Cupons usados", value: totals.couponsUsed, previous: previous.couponsUsed, hint: "validados pela empresa", from: "basic" },
+    { label: "Contatos gerados", value: totals.leads, previous: previous.leads, hint: "WhatsApp, telefone e agendamentos", from: "full" },
+    { label: "Cliques no telefone", value: totals.phone, previous: previous.phone, hint: undefined, from: "full" },
+    { label: "Cliques no site", value: totals.website, previous: previous.website, hint: undefined, from: "full" },
+    { label: "Cliques em “como chegar”", value: totals.directions, previous: previous.directions, hint: undefined, from: "full" },
   ];
+  const tiles = allTiles.filter((tile) => tile.from === "summary" || (tile.from === "basic" && hasBasic) || (tile.from === "full" && hasFull));
   const isEmpty = tiles.every((tile) => tile.value === 0);
 
   return (
@@ -64,6 +75,10 @@ export default async function DashboardResultadosPage({ searchParams }: PageProp
             <p className="mt-2 text-[16px] text-muted">Como sua empresa está sendo encontrada e procurada no Cerâmica Hub.</p>
           </div>
 
+          {level === "none" ? (
+            <UpgradePrompt feature="metrics_summary" label="Métricas da página" description="Acompanhe visualizações e contatos da sua empresa." />
+          ) : (
+          <>
           <div className="flex flex-wrap gap-2">
             {RESULT_PERIODS.map((days) => {
               const locked = !hasDetailedMetrics && days !== 7;
@@ -108,11 +123,11 @@ export default async function DashboardResultadosPage({ searchParams }: PageProp
             </div>
           )}
 
-          {hasDetailedMetrics && <VisitSourcesCard sources={sources} periodLabel={`últimos ${period} dias`} />}
+          {hasFull && <VisitSourcesCard sources={sources} periodLabel={`últimos ${period} dias`} />}
 
-          <PlacementResultsSection placements={placements} periodLabel={`últimos ${period} dias`} allowRenewal />
+          {hasPremium && <PlacementResultsSection placements={placements} periodLabel={`últimos ${period} dias`} allowRenewal />}
 
-          {hasDetailedMetrics && (
+          {hasPremium && (
             <div className="glass-light flex flex-wrap items-center justify-between gap-4 rounded-3xl p-6">
               <div>
                 <p className="text-[15px] font-medium uppercase tracking-[0.15em] text-muted">Relatório mensal</p>
@@ -124,6 +139,11 @@ export default async function DashboardResultadosPage({ searchParams }: PageProp
                 Abrir relatório
               </Link>
             </div>
+          )}
+
+          {!hasFull && <UpgradePrompt feature="metrics_full" label="Métricas completas" description="Origem das visitas, serviços mais clicados, formulários, conversão e dispositivos." />}
+          {!hasPremium && hasFull && <UpgradePrompt feature="metrics_premium" label="Relatórios completos" description="Desempenho dos destaques, impressões em categorias e relatório mensal." />}
+          </>
           )}
 
           <RequestActionForm />

@@ -10,6 +10,8 @@ export type LandingMetrics = {
   directions: number;
   leads: number;
   offerClicks: number;
+  /** cupons rastreáveis efetivamente usados (validados pela empresa) */
+  couponsUsed: number;
   serviceClicks: number;
   /** whatsapp + telefone + como chegar + formulário */
   contactActions: number;
@@ -73,6 +75,7 @@ export function summarizeEvents(rows: MetricRow[]): LandingMetrics {
     directions,
     leads,
     offerClicks: counts.offer_clicked ?? 0,
+    couponsUsed: counts.coupon_redeemed ?? 0,
     serviceClicks: counts.service_clicked ?? 0,
     contactActions,
     conversionRate: conversionRate(contactActions, views),
