@@ -95,6 +95,7 @@ export function DragScroller({ children, label, prevLabel, nextLabel }: DragScro
     if (event.pointerType !== "mouse" || event.button !== 0) return; // toque já rola nativamente
     const el = trackRef.current;
     if (!el) return;
+    delete el.dataset.dragged;
     drag.current = { active: true, moved: false, startX: event.clientX, startScroll: el.scrollLeft };
   };
 
@@ -103,7 +104,10 @@ export function DragScroller({ children, label, prevLabel, nextLabel }: DragScro
     const state = drag.current;
     if (!state.active || !el) return;
     const delta = event.clientX - state.startX;
-    if (!state.moved && Math.abs(delta) > DRAG_THRESHOLD_PX) state.moved = true;
+    if (!state.moved && Math.abs(delta) > DRAG_THRESHOLD_PX) {
+      state.moved = true;
+      el.dataset.dragged = "1"; // avisa a transição de página que este clique é fim de arrasto
+    }
     if (!state.moved) return;
     // mantém a posição dentro da cópia do meio, deslocando a origem do arrasto junto
     const period = periodRef.current;
@@ -132,6 +136,7 @@ export function DragScroller({ children, label, prevLabel, nextLabel }: DragScro
       event.stopPropagation();
       drag.current.moved = false;
     }
+    delete trackRef.current?.dataset.dragged;
   }, []);
 
   // véu nas pontas: blur + degradê de transparência (profundidade)

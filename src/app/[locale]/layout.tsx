@@ -14,6 +14,7 @@ import { ConsentManager } from "@/components/analytics/ConsentManager";
 import "../globals.css";
 import { jsonLdString } from "@/lib/json-ld";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
+import { PageTransition } from "@/components/motion/PageTransition";
 
 // Tipografia oficial do Manual de Identidade Visual v1.0 -- Montserrat é a
 // principal (títulos/textos), Playfair Display fica disponível via
@@ -105,6 +106,7 @@ export default async function LocaleLayout({
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>
           <ScrollReveal />
+          <PageTransition />
           {children}
           <PortalPageViewTracker />
           <PwaRegister />
