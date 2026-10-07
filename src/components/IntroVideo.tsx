@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type SyntheticEvent } from "react";
 import { useTranslations } from "next-intl";
 
 const SEEN_KEY = "ceramica:intro-seen";
@@ -9,6 +9,8 @@ const REVEAL_MS = 750;
 const EASE = "cubic-bezier(.7,0,.2,1)";
 // mesmo tom de fundo do vídeo, para não aparecer emenda
 const BACKGROUND = "#f1ebe5";
+// o vídeo escurece nos últimos ~1,5 s: a transição terracota entra antes, com o logo ainda visível
+const COVER_BEFORE_END_S = 1.5;
 
 const markSeen = () => {
   try {
@@ -36,20 +38,20 @@ const subscribeNothing = () => () => undefined;
 export function IntroVideo() {
   const t = useTranslations("IntroVideo");
   const skipped = useSyncExternalStore(subscribeNothing, alreadySkipped, () => false);
-  const [leaving, setLeaving] = useState(false);
   const [closed, setClosed] = useState(false);
   const [done, setDone] = useState(false);
   const visible = !skipped && !closed;
   const videoRef = useRef<HTMLVideoElement>(null);
   const veilRef = useRef<HTMLDivElement>(null);
+  const leavingRef = useRef(false);
 
   /** Sai com a transição terracota: um círculo nasce no centro e cobre o vídeo; aí o vídeo some e o círculo recolhe revelando a home. */
   const close = () => {
-    if (leaving) return;
-    markSeen();
-    setLeaving(true);
+    if (leavingRef.current) return;
+    leavingRef.current = true;
     const veil = veilRef.current;
     if (!veil) {
+      markSeen();
       setClosed(true);
       setDone(true);
       return;
@@ -61,8 +63,17 @@ export function IntroVideo() {
     cover.onfinish = () => {
       setClosed(true); // o fundo e o vídeo saem por baixo do véu
       const reveal = veil.animate([{ clipPath: at(radius) }, { clipPath: at(0) }], { duration: REVEAL_MS, easing: EASE, fill: "both" });
-      reveal.onfinish = () => setDone(true);
+      // só marca como visto no fim: antes disso `skipped` viraria true e o componente sumiria sem animar
+      reveal.onfinish = () => {
+        markSeen();
+        setDone(true);
+      };
     };
+  };
+
+  const closeNearEnd = (event: SyntheticEvent<HTMLVideoElement>) => {
+    const { currentTime, duration } = event.currentTarget;
+    if (Number.isFinite(duration) && duration - currentTime <= COVER_BEFORE_END_S) close();
   };
 
   useEffect(() => {
@@ -80,7 +91,7 @@ export function IntroVideo() {
     <>
       {visible && (
         <div role="dialog" aria-label={t("label")} style={{ backgroundColor: BACKGROUND }} className="fixed inset-0 z-[100]">
-          <video ref={videoRef} src="/videos/abertura.mp4" muted playsInline autoPlay preload="auto" onEnded={close} onError={close} className="h-full w-full object-contain" />
+          <video ref={videoRef} src="/videos/abertura.mp4" muted playsInline autoPlay preload="auto" onTimeUpdate={closeNearEnd} onEnded={close} onError={close} className="h-full w-full object-contain" />
           <button type="button" onClick={close} className="absolute bottom-6 right-6 rounded-full bg-foreground/10 px-5 py-2.5 text-[15px] font-medium text-foreground backdrop-blur transition-colors hover:bg-foreground/20">
             {t("skip")}
           </button>
