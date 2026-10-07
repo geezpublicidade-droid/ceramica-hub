@@ -49,6 +49,11 @@ export default auth((req) => {
 
   if (NO_LOCALE_PATHS.includes(pathname) || pathname.startsWith("/proposta/") || pathname.startsWith("/descadastrar/")) return;
 
+  if (!req.auth) {
+    const redirect = comingSoonRedirect(req);
+    if (redirect) return redirect;
+  }
+
   return intlMiddleware(req);
 });
 
