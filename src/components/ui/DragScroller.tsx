@@ -136,13 +136,13 @@ export function DragScroller({ children, label, prevLabel, nextLabel }: DragScro
 
   // véu nas pontas: blur + degradê de transparência (profundidade)
   const edge = "pointer-events-none absolute inset-y-0 z-[5] w-16 backdrop-blur-[6px] sm:w-24";
-  const arrow = "absolute top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-white text-foreground shadow-md transition-colors hover:bg-surface sm:flex";
+  const arrow = "btn-shine absolute top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-white text-foreground shadow-md transition-colors hover:bg-surface sm:flex";
 
   return (
-    <div className="relative" role="group" aria-label={label}>
+    <div className="relative w-full" role="group" aria-label={label}>
       <div aria-hidden="true" className={`${edge} left-0 bg-gradient-to-r from-white/90 via-white/50 to-transparent [mask-image:linear-gradient(to_right,black_30%,transparent)]`} />
       <div aria-hidden="true" className={`${edge} right-0 bg-gradient-to-l from-white/90 via-white/50 to-transparent [mask-image:linear-gradient(to_left,black_30%,transparent)]`} />
-      <button type="button" aria-label={prevLabel} onClick={() => scrollByPage(-1)} className={`${arrow} -left-3`}>
+      <button type="button" aria-label={prevLabel} onClick={() => scrollByPage(-1)} className={`${arrow} left-3`}>
         <ChevronLeft className="h-5 w-5" aria-hidden="true" />
       </button>
       <div
@@ -177,7 +177,7 @@ export function DragScroller({ children, label, prevLabel, nextLabel }: DragScro
           </>
         )}
       </div>
-      <button type="button" aria-label={nextLabel} onClick={() => scrollByPage(1)} className={`${arrow} -right-3`}>
+      <button type="button" aria-label={nextLabel} onClick={() => scrollByPage(1)} className={`${arrow} right-3`}>
         <ChevronRight className="h-5 w-5" aria-hidden="true" />
       </button>
     </div>

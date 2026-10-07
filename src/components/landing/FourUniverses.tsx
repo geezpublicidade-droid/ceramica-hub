@@ -19,7 +19,7 @@ export async function FourUniverses() {
 
   // cards alternando terracota e branco; no hover trocam de cor
   const ITEM_BASE =
-    "group flex h-[104px] w-[124px] shrink-0 flex-col items-center justify-center gap-2.5 border px-2 py-3 text-center transition-colors duration-300 hover:shadow-[0_16px_32px_-16px_rgba(179,85,58,0.45)] sm:h-[112px] sm:w-[148px]";
+    "btn-shine group relative flex h-[104px] w-[124px] shrink-0 flex-col items-center justify-center gap-2.5 border px-2 py-3 text-center transition-colors duration-300 hover:shadow-[0_16px_32px_-16px_rgba(179,85,58,0.45)] sm:h-[112px] sm:w-[148px]";
   const TERRACOTTA = { item: "border-primary bg-primary hover:bg-white", label: "text-white group-hover:text-foreground", icon: "text-white group-hover:text-primary" };
   const WHITE = { item: "border-border bg-white hover:border-primary hover:bg-primary", label: "text-foreground group-hover:text-white", icon: "text-primary group-hover:text-white" };
   const LABEL_BASE = "w-full break-words text-balance text-[13px] font-semibold uppercase leading-[1.15] tracking-wide transition-colors";
@@ -42,7 +42,7 @@ export async function FourUniverses() {
 
   return (
     <nav aria-label={tStrip("headline")} className="border-b border-border bg-white">
-      <div className="container-page py-6 sm:py-8">
+      <div className="py-6 sm:py-8">
         <DragScroller label={tStrip("headline")} prevLabel={tStrip("prev")} nextLabel={tStrip("next")}>
           {items.map(({ key, href, Icon, label }, index) => {
             const tone = index % 2 === 0 ? TERRACOTTA : WHITE;

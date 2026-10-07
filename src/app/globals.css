@@ -549,3 +549,40 @@ html {
     transform: none;
   }
 }
+
+/* Efeito de botão: sobe um pouco, passa um brilho diagonal e "afunda" ao clicar. Complementa (não substitui) .neu-primary/.liquid-dark. */
+.btn-shine {
+  /* quem usa precisa ser relative/absolute (utilitário do Tailwind) para o brilho ficar contido */
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.45) 50%, transparent 65%);
+  transform: translateX(-120%);
+}
+.btn-shine:hover {
+  transform: translateY(-3px);
+}
+.btn-shine:hover::after {
+  transform: translateX(120%);
+  transition: transform 0.7s ease;
+}
+.btn-shine:active {
+  transform: translateY(0) scale(0.97);
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn-shine,
+  .btn-shine:hover,
+  .btn-shine:active {
+    transform: none;
+  }
+  .btn-shine::after {
+    display: none;
+  }
+}
