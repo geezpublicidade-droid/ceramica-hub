@@ -14,6 +14,8 @@ export const RATE_LIMITS = {
   partnerLead: { scope: "partner-lead", max: 5, windowSeconds: 600 },
   profileClaim: { scope: "profile-claim", max: 3, windowSeconds: 3600 },
   businessLead: { scope: "business-lead", max: 5, windowSeconds: 600 },
+  googleImport: { scope: "google-import", max: 20, windowSeconds: 600 },
+  registrationUpload: { scope: "registration-upload", max: 30, windowSeconds: 600 },
 } as const satisfies Record<string, RateLimitRule>;
 
 /** true = dentro do limite. Falha aberta: erro de banco ou flag `public_rate_limit` desligada nunca derruba o site. */

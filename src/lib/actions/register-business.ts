@@ -10,6 +10,8 @@ import { verifyTurnstileToken } from "@/lib/services/turnstile";
 import { RATE_LIMITS, withinRateLimit } from "@/lib/services/rate-limit";
 import { recordReferral } from "@/lib/services/referrals";
 import { REFERRAL_COOKIE } from "@/lib/services/referral-code";
+import { draftFromPayload } from "@/lib/profile/draft";
+import { applyProfileDraft } from "@/lib/profile/apply";
 
 const CONSENT_VERSION = "1.0";
 
@@ -39,6 +41,9 @@ const registerBusinessSchema = z
     marketingOptIn: z.boolean().optional(),
     comprovantePath: z.string().min(1, "Envie o comprovante de instalação na torre."),
     turnstileToken: z.string().nullable().optional(),
+    /** ProfileDraft completo do wizard (serviços, FAQ, fotos, redes...); lido com draftFromPayload, nunca confiado. */
+    profile: z.unknown().optional(),
+    importedFromGoogle: z.boolean().optional(),
   })
   .superRefine((data, ctx) => {
     if (!data.termsAccepted || !data.privacyAccepted || !data.registrationPolicyAccepted || !data.addressConfirmed) {
@@ -87,6 +92,27 @@ export async function uploadComprovante(formData: FormData): Promise<UploadCompr
   if (error) return { success: false, error: "Não foi possível enviar o arquivo. Tente novamente." };
 
   return { success: true, path };
+}
+
+type UploadImageResult = { success: true; url: string } | { success: false; error: string };
+
+const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/avif"];
+
+/** Foto/logo enviada durante o cadastro (a empresa ainda não existe): vai para `pending/` no bucket público. */
+export async function uploadRegistrationImage(formData: FormData): Promise<UploadImageResult> {
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) return { success: false, error: "Selecione uma imagem." };
+  if (!ALLOWED_IMAGE_TYPES.includes(file.type)) return { success: false, error: "Use uma imagem JPG, PNG, WebP ou AVIF." };
+  if (file.size > MAX_IMAGE_BYTES) return { success: false, error: "Imagem muito grande (máximo 8MB)." };
+  if (!(await withinRateLimit(RATE_LIMITS.registrationUpload))) return { success: false, error: "Muitos envios seguidos. Aguarde alguns minutos." };
+
+  const extension = file.type.split("/")[1].replace("jpeg", "jpg");
+  const path = `pending/${crypto.randomUUID()}.${extension}`;
+  const supabase = createServiceClient();
+  const { error } = await supabase.storage.from("business-photos").upload(path, file, { contentType: file.type, upsert: false });
+  if (error) return { success: false, error: "Não foi possível enviar a imagem." };
+  return { success: true, url: supabase.storage.from("business-photos").getPublicUrl(path).data.publicUrl };
 }
 
 async function generateUniqueSlug(
@@ -187,6 +213,13 @@ export async function registerBusiness(rawInput: RegisterBusinessInput): Promise
     await recordReferral(business.id, (await cookies()).get(REFERRAL_COOKIE)?.value);
   } catch (referralError) {
     console.error("[referrals] falha ao registrar indicação:", referralError);
+  }
+
+  // Extras do wizard são bônus: falha aqui não desfaz o cadastro já feito.
+  try {
+    await applyProfileDraft(supabase, business.id, draftFromPayload(input.profile), input.importedFromGoogle ? "google" : "wizard");
+  } catch (profileError) {
+    console.error("[register] falha ao gravar o perfil completo:", profileError);
   }
 
   await translateAndStore("business", business.id, {
