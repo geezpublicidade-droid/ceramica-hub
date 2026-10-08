@@ -85,3 +85,14 @@ describe("rascunho do perfil", () => {
     assert.equal(completenessScore(full), 100);
   });
 });
+
+describe("compareImport", () => {
+  const current = { shortDescription: "", whatsapp: "11999999999", schedule: null, websiteUrl: "https://a.com", instagram: "", parkingInfo: "", accessibilityInfo: "" };
+
+  it("classifica em novo, diferente e igual, e ignora o que o Google não trouxe", async () => {
+    const { compareImport } = await import("../profile/import-fields.ts");
+    const rows = compareImport(current, { shortDescription: "Texto", whatsapp: "11888888888", websiteUrl: "https://a.com", instagram: "" });
+    const status = Object.fromEntries(rows.map((row) => [row.key, row.status]));
+    assert.deepEqual(status, { shortDescription: "new", whatsapp: "different", websiteUrl: "same" });
+  });
+});

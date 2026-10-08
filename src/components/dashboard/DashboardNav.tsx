@@ -21,6 +21,7 @@ const NAV_ITEMS = [
   { label: "Fotos e conteúdo", href: editarHref("fotos"), Icon: IconPhotos },
   { label: "Serviços", href: editarHref("servicos"), Icon: IconServices },
   { label: "Landing page", href: "/dashboard/landing", Icon: IconProfile },
+  { label: "Importar do Google", href: "/dashboard/importar", Icon: IconProfile },
   { label: "Leads", href: "/dashboard/leads", Icon: IconResults },
   { label: "Promoções", href: editarHref("promocoes"), Icon: IconPromotions },
   { label: "Resultados", href: "/dashboard/resultados", Icon: IconResults },
