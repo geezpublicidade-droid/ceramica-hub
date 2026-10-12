@@ -211,6 +211,55 @@ export async function placementReleaseRule(supabase: Supabase): Promise<number> 
   return data?.length ?? 0;
 }
 
+export async function adCampaignCompletedRule(supabase: Supabase): Promise<number> {
+  const { data, error } = await supabase
+    .from("ad_campaigns")
+    .update({ status: "completed" })
+    .eq("source", "loja")
+    .eq("status", "approved")
+    .lt("ends_at", todaySaoPaulo())
+    .select("id");
+  if (error) throw error;
+  for (const row of data ?? []) await logSystemAction("ad_campaign_completed", "ad_campaign", row.id);
+  return data?.length ?? 0;
+}
+
+const UNPAID_HOLD_DAYS = 7;
+
+/** Reserva da loja sem pagamento não segura vaga para sempre: cancela (campanha: recusada com motivo) e libera o espaço. */
+export async function adUnpaidReleasedRule(supabase: Supabase): Promise<number> {
+  const today = todaySaoPaulo();
+  const tomorrow = new Date(Date.parse(`${today}T00:00:00Z`) + 86_400_000).toISOString().slice(0, 10);
+  const cutoff = new Date(Date.now() - UNPAID_HOLD_DAYS * 86_400_000).toISOString();
+  let released = 0;
+
+  const campaigns = await supabase
+    .from("ad_campaigns")
+    .update({ status: "rejected", rejection_reason: "Reserva liberada: o pagamento não foi confirmado a tempo." })
+    .eq("source", "loja")
+    .eq("payment_status", "pendente")
+    .in("status", ["pending_review", "approved"])
+    .or(`created_at.lt.${cutoff},starts_at.lte.${today}`)
+    .select("id");
+  if (campaigns.error) throw campaigns.error;
+  for (const row of campaigns.data ?? []) await logSystemAction("ad_unpaid_released", "ad_campaign", row.id);
+  released += campaigns.data?.length ?? 0;
+
+  const publications = await supabase
+    .from("publication_bookings")
+    .update({ status: "cancelado" })
+    .eq("payment_status", "pendente")
+    .in("status", ["aguardando", "correcao", "aprovado"])
+    .or(`created_at.lt.${cutoff},scheduled_for.lte.${tomorrow}`)
+    .select("id, content_item_id");
+  if (publications.error) throw publications.error;
+  for (const row of publications.data ?? []) {
+    if (row.content_item_id) await supabase.from("content_items").update({ status: "cancelado" }).eq("id", row.content_item_id);
+    await logSystemAction("ad_unpaid_released", "publication_booking", row.id);
+  }
+  return released + (publications.data?.length ?? 0);
+}
+
 export async function placementExpiredRule(supabase: Supabase): Promise<number> {
   const { data, error } = await supabase
     .from("category_placements")

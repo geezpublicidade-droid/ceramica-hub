@@ -1,6 +1,8 @@
 import { createServiceClient } from "@/lib/supabase/server";
 import { OPERATIONAL_RULES, type OperationalRule } from "./catalog";
 import {
+  adCampaignCompletedRule,
+  adUnpaidReleasedRule,
   inactiveBusinessRule,
   leadFollowupRule,
   overduePaymentRule,
@@ -24,6 +26,8 @@ const RULES: Record<OperationalRule, (supabase: Supabase) => Promise<number>> = 
   plan_grace_expired: planGraceExpiredRule,
   placement_release: placementReleaseRule,
   placement_expired: placementExpiredRule,
+  ad_campaign_completed: adCampaignCompletedRule,
+  ad_unpaid_released: adUnpaidReleasedRule,
 };
 
 export type OperationalRunResult = { rule: OperationalRule; affected: number; failed: boolean };

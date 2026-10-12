@@ -12,6 +12,8 @@ export const AUTOMATION_KEYS = [
   "new_lead",
   "executive_report",
   "sales_report",
+  "weekly_company_report",
+  "ad_ending_soon",
 ] as const;
 export type AutomationKey = (typeof AUTOMATION_KEYS)[number];
 
@@ -83,6 +85,18 @@ export const AUTOMATIONS: Record<AutomationKey, AutomationMeta> = {
     label: "Relatório executivo mensal",
     description: "Nos primeiros dias do mês, a administração e o financeiro recebem receita, contratos, metas e audiência do mês anterior.",
     audience: "admin",
+    requiresConsent: false,
+  },
+  weekly_company_report: {
+    label: "Resumo semanal da empresa",
+    description: "Toda segunda, empresas de planos pagos com consentimento recebem visualizações, contatos e o que está programado para a semana.",
+    audience: "business",
+    requiresConsent: true,
+  },
+  ad_ending_soon: {
+    label: "Anúncio ou publicação terminando",
+    description: "Avisa a empresa 3 dias antes do fim de um anúncio comprado na loja, com o link para reservar a continuação.",
+    audience: "business",
     requiresConsent: false,
   },
   sales_report: {

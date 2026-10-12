@@ -117,3 +117,14 @@ describe("indicadores do painel inicial", () => {
     assert.equal(conversionRate({ views: 0, whatsapp: 3, routes: 0, phone: 0, coupons: 0 }, 0), null);
   });
 });
+
+import { assessImage } from "../media-fit.ts";
+
+describe("biblioteca de mídias", () => {
+  it("avisa quando a imagem serve para Stories, banner ou está pequena", () => {
+    assert.match(assessImage(1080, 1920).message, /Stories/);
+    assert.match(assessImage(1200, 240).message, /banner largo/);
+    assert.match(assessImage(400, 300).message, /abaixo da resolução/);
+    assert.match(assessImage(1000, 1000).message, /uso geral/);
+  });
+});

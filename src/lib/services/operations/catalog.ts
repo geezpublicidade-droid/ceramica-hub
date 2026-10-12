@@ -10,6 +10,8 @@ export const OPERATIONAL_RULES = [
   "plan_grace_expired",
   "placement_release",
   "placement_expired",
+  "ad_campaign_completed",
+  "ad_unpaid_released",
 ] as const;
 export type OperationalRule = (typeof OPERATIONAL_RULES)[number];
 
@@ -62,6 +64,17 @@ export const OPERATIONAL_RULE_META: Record<OperationalRule, OperationalRuleMeta>
     label: "Posição paga liberada",
     description:
       "Posição de categoria reservada, com pagamento confirmado (ou isenta) e dentro do período, passa sozinha para Ativa e entra no ar.",
+    effect: "state",
+  },
+  ad_campaign_completed: {
+    label: "Anúncio da loja encerrado",
+    description: "Campanha comprada na loja de publicidade com o término ultrapassado passa para Encerrada. O espaço já sai do ar pela data.",
+    effect: "state",
+  },
+  ad_unpaid_released: {
+    label: "Reserva sem pagamento liberada",
+    description:
+      "Reserva de anúncio ou publicação da loja sem pagamento confirmado depois de 7 dias (ou quando a data de início chega) é cancelada e a vaga volta a ficar livre.",
     effect: "state",
   },
   placement_expired: {

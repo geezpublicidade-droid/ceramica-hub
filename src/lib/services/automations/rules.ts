@@ -98,6 +98,72 @@ async function monthlyReportJobs(): Promise<AutomationJob[]> {
   );
 }
 
+/** Segunda-feira de cada semana (UTC), para a chave única do resumo semanal. */
+function mondayOf(date: Date): string {
+  const copy = new Date(date);
+  copy.setUTCDate(copy.getUTCDate() - ((copy.getUTCDay() + 6) % 7));
+  return isoDate(copy);
+}
+
+async function weeklyCompanyReportJobs(): Promise<AutomationJob[]> {
+  // Segunda e terça: se o envio de segunda falhar, terça tenta de novo (a chave única evita duplicar).
+  const weekday = new Date().getUTCDay();
+  if (weekday !== 1 && weekday !== 2) return [];
+  const week = mondayOf(new Date());
+  const supabase = createServiceClient();
+  const businesses = await selectBusinesses((q) => q.eq("status", "approved").neq("plan", "presenca"));
+  return businesses.map((business) =>
+    businessJob("weekly_company_report", `${business.id}:${week}`, business, async (token) => {
+      const since = daysFromNow(-7).toISOString();
+      const [views, contacts, leads] = await Promise.all([
+        supabase.from("metrics_events").select("id", { count: "exact", head: true }).eq("business_id", business.id).eq("event_type", "commercial_page_viewed").gte("created_at", since),
+        supabase.from("metrics_events").select("id", { count: "exact", head: true }).eq("business_id", business.id).in("event_type", ["whatsapp_clicked", "phone_clicked", "directions_clicked"]).gte("created_at", since),
+        supabase.from("business_leads").select("id", { count: "exact", head: true }).eq("business_id", business.id).gte("created_at", since),
+      ]);
+      return {
+        subject: "Seu resumo da semana no Cerâmica Hub",
+        html: renderAutomationEmail({
+          title: "Sua semana no Cerâmica Hub",
+          bodyHtml: `<p>${escapeHtml(business.name)} teve <strong>${views.count ?? 0}</strong> visualizações, <strong>${contacts.count ?? 0}</strong> cliques de contato e <strong>${leads.count ?? 0}</strong> novos contatos nos últimos 7 dias. Veja o que está programado e as sugestões para a próxima semana.</p>`,
+          cta: { label: "Abrir minha central de marketing", href: absoluteUrl("/dashboard") },
+          unsubscribeToken: token,
+        }),
+      };
+    })
+  );
+}
+
+async function adEndingSoonJobs(): Promise<AutomationJob[]> {
+  const supabase = createServiceClient();
+  const today = isoDate(new Date());
+  const limit = isoDate(daysFromNow(3));
+  const { data, error } = await supabase
+    .from("ad_campaigns")
+    .select("id, title, ends_at, businesses(id, name, email), ad_placements(name)")
+    .eq("source", "loja")
+    .eq("status", "approved")
+    .in("payment_status", ["pago", "isento"])
+    .gte("ends_at", today)
+    .lte("ends_at", limit);
+  if (error) throw error;
+  return (data ?? []).flatMap((row) => {
+    const business = row.businesses as unknown as BusinessRow | null;
+    if (!business) return [];
+    const space = (row.ad_placements as unknown as { name: string } | null)?.name ?? "espaço";
+    return [
+      businessJob("ad_ending_soon", `camp:${row.id}`, business, (token) => ({
+        subject: `Seu anúncio termina em ${formatDateBR(row.ends_at)}`,
+        html: renderAutomationEmail({
+          title: "Seu anúncio está terminando",
+          bodyHtml: `<p>O anúncio <strong>${escapeHtml(row.title)}</strong> (${escapeHtml(space)}) termina em ${formatDateBR(row.ends_at)}. Reserve a continuação para não ficar fora do ar.</p>`,
+          cta: { label: "Reservar continuação", href: absoluteUrl("/dashboard/anuncios") },
+          unsubscribeToken: token,
+        }),
+      })),
+    ];
+  });
+}
+
 async function renewalBusinessJobs(): Promise<AutomationJob[]> {
   const supabase = createServiceClient();
   const [subs, trials] = await Promise.all([
@@ -300,6 +366,8 @@ const COLLECTORS: Record<AutomationKey, () => Promise<AutomationJob[]>> = {
   new_lead: newLeadJobs,
   executive_report: executiveReportJobs,
   sales_report: salesReportJobs,
+  weekly_company_report: weeklyCompanyReportJobs,
+  ad_ending_soon: adEndingSoonJobs,
 };
 
 export function collectJobs(automation: AutomationKey): Promise<AutomationJob[]> {
