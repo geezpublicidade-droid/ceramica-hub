@@ -2,6 +2,7 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { bookAdSpace, uploadAdCreative } from "@/lib/actions/ad-store";
+import { applyDiscount } from "@/lib/ad-plan-benefits";
 import { addDays, countDays, isRangeAvailable, priceForPeriod, validatePeriod } from "@/lib/ad-schedule";
 import { formatCents, formatDateBR } from "@/lib/utils";
 import type { StoreSpace } from "@/lib/services/ad-store";
@@ -14,7 +15,7 @@ const EMPTY: Creative = { url: "", error: null, busy: false };
 const inputClass = "w-full rounded-xl border border-border bg-white px-3 py-2.5 text-[15px] text-foreground";
 
 /** Um espaço à venda: onde aparece, medidas, disponibilidade, preço e o formulário de reserva. */
-export function AdSpaceCard({ space, today, defaultUrl }: { space: StoreSpace; today: string; defaultUrl: string }) {
+export function AdSpaceCard({ space, today, defaultUrl, discountPercent }: { space: StoreSpace; today: string; defaultUrl: string; discountPercent: number }) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [start, setStart] = useState(space.nextFreeStart ?? "");
@@ -32,7 +33,8 @@ export function AdSpaceCard({ space, today, defaultUrl }: { space: StoreSpace; t
   const periodError = start && end ? validatePeriod(start, end, today, { minDays: space.minDays, maxDays: space.maxDays, leadDays: space.leadDays }) : null;
   const available = start && end && !periodError ? isRangeAvailable(held, 1, start, end) : false;
   const days = start && end && end >= start ? countDays(start, end) : 0;
-  const price = days > 0 ? priceForPeriod(space.monthlyPriceCents, days) : 0;
+  const fullPrice = days > 0 ? priceForPeriod(space.monthlyPriceCents, days) : 0;
+  const price = applyDiscount(fullPrice, discountPercent);
   const mobileSize = { width: space.mobileWidth ?? space.width, height: space.mobileHeight ?? space.height };
 
   async function pickFile(device: "desktop" | "mobile", file: File | undefined) {
@@ -134,7 +136,7 @@ export function AdSpaceCard({ space, today, defaultUrl }: { space: StoreSpace; t
           )}
           <div className="flex flex-wrap items-center justify-between gap-3 sm:col-span-2">
             <p className="text-[15px]">
-              {days > 0 ? <><strong>{days} dia(s)</strong> · total <strong className="text-primary">{formatCents(price)}</strong></> : "Escolha as datas"}
+              {days > 0 ? <><strong>{days} dia(s)</strong> · total <strong className="text-primary">{formatCents(price)}</strong>{discountPercent > 0 && <span className="text-muted"> (desconto de {discountPercent}% do seu plano)</span>}</> : "Escolha as datas"}
             </p>
             <button
               type="button"

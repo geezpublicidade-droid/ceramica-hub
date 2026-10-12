@@ -47,9 +47,14 @@ export default async function AdminPublicidadePage() {
             rotuladas &quot;Patrocinado&quot;.
           </p>
         </div>
-        <Link href="/admin/publicidade/espacos" className="neu shrink-0 rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
-          Espaços
-        </Link>
+        <div className="flex shrink-0 gap-2">
+          <Link href="/admin/publicidade/publicacoes" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
+            Publicações
+          </Link>
+          <Link href="/admin/publicidade/espacos" className="neu rounded-full px-4 py-2 text-[15px] font-medium text-foreground">
+            Espaços
+          </Link>
+        </div>
       </div>
 
       <AdsSummaryCards

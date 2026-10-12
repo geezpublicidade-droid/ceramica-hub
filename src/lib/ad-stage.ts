@@ -18,3 +18,14 @@ export function campaignStage(
   }
   return { label: "Encerrada", tone: "gray" };
 }
+
+export type PublicationStageInput = { status: string; paymentStatus: string; scheduledFor: string };
+
+/** Fase da publicação reservada (Story, newsletter, matéria) para a empresa. */
+export function publicationStage(p: PublicationStageInput): { label: string; tone: StageTone } {
+  if (p.status === "cancelado") return { label: "Cancelada", tone: "gray" };
+  if (p.status === "correcao") return { label: "Precisa de correção", tone: "red" };
+  if (p.status === "publicado") return { label: "Publicado", tone: "green" };
+  if (p.status === "aprovado") return { label: "Agendado", tone: "blue" };
+  return { label: p.paymentStatus === "pendente" ? "Aguardando pagamento e aprovação" : "Aguardando aprovação", tone: "yellow" };
+}

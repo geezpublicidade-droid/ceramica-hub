@@ -10,6 +10,8 @@ import { countDays, isRangeAvailable, occupancyByDay, priceForPeriod, validatePe
 import { getHoldingBookings } from "@/lib/services/ad-store";
 import { createTicket } from "@/lib/services/support";
 import { getBusinessById } from "@/lib/services/platform";
+import { getCompanyPermissions } from "@/lib/services/company-plan";
+import { applyDiscount, discountFor } from "@/lib/ad-plan-benefits";
 
 type Result = { success: true } | { success: false; error: string };
 type UploadResult = { success: true; url: string } | { success: false; error: string };
@@ -19,10 +21,11 @@ const DEFAULT_LEAD_DAYS = 2;
 type PlacementForSale = {
   id: string; name: string; width: number; height: number; mobile_width: number | null; mobile_height: number | null;
   monthly_price_cents: number; min_days: number; max_days: number; creative_deadline_days: number | null; max_concurrent: number;
+  exclusive_by_category: boolean;
 };
 
 const PLACEMENT_COLUMNS =
-  "id, name, width, height, mobile_width, mobile_height, monthly_price_cents, min_days, max_days, creative_deadline_days, max_concurrent";
+  "id, name, width, height, mobile_width, mobile_height, monthly_price_cents, min_days, max_days, creative_deadline_days, max_concurrent, exclusive_by_category";
 
 async function loadSellablePlacement(placementId: string): Promise<PlacementForSale | null> {
   const { data } = await createServiceClient()
@@ -41,6 +44,20 @@ function targetFor(placement: PlacementForSale, device: "desktop" | "mobile") {
     return { width: placement.mobile_width ?? placement.width, height: placement.mobile_height ?? placement.height };
   }
   return { width: placement.width, height: placement.height };
+}
+
+/** Outra empresa da mesma categoria com reserva (aprovada ou em análise) cruzando o período neste espaço. */
+async function findCategoryRival(placementId: string, businessId: string, category: string, startsAt: string, endsAt: string): Promise<boolean> {
+  const { data } = await createServiceClient()
+    .from("ad_campaigns")
+    .select("business_id, businesses(category)")
+    .eq("placement_id", placementId)
+    .in("status", ["pending_review", "approved"])
+    .not("business_id", "is", null)
+    .neq("business_id", businessId)
+    .lte("starts_at", endsAt)
+    .gte("ends_at", startsAt);
+  return (data ?? []).some((row) => (row.businesses as unknown as { category: string } | null)?.category === category);
 }
 
 /** Envia a arte do anúncio, conferindo tipo, peso e proporção contra a medida do espaço. */
@@ -111,7 +128,15 @@ export async function bookAdSpace(raw: z.input<typeof bookingSchema>): Promise<R
       return { success: false, error: "Este espaço acabou de ser reservado nessas datas. Escolha outro período." };
     }
 
-    const priceCents = priceForPeriod(placement.monthly_price_cents, countDays(input.startsAt, input.endsAt));
+    const business = await getBusinessById(businessId);
+    if (placement.exclusive_by_category && business?.category) {
+      const rival = await findCategoryRival(placement.id, businessId, business.category, input.startsAt, input.endsAt);
+      if (rival) return { success: false, error: "Este espaço tem exclusividade por segmento: já existe uma empresa da sua categoria nesse período. Escolha outras datas." };
+    }
+
+    const permissions = await getCompanyPermissions(businessId);
+    const basePrice = priceForPeriod(placement.monthly_price_cents, countDays(input.startsAt, input.endsAt));
+    const priceCents = applyDiscount(basePrice, discountFor(permissions?.plan ?? "presenca"));
     const { data: campaign, error } = await supabase
       .from("ad_campaigns")
       .insert({
@@ -151,7 +176,6 @@ export async function bookAdSpace(raw: z.input<typeof bookingSchema>): Promise<R
       return { success: false, error: "Este espaço acabou de ser reservado nessas datas. Escolha outro período." };
     }
 
-    const business = await getBusinessById(businessId);
     await createTicket({
       requester: { type: "business", id: businessId },
       requesterName: business?.name ?? "Empresa",

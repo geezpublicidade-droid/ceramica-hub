@@ -5,7 +5,12 @@ import { BackLink } from "@/components/nav/BackLink";
 import { AdSpaceCard } from "@/components/dashboard/ads/AdSpaceCard";
 import { MyCampaignsList } from "@/components/dashboard/ads/MyCampaignsList";
 import { getMyCampaigns, getStoreSpaces } from "@/lib/services/ad-store";
+import { PublicationCard } from "@/components/dashboard/ads/PublicationCard";
+import { MyPublicationsList } from "@/components/dashboard/ads/MyPublicationsList";
+import { getMyPublications, getPublicationOffers } from "@/lib/services/publication-store";
 import { getBusinessById } from "@/lib/services/platform";
+import { getCompanyPermissions } from "@/lib/services/company-plan";
+import { discountFor } from "@/lib/ad-plan-benefits";
 
 export const metadata = { title: "Anunciar — Cerâmica Hub" };
 export const dynamic = "force-dynamic";
@@ -16,7 +21,16 @@ export default async function AnunciosPage() {
   if (!businessId) redirect("/login");
   const isOwner = !session?.user?.isStaff;
 
-  const [spaces, campaigns, business] = await Promise.all([getStoreSpaces(), getMyCampaigns(businessId), getBusinessById(businessId)]);
+  const permissions = await getCompanyPermissions(businessId);
+  const plan = permissions?.plan ?? "presenca";
+  const [spaces, campaigns, business, publications, offers] = await Promise.all([
+    getStoreSpaces(),
+    getMyCampaigns(businessId),
+    getBusinessById(businessId),
+    getMyPublications(businessId),
+    getPublicationOffers(businessId, plan),
+  ]);
+  const discountPercent = discountFor(plan);
   const today = new Date().toISOString().slice(0, 10);
   const defaultUrl = business?.slug ? `/empresa/${business.slug}` : "";
 
@@ -36,6 +50,7 @@ export default async function AnunciosPage() {
           </div>
 
           <MyCampaignsList campaigns={campaigns} today={today} canCancel={isOwner} />
+          <MyPublicationsList publications={publications} />
 
           <section className="flex flex-col gap-4">
             <h2 className="text-lg font-semibold text-foreground">Espaços disponíveis</h2>
@@ -43,9 +58,22 @@ export default async function AnunciosPage() {
             {spaces.length === 0 ? (
               <p className="text-[15px] text-muted">Nenhum espaço aberto para reserva agora.</p>
             ) : (
-              spaces.map((space) => <AdSpaceCard key={space.id} space={space} today={today} defaultUrl={defaultUrl} />)
+              spaces.map((space) => <AdSpaceCard key={space.id} space={space} today={today} defaultUrl={defaultUrl} discountPercent={discountPercent} />)
             )}
           </section>
+
+          {offers.length > 0 && (
+            <section className="flex flex-col gap-4">
+              <h2 className="text-lg font-semibold text-foreground">Stories, newsletter e conteúdo</h2>
+              <p className="text-[14px] text-muted">
+                A equipe do Hub publica por você na data e no horário que escolher, depois de aprovar o conteúdo.
+                {discountPercent > 0 && " Seu plano dá " + discountPercent + "% de desconto."}
+              </p>
+              {offers.map((offer) => (
+                <PublicationCard key={offer.product.id} offer={offer} discountPercent={discountPercent} />
+              ))}
+            </section>
+          )}
         </div>
       </div>
     </main>

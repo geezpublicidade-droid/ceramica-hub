@@ -15,6 +15,7 @@ const QUICK_LINKS = [
   { href: "/admin/marketing/email", label: "E-mail marketing" },
   { href: "/admin/marketing/automacoes", label: "Automações" },
   { href: "/admin/publicidade/espacos", label: "Espaços publicitários" },
+  { href: "/admin/publicidade/publicacoes", label: "Publicações reservadas" },
 ];
 
 function StatSection({ title, children }: { title: string; children: React.ReactNode }) {
