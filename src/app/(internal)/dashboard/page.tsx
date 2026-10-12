@@ -28,6 +28,8 @@ import { landingCapabilitiesFromFeatures } from "@/lib/landing/sections";
 import { DailyViewsChart } from "@/components/dashboard/DailyViewsChart";
 import { LivePreviewCard } from "@/components/dashboard/LivePreviewCard";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
+import { MarketingOverview } from "@/components/dashboard/MarketingOverview";
+import { getOverviewData } from "@/lib/services/overview-data";
 
 export const metadata = { title: "Painel — Cerâmica Hub" };
 
@@ -74,6 +76,10 @@ export default async function DashboardPage() {
   const score = presenceInput ? calculatePresenceScore(presenceInput) : undefined;
   const nextStep = presenceInput ? getNextStepRecommendation(presenceInput) : null;
   const status = business ? PROFILE_STATUS[business.status] : undefined;
+  const overview =
+    businessId && business
+      ? await getOverviewData({ businessId, plan: permissions?.plan ?? "presenca", photoCount: photos.length, hasActivePromotion }).catch(() => null)
+      : null;
 
   return (
     <main className="min-h-screen px-6 py-16 lg:py-20">
@@ -130,6 +136,15 @@ export default async function DashboardPage() {
               quando quiser recuperar os recursos do plano Destaque.
             </p>
           </div>
+        )}
+
+        {business && overview && (
+          <MarketingOverview
+            data={overview}
+            planName={permissions?.planName ?? "Presença"}
+            renewsAt={permissions?.expiresAt ? String(permissions.expiresAt).slice(0, 10) : null}
+            pageHref={business.slug ? "/empresa/" + business.slug : null}
+          />
         )}
 
         {business && score && status ? (

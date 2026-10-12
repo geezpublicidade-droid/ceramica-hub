@@ -82,3 +82,38 @@ describe("recomendações e variação", () => {
     assert.equal(stage("rejected", "pago", "2026-10-15", "2026-10-20"), "Precisa de correção");
   });
 });
+
+import { conversionRate, summarizeOverview } from "../overview-stats.ts";
+
+describe("indicadores do painel inicial", () => {
+  const now = new Date("2026-10-12T15:00:00Z");
+  const at = (daysAgo: number, hourUtc = 15) => new Date(now.getTime() - daysAgo * 86_400_000 + (hourUtc - 15) * 3_600_000).toISOString();
+  it("separa período atual e anterior", () => {
+    const rows = [
+      ...Array.from({ length: 12 }, () => ({ eventType: "commercial_page_viewed", createdAt: at(2) })),
+      ...Array.from({ length: 6 }, () => ({ eventType: "commercial_page_viewed", createdAt: at(40) })),
+      { eventType: "whatsapp_clicked", createdAt: at(1) },
+      { eventType: "whatsapp_clicked", createdAt: at(50) },
+      { eventType: "coupon_redeemed", createdAt: at(3) },
+    ];
+    const stats = summarizeOverview(rows, now);
+    assert.equal(stats.current.views, 12);
+    assert.equal(stats.previous.views, 6);
+    assert.equal(stats.current.whatsapp, 1);
+    assert.equal(stats.previous.whatsapp, 1);
+    assert.equal(stats.current.coupons, 1);
+    assert.equal(percentChange(stats.current.views, stats.previous.views), 100);
+    assert.equal(stats.peak, null); // poucos dados: não inventa horário de pico
+  });
+  it("acha o dia e a janela de pico com dados suficientes", () => {
+    // quartas (2026-10-07) às 19h de Brasília = 22h UTC
+    const rows = Array.from({ length: 40 }, () => ({ eventType: "commercial_page_viewed", createdAt: "2026-10-07T22:10:00Z" }));
+    const stats = summarizeOverview(rows, now);
+    assert.equal(stats.peak?.weekday, 3);
+    assert.equal(stats.peak?.fromHour <= 19 && 19 < (stats.peak?.toHour ?? 0), true);
+  });
+  it("conversão = contatos / visualizações", () => {
+    assert.equal(conversionRate({ views: 200, whatsapp: 10, routes: 4, phone: 2, coupons: 0 }, 4), 10);
+    assert.equal(conversionRate({ views: 0, whatsapp: 3, routes: 0, phone: 0, coupons: 0 }, 0), null);
+  });
+});
