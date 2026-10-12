@@ -69,6 +69,9 @@ export type ActiveCampaign = {
   creatives: ActiveCampaignCreative[];
 };
 
+/** Campanha da loja só vai ao ar com pagamento confirmado (ou isento); as do admin não têm cobrança na plataforma. */
+const LIVE_PAYMENT_STATUSES = ["nao_aplicavel", "pago", "isento"];
+
 async function fetchEligibleCampaigns(placementKey: string): Promise<ActiveCampaign[]> {
   const supabase = createServiceClient();
   const today = new Date().toISOString().slice(0, 10);
@@ -78,15 +81,17 @@ async function fetchEligibleCampaigns(placementKey: string): Promise<ActiveCampa
 
   const { data: campaigns, error } = await supabase
     .from("ad_campaigns")
-    .select("id, title, description, target_url, ad_accounts!inner(blocked), ad_creatives(device, image_url, alt_text)")
+    .select("id, title, description, target_url, payment_status, ad_accounts(blocked), ad_creatives(device, image_url, alt_text)")
     .eq("placement_id", placement.id)
     .eq("status", "approved")
-    .eq("ad_accounts.blocked", false)
+    .in("payment_status", LIVE_PAYMENT_STATUSES)
     .lte("starts_at", today)
     .gte("ends_at", today);
   if (error) throw error;
 
-  return (campaigns ?? []).map((campaign) => ({
+  return (campaigns ?? [])
+    .filter((campaign) => !(campaign.ad_accounts as unknown as { blocked: boolean } | null)?.blocked)
+    .map((campaign) => ({
     id: campaign.id,
     title: campaign.title,
     description: campaign.description,
@@ -137,6 +142,9 @@ export type CampaignWithDetails = {
   rejectionReason: string | null;
   negotiatedValueCents: number | null;
   budgetCents: number | null;
+  paymentStatus: string;
+  priceCents: number | null;
+  source: string;
   /** Criativo desktop, pra miniatura no board do admin -- mesmo dado que já
    * é buscado pro slot público (fetchEligibleCampaigns), só que aqui é só
    * pra o admin se localizar visualmente entre campanhas, não pra veicular. */
@@ -148,7 +156,7 @@ export async function getAllCampaigns(): Promise<CampaignWithDetails[]> {
   const { data, error } = await supabase
     .from("ad_campaigns")
     .select(
-      "id, title, status, starts_at, ends_at, target_url, rejection_reason, negotiated_value_cents, budget_cents, ad_accounts(id, company_name, blocked), ad_placements(name), ad_creatives(device, image_url)"
+      "id, title, status, starts_at, ends_at, target_url, rejection_reason, negotiated_value_cents, budget_cents, payment_status, price_cents, source, ad_accounts(id, company_name, blocked), businesses(name), ad_placements(name), ad_creatives(device, image_url)"
     )
     .order("created_at", { ascending: false });
   if (error) throw error;
@@ -166,12 +174,15 @@ export async function getAllCampaigns(): Promise<CampaignWithDetails[]> {
       endsAt: row.ends_at,
       targetUrl: row.target_url,
       advertiserId: account?.id ?? "",
-      advertiserName: account?.company_name ?? "Anunciante",
+      advertiserName: account?.company_name ?? (row.businesses as unknown as { name: string } | null)?.name ?? "Anunciante",
       advertiserBlocked: account?.blocked ?? false,
       placementName: placement?.name ?? "—",
       rejectionReason: row.rejection_reason,
       negotiatedValueCents: row.negotiated_value_cents,
       budgetCents: row.budget_cents,
+      paymentStatus: row.payment_status,
+      priceCents: row.price_cents,
+      source: row.source,
       previewImageUrl: preview?.image_url ?? null,
     };
   });
@@ -218,7 +229,7 @@ export async function getPlacementsInventory(): Promise<PlacementInventory[]> {
     supabase.from("ad_placements").select("*").order("name", { ascending: true }),
     supabase
       .from("ad_campaigns")
-      .select("id, placement_id, title, status, starts_at, ends_at, ad_accounts(company_name), ad_creatives(id)")
+      .select("id, placement_id, title, status, starts_at, ends_at, ad_accounts(company_name), businesses(name), ad_creatives(id)")
       .in("status", ["pending_review", "approved"]),
   ]);
   if (placementsError) throw placementsError;
@@ -232,6 +243,7 @@ export async function getPlacementsInventory(): Promise<PlacementInventory[]> {
     starts_at: string;
     ends_at: string;
     ad_accounts: { company_name: string } | null;
+    businesses: { name: string } | null;
     ad_creatives: { id: string }[];
   };
 
@@ -254,7 +266,7 @@ export async function getPlacementsInventory(): Promise<PlacementInventory[]> {
       ? {
           campaignId: occupantRow.id,
           title: occupantRow.title,
-          advertiserName: occupantRow.ad_accounts?.company_name ?? "Anunciante",
+          advertiserName: occupantRow.ad_accounts?.company_name ?? occupantRow.businesses?.name ?? "Anunciante",
           startsAt: occupantRow.starts_at,
           endsAt: occupantRow.ends_at,
           hasCreative: occupantRow.ad_creatives.length > 0,
@@ -286,7 +298,7 @@ export async function findPlacementConflicts(campaignId: string): Promise<Placem
 
   const { data: overlapping, error: overlapError } = await supabase
     .from("ad_campaigns")
-    .select("id, title, starts_at, ends_at, ad_accounts(company_name)")
+    .select("id, title, starts_at, ends_at, ad_accounts(company_name), businesses(name)")
     .eq("placement_id", campaign.placement_id)
     .eq("status", "approved")
     .neq("id", campaignId)
@@ -300,7 +312,10 @@ export async function findPlacementConflicts(campaignId: string): Promise<Placem
   return (overlapping ?? []).map((row) => ({
     campaignId: row.id,
     title: row.title,
-    advertiserName: (row.ad_accounts as unknown as { company_name: string } | null)?.company_name ?? "Anunciante",
+    advertiserName:
+      (row.ad_accounts as unknown as { company_name: string } | null)?.company_name ??
+      (row.businesses as unknown as { name: string } | null)?.name ??
+      "Anunciante",
     startsAt: row.starts_at,
     endsAt: row.ends_at,
   }));

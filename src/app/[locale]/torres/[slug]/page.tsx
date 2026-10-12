@@ -90,7 +90,7 @@ export default async function TowerPage({ params }: PageProps) {
             />
           </div>
         </section>
-        <AdHereBanner />
+        <AdHereBanner placementKey="torres_rodape" />
       </main>
       <CinematicFooter />
     </>

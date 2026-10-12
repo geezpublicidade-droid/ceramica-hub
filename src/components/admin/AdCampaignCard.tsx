@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { approveCampaign, rejectCampaign, pauseCampaign, resumeCampaign, toggleBlockAdvertiser } from "@/lib/actions/admin-ads";
+import { approveCampaign, rejectCampaign, pauseCampaign, resumeCampaign, toggleBlockAdvertiser, confirmAdPayment } from "@/lib/actions/admin-ads";
 import { PHASE_CLASS, PHASE_LABEL, type CampaignPhase } from "@/lib/ads-phase";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { formatCents, formatDateBR } from "@/lib/utils";
 import type { CampaignWithDetails, CampaignMetrics } from "@/lib/services/ads";
+
+const PAYMENT_LABEL: Record<string, string> = { pendente: "pagamento pendente", pago: "pago", isento: "cortesia", nao_aplicavel: "sem cobrança" };
 
 type Props = { campaign: CampaignWithDetails; metrics: CampaignMetrics; phase: CampaignPhase };
 
@@ -63,6 +65,12 @@ export function AdCampaignCard({ campaign, metrics, phase }: Props) {
         <p className="text-[13px] text-muted">
           {formatDateBR(campaign.startsAt)} a {formatDateBR(campaign.endsAt)}
         </p>
+        {campaign.source === "loja" && (
+          <p className="mt-1 text-[13px] font-medium text-foreground">
+            Comprado na loja · {campaign.priceCents != null ? formatCents(campaign.priceCents) : "sem valor"} ·{" "}
+            {PAYMENT_LABEL[campaign.paymentStatus] ?? campaign.paymentStatus}
+          </p>
+        )}
         {campaign.advertiserBlocked && <p className="mt-1 text-[13px] text-red-600">Anunciante bloqueado</p>}
         {campaign.rejectionReason && <p className="mt-1 text-[13px] text-red-600">Motivo: {campaign.rejectionReason}</p>}
       </div>
@@ -77,6 +85,26 @@ export function AdCampaignCard({ campaign, metrics, phase }: Props) {
       </div>
 
       <div className="flex flex-wrap gap-2 border-t border-border pt-3">
+        {campaign.source === "loja" && campaign.paymentStatus === "pendente" && (
+          <>
+            <button
+              type="button"
+              disabled={isPending}
+              onClick={() => startTransition(() => void confirmAdPayment(campaign.id, "pago"))}
+              className="neu-primary rounded-full px-3.5 py-1.5 text-[13px] font-medium text-white disabled:opacity-60"
+            >
+              Confirmar pagamento
+            </button>
+            <button
+              type="button"
+              disabled={isPending}
+              onClick={() => startTransition(() => void confirmAdPayment(campaign.id, "isento"))}
+              className="neu rounded-full px-3.5 py-1.5 text-[13px] font-medium text-foreground disabled:opacity-60"
+            >
+              Isentar (cortesia)
+            </button>
+          </>
+        )}
         {(campaign.status === "pending_review" || isPaused) && (
           <button
             type="button"
@@ -107,14 +135,16 @@ export function AdCampaignCard({ campaign, metrics, phase }: Props) {
             Recusar
           </button>
         )}
-        <button
-          type="button"
-          disabled={isPending}
-          onClick={() => startTransition(() => void toggleBlockAdvertiser(campaign.advertiserId, !campaign.advertiserBlocked))}
-          className="rounded-full border border-red-200 px-3.5 py-1.5 text-[13px] font-medium text-red-600 disabled:opacity-60"
-        >
-          {campaign.advertiserBlocked ? "Desbloquear anunciante" : "Bloquear anunciante"}
-        </button>
+        {campaign.advertiserId && (
+          <button
+            type="button"
+            disabled={isPending}
+            onClick={() => startTransition(() => void toggleBlockAdvertiser(campaign.advertiserId, !campaign.advertiserBlocked))}
+            className="rounded-full border border-red-200 px-3.5 py-1.5 text-[13px] font-medium text-red-600 disabled:opacity-60"
+          >
+            {campaign.advertiserBlocked ? "Desbloquear anunciante" : "Bloquear anunciante"}
+          </button>
+        )}
       </div>
 
       {conflict && (

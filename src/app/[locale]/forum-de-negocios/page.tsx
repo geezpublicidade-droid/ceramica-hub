@@ -110,7 +110,7 @@ export default async function ForumDeNegociosPage({ params }: { params: Promise<
             </div>
           )}
         </div>
-        <AdHereBanner />
+        <AdHereBanner placementKey="forum_rodape" />
       </main>
       <CinematicFooter />
     </>

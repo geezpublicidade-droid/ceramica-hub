@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { AdLink } from "@/components/ads/AdLink";
 import type { ActiveCampaign } from "@/lib/services/ads";
 
@@ -8,7 +8,7 @@ import type { ActiveCampaign } from "@/lib/services/ads";
  * verdade a cada carregamento, em vez de ficar presa ao HTML cacheado por
  * até 60s. Usado em posições simples e contidas, tipo o topo do diretório —
  * o banner de destaque de tela a tela é o AdBanner, componente separado. */
-export function AdSlot({ placementKey }: { placementKey: string }) {
+export function AdSlot({ placementKey, fallback = null }: { placementKey: string; fallback?: ReactNode }) {
   const [campaign, setCampaign] = useState<ActiveCampaign | null>(null);
 
   useEffect(() => {
@@ -24,12 +24,12 @@ export function AdSlot({ placementKey }: { placementKey: string }) {
     };
   }, [placementKey]);
 
-  // Sem anunciante ativo nessa posição, não mostra nada (sem banner "Anuncie aqui").
-  if (!campaign) return null;
+  // Sem anunciante ativo: mostra o fallback (ex.: convite "Anuncie aqui" de página interna) ou nada.
+  if (!campaign) return fallback;
 
   const desktopCreative = campaign.creatives.find((c) => c.device === "desktop");
   const mobileCreative = campaign.creatives.find((c) => c.device === "mobile");
-  if (!desktopCreative && !mobileCreative) return null;
+  if (!desktopCreative && !mobileCreative) return fallback;
 
   return (
     <div className="mx-auto max-w-6xl px-6">

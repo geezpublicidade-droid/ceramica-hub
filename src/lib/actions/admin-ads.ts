@@ -138,6 +138,34 @@ export async function approveCampaign(campaignId: string, authorizeOverlap = fal
   return approveWithCapacityCheck(campaignId, authorizeOverlap);
 }
 
+/** Pagamento de campanha da loja confirmado (ou cortesia). Se o espaço é de aprovação automática e há criativo, já aprova e agenda. */
+export async function confirmAdPayment(campaignId: string, status: "pago" | "isento"): Promise<ActionResult> {
+  const adminId = await requireAdmin(["super_admin", "admin", "comercial", "financeiro"]);
+  const supabase = createServiceClient();
+  const { data: campaign, error } = await supabase
+    .from("ad_campaigns")
+    .update({ payment_status: status, paid_at: new Date().toISOString() })
+    .eq("id", campaignId)
+    .eq("source", "loja")
+    .eq("payment_status", "pendente")
+    .select("status, ad_placements(auto_approve), ad_creatives(id)")
+    .maybeSingle();
+  if (error || !campaign) return { success: false, error: "Não foi possível confirmar o pagamento." };
+  await logAdminAction(adminId, "ad_campaign_payment_" + status, "ad_campaign", campaignId);
+
+  const autoApprove = (campaign.ad_placements as unknown as { auto_approve: boolean } | null)?.auto_approve;
+  const hasCreative = ((campaign.ad_creatives ?? []) as unknown[]).length > 0;
+  if (autoApprove && hasCreative && campaign.status === "pending_review") {
+    const approval = await approveWithCapacityCheck(campaignId, false);
+    if (!approval.success) {
+      revalidatePath("/admin/publicidade");
+      return approval;
+    }
+  }
+  revalidatePath("/admin/publicidade");
+  return { success: true };
+}
+
 export async function rejectCampaign(campaignId: string, reason: string): Promise<ActionResult> {
   return updateCampaignStatus(campaignId, "rejected", reason);
 }

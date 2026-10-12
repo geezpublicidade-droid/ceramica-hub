@@ -86,7 +86,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </h1>
           <p className="mt-6 whitespace-pre-wrap text-[18px] leading-relaxed text-foreground/85">{post.content}</p>
         </div>
-        <AdHereBanner />
+        <AdHereBanner placementKey="blog_rodape" />
       </main>
       <CinematicFooter />
     </>

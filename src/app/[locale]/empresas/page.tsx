@@ -291,7 +291,7 @@ export default async function EmpresasPage({ params, searchParams }: PageProps) 
 
                 <ListingTracker origin={filters.q ? "busca" : "empresas"} category={filters.cat} query={filters.q || undefined} />
 
-                {result.items.length > 3 && <AdHereBanner inline tone={1} />}
+                {result.items.length > 3 && <AdHereBanner inline tone={1} placementKey="empresas_meio" />}
 
                 {totalPages > 1 && (
                   <nav className="mt-10 flex items-center justify-between gap-4" aria-label={t("pagination")}>
@@ -322,7 +322,7 @@ export default async function EmpresasPage({ params, searchParams }: PageProps) 
             </div>
           </div>
         </section>
-        <AdHereBanner />
+        <AdHereBanner placementKey="empresas_rodape" />
       </main>
       <CinematicFooter />
     </>

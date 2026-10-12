@@ -71,7 +71,7 @@ export default async function NoticiasPage() {
             </div>
           )}
         </div>
-        <AdHereBanner />
+        <AdHereBanner placementKey="noticias_rodape" />
       </main>
       <CinematicFooter />
     </>

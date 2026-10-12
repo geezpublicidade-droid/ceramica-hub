@@ -53,9 +53,9 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
       supabase.from("businesses").select("id", { count: "exact", head: true }).gte("created_at", sevenDaysAgo),
       supabase
         .from("ad_campaigns")
-        .select("id, ad_accounts!inner(blocked)")
+        .select("id")
         .eq("status", "approved")
-        .eq("ad_accounts.blocked", false)
+        .in("payment_status", ["nao_aplicavel", "pago", "isento"])
         .lte("starts_at", today)
         .gte("ends_at", today),
       supabase

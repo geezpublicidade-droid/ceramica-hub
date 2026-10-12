@@ -71,7 +71,7 @@ export default async function BlogPage({ params }: { params: Promise<{ locale: s
             </div>
           )}
         </div>
-        <AdHereBanner />
+        <AdHereBanner placementKey="blog_rodape" />
       </main>
       <CinematicFooter />
     </>

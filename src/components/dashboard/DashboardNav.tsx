@@ -26,6 +26,7 @@ const NAV_ITEMS = [
   { label: "Promoções", href: editarHref("promocoes"), Icon: IconPromotions },
   { label: "Resultados", href: "/dashboard/resultados", Icon: IconResults },
   { label: "Divulgação", href: "/dashboard/divulgacao", Icon: IconPromotions },
+  { label: "Anunciar", href: "/dashboard/anuncios", Icon: IconPromotions },
   { label: "Cupons", href: "/dashboard/cupons", Icon: IconPromotions },
   { label: "Indicações", href: "/dashboard/indicacoes", Icon: IconPromotions },
   { label: "Plano e assinatura", href: "/dashboard/plano", Icon: IconPlan },

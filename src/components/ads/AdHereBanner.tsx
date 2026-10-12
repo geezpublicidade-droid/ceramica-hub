@@ -1,6 +1,7 @@
 import { ArrowRight, Megaphone } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { AdSlot } from "@/components/ads/AdSlot";
 import { openSlotBackground } from "@/components/categoria/open-slot";
 
 type AdHereBannerProps = {
@@ -12,13 +13,15 @@ type AdHereBannerProps = {
   tone?: number;
   /** sem o container/respiro de fim de página: para encaixar no meio de uma seção que já tem largura própria */
   inline?: boolean;
+  /** espaço de anúncio vendido na loja: se houver campanha no ar, ela aparece no lugar do convite */
+  placementKey?: string;
 };
 
 /** Faixa larga de espaço publicitário livre: cor da marca + "Anuncie aqui", leva à página de planos. */
-export async function AdHereBanner({ href = "/planos", topic, tone = 0, inline = false }: AdHereBannerProps) {
+export async function AdHereBanner({ href = "/planos", topic, tone = 0, inline = false, placementKey }: AdHereBannerProps) {
   const t = await getTranslations("AdHere");
 
-  return (
+  const banner = (
     <section aria-label={t("eyebrow")} data-reveal className={inline ? "my-10" : "container-page pb-16 pt-6 sm:pb-20"}>
       <Link
         href={href}
@@ -44,4 +47,5 @@ export async function AdHereBanner({ href = "/planos", topic, tone = 0, inline =
       </Link>
     </section>
   );
+  return placementKey ? <AdSlot placementKey={placementKey} fallback={banner} /> : banner;
 }

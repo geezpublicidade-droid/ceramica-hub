@@ -76,7 +76,7 @@ export default async function SearchPage({ params, searchParams }: PageProps) {
             )}
           </div>
         </section>
-        <AdHereBanner />
+        <AdHereBanner placementKey="busca_rodape" />
       </main>
       <CinematicFooter />
     </>
