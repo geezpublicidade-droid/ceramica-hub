@@ -21,6 +21,39 @@ const intlMiddleware = createMiddleware(routing);
 const LOCALE_PREFIX = /^\/(en|es|zh)(?=\/|$)/;
 const COMING_SOON_OPEN = [/^\/?$/];
 
+// Link secreto de pré-visualização: /preview?previewkey=<PREVIEW_ACCESS_KEY> grava um cookie
+// httpOnly e libera o site inteiro naquele navegador, sem conta. Sem a env, o recurso fica desligado.
+const PREVIEW_PARAM = "previewkey";
+const PREVIEW_COOKIE = "hub-preview";
+const PREVIEW_COOKIE_MAX_AGE = 60 * 60 * 24 * 30;
+
+function sameKey(a: string | undefined | null, b: string | undefined) {
+  if (!a || !b || a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
+function hasPreviewAccess(req: NextRequest) {
+  return sameKey(req.cookies.get(PREVIEW_COOKIE)?.value, process.env.PREVIEW_ACCESS_KEY);
+}
+
+// Chave certa na URL: grava o cookie e redireciona para a mesma URL sem a chave.
+function previewKeyGrant(req: NextRequest) {
+  if (!sameKey(req.nextUrl.searchParams.get(PREVIEW_PARAM), process.env.PREVIEW_ACCESS_KEY)) return null;
+  const clean = req.nextUrl.clone();
+  clean.searchParams.delete(PREVIEW_PARAM);
+  const res = NextResponse.redirect(clean);
+  res.cookies.set(PREVIEW_COOKIE, process.env.PREVIEW_ACCESS_KEY!, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: PREVIEW_COOKIE_MAX_AGE,
+  });
+  return res;
+}
+
 function comingSoonRedirect(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const localePrefix = LOCALE_PREFIX.exec(pathname)?.[0] ?? "";
@@ -33,8 +66,12 @@ export default auth((req) => {
   const { pathname } = req.nextUrl;
   const isAdmin = req.auth?.user.role === "admin";
 
+  const grant = previewKeyGrant(req);
+  if (grant) return grant;
+  const canPreview = isAdmin || hasPreviewAccess(req);
+
   // APIs de dados públicos (busca, anúncios, QR): só com sessão até o lançamento.
-  if (pathname.startsWith("/api/")) return req.auth ? undefined : NextResponse.json({ error: "not_found" }, { status: 404 });
+  if (pathname.startsWith("/api/")) return req.auth || canPreview ? undefined : NextResponse.json({ error: "not_found" }, { status: 404 });
 
   const match = ROLE_BY_PREFIX.find(({ prefix }) => pathname.startsWith(prefix));
 
@@ -54,7 +91,7 @@ export default auth((req) => {
 
   if (NO_LOCALE_PATHS.includes(pathname) || pathname.startsWith("/proposta/") || pathname.startsWith("/descadastrar/")) return;
 
-  if (!isAdmin) {
+  if (!canPreview) {
     const redirect = comingSoonRedirect(req);
     if (redirect) return redirect;
   }
