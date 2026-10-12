@@ -15,6 +15,8 @@ export type InstitutionalPartner = {
   sortOrder: number;
   /** Só existe quando a página própria está habilitada no admin; /parceiros usa pra linkar. */
   pageSlug: string | null;
+  /** Âncora de demonstração comercial (marca fictícia/sem autorização): aparece marcada e some quando o admin desativa. */
+  isDemo: boolean;
 };
 
 function mapPartner(row: Record<string, unknown>): InstitutionalPartner {
@@ -31,6 +33,7 @@ function mapPartner(row: Record<string, unknown>): InstitutionalPartner {
     endsAt: row.ends_at as string | null,
     sortOrder: row.sort_order as number,
     pageSlug: row.has_page ? (row.slug as string | null) : null,
+    isDemo: Boolean(row.is_demo),
   };
 }
 

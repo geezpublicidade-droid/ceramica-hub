@@ -3,10 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { ContactLink } from "@/components/ContactLink";
 import { formatSchedule } from "@/lib/landing/hours";
 import { OUTLINE_BUTTON, SECTION_TITLE, type LandingContext } from "./context";
-
-function instagramUrl(handle: string) {
-  return `https://instagram.com/${handle.replace(/^@/, "")}`;
-}
+import { instagramUrl } from "@/lib/utils";
 
 type Row = { icon: typeof MapPin; title: string; lines: string[] };
 

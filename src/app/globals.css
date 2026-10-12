@@ -586,3 +586,23 @@ html {
     display: none;
   }
 }
+
+
+/* Faixa de logos das Âncoras: rolagem contínua, pausa no hover/foco, parada com reduced-motion. */
+@keyframes logo-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.logo-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: logo-marquee 40s linear infinite;
+}
+.logo-marquee:hover .logo-marquee-track,
+.logo-marquee:focus-within .logo-marquee-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .logo-marquee-track { animation: none; flex-wrap: wrap; width: auto; justify-content: center; }
+  .logo-marquee-dup { display: none; }
+}

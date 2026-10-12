@@ -68,6 +68,28 @@ export type AnchorPartner = {
   status: string;
   tier: string;
   partnershipType: string;
+  isDemo: boolean;
+  tagline: string | null;
+  about: string | null;
+  address: string | null;
+  openingHours: string | null;
+  directionsUrl: string | null;
+  whatsapp: string | null;
+};
+
+export type AnchorPostKind = "evento" | "experiencia" | "novidade";
+
+export type AnchorPost = {
+  id: string;
+  partnerId: string;
+  kind: AnchorPostKind;
+  title: string;
+  body: string | null;
+  happensOn: string | null;
+  imageUrl: string | null;
+  link: string | null;
+  active: boolean;
+  sortOrder: number;
 };
 
 const today = () => new Date().toISOString().slice(0, 10);
@@ -90,6 +112,28 @@ function mapPartner(row: Record<string, unknown>): AnchorPartner {
     status: row.status as string,
     tier: row.tier as string,
     partnershipType: row.partnership_type as string,
+    isDemo: Boolean(row.is_demo),
+    tagline: row.tagline as string | null,
+    about: row.about as string | null,
+    address: row.address as string | null,
+    openingHours: row.opening_hours as string | null,
+    directionsUrl: row.directions_url as string | null,
+    whatsapp: row.whatsapp as string | null,
+  };
+}
+
+function mapPost(row: Record<string, unknown>): AnchorPost {
+  return {
+    id: row.id as string,
+    partnerId: row.partner_id as string,
+    kind: row.kind as AnchorPostKind,
+    title: row.title as string,
+    body: row.body as string | null,
+    happensOn: row.happens_on as string | null,
+    imageUrl: row.image_url as string | null,
+    link: row.link as string | null,
+    active: row.active as boolean,
+    sortOrder: row.sort_order as number,
   };
 }
 
@@ -172,6 +216,29 @@ export async function getPublicStores(partnerId: string): Promise<(AnchorStore &
   return stores
     .map((store) => ({ ...store, highlighted: isStoreHighlighted(store) }))
     .sort((a, b) => Number(b.highlighted) - Number(a.highlighted));
+}
+
+export async function getAnchorPosts(partnerId: string, options: { onlyActive: boolean }): Promise<AnchorPost[]> {
+  const supabase = createServiceClient();
+  let query = supabase.from("anchor_posts").select("*").eq("partner_id", partnerId);
+  if (options.onlyActive) query = query.eq("active", true);
+  const { data, error } = await query.order("sort_order").order("created_at");
+  if (error) throw error;
+  return (data ?? []).map(mapPost);
+}
+
+/** Slugs das páginas públicas (sitemap): demonstração fica de fora. */
+export async function getIndexableAnchorSlugs(): Promise<string[]> {
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from("institutional_partners")
+    .select("slug")
+    .eq("status", "ativo")
+    .eq("has_page", true)
+    .eq("is_demo", false)
+    .not("slug", "is", null);
+  if (error) throw error;
+  return (data ?? []).map((row) => row.slug as string);
 }
 
 export async function getContractsWithDeliverables(partnerId: string): Promise<ContractWithDeliverables[]> {

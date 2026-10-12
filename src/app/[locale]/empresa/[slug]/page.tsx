@@ -22,6 +22,7 @@ import { getLandingConfig } from "@/lib/services/landing";
 import { buildLandingContext } from "@/lib/services/landing-context";
 import { ProfileVisitTracker } from "@/components/business/ProfileVisitTracker";
 import { ShareButtons } from "@/components/promo/ShareButtons";
+import { instagramUrl } from "@/lib/utils";
 
 type PageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -69,10 +70,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       image: `${siteUrl}/api/og/empresa/${business.slug}`,
     }),
   };
-}
-
-function instagramUrl(handle: string) {
-  return `https://instagram.com/${handle.replace(/^@/, "")}`;
 }
 
 export default async function BusinessProfilePage({ params }: PageProps) {

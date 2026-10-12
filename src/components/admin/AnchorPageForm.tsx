@@ -14,6 +14,12 @@ export function AnchorPageForm({ partner }: { partner: AnchorPartner }) {
     description: partner.description ?? "",
     coverUrl: partner.coverUrl ?? "",
     hasPage: partner.hasPage,
+    tagline: partner.tagline ?? "",
+    about: partner.about ?? "",
+    address: partner.address ?? "",
+    openingHours: partner.openingHours ?? "",
+    directionsUrl: partner.directionsUrl ?? "",
+    whatsapp: partner.whatsapp ?? "",
   });
   const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -41,6 +47,30 @@ export function AnchorPageForm({ partner }: { partner: AnchorPartner }) {
       <label>
         <span className={labelClass}>Descrição</span>
         <textarea className={inputClass} rows={3} maxLength={1000} value={form.description} onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))} />
+      </label>
+      <label>
+        <span className={labelClass}>Frase de apresentação</span>
+        <input className={inputClass} maxLength={200} value={form.tagline} onChange={(e) => setForm((p) => ({ ...p, tagline: e.target.value }))} />
+      </label>
+      <label>
+        <span className={labelClass}>Sobre (texto institucional)</span>
+        <textarea className={inputClass} rows={4} maxLength={2000} value={form.about} onChange={(e) => setForm((p) => ({ ...p, about: e.target.value }))} />
+      </label>
+      <label>
+        <span className={labelClass}>Endereço</span>
+        <input className={inputClass} value={form.address} onChange={(e) => setForm((p) => ({ ...p, address: e.target.value }))} />
+      </label>
+      <label>
+        <span className={labelClass}>Horários</span>
+        <input className={inputClass} value={form.openingHours} onChange={(e) => setForm((p) => ({ ...p, openingHours: e.target.value }))} />
+      </label>
+      <label>
+        <span className={labelClass}>Link &quot;Como chegar&quot; (Google Maps)</span>
+        <input className={inputClass} value={form.directionsUrl} onChange={(e) => setForm((p) => ({ ...p, directionsUrl: e.target.value }))} />
+      </label>
+      <label>
+        <span className={labelClass}>WhatsApp (com DDD)</span>
+        <input className={inputClass} value={form.whatsapp} onChange={(e) => setForm((p) => ({ ...p, whatsapp: e.target.value }))} />
       </label>
       <label>
         <span className={labelClass}>Imagem de capa (URL)</span>

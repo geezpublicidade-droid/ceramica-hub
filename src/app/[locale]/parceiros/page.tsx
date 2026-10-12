@@ -74,7 +74,7 @@ export default async function PartnersPage() {
                               ) : (
                                 <p className="text-[17px] font-semibold text-foreground">{partner.name}</p>
                               )}
-                              <p className="text-[14px] text-muted">{partner.partnershipType}</p>
+                              <p className="text-[14px] text-muted">{partner.partnershipType}{partner.isDemo ? " · demonstração" : ""}</p>
                               {partner.pageSlug && (
                                 <Link href={`/parceiros/${partner.pageSlug}`} className="mt-1 inline-block text-[14px] font-medium text-primary hover:underline">
                                   {t("viewPage")}

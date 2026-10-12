@@ -49,6 +49,12 @@ const pageSchema = z.object({
   description: optionalText(1000),
   coverUrl: optionalUrl,
   hasPage: z.boolean(),
+  tagline: optionalText(200),
+  about: optionalText(2000),
+  address: optionalText(300),
+  openingHours: optionalText(300),
+  directionsUrl: optionalUrl,
+  whatsapp: optionalText(30),
 });
 
 export async function updateAnchorPage(partnerId: string, rawInput: z.input<typeof pageSchema>): Promise<ActionResult> {
@@ -72,6 +78,12 @@ export async function updateAnchorPage(partnerId: string, rawInput: z.input<type
           description: parsed.data.description || null,
           cover_url: parsed.data.coverUrl || null,
           has_page: parsed.data.hasPage,
+          tagline: parsed.data.tagline || null,
+          about: parsed.data.about || null,
+          address: parsed.data.address || null,
+          opening_hours: parsed.data.openingHours || null,
+          directions_url: parsed.data.directionsUrl || null,
+          whatsapp: parsed.data.whatsapp || null,
           updated_at: new Date().toISOString(),
         })
         .eq("id", partnerId),
@@ -301,4 +313,47 @@ export async function setStoreHighlight(partnerId: string, storeId: string, rawI
         .eq("partner_id", partnerId),
     "Não foi possível salvar o destaque."
   );
+}
+
+// ---- Publicações da página (eventos, experiências, novidades) ---------------
+
+const postSchema = z.object({
+  kind: z.enum(["evento", "experiencia", "novidade"]),
+  title: z.string().trim().min(3, "Informe o título.").max(120),
+  body: optionalText(600),
+  happensOn: z.string().regex(/^d{4}-d{2}-d{2}$/, "Data inválida.").optional().or(z.literal("")),
+  imageUrl: optionalUrl,
+  link: optionalText(300),
+});
+
+export async function addAnchorPost(partnerId: string, rawInput: z.input<typeof postSchema>): Promise<ActionResult> {
+  const adminId = await requireAdmin([...ANCHOR_ROLES]);
+  const parsed = postSchema.safeParse(rawInput);
+  if (!parsed.success) return { success: false, error: parsed.error.issues[0].message };
+
+  const supabase = createServiceClient();
+  return runWrite(adminId, "add_anchor_post", "institutional_partner", partnerId, partnerId, () =>
+    supabase.from("anchor_posts").insert({
+      partner_id: partnerId,
+      kind: parsed.data.kind,
+      title: parsed.data.title,
+      body: parsed.data.body || null,
+      happens_on: parsed.data.happensOn || null,
+      image_url: parsed.data.imageUrl || null,
+      link: parsed.data.link || null,
+    }), "Não foi possível adicionar a publicação.");
+}
+
+export async function setAnchorPostActive(partnerId: string, postId: string, active: boolean): Promise<ActionResult> {
+  const adminId = await requireAdmin([...ANCHOR_ROLES]);
+  const supabase = createServiceClient();
+  return runWrite(adminId, "set_anchor_post_active", "anchor_post", postId, partnerId, () =>
+    supabase.from("anchor_posts").update({ active }).eq("id", postId).eq("partner_id", partnerId), "Não foi possível atualizar a publicação.");
+}
+
+export async function deleteAnchorPost(partnerId: string, postId: string): Promise<ActionResult> {
+  const adminId = await requireAdmin([...ANCHOR_ROLES]);
+  const supabase = createServiceClient();
+  return runWrite(adminId, "delete_anchor_post", "anchor_post", postId, partnerId, () =>
+    supabase.from("anchor_posts").delete().eq("id", postId).eq("partner_id", partnerId), "Não foi possível excluir a publicação.");
 }

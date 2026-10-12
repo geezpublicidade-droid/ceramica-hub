@@ -28,9 +28,10 @@ export async function PremiumSponsorsCarousel({ partners }: PremiumSponsorsCarou
           image: partner.logoUrl ?? "/images/ceramica-hub-corporativo.webp",
           imageAlt: partner.name,
           overlay: mark(partner.name),
-          action: partner.link ? t("ctaAction") : undefined,
-          href: partner.link ?? undefined,
-          target: partner.link ? "_blank" : undefined,
+          // Âncora com página própria leva a ela; sem página, ao site do parceiro.
+          action: partner.pageSlug ? t("viewPage") : partner.link ? t("ctaAction") : undefined,
+          href: partner.pageSlug ? `/parceiros/${partner.pageSlug}` : (partner.link ?? undefined),
+          target: !partner.pageSlug && partner.link ? "_blank" : undefined,
         }))
       : [
           {

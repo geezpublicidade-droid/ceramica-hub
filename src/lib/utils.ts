@@ -5,6 +5,16 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/** Link do perfil a partir do @ (com ou sem "@"). */
+export function instagramUrl(handle: string): string {
+  return `https://instagram.com/${handle.replace(/^@/, "")}`;
+}
+
+/** Link wa.me a partir de um número em qualquer formato. */
+export function whatsappUrl(number: string): string {
+  return `https://wa.me/${number.replace(/D/g, "")}`;
+}
+
 export function formatCents(cents: number): string {
   return (cents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
