@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
@@ -60,6 +61,14 @@ export default async function AnunciosPage() {
             ) : (
               spaces.map((space) => <AdSpaceCard key={space.id} space={space} today={today} defaultUrl={defaultUrl} discountPercent={discountPercent} />)
             )}
+          </section>
+
+          <section className="glass-card-light rounded-2xl p-5">
+            <h2 className="text-lg font-semibold text-foreground">Destaque na sua categoria</h2>
+            <p className="mt-1 text-[14px] text-muted">
+              Líder, Premium ou Destaque no topo da sua categoria, com vagas limitadas e rotação automática. Veja o que está livre e contrate.
+            </p>
+            <Link href="/planos" className="mt-3 inline-block text-[14px] font-medium text-primary hover:underline">Ver vagas por categoria →</Link>
           </section>
 
           {offers.length > 0 && (

@@ -85,6 +85,7 @@ export function AdSpaceCard({ space, today, defaultUrl, discountPercent }: { spa
             <div><dt className="text-muted">Período</dt><dd className="font-medium">{space.minDays} a {space.maxDays} dias</dd></div>
             <div><dt className="text-muted">Vagas simultâneas</dt><dd className="font-medium">{space.capacity}</dd></div>
             <div><dt className="text-muted">Antecedência</dt><dd className="font-medium">{space.leadDays} dia(s)</dd></div>
+            <div><dt className="text-muted">Alcance estimado</dt><dd className="font-medium">{space.estimatedDailyViews ? `≈ ${space.estimatedDailyViews} exibições/dia` : "após as primeiras exibições"}</dd></div>
             <div><dt className="text-muted">Valor</dt><dd className="font-semibold text-primary">{formatCents(space.monthlyPriceCents)}/mês</dd></div>
           </dl>
           <div className="mt-4">

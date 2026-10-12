@@ -25,6 +25,8 @@ export type StoreSpace = {
   autoApprove: boolean;
   occupancy: DayOccupancy[];
   nextFreeStart: string | null;
+  /** média diária de exibições do espaço nos últimos 30 dias; null enquanto não há histórico */
+  estimatedDailyViews: number | null;
 };
 
 type PlacementRow = {
@@ -50,6 +52,31 @@ export async function getHoldingBookings(placementIds: string[], from: string, t
   return result;
 }
 
+const REACH_WINDOW_DAYS = 30;
+
+/** Exibições por dia de cada espaço, somando as campanhas que já rodaram nele. Sem histórico, devolve null (não inventa alcance). */
+async function estimateReach(placementIds: string[]): Promise<Map<string, number>> {
+  const result = new Map<string, number>();
+  if (placementIds.length === 0) return result;
+  const supabase = createServiceClient();
+  const since = new Date(Date.now() - REACH_WINDOW_DAYS * 86_400_000).toISOString();
+  const { data: campaigns } = await supabase.from("ad_campaigns").select("id, placement_id").in("placement_id", placementIds);
+  const byCampaign = new Map((campaigns ?? []).map((row) => [row.id as string, row.placement_id as string]));
+  if (byCampaign.size === 0) return result;
+  const { data: events } = await supabase
+    .from("metrics_events")
+    .select("metadata")
+    .eq("event_type", "ad_impression")
+    .gte("created_at", since)
+    .limit(50000);
+  for (const event of events ?? []) {
+    const placementId = byCampaign.get((event.metadata as { campaignId?: string } | null)?.campaignId ?? "");
+    if (placementId) result.set(placementId, (result.get(placementId) ?? 0) + 1);
+  }
+  for (const [id, total] of result) result.set(id, Math.round(total / REACH_WINDOW_DAYS));
+  return result;
+}
+
 export async function getStoreSpaces(): Promise<StoreSpace[]> {
   const today = new Date().toISOString().slice(0, 10);
   const horizon = addDays(today, STORE_HORIZON_DAYS);
@@ -62,7 +89,8 @@ export async function getStoreSpaces(): Promise<StoreSpace[]> {
     .order("monthly_price_cents", { ascending: false });
   if (error) throw error;
   const rows = (data ?? []) as unknown as PlacementRow[];
-  const bookings = await getHoldingBookings(rows.map((row) => row.id), today, horizon);
+  const ids = rows.map((row) => row.id);
+  const [bookings, reach] = await Promise.all([getHoldingBookings(ids, today, horizon), estimateReach(ids)]);
 
   return rows.map((row) => {
     const held = bookings.get(row.id) ?? [];
@@ -87,6 +115,7 @@ export async function getStoreSpaces(): Promise<StoreSpace[]> {
       autoApprove: row.auto_approve,
       occupancy: occupancyByDay(held, row.max_concurrent, today, STORE_HORIZON_DAYS),
       nextFreeStart: firstAvailableStart(held, row.max_concurrent, addDays(today, leadDays), row.min_days),
+      estimatedDailyViews: reach.get(row.id) || null,
     };
   });
 }
