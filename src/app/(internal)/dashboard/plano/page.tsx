@@ -4,10 +4,12 @@ import { getBusinessPhotos, getBusinessServices, getOwnedInvoices, getOwnedPromo
 import { getCompanyPermissions, getContentUsage, getPlanHistory } from "@/lib/services/company-plan";
 import { loadPlanCatalog, planLadder } from "@/lib/services/plan-catalog";
 import { loadPlanPrices } from "@/lib/services/plan-prices";
+import { getProductOffers } from "@/lib/services/product-offers";
 import { computeUsage, getLimit } from "@/lib/plans/resolve";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { BackLink } from "@/components/nav/BackLink";
 import { PlanBilling, type BillablePlan } from "@/components/dashboard/PlanBilling";
+import { ProductOffers } from "@/components/dashboard/ProductOffers";
 import { PlanOverview } from "@/components/dashboard/plan/PlanOverview";
 import { FeatureAvailability, UsageMeters } from "@/components/dashboard/plan/UsageAndFeatures";
 import { ContentChooser, type ChooserGroup } from "@/components/dashboard/plan/ContentChooser";
@@ -25,7 +27,7 @@ export default async function PlanoPage() {
   if (!permissions) redirect("/login");
   const isOwner = !session?.user?.isStaff;
 
-  const [catalog, prices, usageCounts, invoices, history, services, photos, promotions] = await Promise.all([
+  const [catalog, prices, usageCounts, invoices, history, services, photos, promotions, offers] = await Promise.all([
     loadPlanCatalog(),
     loadPlanPrices(),
     getContentUsage(businessId),
@@ -34,6 +36,7 @@ export default async function PlanoPage() {
     getBusinessServices(businessId),
     getBusinessPhotos(businessId),
     getOwnedPromotions(businessId),
+    getProductOffers().catch(() => []),
   ]);
 
   const ladder = planLadder(catalog);
@@ -77,6 +80,7 @@ export default async function PlanoPage() {
           <ContentChooser groups={groups} />
           <FeatureAvailability features={permissions.features} ladder={ladder} />
           {isOwner && <PlanBilling currentPlan={permissions.contractedPlan} invoices={invoices} plans={billable} discountPercent={permissions.discountPercent} planNames={planNames} />}
+          {isOwner && <ProductOffers offers={offers} />}
           <PlanComparisonTable ladder={ladder} currentPlan={permissions.plan} />
           <PlanHistoryList history={history} planNames={planNames} />
         </div>
