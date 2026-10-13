@@ -14,10 +14,10 @@ export function parseOgFormat(raw: string | null): OgFormat {
   return raw === "feed" || raw === "story" ? raw : "og";
 }
 
-const PRIMARY = "#b3553a";
+const PRIMARY = "#a14a31";
 const BACKGROUND = "#f6f2eb";
 const FOREGROUND = "#2e2e2e";
-const MUTED = "#86868b";
+const MUTED = "#6e6e73";
 const MAX_LOGO_BYTES = 2_000_000;
 
 /**

@@ -8,7 +8,7 @@
      tintas antigas que substituem. */
   --background: #f6f2eb;
   --foreground: #2e2e2e;
-  --muted: #86868b;
+  --muted: #6e6e73;
   --surface: #f2ece4;
   --surface-dark: #050505;
   --foreground-dark: #f5f5f7;
@@ -16,7 +16,7 @@
   --beige-support: #dccfc2;
   --border: rgba(0, 0, 0, 0.08);
   --border-dark: rgba(255, 255, 255, 0.12);
-  --primary: #b3553a;
+  --primary: #a14a31;
   --whatsapp: #1f6f4a;
   --whatsapp-hover: #185a3c;
   --primary-light: #c6806b;
@@ -443,9 +443,9 @@ body {
 .admin-theme {
   --background: #f7f4ef;
   --foreground: #242321;
-  --muted: #7a746c;
+  --muted: #665f57;
   --border: rgba(36, 35, 33, 0.09);
-  --primary: #b76546;
+  --primary: #a14a31;
   --primary-light: #c98a72;
   --primary-soft: #f6e9e3;
   --success: #3f7d58;

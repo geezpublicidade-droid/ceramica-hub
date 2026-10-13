@@ -18,7 +18,7 @@ const PADDING = { top: 16, right: 16, bottom: 28, left: 40 };
 // apresentação SVG (fill/stroke) é inconsistente entre navegadores, então
 // usamos o valor resolvido dos tokens terracota/teal do globals.css.
 const SERIES = [
-  { key: "pageViews" as const, label: "Visualizações", color: "#b3553a" },
+  { key: "pageViews" as const, label: "Visualizações", color: "#a14a31" },
   { key: "whatsappClicks" as const, label: "Cliques WhatsApp", color: "#1ea6d3" },
 ];
 
@@ -83,14 +83,14 @@ export function ResultsTrendChart({ points }: { points: DailyTrendPoint[] }) {
           {gridLines.map((line) => (
             <g key={line.value}>
               <line x1={PADDING.left} x2={WIDTH - PADDING.right} y1={line.y} y2={line.y} stroke="rgba(0,0,0,0.08)" strokeWidth={1} />
-              <text x={PADDING.left - 8} y={line.y} textAnchor="end" dominantBaseline="middle" fontSize={11} fill="#86868b">
+              <text x={PADDING.left - 8} y={line.y} textAnchor="end" dominantBaseline="middle" fontSize={11} fill="#6e6e73">
                 {line.value}
               </text>
             </g>
           ))}
 
           {xTickIndices.map((i) => (
-            <text key={i} x={xFor(i)} y={HEIGHT - 8} textAnchor="middle" fontSize={11} fill="#86868b">
+            <text key={i} x={xFor(i)} y={HEIGHT - 8} textAnchor="middle" fontSize={11} fill="#6e6e73">
               {formatDayShort(points[i].day)}
             </text>
           ))}
