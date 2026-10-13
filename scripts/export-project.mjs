@@ -8,7 +8,7 @@ const url = process.env.SUPABASE_URL;
 const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const H = { apikey: key, Authorization: `Bearer ${key}` };
 const stamp = new Date().toISOString().slice(0, 10);
-const out = process.argv[2] ?? path.join("C:/Projetos/_backups", `ceramica-hub-${stamp}`);
+const out = process.argv[2] ?? path.join("G:/Meu Drive/CERAMICA HUB/BACKUP", `ceramica-hub-${stamp}`);
 const PAGE = 1000;
 
 async function exportTables() {

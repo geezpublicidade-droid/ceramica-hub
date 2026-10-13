@@ -31,7 +31,7 @@ Roteiro para mover o projeto das contas provisórias (GitHub `geezpublicidade-dr
 
 ## 3. Ordem recomendada
 
-1. **Backup antes de tudo** (conta atual ainda intacta): `node --env-file=.env.local scripts/export-project.mjs` grava todas as tabelas (JSON) e todos os arquivos dos buckets em `C:\Projetos\_backups\ceramica-hub-AAAA-MM-DD`. Contém dados pessoais: não versionar, não enviar. Guardar também uma cópia fora do PC.
+1. **Backup antes de tudo** (conta atual ainda intacta): `node --env-file=.env.local scripts/export-project.mjs` grava todas as tabelas (JSON) e todos os arquivos dos buckets em `G:Meu DriveCERAMICA HUBBACKUP\ceramica-hub-AAAA-MM-DD`. Contém dados pessoais: não versionar, não enviar. Guardar também uma cópia fora do PC.
 2. **Contas novas** (usuário cria): GitHub, Vercel, Supabase (já em plano **Pro**, para ter backup diário), Mercado Pago, Resend, Cloudflare Turnstile, Sentry.
 3. **GitHub:** criar o repositório na conta nova e `git remote set-url origin <novo>` + `git push -u origin main` (histórico completo vai junto).
 4. **Supabase novo:** criar projeto (região São Paulo) e aplicar `0001`…`0074` na ordem com `node --env-file=.env.local scripts/run-sql.mjs <arquivo>` apontando para o `.env.local` do projeto novo. Recriar os 3 buckets com a mesma visibilidade.
